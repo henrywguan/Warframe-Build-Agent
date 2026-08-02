@@ -79,7 +79,7 @@ const top = await market.getTopOrders("mirage_prime_set");
 
 ## Desktop overlay (arsenal coaching)
 
-Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, and get prioritized Steel Path / max-damage / endgame actions. **Fully external** — separate window + desktop screenshots + manual input; no Warframe process touch. Built to *reduce* Easy Anti-Cheat false-positive risk (not a guarantee). Verify with `python3 -m wf_overlay --verify-external`.
+Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, get prioritized Steel Path / endgame actions, and chat with the Build Agent in a minimizable panel while in-game. **Fully external** — separate window + desktop screenshots + HTTPS chat; no Warframe process touch. Set `OPENAI_API_KEY` in `~/.config/warframe-build-agent/overlay.env`. Verify with `python3 -m wf_overlay --verify-external`.
 
 ```bash
 cd overlay
