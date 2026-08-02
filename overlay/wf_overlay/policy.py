@@ -5,13 +5,15 @@ Allowed:
 - OS desktop capture of user-selected regions (pixels only)
 - Local files under the user's config/captures directories
 - Public web/API data and rule-based recommendations
+- Clickable overlay buttons (preferred UX)
 - Window-scoped hotkeys on our own overlay window
+- Optional OS-registered global hotkeys (Windows RegisterHotKey only)
 
 Forbidden (never implement):
 - Reading or writing Warframe process memory
 - Injecting DLLs, hooks, or rendering into the game process
 - Automating Warframe inputs (send keys/clicks into the game)
-- Global low-level input hooks
+- Global low-level input hooks (SetWindowsHookEx / pynput-style)
 - Process enumeration / opening handles to Warframe
 - Packet inspection / traffic tampering
 - Any trainer-style tooling

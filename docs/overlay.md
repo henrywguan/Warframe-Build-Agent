@@ -21,8 +21,9 @@ This overlay is **external-only** by design and must stay that way.
 What we *can* do is keep this app in the lowest-risk class of software:
 
 - A normal separate OS window (not drawn inside the game)
+- Large clickable buttons for every action
 - Optional desktop-region screenshots (same broad class as snipping tools)
-- Window-scoped hotkeys only (no global low-level hooks)
+- Optional **OS-registered** global hotkeys on Windows (`RegisterHotKey`) — not low-level hooks, and they do not type into Warframe
 - Zero contact with the Warframe process
 - Refuse to run elevated (admin/root)
 
@@ -37,7 +38,7 @@ That reduces risk versus memory tools, injectors, and input bots — it is **not
 | Startup source scan | Rejects process-memory, injection, global-hook, and game-exe targeting APIs |
 | Dependency scan | `requirements.txt` must not list high-risk packages |
 | Privilege check | Refuses admin/root elevation |
-| Capture/hotkey posture | Requires `mss` desktop capture + `QShortcut` window hotkeys |
+| Capture/hotkey posture | `mss` desktop capture; buttons + `QShortcut`; optional Windows `RegisterHotKey` |
 | Verify command | `python3 -m wf_overlay --verify-external` |
 
 The UI **will not start** if verification fails. Future OCR/vision may only read **captured screen pixels** or user-entered text — never the game’s address space.
@@ -82,14 +83,18 @@ Needs a desktop session (Windows / Linux / macOS with a display). This cloud/dev
 4. **Capture** saves a PNG under `~/.config/warframe-build-agent/captures/`
 5. **Refresh actions** shows prioritized next steps
 
-### Hotkeys
+### Buttons + hotkeys
 
-| Shortcut | Action |
+Use the **Quick actions** buttons anytime (recommended). The same actions also have hotkeys:
+
+| Button / shortcut | Action |
 | --- | --- |
-| `Ctrl+Shift+A` | Refresh recommended actions |
-| `Ctrl+Shift+R` | Set/capture region selector |
-| `Ctrl+Shift+C` | Capture the selected saved region |
-| `Ctrl+Shift+H` | Show / hide overlay |
+| Refresh actions · `Ctrl+Shift+A` | Refresh recommended actions |
+| Set region · `Ctrl+Shift+R` | Snip a screen region |
+| Capture · `Ctrl+Shift+C` | Capture the selected saved region |
+| Show / hide · `Ctrl+Shift+H` | Minimize / restore overlay |
+
+Toggle **Enable global hotkeys (Windows)** to keep those chords working while Warframe is focused. On Linux/macOS, focus the overlay or click the buttons.
 
 ## Config locations
 

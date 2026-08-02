@@ -5,8 +5,10 @@ from pathlib import Path
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QFont, QGuiApplication, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -20,6 +22,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..capture import capture_saved_region
+from ..hotkeys import HOTKEY_BINDINGS, GlobalHotkeyManager, describe_hotkeys
 from ..models import Goal, LoadoutContext, WeaponSlot
 from ..recommend import recommend_actions
 from ..regions import load_regions, upsert_region
@@ -37,14 +40,17 @@ class OverlayWindow(QMainWindow):
             | Qt.WindowType.Tool
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.resize(420, 640)
+        self.resize(440, 720)
         self._drag_pos: QPoint | None = None
         self._selector: RegionSelector | None = None
         self._pending_region_name = "mod_grid"
+        self._hotkeys = GlobalHotkeyManager(self)
+        self._action_buttons: dict[str, QPushButton] = {}
 
         self._build_ui()
         self._load_style()
-        self._wire_hotkeys()
+        self._wire_local_shortcuts()
+        self._wire_global_hotkeys()
         self._refresh_region_meta()
         self._place_default()
         self.refresh_actions()
@@ -68,7 +74,7 @@ class OverlayWindow(QMainWindow):
         brand = QLabel("Warframe <span style='color:#3db8b0'>Build Agent</span>")
         brand.setObjectName("Brand")
         brand.setTextFormat(Qt.TextFormat.RichText)
-        tagline = QLabel("Overlay · recommended actions for arsenal / mods")
+        tagline = QLabel("Overlay · tap a button or use global hotkeys")
         tagline.setObjectName("Tagline")
         brand_box.addWidget(brand)
         brand_box.addWidget(tagline)
@@ -78,15 +84,29 @@ class OverlayWindow(QMainWindow):
         self.pin_btn.setObjectName("Ghost")
         self.pin_btn.setCheckable(True)
         self.pin_btn.setChecked(True)
+        self.pin_btn.setToolTip("Keep the overlay above other windows")
         self.pin_btn.clicked.connect(self._toggle_pin)
         header.addWidget(self.pin_btn, 0, Qt.AlignmentFlag.AlignTop)
 
         close_btn = QPushButton("✕")
         close_btn.setObjectName("DangerGhost")
         close_btn.setFixedWidth(36)
+        close_btn.setToolTip("Close overlay")
         close_btn.clicked.connect(self.close)
         header.addWidget(close_btn, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(header)
+
+        layout.addWidget(self._section("Quick actions"))
+        layout.addLayout(self._build_quick_actions())
+
+        self.global_hotkeys_box = QCheckBox("Enable global hotkeys (Windows)")
+        self.global_hotkeys_box.setChecked(self._hotkeys.supported)
+        self.global_hotkeys_box.setToolTip(
+            "OS-registered hotkeys (RegisterHotKey). Works while Warframe is focused. "
+            "Not a low-level keyboard hook and does not type into the game."
+        )
+        self.global_hotkeys_box.toggled.connect(self._on_global_hotkeys_toggled)
+        layout.addWidget(self.global_hotkeys_box)
 
         layout.addWidget(self._section("Loadout"))
         form = QHBoxLayout()
@@ -122,16 +142,6 @@ class OverlayWindow(QMainWindow):
         self.region_combo.addItem("Mod grid", "mod_grid")
         self.region_combo.addItem("Stats panel", "stats_panel")
         region_row.addWidget(self.region_combo, 1)
-
-        set_region_btn = QPushButton("Set region")
-        set_region_btn.setObjectName("Ghost")
-        set_region_btn.clicked.connect(self.begin_region_select)
-        region_row.addWidget(set_region_btn)
-
-        capture_btn = QPushButton("Capture")
-        capture_btn.setObjectName("Ghost")
-        capture_btn.clicked.connect(self.capture_region)
-        region_row.addWidget(capture_btn)
         layout.addLayout(region_row)
 
         self.region_meta = QLabel()
@@ -143,18 +153,6 @@ class OverlayWindow(QMainWindow):
         self.status_label.setObjectName("Hint")
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
-
-        action_row = QHBoxLayout()
-        refresh_btn = QPushButton("Refresh actions")
-        refresh_btn.setObjectName("Primary")
-        refresh_btn.clicked.connect(self.refresh_actions)
-        action_row.addWidget(refresh_btn, 2)
-
-        hide_btn = QPushButton("Hide")
-        hide_btn.setObjectName("Ghost")
-        hide_btn.clicked.connect(self.showMinimized)
-        action_row.addWidget(hide_btn, 1)
-        layout.addLayout(action_row)
 
         layout.addWidget(self._section("Recommended actions"))
         self.scroll = QScrollArea()
@@ -168,23 +166,43 @@ class OverlayWindow(QMainWindow):
         self.scroll.setWidget(self.actions_host)
         layout.addWidget(self.scroll, 1)
 
-        hint = QLabel(
-            "Hotkeys: Ctrl+Shift+A refresh · Ctrl+Shift+R set region · "
-            "Ctrl+Shift+C capture · Ctrl+Shift+H show/hide"
-        )
+        hint = QLabel(f"Hotkeys: {describe_hotkeys()}")
         hint.setObjectName("Hint")
         hint.setWordWrap(True)
         layout.addWidget(hint)
 
         policy = QLabel(
-            "External only — separate window + desktop screenshots + your input. "
+            "External only — buttons + desktop screenshots + optional OS global hotkeys. "
             "No Warframe process touch, memory access, injection, or game input. "
-            "Reduces anti-cheat risk; cannot guarantee EAC false positives never happen. "
             "Verify: python3 -m wf_overlay --verify-external"
         )
         policy.setObjectName("Hint")
         policy.setWordWrap(True)
         layout.addWidget(policy)
+
+    def _build_quick_actions(self) -> QGridLayout:
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(8)
+        grid.setVerticalSpacing(8)
+
+        specs = [
+            ("refresh", "Refresh actions", "Primary", self.refresh_actions, 0, 0),
+            ("set_region", "Set region", "Action", self.begin_region_select, 0, 1),
+            ("capture", "Capture", "Action", self.capture_region, 1, 0),
+            ("toggle", "Show / hide", "Ghost", self.toggle_visibility, 1, 1),
+        ]
+        chord_by_id = {b.action_id: b.chord for b in HOTKEY_BINDINGS}
+
+        for action_id, title, role, callback, row, col in specs:
+            button = QPushButton(f"{title}\n{chord_by_id.get(action_id, '')}")
+            button.setObjectName(role)
+            button.setMinimumHeight(58)
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
+            button.setToolTip(f"{title} ({chord_by_id.get(action_id, 'click')})")
+            button.clicked.connect(callback)
+            self._action_buttons[action_id] = button
+            grid.addWidget(button, row, col)
+        return grid
 
     def _section(self, text: str) -> QLabel:
         label = QLabel(text)
@@ -198,11 +216,44 @@ class OverlayWindow(QMainWindow):
         font = QFont("Segoe UI", 10)
         self.setFont(font)
 
-    def _wire_hotkeys(self) -> None:
+    def _wire_local_shortcuts(self) -> None:
+        # Fallback when the overlay itself is focused (all platforms).
         QShortcut(QKeySequence("Ctrl+Shift+A"), self, activated=self.refresh_actions)
         QShortcut(QKeySequence("Ctrl+Shift+R"), self, activated=self.begin_region_select)
         QShortcut(QKeySequence("Ctrl+Shift+C"), self, activated=self.capture_region)
         QShortcut(QKeySequence("Ctrl+Shift+H"), self, activated=self.toggle_visibility)
+
+    def _wire_global_hotkeys(self) -> None:
+        self._hotkeys.triggered.connect(self._on_hotkey_action)
+        self._hotkeys.statusChanged.connect(self._set_status)
+        if self.global_hotkeys_box.isChecked():
+            started = self._hotkeys.start()
+            if not started:
+                self.global_hotkeys_box.setChecked(False)
+
+    def _on_global_hotkeys_toggled(self, checked: bool) -> None:
+        if checked:
+            if not self._hotkeys.start():
+                self.global_hotkeys_box.blockSignals(True)
+                self.global_hotkeys_box.setChecked(False)
+                self.global_hotkeys_box.blockSignals(False)
+        else:
+            self._hotkeys.stop()
+
+    def _on_hotkey_action(self, action_id: str) -> None:
+        dispatch = {
+            "refresh": self.refresh_actions,
+            "set_region": self.begin_region_select,
+            "capture": self.capture_region,
+            "toggle": self.toggle_visibility,
+        }
+        action = dispatch.get(action_id)
+        if action:
+            action()
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        self._hotkeys.stop()
+        super().closeEvent(event)
 
     def _place_default(self) -> None:
         screen = QGuiApplication.primaryScreen()
@@ -225,10 +276,12 @@ class OverlayWindow(QMainWindow):
     def toggle_visibility(self) -> None:
         if self.isVisible() and not self.isMinimized():
             self.showMinimized()
+            self._set_status("Overlay hidden. Hotkey or taskbar to bring it back.")
         else:
             self.showNormal()
             self.raise_()
             self.activateWindow()
+            self._set_status("Overlay shown.")
 
     def begin_region_select(self) -> None:
         self._pending_region_name = self.region_combo.currentData()
@@ -260,7 +313,7 @@ class OverlayWindow(QMainWindow):
             QMessageBox.information(
                 self,
                 "No region yet",
-                f"Set the “{name.replace('_', ' ')}” region first with Set region.",
+                f"Click “Set region” first and drag over the {name.replace('_', ' ')}.",
             )
             return
         try:
@@ -274,7 +327,7 @@ class OverlayWindow(QMainWindow):
         regions = load_regions()
         if not regions:
             self.region_meta.setText(
-                "No saved regions yet. Use Set region like a snipping tool on the arsenal mod grid."
+                "No saved regions yet. Click Set region, then drag over the arsenal mod grid."
             )
             return
         bits = [

@@ -77,9 +77,39 @@ QPushButton#Primary:hover {
   background: #0e8f8f;
 }
 
+QPushButton#Action {
+  background: rgba(61, 184, 176, 0.22);
+  border: 1px solid rgba(61, 184, 176, 0.5);
+  color: #f4f8fa;
+  text-align: center;
+}
+
+QPushButton#Action:hover {
+  background: rgba(61, 184, 176, 0.34);
+}
+
 QPushButton#Ghost {
   background: transparent;
   border: 1px solid rgba(215, 227, 234, 0.18);
+}
+
+QCheckBox {
+  spacing: 8px;
+  color: rgba(232, 238, 242, 0.86);
+  font-size: 12px;
+}
+
+QCheckBox::indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(215, 227, 234, 0.35);
+  background: rgba(247, 250, 252, 0.06);
+}
+
+QCheckBox::indicator:checked {
+  background: #0c7c7c;
+  border-color: #0a6868;
 }
 
 QPushButton#DangerGhost {

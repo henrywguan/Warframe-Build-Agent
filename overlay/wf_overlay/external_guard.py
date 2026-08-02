@@ -87,8 +87,9 @@ def _module_root(name: str) -> str:
     return name.split(".", 1)[0].lower()
 
 
-def _is_policy_module(path: Path) -> bool:
-    return path.name in {"external_guard.py", "policy.py"}
+# policy/external_guard hold blocklist strings; hotkeys may use ctypes for RegisterHotKey.
+_SKIP_SNIPPET_SCAN = frozenset({"policy.py", "external_guard.py"})
+_CTYPES_IMPORT_ALLOWED = frozenset({"external_guard.py", "hotkeys.py"})
 
 
 def scan_source_for_forbidden_apis(paths: list[Path] | None = None) -> list[GuardFinding]:
@@ -99,15 +100,23 @@ def scan_source_for_forbidden_apis(paths: list[Path] | None = None) -> list[Guar
         text = path.read_text(encoding="utf-8")
         rel = path.relative_to(overlay_root())
 
-        if not _is_policy_module(path):
+        if path.name not in _SKIP_SNIPPET_SCAN:
             for snippet in FORBIDDEN_SOURCE_SNIPPETS:
-                if snippet in text:
-                    findings.append(
-                        GuardFinding(
-                            "forbidden_source_snippet",
-                            f"{rel}: contains {snippet!r}",
-                        )
+                if snippet not in text:
+                    continue
+                # Allow ctypes.windll only in the hotkeys RegisterHotKey helper.
+                if path.name == "hotkeys.py" and snippet in {
+                    "ctypes.windll",
+                    "ctypes.cdll.LoadLibrary",
+                    "windll.kernel32",
+                }:
+                    continue
+                findings.append(
+                    GuardFinding(
+                        "forbidden_source_snippet",
+                        f"{rel}: contains {snippet!r}",
                     )
+                )
 
         try:
             tree = ast.parse(text, filename=str(path))
@@ -118,31 +127,25 @@ def scan_source_for_forbidden_apis(paths: list[Path] | None = None) -> list[Guar
             continue
 
         for node in ast.walk(tree):
+            names: list[str] = []
             if isinstance(node, ast.Import):
-                for alias in node.names:
-                    root = _module_root(alias.name)
-                    if root in FORBIDDEN_LOCAL_IMPORTS or root in FORBIDDEN_IMPORT_ROOTS:
-                        if _is_policy_module(path):
-                            continue
-                        findings.append(
-                            GuardFinding(
-                                "forbidden_import",
-                                f"{rel}: imports {alias.name}",
-                            )
-                        )
-            elif isinstance(node, ast.ImportFrom):
-                if not node.module:
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                names = [node.module]
+            for name in names:
+                root = _module_root(name)
+                if root not in FORBIDDEN_LOCAL_IMPORTS and root not in FORBIDDEN_IMPORT_ROOTS:
                     continue
-                root = _module_root(node.module)
-                if root in FORBIDDEN_LOCAL_IMPORTS or root in FORBIDDEN_IMPORT_ROOTS:
-                    if _is_policy_module(path):
-                        continue
-                    findings.append(
-                        GuardFinding(
-                            "forbidden_import",
-                            f"{rel}: imports from {node.module}",
-                        )
+                if path.name in _CTYPES_IMPORT_ALLOWED and root == "ctypes":
+                    continue
+                if path.name in {"external_guard.py", "policy.py"}:
+                    continue
+                findings.append(
+                    GuardFinding(
+                        "forbidden_import",
+                        f"{rel}: imports {name}",
                     )
+                )
     return findings
 
 
@@ -242,7 +245,7 @@ def scan_anticheat_posture() -> list[GuardFinding]:
             )
         )
 
-    # Hotkeys must stay window-scoped (QShortcut), not global OS hooks.
+    # Buttons + window-scoped shortcuts always; OS RegisterHotKey is optional.
     overlay_window = package_root() / "widgets" / "overlay_window.py"
     if overlay_window.exists():
         text = overlay_window.read_text(encoding="utf-8")
@@ -250,15 +253,34 @@ def scan_anticheat_posture() -> list[GuardFinding]:
             findings.append(
                 GuardFinding(
                     "hotkey_posture",
-                    "overlay_window.py should use QShortcut (window-scoped hotkeys)",
+                    "overlay_window.py should keep QShortcut fallbacks",
                 )
             )
-        for banned in ("pynput", "SetWindowsHookEx", "keyboard.hook", "GlobalHotKey"):
+        for banned in ("pynput", "SetWindowsHookEx", "keyboard.hook", "SendInput"):
             if banned in text:
                 findings.append(
                     GuardFinding(
                         "hotkey_posture",
                         f"overlay_window.py contains high-risk hotkey API {banned!r}",
+                    )
+                )
+
+    hotkeys = package_root() / "hotkeys.py"
+    if hotkeys.exists():
+        text = hotkeys.read_text(encoding="utf-8")
+        if "RegisterHotKey" not in text:
+            findings.append(
+                GuardFinding(
+                    "hotkey_posture",
+                    "hotkeys.py should use OS RegisterHotKey (not low-level hooks)",
+                )
+            )
+        for banned in ("SetWindowsHookEx", "SendInput", "pynput", "keyboard.hook"):
+            if banned in text:
+                findings.append(
+                    GuardFinding(
+                        "hotkey_posture",
+                        f"hotkeys.py contains high-risk API {banned!r}",
                     )
                 )
 
@@ -325,9 +347,11 @@ def format_verification_report(findings: list[GuardFinding]) -> str:
                 "- no banned high-risk modules are loaded",
                 "- runtime import blocker installed",
                 "- process is not running elevated (admin/root)",
-                "- capture uses OS desktop screenshots; hotkeys are window-scoped",
+                "- capture uses OS desktop screenshots",
+                "- buttons + window shortcuts always; optional OS RegisterHotKey globals",
                 "",
-                "Allowed: separate overlay window, desktop region pixels, manual input.",
+                "Allowed: separate overlay window, desktop region pixels, manual input,",
+                "         OS-registered global hotkeys (not low-level hooks).",
                 "Forbidden: Warframe process memory, injection, game input automation.",
                 "",
                 "Disclaimer: this reduces false-positive risk but cannot guarantee",
