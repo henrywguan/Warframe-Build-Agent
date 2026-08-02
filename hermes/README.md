@@ -21,15 +21,16 @@ In Hermes Desktop: use **Profiles → Import** (or the CLI above if the UI impor
 hermes profile install ./hermes --name warframe-build-agent --alias
 ```
 
-### C) Install from GitHub (after merge)
+### C) From a GitHub checkout
+
+Clone this monorepo, then install the nested distribution folder (not the repo root):
 
 ```bash
-hermes profile install github.com/henrywguan/Warframe-Build-Agent --name warframe-build-agent --alias
+git clone https://github.com/henrywguan/Warframe-Build-Agent.git
+hermes profile install ./Warframe-Build-Agent/hermes --name warframe-build-agent --alias
 ```
 
-Note: `hermes profile install` expects `distribution.yaml` at the **source root**. If installing from the full monorepo, prefer option A/B (`./hermes`) until/unless this distribution is published as its own repo or subdirectory workflow.
-
-If your Hermes version supports a subdirectory/path install, point it at the `hermes/` directory of this repository.
+`hermes profile install <git-url>` expects `distribution.yaml` at the **repository root**, so for this monorepo use the local `hermes/` path or the packed `.tar.gz` instead.
 
 ## After install
 
