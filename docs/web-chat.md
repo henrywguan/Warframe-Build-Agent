@@ -2,6 +2,8 @@
 
 A phone-friendly chat front-end lives in [`web/`](../web/). It talks to an OpenAI-compatible model and can call this repo’s Warframe Status + Warframe.market helpers for live data.
 
+The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands.
+
 ## Why this exists
 
 Cursor Cloud / desktop chat is great while coding. This UI is for **on-the-go** questions from a phone browser (and can be installed as a home-screen web app).
