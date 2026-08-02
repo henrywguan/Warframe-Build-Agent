@@ -14,19 +14,14 @@ Keeps the codebase tidy after changes: simplify touched code, delete dead weight
 
 ## Use in Cursor chat
 
-- Type **`/cleanup-simplify`** after a change set, or
-- Ask: “clean up and simplify the diff; keep tests green”, or
-- Parent agents should auto-delegate when the rule matches
+- `/cleanup-simplify`, or ask to tidy the diff
+- Parent agents should auto-delegate after substantive edits (see the cleanup rule)
 
-The subagent must stay in the recent diff’s scope and run:
+Always stay in the recent diff and run `./scripts/cleanup-verify.sh`.
 
-```bash
-./scripts/cleanup-verify.sh
-```
+## Automate on every git change
 
-## “Every git change” options
-
-Subagents do **not** auto-run on git by themselves. Wire one of these:
+The subagent file does not self-trigger on git. Pick one:
 
 ### A) Local pre-commit (mechanical)
 
@@ -34,15 +29,15 @@ Subagents do **not** auto-run on git by themselves. Wire one of these:
 ./scripts/install-cleanup-git-hook.sh
 ```
 
-Runs `cleanup-verify.sh` before each commit. Does not run the LLM; it only blocks broken commits.
+Blocks broken commits via `cleanup-verify.sh` (no LLM).
 
 ### B) Cursor Cloud Automation (LLM cleanup on push/PR)
 
-Create an Automation at [cursor.com/automations](https://cursor.com/automations) (or `/automate`):
+At [cursor.com/automations](https://cursor.com/automations) (or `/automate`):
 
-1. **Trigger:** Push to branch and/or PR pushed  
-2. **Repo:** this repository  
-3. **Prompt:**
+1. Trigger: Push to branch and/or PR pushed  
+2. Repo: this repository  
+3. Prompt:
 
 ```text
 You are the cleanup-simplify agent for this repo.
@@ -54,12 +49,11 @@ If you make cleanup commits, push them to the same branch.
 If nothing needs cleanup and verify passes, comment that the diff is already clean.
 ```
 
-4. Ensure the cloud environment can `npm install` / run tests  
-5. Activate the automation
+4. Ensure the cloud env can install deps and run tests, then activate.
 
-### C) Manual after each agent task
+### C) Manual
 
-Finish the feature → run `/cleanup-simplify` → commit.
+Finish work → `/cleanup-simplify` → commit.
 
 ## Verify script details
 
