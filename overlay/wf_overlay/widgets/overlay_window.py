@@ -176,6 +176,14 @@ class OverlayWindow(QMainWindow):
         hint.setWordWrap(True)
         layout.addWidget(hint)
 
+        policy = QLabel(
+            "External only — screen pixels + your input. "
+            "No Warframe memory read/write, injection, or input automation."
+        )
+        policy.setObjectName("Hint")
+        policy.setWordWrap(True)
+        layout.addWidget(policy)
+
     def _section(self, text: str) -> QLabel:
         label = QLabel(text)
         label.setObjectName("Section")

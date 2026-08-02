@@ -79,7 +79,7 @@ const top = await market.getTopOrders("mirage_prime_set");
 
 ## Desktop overlay (arsenal coaching)
 
-Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, and get prioritized Steel Path / max-damage / endgame actions.
+Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, and get prioritized Steel Path / max-damage / endgame actions. **Fully external** — screen pixels + manual input only; no game memory read/write or injection.
 
 ```bash
 cd overlay
@@ -122,6 +122,7 @@ For live data, prefer `npm run wf -- …` and `npm run market -- …`.
 | `npm run market -- <cmd>` | Warframe.market v2 CLI |
 | `npm run web:dev` | Mobile chat UI (local) |
 | `npm run web:build` | Build chat UI |
+| `python3 -m wf_overlay` (from `overlay/`) | Desktop arsenal overlay |
 | `npm test` | Unit tests (mocked fetch + formatters) |
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Emit `dist/` |

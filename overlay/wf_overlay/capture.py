@@ -1,3 +1,10 @@
+"""Screen capture helpers.
+
+Policy: pixels only. This module uses OS desktop capture (mss) of a
+user-selected rectangle. It must never open, attach to, read, or write the
+Warframe process.
+"""
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -6,6 +13,7 @@ from pathlib import Path
 from PIL import Image
 
 from .models import ScreenRegion
+from .policy import assert_external_only
 from .regions import config_dir
 
 
@@ -16,8 +24,9 @@ def captures_dir() -> Path:
 
 
 def grab_region(region: ScreenRegion) -> Image.Image:
+    """Capture a desktop rectangle via the OS compositor / screen buffer."""
+    assert_external_only()
     import mss
-    import mss.tools
 
     region = region.clamp()
     monitor = {

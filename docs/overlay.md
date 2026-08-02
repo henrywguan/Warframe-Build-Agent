@@ -2,13 +2,28 @@
 
 Desktop overlay for arsenal / mod-screen coaching: saved screen regions (snipping-tool style), one-button capture, and a clean action list aimed at Steel Path / max damage / endgame goals.
 
+## Hard policy: fully external (no memory editing)
+
+This overlay is **external-only** by design and must stay that way.
+
+| Allowed | Forbidden |
+| --- | --- |
+| Own always-on-top UI window | Reading Warframe process memory |
+| OS screen capture of user-selected regions | Writing Warframe process memory |
+| Manual loadout / goal input | DLL injection / hooks into the game |
+| Local config + capture PNGs | Sending keys/clicks into Warframe |
+| Public APIs / docs for advice | Packet tampering, debug attach, trainers |
+
+Implementation guardrails live in [`overlay/wf_overlay/policy.py`](../overlay/wf_overlay/policy.py) and are checked by unit tests. Future OCR/vision features may only read **captured screen pixels** or user-entered text — never the game’s address space.
+
 ## Why this shape
 
 - **Saved regions**, not whole-screen OCR — more accurate and less noisy on Warframe UI
 - **Action cards**, not a fake DPS readout — recommendations come from loadout context + rules
 - **Python + PySide6** — fast to iterate; fine latency for hotkey / button workflows
+- **External pixels only** — safe boundary vs memory tools
 
-OCR → mod ID mapping can plug in later; v1 focuses on the interactive overlay UX and recommendation actions.
+OCR → mod ID mapping can plug in later on top of saved captures; v1 focuses on the interactive overlay UX and recommendation actions.
 
 ## Setup
 
@@ -61,7 +76,7 @@ python3 -m unittest discover -s tests -v
 
 ## Roadmap (not in v1)
 
-- OCR / vision parse of captured mod grid into mod IDs
+- OCR / vision parse of **captured** mod-grid images into mod IDs (still external-only)
 - Feed parsed loadout into the web chat / agent tools
-- Optional click-through mode when not interacting
+- Optional click-through mode when not interacting with the overlay window
 - Richer endgame presets (EDA/ETA, archon, etc.)

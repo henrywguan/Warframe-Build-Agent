@@ -5,10 +5,12 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 
+from .policy import assert_external_only
 from .widgets.overlay_window import OverlayWindow
 
 
 def run(argv: list[str] | None = None) -> int:
+    assert_external_only()
     args = argv if argv is not None else sys.argv
     app = QApplication(args)
     app.setApplicationName("Warframe Build Agent Overlay")
