@@ -56,8 +56,8 @@ class ChatPanel(QFrame):
         self._expanded = True
         self._build_ui()
         self._append_assistant(
-            "Tenno. Ask for builds, comparisons, or Steel Path advice while you play. "
-            "Minimize this chat anytime — hotkey Ctrl+Shift+T."
+            "Tenno. Arsenal uplink online. Ask for builds, comparisons, or Steel Path "
+            "advice while you play. Minimize anytime — Ctrl+Shift+T."
         )
 
     def set_loadout_provider(self, provider) -> None:  # noqa: ANN001
@@ -186,14 +186,18 @@ class ChatPanel(QFrame):
 
     def _append_user(self, text: str) -> None:
         self._append_html(
-            f'<p style="margin:8px 0 2px; color:#3db8b0;"><b>You</b></p>'
-            f'<p style="margin:0 0 10px; white-space:pre-wrap;">{_escape(text)}</p>'
+            f'<p style="margin:8px 0 2px; color:#7fe7ef; letter-spacing:0.12em;">'
+            f"<b>OPERATOR</b></p>"
+            f'<p style="margin:0 0 10px; white-space:pre-wrap; color:#e8eef5;">'
+            f"{_escape(text)}</p>"
         )
 
     def _append_assistant(self, text: str) -> None:
         self._append_html(
-            f'<p style="margin:8px 0 2px; color:#c49a55;"><b>Agent</b></p>'
-            f'<p style="margin:0 0 10px; white-space:pre-wrap;">{_escape(text)}</p>'
+            f'<p style="margin:8px 0 2px; color:#d7b56d; letter-spacing:0.12em;">'
+            f"<b>AGENT</b></p>"
+            f'<p style="margin:0 0 10px; white-space:pre-wrap; color:#e8eef5;">'
+            f"{_escape(text)}</p>"
         )
 
     def _append_html(self, html: str) -> None:

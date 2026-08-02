@@ -55,6 +55,9 @@ python3 -m wf_overlay --verify-external
 - **Action cards**, not a fake DPS readout — recommendations come from loadout context + rules
 - **Python + PySide6** — fast to iterate; fine latency for hotkey / button workflows
 - **External pixels only** — safe boundary vs memory tools
+- **Warframe-inspired theme** — void panels, Orokin gold frames, energy cyan controls (original styling, not game assets)
+
+Install optional fonts **Rajdhani** or **Orbitron** for a closer arsenal look; otherwise Segoe UI is used.
 
 OCR → mod ID mapping can plug in later on top of saved captures; v1 focuses on the interactive overlay UX and recommendation actions.
 

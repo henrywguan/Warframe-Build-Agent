@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from PySide6.QtCore import QPoint, Qt
-from PySide6.QtGui import QFont, QGuiApplication, QKeySequence, QShortcut
+from PySide6.QtGui import QFont, QFontDatabase, QGuiApplication, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -68,15 +68,17 @@ class OverlayWindow(QMainWindow):
         panel.setObjectName("Panel")
         root.addWidget(panel)
         layout = QVBoxLayout(panel)
-        layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(12)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(10)
 
         header = QHBoxLayout()
         brand_box = QVBoxLayout()
-        brand = QLabel("Warframe <span style='color:#3db8b0'>Build Agent</span>")
+        brand = QLabel(
+            "WARFRAME <span style='color:#7fe7ef'>BUILD AGENT</span>"
+        )
         brand.setObjectName("Brand")
         brand.setTextFormat(Qt.TextFormat.RichText)
-        tagline = QLabel("Overlay · actions + in-game agent chat")
+        tagline = QLabel("ARSENAL OVERLAY  ·  ACTIONS  ·  LIVE AGENT CHAT")
         tagline.setObjectName("Tagline")
         brand_box.addWidget(brand)
         brand_box.addWidget(tagline)
@@ -97,6 +99,10 @@ class OverlayWindow(QMainWindow):
         close_btn.clicked.connect(self.close)
         header.addWidget(close_btn, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(header)
+
+        header_rule = QFrame()
+        header_rule.setObjectName("HeaderRule")
+        layout.addWidget(header_rule)
 
         layout.addWidget(self._section("Quick actions"))
         layout.addLayout(self._build_quick_actions())
@@ -221,7 +227,13 @@ class OverlayWindow(QMainWindow):
         qss = Path(__file__).resolve().parent.parent / "style.qss"
         if qss.exists():
             self.setStyleSheet(qss.read_text(encoding="utf-8"))
-        font = QFont("Segoe UI", 10)
+        families = set(QFontDatabase.families())
+        if "Rajdhani" in families:
+            font = QFont("Rajdhani", 11)
+        elif "Orbitron" in families:
+            font = QFont("Orbitron", 10)
+        else:
+            font = QFont("Segoe UI Semibold", 10)
         self.setFont(font)
 
     def _wire_local_shortcuts(self) -> None:
