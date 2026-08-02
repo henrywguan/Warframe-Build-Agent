@@ -104,6 +104,8 @@ Or from repo root: `npm run web:dev`
 
 Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to Vercel (or similar) and open it on your phone — details in [`docs/web-chat.md`](docs/web-chat.md).
 
+For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
+
 ## Agent usage (Cursor)
 
 Open this repo in Cursor and ask player-facing questions, for example:

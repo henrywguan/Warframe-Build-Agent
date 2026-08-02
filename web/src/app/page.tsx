@@ -21,7 +21,7 @@ interface ChatMessage {
 const SUGGESTIONS = [
   "Steel Path fissures right now?",
   "Budget viral slash primary ideas",
-  "Cetus / Vallis / Cambion cycles",
+  "Latest Warframe hotfix?",
   "Price check mirage_prime_set",
 ];
 
@@ -35,7 +35,7 @@ export default function HomePage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Tenno. Ask for builds, weapon comparisons, live fissures/cycles, or a market price check. I’ll keep it practical.",
+        "Tenno. Ask for builds, weapon comparisons, live fissures/cycles, market prices, or the latest hotfix. I’ll keep it practical.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -223,7 +223,7 @@ export default function HomePage() {
           Warframe <span>Build Agent</span>
         </h1>
         <p className={styles.tagline}>
-          Builds, comparisons, live world-state, and market context — phone-friendly.
+          Builds, comparisons, live world-state, market, and patch notes — phone-friendly.
         </p>
       </header>
 
@@ -269,7 +269,7 @@ export default function HomePage() {
             ref={inputRef}
             className={styles.input}
             rows={2}
-            placeholder="Ask about a build, fissures, cycles, or a market slug…"
+            placeholder="Ask about a build, fissures, hotfix, or market slug…"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={onKeyDown}
@@ -284,7 +284,7 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : "Tip: market slugs look like mirage_prime_set. Live data can shift while you read."}
+          : "Tip: market slugs look like mirage_prime_set. Patch/market dailies refresh ~4pm Pacific."}
       </p>
     </main>
   );

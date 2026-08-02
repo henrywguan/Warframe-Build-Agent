@@ -41,6 +41,15 @@ GitHub Action [`.github/workflows/patch-notes-daily.yml`](../.github/workflows/p
 - Script exits cleanly if the current Pacific hour is not 16
 - Commits updated `data/patches/*` when the pull runs
 
+## Mobile web chat
+
+The on-the-go UI (`web/`) can call:
+
+- `get_patch_notes_latest` — live hub scrape (no env required)
+- `get_patch_notes_daily_changes` — saved day-over-day diff via `PATCH_CHANGES_URL` (or local `data/patches/latest-changes.json` in dev)
+
+See [`docs/web-chat.md`](web-chat.md).
+
 ## Caveats
 
 - This tracks **what the hub lists**, not every forum post word-for-word

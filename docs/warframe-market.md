@@ -44,6 +44,15 @@ GitHub Action [`.github/workflows/market-daily-prices.yml`](../.github/workflows
 - Script exits cleanly if the current Pacific hour is not 16
 - Commits updated `data/market/*` files back to the default branch when changes exist
 
+## Mobile web chat
+
+The on-the-go UI (`web/`) can call:
+
+- `get_market_price` — live Warframe.market v2 top orders
+- `get_market_daily_changes` — saved day-over-day diff via `MARKET_CHANGES_URL` (or local `data/market/latest-changes.json` in dev)
+
+See [`docs/web-chat.md`](web-chat.md).
+
 ## Player-facing caveats
 
 - Values are **listing snapshots** (top orders), not guaranteed sale clears

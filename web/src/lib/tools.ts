@@ -6,6 +6,8 @@ import {
   liveInvasions,
   liveMarketDailyChanges,
   liveMarketPrice,
+  livePatchNotesDailyChanges,
+  livePatchNotesLatest,
   liveSortie,
   liveWorldstateSummary,
 } from "@/lib/warframe-live";
@@ -101,6 +103,33 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "get_patch_notes_latest",
+      description:
+        "Get the latest official Warframe PC updates/hotfixes from warframe.com/en/patch-notes (live hub scrape).",
+      parameters: {
+        type: "object",
+        properties: {
+          limit: {
+            type: "number",
+            description: "How many recent entries to return (default 8)",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_patch_notes_daily_changes",
+      description:
+        "Read newly listed updates/hotfixes from the daily 4pm Pacific patch-notes snapshot job (day-over-day hub diff).",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
 ];
 
 type ToolArgs = Record<string, unknown>;
@@ -145,6 +174,16 @@ export async function runChatTool(name: string, rawArgs: string): Promise<string
       }
       case "get_market_daily_changes":
         return await liveMarketDailyChanges();
+      case "get_patch_notes_latest": {
+        const limitRaw = args.limit;
+        const limit =
+          typeof limitRaw === "number" && Number.isFinite(limitRaw)
+            ? Math.max(1, Math.min(25, Math.floor(limitRaw)))
+            : 8;
+        return await livePatchNotesLatest(limit);
+      }
+      case "get_patch_notes_daily_changes":
+        return await livePatchNotesDailyChanges();
       default:
         return `Unknown tool: ${name}`;
     }

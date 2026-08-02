@@ -17,7 +17,7 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "Warframe Build Agent",
   description:
-    "Mobile-friendly Warframe advisor chat for builds, comparisons, world-state, and market context.",
+    "Mobile-friendly Warframe advisor chat for builds, comparisons, world-state, market, and patch notes.",
   applicationName: "Warframe Build Agent",
   manifest: "/manifest.webmanifest",
   appleWebApp: {

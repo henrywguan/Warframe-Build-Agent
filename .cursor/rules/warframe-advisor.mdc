@@ -40,5 +40,5 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 - Prefer `npm run wf -- <command>` for live world-state (alerts, fissures, invasions, sortie, cycles, etc.).
 - Prefer `npm run market -- <command>` for Warframe.market v2 prices and daily changes.
 - Prefer `npm run patches -- <command>` for official updates/hotfixes/patch-note checks.
-- The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market clients. Use `npm run patches -- …` for official update/hotfix checks.
+- The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market/Patches clients (including daily 4pm Pacific scrapes).
 - Load the matching skill under `.cursor/skills/` for compare / build / mechanics / world-state / patch-notes workflows.

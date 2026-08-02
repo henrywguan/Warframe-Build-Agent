@@ -1,5 +1,95 @@
+import { loadDailyJson } from "@/lib/daily-data";
+
 const STATUS_BASE = "https://api.warframestat.us";
 const MARKET_BASE = "https://api.warframe.market/v2";
+const PATCH_NOTES_URL = "https://www.warframe.com/en/patch-notes";
+
+type PatchType = "Hotfix" | "Update" | "Other";
+
+interface PatchEntry {
+  id: string;
+  title: string;
+  url: string;
+  type: PatchType;
+  newest: boolean;
+  version?: string;
+}
+
+interface DailyPatchChanges {
+  previousDate?: string;
+  date?: string;
+  newEntries?: PatchEntry[];
+  latest?: PatchEntry | null;
+  source?: string;
+}
+
+interface DailyMarketChanges {
+  previousDate?: string;
+  date?: string;
+  changes?: Array<{
+    name?: string;
+    slug?: string;
+    previousLowestSell?: number;
+    currentLowestSell?: number;
+    lowestSellDelta?: number;
+    lowestSellDeltaPct?: number;
+  }>;
+}
+
+const PATCH_ENTRY_RE =
+  /<li>\s*(?:<span class="tag"><span class="label">([^<]+)<\/span><\/span>\s*)?<a href="(https:\/\/www\.warframe\.com\/en\/patch-notes\/pc\/[^"]+|\/patch-notes\/pc\/[^"]+)">([^<]+)<\/a>/gi;
+
+function absolutizePatchHref(href: string): string {
+  if (href.startsWith("http://") || href.startsWith("https://")) return href;
+  const pathName = href.startsWith("/") ? href : `/${href}`;
+  if (pathName.startsWith("/patch-notes/")) {
+    return `https://www.warframe.com/en${pathName}`;
+  }
+  return `https://www.warframe.com${pathName}`;
+}
+
+function classifyPatch(title: string): PatchType {
+  if (/hotfix/i.test(title)) return "Hotfix";
+  if (/\bupdate\s+\d+/i.test(title)) return "Update";
+  return "Other";
+}
+
+function versionFromPatch(title: string, id: string): string | undefined {
+  const fromTitle = title.match(/\b(\d+\.\d+\.\d+(?:\.\d+)?)\b/);
+  if (fromTitle?.[1]) return fromTitle[1];
+  const fromId = id.match(/^(\d+)-(\d+)-(\d+)(?:-(\d+))?$/);
+  if (!fromId) return undefined;
+  return [fromId[1], fromId[2], fromId[3], fromId[4]].filter(Boolean).join(".");
+}
+
+function parsePatchNotesHtml(html: string): PatchEntry[] {
+  const seen = new Set<string>();
+  const entries: PatchEntry[] = [];
+  for (const match of html.matchAll(PATCH_ENTRY_RE)) {
+    const label = (match[1] ?? "").trim();
+    const url = absolutizePatchHref(match[2] ?? "");
+    const title = (match[3] ?? "").trim();
+    if (!url || !title) continue;
+    const id = url.replace(/\/$/, "").split("/").pop() || url;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    entries.push({
+      id,
+      title,
+      url,
+      type: classifyPatch(title),
+      newest: /^newest$/i.test(label),
+      version: versionFromPatch(title, id),
+    });
+  }
+  return entries;
+}
+
+function formatPatchEntry(entry: PatchEntry): string {
+  const newest = entry.newest ? " [Newest]" : "";
+  const version = entry.version ? ` (${entry.version})` : "";
+  return `• ${entry.type}${newest}: ${entry.title}${version}\n   ${entry.url}`;
+}
 
 async function statusGet<T>(pathName: string): Promise<T> {
   const url =
@@ -281,35 +371,27 @@ export async function liveMarketPrice(slug: string): Promise<string> {
 }
 
 export async function liveMarketDailyChanges(): Promise<string> {
-  const url = process.env.MARKET_CHANGES_URL?.trim();
-  if (!url) {
-    return "Saved daily market changes are not configured for this web deploy. Set MARKET_CHANGES_URL to a JSON snapshot (for example the raw latest-changes.json from the repo), or ask for a live get_market_price instead.";
-  }
+  const loaded = await loadDailyJson<DailyMarketChanges>({
+    envUrl: process.env.MARKET_CHANGES_URL,
+    envName: "MARKET_CHANGES_URL",
+    localRelativePaths: ["data/market/latest-changes.json"],
+    missingHint:
+      "Saved daily market changes are not configured for this web deploy. Set MARKET_CHANGES_URL to the raw latest-changes.json from the daily market job, or ask for a live get_market_price instead.",
+  });
+  if (!loaded.ok) return loaded.error;
 
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) {
-    return `Could not load MARKET_CHANGES_URL (HTTP ${response.status}).`;
-  }
-
-  const changes = (await response.json()) as {
-    previousDate?: string;
-    date?: string;
-    changes?: Array<{
-      name?: string;
-      slug?: string;
-      previousLowestSell?: number;
-      currentLowestSell?: number;
-      lowestSellDelta?: number;
-      lowestSellDeltaPct?: number;
-    }>;
-  };
-
+  const changes = loaded.data;
   if (!changes.changes?.length) {
-    return `No comparable price changes between ${changes.previousDate} and ${changes.date}.`;
+    return [
+      `No comparable price changes between ${changes.previousDate ?? "?"} and ${changes.date ?? "?"}.`,
+      `Source: ${loaded.source}`,
+      "Tip: day-over-day diffs appear after the second daily 4pm Pacific market pull.",
+    ].join("\n");
   }
 
   const lines = [
     `Warframe.market daily changes — ${changes.previousDate} → ${changes.date}`,
+    `Source: ${loaded.source}`,
     "",
   ];
   for (const change of changes.changes.slice(0, 20)) {
@@ -318,5 +400,96 @@ export async function liveMarketDailyChanges(): Promise<string> {
     );
   }
   lines.push("", "Listing snapshots only — re-check before big trades.");
+  return lines.join("\n");
+}
+
+export async function livePatchNotesLatest(limit = 8): Promise<string> {
+  const response = await fetch(PATCH_NOTES_URL, {
+    headers: {
+      Accept: "text/html,application/xhtml+xml",
+      "User-Agent": "warframe-build-agent-web/0.1.0",
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    // Fall back to the committed daily snapshot when the live hub is unreachable.
+    const loaded = await loadDailyJson<{
+      date?: string;
+      entries?: PatchEntry[];
+      source?: string;
+    }>({
+      envUrl: process.env.PATCH_SNAPSHOT_URL,
+      envName: "PATCH_SNAPSHOT_URL",
+      localRelativePaths: ["data/patches/latest-snapshot.json"],
+      missingHint: `Could not fetch official patch notes (HTTP ${response.status}), and no PATCH_SNAPSHOT_URL / local snapshot is available.`,
+    });
+    if (!loaded.ok) return loaded.error;
+    const entries = loaded.data.entries ?? [];
+    if (!entries.length) return "No patch-note entries in the saved snapshot.";
+    return [
+      `Warframe patch notes (saved snapshot ${loaded.data.date ?? "?"})`,
+      `Source: ${loaded.source}`,
+      "",
+      ...entries.slice(0, limit).map(formatPatchEntry),
+      "",
+      "Open the linked notes for full details. Hub listing can change after hotfixes.",
+    ].join("\n");
+  }
+
+  const entries = parsePatchNotesHtml(await response.text());
+  if (!entries.length) {
+    return "Fetched the patch-notes hub, but no PC Update/Hotfix entries parsed. The page markup may have changed.";
+  }
+
+  const newest = entries.find((entry) => entry.newest);
+  const lines = [
+    "Warframe patch notes (live hub)",
+    `Source: ${PATCH_NOTES_URL}`,
+    "",
+  ];
+  if (newest) {
+    lines.push("Latest marked Newest:", formatPatchEntry(newest), "");
+  }
+  lines.push(`Recent entries (showing ${Math.min(limit, entries.length)}):`);
+  for (const entry of entries.slice(0, limit)) {
+    lines.push(formatPatchEntry(entry));
+  }
+  lines.push(
+    "",
+    "Open the linked notes for full details. Listing snapshots only — not full patch text.",
+  );
+  return lines.join("\n");
+}
+
+export async function livePatchNotesDailyChanges(): Promise<string> {
+  const loaded = await loadDailyJson<DailyPatchChanges>({
+    envUrl: process.env.PATCH_CHANGES_URL,
+    envName: "PATCH_CHANGES_URL",
+    localRelativePaths: ["data/patches/latest-changes.json"],
+    missingHint:
+      "Saved daily patch-note changes are not configured yet. Set PATCH_CHANGES_URL to the raw latest-changes.json from the daily patch job, or use get_patch_notes_latest for the live hub listing. Day-over-day diffs appear after the second 4pm Pacific pull.",
+  });
+  if (!loaded.ok) return loaded.error;
+
+  const changes = loaded.data;
+  const newEntries = changes.newEntries ?? [];
+  if (!newEntries.length) {
+    return [
+      `No newly listed updates/hotfixes between ${changes.previousDate ?? "?"} and ${changes.date ?? "?"}.`,
+      `Source: ${loaded.source}`,
+      changes.latest
+        ? `Still newest on hub: ${changes.latest.type} ${changes.latest.title} — ${changes.latest.url}`
+        : "Tip: use get_patch_notes_latest for the current hub listing.",
+    ].join("\n");
+  }
+
+  const lines = [
+    `Warframe patch notes — newly listed ${changes.previousDate} → ${changes.date}`,
+    `Source: ${loaded.source}`,
+    "",
+    ...newEntries.map(formatPatchEntry),
+    "",
+    "These are newly listed hub entries since the previous daily snapshot. Open links for full notes.",
+  ];
   return lines.join("\n");
 }
