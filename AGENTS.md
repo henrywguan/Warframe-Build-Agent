@@ -11,9 +11,11 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `docs/sources.md` | Source priority and caveats |
 | `docs/warframe-status.md` | Status API fields players care about |
 | `docs/warframe-market.md` | Warframe.market v2 pricing + daily 4pm Pacific pull |
+| `docs/warframe-patch-notes.md` | Official updates/hotfixes + daily 4pm Pacific check |
 | `config/market-watchlist.json` | Items tracked for daily price snapshots |
-| `data/market/` | Saved daily snapshots / day-over-day changes |
-| `src/` | Warframe Status + Warframe.market clients and CLIs |
+| `data/market/` | Saved daily market snapshots / day-over-day changes |
+| `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
+| `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
 
@@ -35,6 +37,9 @@ npm run market -- status
 npm run market -- price mirage_prime_set
 npm run market -- pull --force
 npm run market -- changes
+npm run patches -- latest
+npm run patches -- pull --force
+npm run patches -- changes
 npm run web:dev
 npm test
 ```

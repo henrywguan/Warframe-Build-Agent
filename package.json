@@ -6,14 +6,16 @@
   "type": "module",
   "bin": {
     "wf-status": "./dist/cli.js",
-    "wf-market": "./dist/market/cli.js"
+    "wf-market": "./dist/market/cli.js",
+    "wf-patches": "./dist/patches/cli.js"
   },
   "scripts": {
     "build": "tsc",
     "wf": "tsx src/cli.ts",
     "market": "tsx src/market/cli.ts",
+    "patches": "tsx src/patches/cli.ts",
     "start": "tsx src/cli.ts",
-    "test": "tsx --test src/*.test.ts src/market/*.test.ts",
+    "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts",
     "typecheck": "tsc --noEmit",
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build",

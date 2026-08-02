@@ -1,0 +1,640 @@
+{
+  "date": "2026-08-02",
+  "timezone": "America/Los_Angeles",
+  "pulledAt": "2026-08-02T22:58:28.882Z",
+  "source": "https://www.warframe.com/en/patch-notes",
+  "entries": [
+    {
+      "id": "43-0-8",
+      "title": "Mesa Heirloom: Hotfix 43.0.8",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-8",
+      "type": "Hotfix",
+      "newest": true,
+      "version": "43.0.8"
+    },
+    {
+      "id": "43-0-7",
+      "title": "Mesa Heirloom: Hotfix 43.0.7",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.7"
+    },
+    {
+      "id": "43-0-6",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.6",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.6"
+    },
+    {
+      "id": "43-0-5",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.5"
+    },
+    {
+      "id": "43-0-4",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.4"
+    },
+    {
+      "id": "43-0-3",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.3"
+    },
+    {
+      "id": "43-0-2",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.2"
+    },
+    {
+      "id": "43-0-1",
+      "title": "Jade Shadows: Constellations: Hotfix 43.0.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "43.0.1"
+    },
+    {
+      "id": "43-0-0",
+      "title": "Update 43: Jade Shadows: Constellations",
+      "url": "https://www.warframe.com/en/patch-notes/pc/43-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "43.0.0"
+    },
+    {
+      "id": "42-0-11",
+      "title": "Voruna Prime: Hotfix 42.0.11",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-11",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.11"
+    },
+    {
+      "id": "42-0-10",
+      "title": "Voruna Prime: 42.0.10",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-10",
+      "type": "Other",
+      "newest": false,
+      "version": "42.0.10"
+    },
+    {
+      "id": "42-0-9",
+      "title": "Voruna Prime: Hotfix 42.0.9",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-9",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.9"
+    },
+    {
+      "id": "42-0-8",
+      "title": "Voruna Prime: Hotfix 42.0.8",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-8",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.8"
+    },
+    {
+      "id": "42-0-7",
+      "title": "Voruna Prime: Hotfix 42.0.7 + 7.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.7"
+    },
+    {
+      "id": "42-0-6",
+      "title": "Voruna Prime: Hotfix 42.0.6 + 6.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.6"
+    },
+    {
+      "id": "42-0-5",
+      "title": "The Shadowgrapher: Hotfix 42.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.5"
+    },
+    {
+      "id": "42-0-4",
+      "title": "The Shadowgrapher: Hotfix 42.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.4"
+    },
+    {
+      "id": "42-0-3",
+      "title": "The Shadowgrapher: Hotfix 42.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.3"
+    },
+    {
+      "id": "42-0-2",
+      "title": "The Shadowgrapher: Hotfix 42.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.2"
+    },
+    {
+      "id": "42-0-1",
+      "title": "The Shadowgrapher: Hotfix 42.0.1 + 1.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "42.0.1"
+    },
+    {
+      "id": "42-0-0",
+      "title": "Update 42: The Shadowgrapher",
+      "url": "https://www.warframe.com/en/patch-notes/pc/42-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "42.0.0"
+    },
+    {
+      "id": "41-1-2",
+      "title": "Vauban Heirloom: 41.1.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-1-2",
+      "type": "Other",
+      "newest": false,
+      "version": "41.1.2"
+    },
+    {
+      "id": "41-1-1",
+      "title": "Vauban Heirloom: Hotfix 41.1.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-1-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.1.1"
+    },
+    {
+      "id": "41-1-0",
+      "title": "Update 41.1: Vauban Heirloom",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-1-0",
+      "type": "Update",
+      "newest": false,
+      "version": "41.1.0"
+    },
+    {
+      "id": "41-0-7",
+      "title": "The Old Peace: Hotfix 41.0.7",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.7"
+    },
+    {
+      "id": "41-0-6",
+      "title": "The Old Peace: Hotfix 41.0.6",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.6"
+    },
+    {
+      "id": "41-0-5",
+      "title": "The Old Peace: Hotfix 41.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.5"
+    },
+    {
+      "id": "41-0-4",
+      "title": "The Old Peace: Hotfix 41.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.4"
+    },
+    {
+      "id": "41-0-3",
+      "title": "The Old Peace: Hotfix 41.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.3"
+    },
+    {
+      "id": "41-0-2",
+      "title": "The Old Peace: Hotfix 41.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.2"
+    },
+    {
+      "id": "41-0-1",
+      "title": "The Old Peace: Hotfix 41.0.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "41.0.1"
+    },
+    {
+      "id": "41-0-0",
+      "title": "Update 41: The Old Peace",
+      "url": "https://www.warframe.com/en/patch-notes/pc/41-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "41.0.0"
+    },
+    {
+      "id": "40-0-5",
+      "title": "The Vallis Undermind: Hotfix 40.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "40.0.5"
+    },
+    {
+      "id": "40-0-4",
+      "title": "The Vallis Undermind: Hotfix 40.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "40.0.4"
+    },
+    {
+      "id": "40-0-3",
+      "title": "The Vallis Undermind: Hotfix 40.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "40.0.3"
+    },
+    {
+      "id": "40-0-2",
+      "title": "The Vallis Undermind: Hotfix 40.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "40.0.2"
+    },
+    {
+      "id": "40-0-1",
+      "title": "The Vallis Undermind: Hotfix 40.0.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "40.0.1"
+    },
+    {
+      "id": "40-0-0",
+      "title": "Update 40: The Vallis Undermind",
+      "url": "https://www.warframe.com/en/patch-notes/pc/40-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "40.0.0"
+    },
+    {
+      "id": "39-1-3",
+      "title": "Caliban Prime: Hotfix 39.1.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-1-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.1.3"
+    },
+    {
+      "id": "39-1-2",
+      "title": "Caliban Prime: Hotfix 39.1.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-1-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.1.2"
+    },
+    {
+      "id": "39-1-1",
+      "title": "Caliban Prime: Hotfix 39.1.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-1-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.1.1"
+    },
+    {
+      "id": "39-1-0",
+      "title": "Update 39.1: Caliban Prime",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-1-0",
+      "type": "Update",
+      "newest": false,
+      "version": "39.1.0"
+    },
+    {
+      "id": "39-0-7",
+      "title": "Isleweaver: Hotfix 39.0.7",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.7"
+    },
+    {
+      "id": "39-0-6",
+      "title": "Isleweaver: Hotfix 39.0.6",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.6"
+    },
+    {
+      "id": "39-0-5",
+      "title": "Isleweaver: Hotfix 39.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.5"
+    },
+    {
+      "id": "39-0-4",
+      "title": "Isleweaver: Hotfix 39.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.4"
+    },
+    {
+      "id": "39-0-3",
+      "title": "Isleweaver: Hotfix 39.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.3"
+    },
+    {
+      "id": "39-0-2",
+      "title": "Isleweaver: Hotfix 39.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.2"
+    },
+    {
+      "id": "39-0-1",
+      "title": "Isleweaver: Hotfix 39.0.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "39.0.1"
+    },
+    {
+      "id": "39-0-0",
+      "title": "Update 39: Isleweaver",
+      "url": "https://www.warframe.com/en/patch-notes/pc/39-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "39.0.0"
+    },
+    {
+      "id": "38-6-3",
+      "title": "Yareli Prime: Hotfix 38.6.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-6-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.6.3"
+    },
+    {
+      "id": "38-6-2",
+      "title": "Yareli Prime: Hotfix 38.6.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-6-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.6.2"
+    },
+    {
+      "id": "38-6-1",
+      "title": "Yareli Prime: Hotfix 38.6.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-6-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.6.1"
+    },
+    {
+      "id": "38-6-0",
+      "title": "Update 38.6: Yareli Prime",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-6-0",
+      "type": "Update",
+      "newest": false,
+      "version": "38.6.0"
+    },
+    {
+      "id": "38-5-11",
+      "title": "Techrot Encore: Hotfix 38.5.11",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-11",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.11"
+    },
+    {
+      "id": "38-5-10",
+      "title": "Techrot Encore: Hotfix 38.5.10",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-10",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.10"
+    },
+    {
+      "id": "38-5-9",
+      "title": "Techrot Encore: Hotfix 38.5.9",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-9",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.9"
+    },
+    {
+      "id": "38-5-8",
+      "title": "Techrot Encore: Hotfix 38.5.8",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-8",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.8"
+    },
+    {
+      "id": "38-5-7",
+      "title": "Techrot Encore: Hotfix 38.5.7",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.7"
+    },
+    {
+      "id": "38-5-6",
+      "title": "Techrot Encore: Hotfix 38.5.6",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.6"
+    },
+    {
+      "id": "38-5-5",
+      "title": "Techrot Encore: Hotfix 38.5.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.5"
+    },
+    {
+      "id": "38-5-4",
+      "title": "Techrot Encore: Hotfix 38.5.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.4"
+    },
+    {
+      "id": "38-5-3",
+      "title": "Techrot Encore: Hotfix 38.5.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.3"
+    },
+    {
+      "id": "38-5-2",
+      "title": "Techrot Encore: Hotfix 38.5.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.2"
+    },
+    {
+      "id": "38-5-1",
+      "title": "Techrot Encore: Hotfix 38.5.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.5.1"
+    },
+    {
+      "id": "38-5-0",
+      "title": "Update 38.5: Techrot Encore",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-5-0",
+      "type": "Update",
+      "newest": false,
+      "version": "38.5.0"
+    },
+    {
+      "id": "38-0-12",
+      "title": "Lavos Prime: Hotfix 38.0.12",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-12",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.12"
+    },
+    {
+      "id": "38-0-11",
+      "title": "Lavos Prime: Hotfix 38.0.11",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-11",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.11"
+    },
+    {
+      "id": "38-0-10",
+      "title": "Lavos Prime: Hotfix 38.0.10",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-10",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.10"
+    },
+    {
+      "id": "38-0-9",
+      "title": "Rhino Heirloom: Hotfix 38.0.9",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-9",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.9"
+    },
+    {
+      "id": "38-0-8",
+      "title": "Rhino Heirloom: Hotfix 38.0.8",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-8",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.8"
+    },
+    {
+      "id": "38-0-7",
+      "title": "Warframe: 1999: Hotfix 38.0.7",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-7",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.7"
+    },
+    {
+      "id": "38-0-6",
+      "title": "Warframe: 1999: Hotfix 38.0.6",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-6",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.6"
+    },
+    {
+      "id": "38-0-5",
+      "title": "Warframe: 1999: Hotfix 38.0.5",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-5",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.5"
+    },
+    {
+      "id": "38-0-4",
+      "title": "Warframe: 1999: Hotfix 38.0.4",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-4",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.4"
+    },
+    {
+      "id": "38-0-3",
+      "title": "Warframe: 1999: Hotfix 38.0.3",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-3",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.3"
+    },
+    {
+      "id": "38-0-2",
+      "title": "Warframe: 1999: Hotfix 38.0.2",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-2",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.2"
+    },
+    {
+      "id": "38-0-1",
+      "title": "Warframe: 1999: Hotfix 38.0.1",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-1",
+      "type": "Hotfix",
+      "newest": false,
+      "version": "38.0.1"
+    },
+    {
+      "id": "38-0-0",
+      "title": "Update 38: Warframe: 1999",
+      "url": "https://www.warframe.com/en/patch-notes/pc/38-0-0",
+      "type": "Update",
+      "newest": false,
+      "version": "38.0.0"
+    }
+  ]
+}

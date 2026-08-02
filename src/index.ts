@@ -55,3 +55,17 @@ export {
   type ItemPriceSnapshot,
   type MarketPlatform,
 } from "./market/index.js";
+
+export {
+  PatchNotesClient,
+  PatchNotesError,
+  PATCH_NOTES_URL,
+  PATCH_DAILY_PULL_HOUR,
+  PATCH_DAILY_PULL_TIMEZONE,
+  parsePatchNotesHtml,
+  runDailyPatchCheck,
+  formatPatchChanges,
+  type DailyPatchChanges,
+  type DailyPatchSnapshot,
+  type PatchEntry,
+} from "./patches/index.js";
