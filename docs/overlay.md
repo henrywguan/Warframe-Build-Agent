@@ -8,22 +8,37 @@ This overlay is **external-only** by design and must stay that way.
 
 | Allowed | Forbidden |
 | --- | --- |
-| Own always-on-top UI window | Reading Warframe process memory |
-| OS screen capture of user-selected regions | Writing Warframe process memory |
-| Manual loadout / goal input | DLL injection / hooks into the game |
-| Local config + capture PNGs | Sending keys/clicks into Warframe |
-| Public APIs / docs for advice | Packet tampering, debug attach, trainers |
+| Own always-on-top UI window | Reading / writing Warframe process memory |
+| OS desktop capture of user-selected regions | DLL / graphics injection into the game |
+| Manual loadout / goal input | Global input hooks or sending keys/clicks into Warframe |
+| Local config + capture PNGs | Opening handles / enumerating the Warframe process |
+| Public APIs / docs for advice | Packet tampering, debug attach, trainers, admin/root requirement |
+
+### Anti-cheat / Easy Anti-Cheat reality check
+
+**No safeguard can guarantee Warframe or Easy Anti-Cheat will never false-positive.** Detection rules are proprietary and can change.
+
+What we *can* do is keep this app in the lowest-risk class of software:
+
+- A normal separate OS window (not drawn inside the game)
+- Optional desktop-region screenshots (same broad class as snipping tools)
+- Window-scoped hotkeys only (no global low-level hooks)
+- Zero contact with the Warframe process
+- Refuse to run elevated (admin/root)
+
+That reduces risk versus memory tools, injectors, and input bots — it is **not** a promise of undetectability or of zero false positives.
 
 ### Safeguards (fail closed)
 
 | Layer | What it does |
 | --- | --- |
-| Policy module | [`policy.py`](../overlay/wf_overlay/policy.py) declares external-only contract |
-| Runtime import blocker | [`external_guard.py`](../overlay/wf_overlay/external_guard.py) refuses `pymem` / `frida` / similar imports |
-| Startup source scan | App scans its own Python tree for `ReadProcessMemory`, `OpenProcess`, `/proc/`, ptrace, etc. |
-| Dependency scan | `requirements.txt` must not list memory-tooling packages |
-| Unit tests | CI-style checks that the tree stays clean and the blocker works |
-| Verify command | `python3 -m wf_overlay --verify-external` prints PASS/FAIL |
+| Policy module | [`policy.py`](../overlay/wf_overlay/policy.py) external-only + anti-cheat risk-reduction flags |
+| Runtime import blocker | Blocks `pymem`, `frida`, `pynput`, `psutil`, `dxcam`, etc. |
+| Startup source scan | Rejects process-memory, injection, global-hook, and game-exe targeting APIs |
+| Dependency scan | `requirements.txt` must not list high-risk packages |
+| Privilege check | Refuses admin/root elevation |
+| Capture/hotkey posture | Requires `mss` desktop capture + `QShortcut` window hotkeys |
+| Verify command | `python3 -m wf_overlay --verify-external` |
 
 The UI **will not start** if verification fails. Future OCR/vision may only read **captured screen pixels** or user-entered text — never the game’s address space.
 

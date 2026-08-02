@@ -39,5 +39,5 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 - Prefer `npm run wf -- <command>` for live world-state (alerts, fissures, invasions, sortie, cycles, etc.).
 - Prefer `npm run market -- <command>` for Warframe.market v2 prices and daily changes.
 - The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market clients.
-- The desktop arsenal overlay lives in `overlay/` (`docs/overlay.md`): region snip + prioritized Steel Path / endgame action cards via `python3 -m wf_overlay`. It is **external-only** (screen pixels + user input). Never suggest memory reading, writing, injection, or input automation into Warframe.
+- The desktop arsenal overlay lives in `overlay/` (`docs/overlay.md`): region snip + prioritized Steel Path / endgame action cards via `python3 -m wf_overlay`. It is **external-only** (separate window + desktop pixels + user input). Never suggest memory reading/writing, injection, global input hooks, or input automation into Warframe. Be clear that no tool can guarantee Easy Anti-Cheat will never false-positive.
 - Load the matching skill under `.cursor/skills/` for compare / build / mechanics / world-state workflows.

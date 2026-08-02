@@ -177,9 +177,10 @@ class OverlayWindow(QMainWindow):
         layout.addWidget(hint)
 
         policy = QLabel(
-            "External only — screen pixels + your input. "
-            "No Warframe memory read/write, injection, or input automation. "
-            "Startup runs python3 -m wf_overlay --verify-external checks."
+            "External only — separate window + desktop screenshots + your input. "
+            "No Warframe process touch, memory access, injection, or game input. "
+            "Reduces anti-cheat risk; cannot guarantee EAC false positives never happen. "
+            "Verify: python3 -m wf_overlay --verify-external"
         )
         policy.setObjectName("Hint")
         policy.setWordWrap(True)

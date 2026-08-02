@@ -11,7 +11,12 @@ from wf_overlay.external_guard import (
     scan_source_for_forbidden_apis,
     verify_external_only,
 )
-from wf_overlay.policy import EXTERNAL_ONLY, FORBIDDEN_DEPENDENCY_NAMES, assert_external_only
+from wf_overlay.policy import (
+    ANTICHEAT_RISK_REDUCTION,
+    EXTERNAL_ONLY,
+    FORBIDDEN_DEPENDENCY_NAMES,
+    assert_external_only,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class ExternalOnlyPolicyTests(unittest.TestCase):
     def test_flag_is_enabled(self) -> None:
         self.assertTrue(EXTERNAL_ONLY)
+        self.assertTrue(ANTICHEAT_RISK_REDUCTION)
         assert_external_only()
 
     def test_requirements_exclude_memory_tooling(self) -> None:
@@ -47,6 +53,13 @@ class ExternalOnlyPolicyTests(unittest.TestCase):
         install_import_blocker()
         with self.assertRaises(ExternalOnlyViolation):
             importlib.import_module("frida")
+
+    def test_import_blocker_rejects_input_automation(self) -> None:
+        install_import_blocker()
+        with self.assertRaises(ExternalOnlyViolation):
+            importlib.import_module("pynput")
+        with self.assertRaises(ExternalOnlyViolation):
+            importlib.import_module("psutil")
 
     def test_source_scan_detects_injected_memory_api(self) -> None:
         fake = ROOT / "wf_overlay" / "_fake_memory_probe.py"
