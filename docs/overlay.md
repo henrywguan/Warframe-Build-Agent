@@ -14,7 +14,23 @@ This overlay is **external-only** by design and must stay that way.
 | Local config + capture PNGs | Sending keys/clicks into Warframe |
 | Public APIs / docs for advice | Packet tampering, debug attach, trainers |
 
-Implementation guardrails live in [`overlay/wf_overlay/policy.py`](../overlay/wf_overlay/policy.py) and are checked by unit tests. Future OCR/vision features may only read **captured screen pixels** or user-entered text — never the game’s address space.
+### Safeguards (fail closed)
+
+| Layer | What it does |
+| --- | --- |
+| Policy module | [`policy.py`](../overlay/wf_overlay/policy.py) declares external-only contract |
+| Runtime import blocker | [`external_guard.py`](../overlay/wf_overlay/external_guard.py) refuses `pymem` / `frida` / similar imports |
+| Startup source scan | App scans its own Python tree for `ReadProcessMemory`, `OpenProcess`, `/proc/`, ptrace, etc. |
+| Dependency scan | `requirements.txt` must not list memory-tooling packages |
+| Unit tests | CI-style checks that the tree stays clean and the blocker works |
+| Verify command | `python3 -m wf_overlay --verify-external` prints PASS/FAIL |
+
+The UI **will not start** if verification fails. Future OCR/vision may only read **captured screen pixels** or user-entered text — never the game’s address space.
+
+```bash
+cd overlay
+python3 -m wf_overlay --verify-external
+```
 
 ## Why this shape
 
@@ -71,6 +87,7 @@ Needs a desktop session (Windows / Linux / macOS with a display). This cloud/dev
 
 ```bash
 cd overlay
+python3 -m wf_overlay --verify-external
 python3 -m unittest discover -s tests -v
 ```
 

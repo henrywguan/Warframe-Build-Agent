@@ -40,8 +40,23 @@ FORBIDDEN_TECHNIQUES = (
     "debug_attach",
 )
 
-# Dependencies that imply memory editing / process intrusion. Keep this list
-# checked in tests so accidental installs fail CI.
+# Top-level modules that must never be importable while the overlay runs.
+FORBIDDEN_IMPORT_ROOTS = frozenset(
+    {
+        "pymem",
+        "frida",
+        "pyinjector",
+        "readwritememory",
+        "processmemory",
+        "cheatengine",
+        "mem_edit",
+        "memedit",
+        "pymemorymodule",
+        "injection",
+    }
+)
+
+# Dependency name fragments banned from requirements.txt / installed env checks.
 FORBIDDEN_DEPENDENCY_NAMES = frozenset(
     {
         "pymem",
@@ -51,6 +66,46 @@ FORBIDDEN_DEPENDENCY_NAMES = frozenset(
         "injection",
         "readwritememory",
         "processmemory",
+        "mem-edit",
+        "mem_edit",
+        "pymemorymodule",
+    }
+)
+
+# Snippets that must never appear in overlay application source.
+FORBIDDEN_SOURCE_SNIPPETS = (
+    "import pymem",
+    "from pymem",
+    "import frida",
+    "from frida",
+    "ReadProcessMemory",
+    "WriteProcessMemory",
+    "OpenProcess(",
+    "process_vm_readv",
+    "process_vm_writev",
+    "PTRACE_PEEKDATA",
+    "PTRACE_POKEDATA",
+    "ptrace(",
+    "/proc/",
+    "VirtualAllocEx",
+    "WriteProcessMemory",
+    "CreateRemoteThread",
+    "NtReadVirtualMemory",
+    "NtWriteVirtualMemory",
+    "MachVMRead",
+    "task_for_pid",
+    "ctypes.windll",
+    "ctypes.cdll.LoadLibrary",
+    "windll.kernel32",
+)
+
+# Our package must not import these stdlib/tools for process intrusion.
+FORBIDDEN_LOCAL_IMPORTS = frozenset(
+    {
+        "ctypes",
+        "cffi",
+        "pymem",
+        "frida",
     }
 )
 
