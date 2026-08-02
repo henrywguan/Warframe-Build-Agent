@@ -16,6 +16,8 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `src/` | Warframe Status + Warframe.market clients and CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
+| `overlay/` | Desktop arsenal overlay (region capture + action recommendations) |
+| `docs/overlay.md` | How to run the interactive overlay |
 
 ## Default assumptions
 
@@ -37,6 +39,7 @@ npm run market -- pull --force
 npm run market -- changes
 npm run web:dev
 npm test
+cd overlay && python3 -m wf_overlay
 ```
 
 ## How to answer players

@@ -16,6 +16,8 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`src/`](src/) | Status + Market TypeScript clients and CLIs |
 | [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
+| [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
+| [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
 
 ## Defaults
 
@@ -74,6 +76,19 @@ const summary = await status.getSummary();
 const market = new WarframeMarketClient();
 const top = await market.getTopOrders("mirage_prime_set");
 ```
+
+## Desktop overlay (arsenal coaching)
+
+Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, and get prioritized Steel Path / max-damage / endgame actions.
+
+```bash
+cd overlay
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python3 -m wf_overlay
+```
+
+Details: [`docs/overlay.md`](docs/overlay.md).
 
 ## Mobile web chat (on the go)
 

@@ -1,0 +1,139 @@
+* {
+  font-family: "Segoe UI", "Source Sans 3", "Ubuntu", sans-serif;
+  color: #e8eef2;
+}
+
+QWidget#OverlayRoot {
+  background: transparent;
+}
+
+QFrame#Panel {
+  background: rgba(18, 28, 34, 0.92);
+  border: 1px solid rgba(215, 227, 234, 0.16);
+  border-radius: 18px;
+}
+
+QLabel#Brand {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #f4f8fa;
+}
+
+QLabel#BrandAccent {
+  color: #3db8b0;
+}
+
+QLabel#Tagline, QLabel#Hint, QLabel#Meta {
+  color: rgba(232, 238, 242, 0.72);
+  font-size: 12px;
+}
+
+QLabel#Section {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(232, 238, 242, 0.55);
+}
+
+QLineEdit, QPlainTextEdit, QComboBox {
+  background: rgba(247, 250, 252, 0.06);
+  border: 1px solid rgba(215, 227, 234, 0.14);
+  border-radius: 10px;
+  padding: 8px 10px;
+  selection-background-color: rgba(61, 184, 176, 0.35);
+}
+
+QComboBox QAbstractItemView {
+  background: #18242c;
+  border: 1px solid rgba(215, 227, 234, 0.16);
+  selection-background-color: rgba(61, 184, 176, 0.28);
+}
+
+QPushButton {
+  background: rgba(61, 184, 176, 0.18);
+  border: 1px solid rgba(61, 184, 176, 0.45);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+QPushButton:hover {
+  background: rgba(61, 184, 176, 0.28);
+}
+
+QPushButton:pressed {
+  background: rgba(61, 184, 176, 0.38);
+}
+
+QPushButton#Primary {
+  background: #0c7c7c;
+  border: 1px solid #0a6868;
+  color: #f4f8fa;
+}
+
+QPushButton#Primary:hover {
+  background: #0e8f8f;
+}
+
+QPushButton#Ghost {
+  background: transparent;
+  border: 1px solid rgba(215, 227, 234, 0.18);
+}
+
+QPushButton#DangerGhost {
+  background: transparent;
+  border: 1px solid rgba(196, 92, 92, 0.35);
+  color: #f0c4c4;
+}
+
+QFrame#ActionCard {
+  background: rgba(247, 250, 252, 0.05);
+  border: 1px solid rgba(215, 227, 234, 0.10);
+  border-radius: 14px;
+}
+
+QLabel#ActionPriority {
+  color: #3db8b0;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+QLabel#ActionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f4f8fa;
+}
+
+QLabel#ActionDetail, QLabel#ActionWhy {
+  font-size: 12px;
+  color: rgba(232, 238, 242, 0.78);
+}
+
+QLabel#ActionCategory {
+  font-size: 11px;
+  color: #c49a55;
+  font-weight: 600;
+}
+
+QScrollArea {
+  border: none;
+  background: transparent;
+}
+
+QScrollBar:vertical {
+  background: transparent;
+  width: 8px;
+  margin: 4px 2px;
+}
+
+QScrollBar::handle:vertical {
+  background: rgba(215, 227, 234, 0.25);
+  border-radius: 4px;
+  min-height: 24px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+  height: 0;
+}
