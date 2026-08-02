@@ -7,7 +7,10 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | Path | Purpose |
 | --- | --- |
 | `.cursor/rules/` | Always-on advisor behavior |
-| `.cursor/skills/` | Task playbooks (compare, builds, mechanics, world-state) |
+| `.cursor/skills/` | Task playbooks (compare, builds, mechanics, world-state, cleanup) |
+| `.cursor/agents/` | Cursor subagents (e.g. cleanup-simplify) |
+| `docs/cleanup-agent.md` | Cleanup subagent + git-change automation |
+| `scripts/cleanup-verify.sh` | Post-cleanup typecheck/tests gate |
 | `docs/sources.md` | Source priority and caveats |
 | `docs/warframe-status.md` | Status API fields players care about |
 | `docs/warframe-market.md` | Warframe.market v2 pricing + daily 4pm Pacific pull |
@@ -37,7 +40,10 @@ npm run market -- pull --force
 npm run market -- changes
 npm run web:dev
 npm test
+./scripts/cleanup-verify.sh
 ```
+
+After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
 
 ## How to answer players
 
