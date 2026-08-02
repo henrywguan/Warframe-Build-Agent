@@ -14,7 +14,10 @@
     "market": "tsx src/market/cli.ts",
     "start": "tsx src/cli.ts",
     "test": "tsx --test src/*.test.ts src/market/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build",
+    "web:start": "npm --prefix web run start"
   },
   "engines": {
     "node": ">=20"

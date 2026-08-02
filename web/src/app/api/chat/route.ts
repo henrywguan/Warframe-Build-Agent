@@ -1,0 +1,130 @@
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
+import type {
+  ChatCompletionMessageParam,
+  ChatCompletionToolMessageParam,
+} from "openai/resources/chat/completions";
+import { isAuthorized } from "@/lib/auth";
+import { SYSTEM_PROMPT } from "@/lib/system-prompt";
+import { chatTools, runChatTool } from "@/lib/tools";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+interface IncomingMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+function getClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "OPENAI_API_KEY is not set. Add it in web/.env.local (or your host env) to enable chat.",
+    );
+  }
+  return new OpenAI({
+    apiKey,
+    baseURL: process.env.OPENAI_BASE_URL || undefined,
+  });
+}
+
+export async function POST(request: Request) {
+  if (!(await isAuthorized())) {
+    return NextResponse.json(
+      { error: "Unauthorized. Enter the chat password first." },
+      { status: 401 },
+    );
+  }
+
+  let body: { messages?: IncomingMessage[] };
+  try {
+    body = (await request.json()) as { messages?: IncomingMessage[] };
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const incoming = body.messages ?? [];
+  if (!incoming.length) {
+    return NextResponse.json({ error: "messages is required" }, { status: 400 });
+  }
+
+  const model = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
+
+  try {
+    const client = getClient();
+    const messages: ChatCompletionMessageParam[] = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...incoming
+        .filter((m) => m.content?.trim())
+        .slice(-20)
+        .map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+    ];
+
+    const toolsUsed: string[] = [];
+    let guard = 0;
+
+    while (guard < 4) {
+      guard += 1;
+      const completion = await client.chat.completions.create({
+        model,
+        messages,
+        tools: chatTools,
+        tool_choice: "auto",
+        temperature: 0.4,
+      });
+
+      const choice = completion.choices[0]?.message;
+      if (!choice) {
+        return NextResponse.json(
+          { error: "Model returned an empty response" },
+          { status: 502 },
+        );
+      }
+
+      messages.push(choice);
+
+      const toolCalls = choice.tool_calls ?? [];
+      if (!toolCalls.length) {
+        return NextResponse.json({
+          message: {
+            role: "assistant" as const,
+            content: choice.content?.trim() || "I do not have a response for that.",
+          },
+          toolsUsed,
+          model,
+        });
+      }
+
+      for (const call of toolCalls) {
+        if (call.type !== "function") continue;
+        toolsUsed.push(call.function.name);
+        const result = await runChatTool(
+          call.function.name,
+          call.function.arguments ?? "{}",
+        );
+        const toolMessage: ChatCompletionToolMessageParam = {
+          role: "tool",
+          tool_call_id: call.id,
+          content: result,
+        };
+        messages.push(toolMessage);
+      }
+    }
+
+    return NextResponse.json(
+      {
+        error: "Too many tool rounds. Try a narrower question.",
+        toolsUsed,
+      },
+      { status: 502 },
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const status = message.includes("OPENAI_API_KEY") ? 503 : 500;
+    return NextResponse.json({ error: message }, { status });
+  }
+}
