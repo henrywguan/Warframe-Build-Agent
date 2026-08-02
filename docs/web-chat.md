@@ -55,6 +55,24 @@ Locally, daily-scrape tools also try `../data/market/` and `../data/patches/` wh
 
 Live `get_market_price` and `get_patch_notes_latest` work on any deploy. Saved day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files during repo-root/dev runs).
 
+## Slash commands
+
+Type **`/list`** in the chat for the full catalog. Common ones:
+
+| Command | Result |
+| --- | --- |
+| `/list` | Show available commands |
+| `/fissures [sp] [tier]` | Live fissures |
+| `/cycles` / `/sortie` / `/alerts` / `/invasions` | Live worldstate slices |
+| `/market <slug>` | Live Warframe.market price |
+| `/market-changes` | Daily 4pm Pacific market scrape |
+| `/patches` / `/hotfix` | Latest official updates/hotfixes |
+| `/patch-changes` | Daily 4pm Pacific newly listed notes |
+
+Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions still go through the model + tools.
+
+Full shared catalog: [`docs/commands.md`](commands.md).
+
 ## What the chat can tool-call
 
 - Worldstate summary, fissures, cycles, sortie, invasions, alerts

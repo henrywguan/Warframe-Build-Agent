@@ -17,6 +17,7 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`src/`](src/) | Status, Market, and Patch Notes clients + CLIs |
 | [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
+| [`docs/commands.md`](docs/commands.md) | `/list` command catalog (web + agent chat) |
 
 ## Defaults
 
@@ -105,6 +106,8 @@ Or from repo root: `npm run web:dev`
 Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to Vercel (or similar) and open it on your phone — details in [`docs/web-chat.md`](docs/web-chat.md).
 
 For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
+
+In the chat UI (and this agent chat), type **`/list`** for available commands — see [`docs/commands.md`](docs/commands.md).
 
 ## Agent usage (Cursor)
 

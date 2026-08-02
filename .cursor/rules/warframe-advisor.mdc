@@ -35,10 +35,20 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 - Treat prices, popularity, live status, cycles, and patch-sensitive rankings as changeable.
 - When context is missing, give a strong default recommendation and note what would change it.
 
+## `/list` command
+
+If the user types `/list`, `/help`, or asks what commands are available, reply with the catalog in [`docs/commands.md`](docs/commands.md):
+
+1. Mobile web slash commands (`/summary`, `/fissures`, `/cycles`, `/sortie`, `/invasions`, `/alerts`, `/market <slug>`, `/market-changes`, `/patches`, `/patch-changes`)
+2. Local CLI shortcuts (`npm run wf -- …`, `npm run market -- …`, `npm run patches -- …`, `npm run web:dev`)
+3. Note that market + patch scrapes refresh around **4pm Pacific**
+
+Keep the `/list` reply concise and scannable; do not pad with extra sections.
+
 ## Tools in this repo
 
 - Prefer `npm run wf -- <command>` for live world-state (alerts, fissures, invasions, sortie, cycles, etc.).
 - Prefer `npm run market -- <command>` for Warframe.market v2 prices and daily changes.
 - Prefer `npm run patches -- <command>` for official updates/hotfixes/patch-note checks.
-- The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market/Patches clients (including daily 4pm Pacific scrapes).
+- The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market/Patches clients (including daily 4pm Pacific scrapes) and the `/list` command catalog.
 - Load the matching skill under `.cursor/skills/` for compare / build / mechanics / world-state / patch-notes workflows.

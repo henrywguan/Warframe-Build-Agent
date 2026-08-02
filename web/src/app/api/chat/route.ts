@@ -5,6 +5,7 @@ import type {
   ChatCompletionToolMessageParam,
 } from "openai/resources/chat/completions";
 import { isAuthorized } from "@/lib/auth";
+import { isSlashCommand, runSlashCommand } from "@/lib/commands";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import { chatTools, runChatTool } from "@/lib/tools";
 
@@ -52,6 +53,21 @@ export async function POST(request: Request) {
   const model = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
 
   try {
+    const latestUser = [...incoming].reverse().find((m) => m.role === "user");
+    if (latestUser && isSlashCommand(latestUser.content)) {
+      const result = await runSlashCommand(latestUser.content);
+      if (result.handled) {
+        return NextResponse.json({
+          message: {
+            role: "assistant" as const,
+            content: result.content,
+          },
+          toolsUsed: result.toolsUsed,
+          model: "slash-command",
+        });
+      }
+    }
+
     const client = getClient();
     const messages: ChatCompletionMessageParam[] = [
       { role: "system", content: SYSTEM_PROMPT },

@@ -19,10 +19,10 @@ interface ChatMessage {
 }
 
 const SUGGESTIONS = [
-  "Steel Path fissures right now?",
-  "Budget viral slash primary ideas",
-  "Latest Warframe hotfix?",
-  "Price check mirage_prime_set",
+  "/list",
+  "/fissures sp",
+  "/patches",
+  "/market mirage_prime_set",
 ];
 
 function uid(): string {
@@ -35,7 +35,7 @@ export default function HomePage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Tenno. Ask for builds, weapon comparisons, live fissures/cycles, market prices, or the latest hotfix. I’ll keep it practical.",
+        "Tenno. Ask in plain language, or type /list for chat commands (fissures, market, hotfixes, daily scrapes, and more).",
     },
   ]);
   const [input, setInput] = useState("");
@@ -269,7 +269,7 @@ export default function HomePage() {
             ref={inputRef}
             className={styles.input}
             rows={2}
-            placeholder="Ask about a build, fissures, hotfix, or market slug…"
+            placeholder="Try /list, /patches, or ask in plain language…"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={onKeyDown}
@@ -284,7 +284,7 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : "Tip: market slugs look like mirage_prime_set. Patch/market dailies refresh ~4pm Pacific."}
+          : "Tip: type /list for commands. Patch/market dailies refresh ~4pm Pacific."}
       </p>
     </main>
   );
