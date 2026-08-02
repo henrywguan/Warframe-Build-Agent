@@ -1,0 +1,69 @@
+name: Market daily prices (4pm Pacific)
+
+on:
+  schedule:
+    # 4pm PDT = 23:00 UTC, 4pm PST = 00:00 UTC. Script no-ops outside hour 16 Pacific.
+    - cron: "0 23 * * *"
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Ignore 4pm Pacific window and pull immediately"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-daily-prices
+  cancel-in-progress: false
+
+jobs:
+  pull-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Pull market prices
+        id: pull
+        run: |
+          set -euo pipefail
+          FORCE_FLAG=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
+            FORCE_FLAG="--force"
+          fi
+          npm run market -- pull $FORCE_FLAG | tee /tmp/market-pull.log
+          if grep -q '^Skipped:' /tmp/market-pull.log; then
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skipped=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit snapshot data
+        if: steps.pull.outputs.skipped == 'false'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/market
+          if git diff --staged --quiet; then
+            echo "No market data changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(market): daily warframe.market price snapshot (4pm Pacific)"
+          git push

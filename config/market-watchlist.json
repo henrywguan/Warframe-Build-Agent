@@ -1,0 +1,23 @@
+{
+  "description": "Items snapped daily at 4pm Pacific from https://api.warframe.market/v2/. Edit this list to track more/fewer items.",
+  "platform": "pc",
+  "items": [
+    "mirage_prime_set",
+    "wisp_prime_set",
+    "protea_prime_set",
+    "caliban_prime_set",
+    "voruna_prime_set",
+    "voltaic_strike",
+    "primed_continuity",
+    "primed_flow",
+    "galvanized_diffusion",
+    "galvanized_savvy",
+    "galvanized_aptitude",
+    "melee_influence",
+    "primary_deadhead",
+    "cascadia_flare",
+    "arcane_energize",
+    "arcane_grace",
+    "arcane_blessing"
+  ]
+}

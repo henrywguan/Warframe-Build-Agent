@@ -1,0 +1,30 @@
+{
+  "name": "warframe-build-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Warframe guide agent pack with Warframe Status and Warframe.market clients",
+  "type": "module",
+  "bin": {
+    "wf-status": "./dist/cli.js",
+    "wf-market": "./dist/market/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "wf": "tsx src/cli.ts",
+    "market": "tsx src/market/cli.ts",
+    "start": "tsx src/cli.ts",
+    "test": "tsx --test src/*.test.ts src/market/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build",
+    "web:start": "npm --prefix web run start"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

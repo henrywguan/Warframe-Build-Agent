@@ -1,0 +1,10 @@
+{
+  "name": "Warframe Build Agent",
+  "short_name": "WF Agent",
+  "description": "Mobile Warframe advisor chat for builds, world-state, and market context.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#d7e3ea",
+  "theme_color": "#d7e3ea",
+  "lang": "en"
+}
