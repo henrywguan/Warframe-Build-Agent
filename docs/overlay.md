@@ -22,6 +22,7 @@ What we *can* do is keep this app in the lowest-risk class of software:
 
 - A normal separate OS window (not drawn inside the game)
 - Large clickable buttons for every action
+- Minimizable **Agent chat** box (OpenAI-compatible HTTPS — still external)
 - Optional desktop-region screenshots (same broad class as snipping tools)
 - Optional **OS-registered** global hotkeys on Windows (`RegisterHotKey`) — not low-level hooks, and they do not type into Warframe
 - Zero contact with the Warframe process
@@ -64,6 +65,12 @@ cd overlay
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+
+# Optional in-game chat (OpenAI-compatible)
+mkdir -p ~/.config/warframe-build-agent
+cp overlay.env.example ~/.config/warframe-build-agent/overlay.env
+# edit overlay.env and set OPENAI_API_KEY
+
 python3 -m wf_overlay
 ```
 
@@ -93,8 +100,20 @@ Use the **Quick actions** buttons anytime (recommended). The same actions also h
 | Set region · `Ctrl+Shift+R` | Snip a screen region |
 | Capture · `Ctrl+Shift+C` | Capture the selected saved region |
 | Show / hide · `Ctrl+Shift+H` | Minimize / restore overlay |
+| Chat panel · `Ctrl+Shift+T` | Minimize / expand the in-overlay agent chat |
 
 Toggle **Enable global hotkeys (Windows)** to keep those chords working while Warframe is focused. On Linux/macOS, focus the overlay or click the buttons.
+
+### In-game agent chat
+
+The overlay includes a **minimizable chat box** tied to the Warframe Build Agent:
+
+1. Set `OPENAI_API_KEY` in env or `~/.config/warframe-build-agent/overlay.env`
+2. Click **Chat panel** (or `Ctrl+Shift+T`) to expand/minimize
+3. Ask build / comparison / Steel Path questions while arsenal is open
+4. Loadout fields (weapon, slot, goal, notes) are sent as context with each message
+
+Optional: set `CHAT_API_URL=http://127.0.0.1:3000/api/chat` to use a running `web/` backend instead of calling the model provider directly (works best when the web app has no `CHAT_PASSWORD`, or you handle auth separately).
 
 ## Config locations
 
@@ -102,6 +121,7 @@ Toggle **Enable global hotkeys (Windows)** to keep those chords working while Wa
 | --- | --- |
 | `~/.config/warframe-build-agent/overlay-regions.json` | Saved snip regions |
 | `~/.config/warframe-build-agent/captures/` | Region screenshots |
+| `~/.config/warframe-build-agent/overlay.env` | Chat API key / model / optional web chat URL |
 
 ## Tests
 

@@ -30,6 +30,7 @@ HOTKEY_BINDINGS: tuple[HotkeyBinding, ...] = (
     HotkeyBinding("set_region", "Set region", 0x52, "Ctrl+Shift+R"),  # R
     HotkeyBinding("capture", "Capture", 0x43, "Ctrl+Shift+C"),  # C
     HotkeyBinding("toggle", "Show / hide", 0x48, "Ctrl+Shift+H"),  # H
+    HotkeyBinding("chat", "Chat panel", 0x54, "Ctrl+Shift+T"),  # T
 )
 
 

@@ -112,6 +112,21 @@ QCheckBox::indicator:checked {
   border-color: #0a6868;
 }
 
+QFrame#ChatPanel {
+  background: rgba(247, 250, 252, 0.04);
+  border: 1px solid rgba(215, 227, 234, 0.12);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+QTextEdit#ChatTranscript, QPlainTextEdit#ChatInput {
+  background: rgba(10, 16, 20, 0.55);
+  border: 1px solid rgba(215, 227, 234, 0.14);
+  border-radius: 10px;
+  padding: 8px;
+  color: #e8eef2;
+}
+
 QPushButton#DangerGhost {
   background: transparent;
   border: 1px solid rgba(196, 92, 92, 0.35);

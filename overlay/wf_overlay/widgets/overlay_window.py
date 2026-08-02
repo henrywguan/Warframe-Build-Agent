@@ -26,6 +26,7 @@ from ..hotkeys import HOTKEY_BINDINGS, GlobalHotkeyManager, describe_hotkeys
 from ..models import Goal, LoadoutContext, WeaponSlot
 from ..recommend import recommend_actions
 from ..regions import load_regions, upsert_region
+from .chat_panel import ChatPanel
 from .region_selector import RegionSelector
 
 
@@ -40,12 +41,13 @@ class OverlayWindow(QMainWindow):
             | Qt.WindowType.Tool
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.resize(440, 720)
+        self.resize(460, 820)
         self._drag_pos: QPoint | None = None
         self._selector: RegionSelector | None = None
         self._pending_region_name = "mod_grid"
         self._hotkeys = GlobalHotkeyManager(self)
         self._action_buttons: dict[str, QPushButton] = {}
+        self.chat_panel: ChatPanel | None = None
 
         self._build_ui()
         self._load_style()
@@ -74,7 +76,7 @@ class OverlayWindow(QMainWindow):
         brand = QLabel("Warframe <span style='color:#3db8b0'>Build Agent</span>")
         brand.setObjectName("Brand")
         brand.setTextFormat(Qt.TextFormat.RichText)
-        tagline = QLabel("Overlay · tap a button or use global hotkeys")
+        tagline = QLabel("Overlay · actions + in-game agent chat")
         tagline.setObjectName("Tagline")
         brand_box.addWidget(brand)
         brand_box.addWidget(tagline)
@@ -166,13 +168,17 @@ class OverlayWindow(QMainWindow):
         self.scroll.setWidget(self.actions_host)
         layout.addWidget(self.scroll, 1)
 
+        self.chat_panel = ChatPanel()
+        self.chat_panel.set_loadout_provider(self._loadout_context_text)
+        layout.addWidget(self.chat_panel, 1)
+
         hint = QLabel(f"Hotkeys: {describe_hotkeys()}")
         hint.setObjectName("Hint")
         hint.setWordWrap(True)
         layout.addWidget(hint)
 
         policy = QLabel(
-            "External only — buttons + desktop screenshots + optional OS global hotkeys. "
+            "External only — buttons + desktop screenshots + optional OS global hotkeys + chat API. "
             "No Warframe process touch, memory access, injection, or game input. "
             "Verify: python3 -m wf_overlay --verify-external"
         )
@@ -190,6 +196,7 @@ class OverlayWindow(QMainWindow):
             ("set_region", "Set region", "Action", self.begin_region_select, 0, 1),
             ("capture", "Capture", "Action", self.capture_region, 1, 0),
             ("toggle", "Show / hide", "Ghost", self.toggle_visibility, 1, 1),
+            ("chat", "Chat panel", "Action", self.toggle_chat, 2, 0),
         ]
         chord_by_id = {b.action_id: b.chord for b in HOTKEY_BINDINGS}
 
@@ -201,7 +208,8 @@ class OverlayWindow(QMainWindow):
             button.setToolTip(f"{title} ({chord_by_id.get(action_id, 'click')})")
             button.clicked.connect(callback)
             self._action_buttons[action_id] = button
-            grid.addWidget(button, row, col)
+            span = 2 if action_id == "chat" else 1
+            grid.addWidget(button, row, col, 1, span)
         return grid
 
     def _section(self, text: str) -> QLabel:
@@ -222,6 +230,7 @@ class OverlayWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+Shift+R"), self, activated=self.begin_region_select)
         QShortcut(QKeySequence("Ctrl+Shift+C"), self, activated=self.capture_region)
         QShortcut(QKeySequence("Ctrl+Shift+H"), self, activated=self.toggle_visibility)
+        QShortcut(QKeySequence("Ctrl+Shift+T"), self, activated=self.toggle_chat)
 
     def _wire_global_hotkeys(self) -> None:
         self._hotkeys.triggered.connect(self._on_hotkey_action)
@@ -246,6 +255,7 @@ class OverlayWindow(QMainWindow):
             "set_region": self.begin_region_select,
             "capture": self.capture_region,
             "toggle": self.toggle_visibility,
+            "chat": self.toggle_chat,
         }
         action = dispatch.get(action_id)
         if action:
@@ -282,6 +292,27 @@ class OverlayWindow(QMainWindow):
             self.raise_()
             self.activateWindow()
             self._set_status("Overlay shown.")
+
+    def toggle_chat(self) -> None:
+        if not self.chat_panel:
+            return
+        self.showNormal()
+        self.raise_()
+        self.activateWindow()
+        self.chat_panel.toggle_expanded()
+        state = "expanded" if self.chat_panel.is_expanded() else "minimized"
+        self._set_status(f"Chat panel {state}.")
+
+    def _loadout_context_text(self) -> str:
+        ctx = self._context()
+        bits = [
+            f"weapon/frame: {ctx.weapon_name or '(unset)'}",
+            f"slot: {ctx.slot.value}",
+            f"goal: {ctx.goal.value}",
+        ]
+        if ctx.notes:
+            bits.append(f"notes: {ctx.notes}")
+        return "\n".join(bits)
 
     def begin_region_select(self) -> None:
         self._pending_region_name = self.region_combo.currentData()

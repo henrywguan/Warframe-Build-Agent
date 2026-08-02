@@ -6,8 +6,12 @@ from wf_overlay.hotkeys import HOTKEY_BINDINGS, GlobalHotkeyManager, describe_ho
 class HotkeyCatalogTests(unittest.TestCase):
     def test_bindings_cover_core_actions(self) -> None:
         ids = {binding.action_id for binding in HOTKEY_BINDINGS}
-        self.assertEqual(ids, {"refresh", "set_region", "capture", "toggle"})
+        self.assertEqual(
+            ids,
+            {"refresh", "set_region", "capture", "toggle", "chat"},
+        )
         self.assertIn("Ctrl+Shift+A", describe_hotkeys())
+        self.assertIn("Ctrl+Shift+T", describe_hotkeys())
 
     def test_manager_reports_platform_support(self) -> None:
         manager = GlobalHotkeyManager()
