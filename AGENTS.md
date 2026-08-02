@@ -10,7 +10,10 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `.cursor/skills/` | Task playbooks (compare, builds, mechanics, world-state) |
 | `docs/sources.md` | Source priority and caveats |
 | `docs/warframe-status.md` | Status API fields players care about |
-| `src/` | Thin Warframe Status world-state client + CLI |
+| `docs/warframe-market.md` | Warframe.market v2 pricing + daily 4pm Pacific pull |
+| `config/market-watchlist.json` | Items tracked for daily price snapshots |
+| `data/market/` | Saved daily snapshots / day-over-day changes |
+| `src/` | Warframe Status + Warframe.market clients and CLIs |
 
 ## Default assumptions
 
@@ -26,6 +29,10 @@ npm run wf -- summary
 npm run wf -- fissures --steel-path
 npm run wf -- sortie
 npm run wf -- cycles
+npm run market -- status
+npm run market -- price mirage_prime_set
+npm run market -- pull --force
+npm run market -- changes
 npm test
 ```
 

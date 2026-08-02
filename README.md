@@ -1,6 +1,6 @@
 # Warframe Build Agent
 
-A Warframe guide agent that compares weapons, recommends builds, explains game mechanics, and grounds answers in the Warframe Wiki, Warframe Market, Overframe, and [Warframe Status](https://docs.warframestat.us/) documentation — plus a thin live world-state client for timers and events.
+A Warframe guide agent that compares weapons, recommends builds, explains game mechanics, and grounds answers in the Warframe Wiki, Warframe Market, Overframe, and [Warframe Status](https://docs.warframestat.us/) documentation — plus thin clients for live world-state and market prices.
 
 ## What’s in this repo
 
@@ -11,12 +11,16 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`.cursor/skills/`](.cursor/skills/) | Playbooks: compare gear, builds, mechanics, world-state |
 | [`docs/sources.md`](docs/sources.md) | Source priority and conflict handling |
 | [`docs/warframe-status.md`](docs/warframe-status.md) | Status field meanings + CLI map |
-| [`src/`](src/) | TypeScript Warframe Status client + `wf` CLI |
+| [`docs/warframe-market.md`](docs/warframe-market.md) | Market v2 pricing + daily 4pm Pacific pull |
+| [`config/market-watchlist.json`](config/market-watchlist.json) | Items tracked for daily price snapshots |
+| [`src/`](src/) | Status + Market TypeScript clients and CLIs |
 
 ## Defaults
 
 - **Platform:** `pc` — Warframe is cross-play; this agent treats **PC and mobile** as the same default worldstate path.
-- Live data comes from `https://api.warframestat.us` (community Warframe Status API). Timers can lag slightly vs the in-game UI.
+- World-state: `https://api.warframestat.us`
+- Market prices: `https://api.warframe.market/v2/`
+- Daily market snapshots target **4:00 PM America/Los_Angeles** (PST/PDT)
 
 ## Setup
 
@@ -42,13 +46,31 @@ npm run wf -- get arbitration
 
 Common flags: `--platform pc` (default), `--language en`, `--json`.
 
+## Warframe.market CLI
+
+```bash
+npm run market -- status
+npm run market -- price mirage_prime_set
+npm run market -- snapshot
+npm run market -- pull --force
+npm run market -- changes
+```
+
+Daily automation: [`.github/workflows/market-daily-prices.yml`](.github/workflows/market-daily-prices.yml) runs near 4pm Pacific, writes `data/market/`, and commits when there are updates. Edit [`config/market-watchlist.json`](config/market-watchlist.json) to change tracked items.
+
 ## Library usage
 
 ```ts
-import { WarframeStatusClient } from "./src/index.ts";
+import {
+  WarframeStatusClient,
+  WarframeMarketClient,
+} from "./src/index.ts";
 
-const client = new WarframeStatusClient(); // platform: pc
-const summary = await client.getSummary();
+const status = new WarframeStatusClient(); // platform: pc
+const summary = await status.getSummary();
+
+const market = new WarframeMarketClient();
+const top = await market.getTopOrders("mirage_prime_set");
 ```
 
 ## Agent usage (Cursor)
@@ -58,14 +80,16 @@ Open this repo in Cursor and ask player-facing questions, for example:
 - “Budget Steel Path build for Coda Hema”
 - “Laetum vs Felarx for EDA”
 - “What’s up for fissures / Cetus night right now?”
+- “How did Mirage Prime Set move vs yesterday’s market snapshot?”
 
-The advisor rule and skills steer comparisons, builds, mechanic explanations, and Status interpretation. For live data, prefer `npm run wf -- …`.
+For live data, prefer `npm run wf -- …` and `npm run market -- …`.
 
 ## Scripts
 
 | Script | Purpose |
 | --- | --- |
 | `npm run wf -- <cmd>` | World-state CLI |
+| `npm run market -- <cmd>` | Warframe.market v2 CLI |
 | `npm test` | Unit tests (mocked fetch + formatters) |
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Emit `dist/` |
