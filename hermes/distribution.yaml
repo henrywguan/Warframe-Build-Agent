@@ -1,0 +1,16 @@
+name: warframe-build-agent
+version: 0.1.0
+description: "Warframe advisor for builds, gear comparisons, mechanics, live world-state, and market context"
+hermes_requires: ">=0.12.0"
+author: "Henry Guan"
+license: "MIT"
+env_requires:
+  - name: OPENAI_API_KEY
+    description: "Model API key if you use an OpenAI-compatible provider in Hermes"
+    required: false
+distribution_owned:
+  - SOUL.md
+  - config.yaml
+  - skills/
+  - distribution.yaml
+  - profile.yaml

@@ -18,7 +18,10 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
+| `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |
+| `exports/` | Packed Hermes profile archive(s) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
+| `docs/hermes-export.md` | How to import this agent into Hermes Desktop |
 
 ## Default assumptions
 
@@ -44,6 +47,7 @@ npm run patches -- latest
 npm run patches -- pull --force
 npm run patches -- changes
 npm run web:dev
+./scripts/pack-hermes-profile.sh
 npm test
 ```
 

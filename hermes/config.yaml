@@ -1,0 +1,12 @@
+# Lightweight defaults for the Warframe Build Agent profile.
+# Installers can change model/provider locally; updates preserve config.yaml unless --force-config.
+
+# Leave provider/model unset so Hermes uses the user's existing setup.
+# Optional: pin a cheaper model for fast live-status Q&A.
+# model:
+#   provider: openai
+#   name: gpt-4o-mini
+
+terminal:
+  # If you clone Warframe-Build-Agent locally, point cwd there so wf/market CLIs are handy.
+  cwd: "."

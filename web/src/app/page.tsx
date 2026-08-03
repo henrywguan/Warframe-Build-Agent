@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { OrdisStage, type OrdisMood } from "../components/OrdisStage";
 import styles from "./page.module.css";
 
 type Role = "user" | "assistant";
@@ -25,8 +26,16 @@ const SUGGESTIONS = [
   "/market mirage_prime_set",
 ];
 
+const SPEAKING_MS = 3400;
+
 function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function ordisCaption(mood: OrdisMood, pending: boolean): string {
+  if (mood === "thinking" || pending) return "Consulting the ship’s systems…";
+  if (mood === "speaking") return "Ordis is transmitting…";
+  return "Operator? Ordis is standing by.";
 }
 
 export default function HomePage() {
@@ -35,7 +44,7 @@ export default function HomePage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Tenno. Ask in plain language, or type /list for chat commands (fissures, market, hotfixes, daily scrapes, and more).",
+        "Operator? Ordis is online. Ask in plain language, or type /list for commands (builds, fissures, market, hotfixes, and more). —Destruction— practical guidance awaits.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -45,11 +54,42 @@ export default function HomePage() {
   const [password, setPassword] = useState("");
   const [ready, setReady] = useState(false);
   const [pending, setPending] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSpokenIdRef = useRef<string | null>("welcome");
+
+  const mood: OrdisMood = pending ? "thinking" : speaking ? "speaking" : "idle";
+
+  function triggerSpeaking(messageId: string) {
+    if (lastSpokenIdRef.current === messageId && messageId !== "welcome") return;
+    lastSpokenIdRef.current = messageId;
+    setSpeaking(true);
+    if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
+    speakTimerRef.current = setTimeout(() => {
+      setSpeaking(false);
+      speakTimerRef.current = null;
+    }, SPEAKING_MS);
+  }
+
+  useEffect(() => {
+    // Welcome line: brief Ordis speak on first paint
+    triggerSpeaking("welcome");
+    return () => {
+      if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, pending]);
+
+  useEffect(() => {
+    const last = messages[messages.length - 1];
+    if (!last || last.role !== "assistant" || last.id === "welcome") return;
+    if (pending) return;
+    triggerSpeaking(last.id);
   }, [messages, pending]);
 
   useEffect(() => {
@@ -102,6 +142,7 @@ export default function HomePage() {
     if (!content || pending) return;
 
     setError(null);
+    setSpeaking(false);
     const userMessage: ChatMessage = {
       id: uid(),
       role: "user",
@@ -132,10 +173,11 @@ export default function HomePage() {
         throw new Error(data.error || "Chat request failed");
       }
 
+      const replyId = uid();
       setMessages((current) => [
         ...current,
         {
-          id: uid(),
+          id: replyId,
           role: "assistant",
           content: data.message?.content || "No response.",
           toolsUsed: data.toolsUsed,
@@ -149,7 +191,7 @@ export default function HomePage() {
         {
           id: uid(),
           role: "assistant",
-          content: `I hit a snag: ${message}`,
+          content: `I hit a snag, Operator: ${message}`,
         },
       ]);
     } finally {
@@ -177,8 +219,12 @@ export default function HomePage() {
           <h1 className={styles.brandMark}>
             Warframe <span>Build Agent</span>
           </h1>
-          <p className={styles.tagline}>Warming up the relay…</p>
+          <hr className={styles.brandRule} />
+          <p className={styles.tagline}>Awakening cephalon…</p>
         </header>
+        <div className={styles.centerStage}>
+          <OrdisStage mood="thinking" caption="Initializing…" />
+        </div>
       </main>
     );
   }
@@ -190,10 +236,14 @@ export default function HomePage() {
           <h1 className={styles.brandMark}>
             Warframe <span>Build Agent</span>
           </h1>
+          <hr className={styles.brandRule} />
           <p className={styles.tagline}>
-            Private chat lock is on. Enter your access password to continue.
+            Cephalon lock engaged. Enter your access password, Operator.
           </p>
         </header>
+        <div className={styles.centerStage}>
+          <OrdisStage mood="idle" caption="Awaiting clearance…" />
+        </div>
         <form className={styles.lock} onSubmit={unlock}>
           <h2>Access</h2>
           <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
@@ -222,12 +272,18 @@ export default function HomePage() {
         <h1 className={styles.brandMark}>
           Warframe <span>Build Agent</span>
         </h1>
+        <hr className={styles.brandRule} />
         <p className={styles.tagline}>
-          Builds, comparisons, live world-state, market, and patch notes — phone-friendly.
+          Builds, comparisons, live world-state, market, and patch notes — Ordis on the line.
         </p>
       </header>
 
+      <div className={styles.centerStage}>
+        <OrdisStage mood={mood} caption={ordisCaption(mood, pending)} />
+      </div>
+
       <section className={styles.chatPanel} aria-label="Chat">
+        <p className={styles.panelLabel}>Transmission log</p>
         <div className={styles.messages}>
           {messages.map((message) => (
             <article

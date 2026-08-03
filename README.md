@@ -16,7 +16,9 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`config/market-watchlist.json`](config/market-watchlist.json) | Items tracked for daily price snapshots |
 | [`src/`](src/) | Status, Market, and Patch Notes clients + CLIs |
 | [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
+| [`hermes/`](hermes/) | Hermes Desktop/CLI importable profile distribution |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
+| [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
 | [`docs/commands.md`](docs/commands.md) | `/list` command catalog (web + agent chat) |
 
 ## Defaults
@@ -108,6 +110,21 @@ Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to V
 For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
 
 In the chat UI (and this agent chat), type **`/list`** for available commands — see [`docs/commands.md`](docs/commands.md).
+
+## Hermes Desktop import
+
+```bash
+./scripts/pack-hermes-profile.sh
+hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
+```
+
+Or install the folder directly:
+
+```bash
+hermes profile install ./hermes --name warframe-build-agent --alias
+```
+
+Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
 
 ## Agent usage (Cursor)
 

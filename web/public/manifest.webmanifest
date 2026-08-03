@@ -4,7 +4,33 @@
   "description": "Mobile Warframe advisor chat for builds, world-state, and market context.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#d7e3ea",
-  "theme_color": "#d7e3ea",
-  "lang": "en"
+  "background_color": "#080c12",
+  "theme_color": "#080c12",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/ordis-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }
