@@ -130,9 +130,13 @@ Optional: set `CHAT_API_URL=http://127.0.0.1:3000/api/chat` to use a running `we
 
 ```bash
 cd overlay
+export QT_QPA_PLATFORM=offscreen   # headless button/UI smoke
 python3 -m wf_overlay --verify-external
 python3 -m unittest discover -s tests -v
 ```
+
+Integrity fixtures live in `overlay/tests/fixtures/` (Overframe-style Coda Hema Steel Path sample + PNG stand-in).  
+Full product check: `npm run cleanup:verify:all` / `/cleanup-simplify -all`.
 
 ## Roadmap (not in v1)
 

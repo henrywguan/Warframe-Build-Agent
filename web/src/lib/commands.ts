@@ -1,4 +1,4 @@
-import { runChatTool } from "@/lib/tools";
+import { runChatTool } from "./tools";
 
 export interface ChatCommand {
   name: string;

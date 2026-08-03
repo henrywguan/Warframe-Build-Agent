@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src --max-warnings 0"
+    "lint": "eslint src --max-warnings 0",
+    "test": "tsx --test src/lib/*.test.ts src/components/*.test.ts"
   },
   "dependencies": {
     "next": "^16.2.12",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "tsx": "^4.19.3",
     "typescript": "^5"
   }
 }

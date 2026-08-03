@@ -168,6 +168,7 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Emit `dist/` |
 | `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
+| `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `/cleanup-simplify` (Cursor) | Cleanup subagent — see [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 
 ## Source notes

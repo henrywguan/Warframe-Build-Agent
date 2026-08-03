@@ -1,6 +1,7 @@
+import type { OrdisMood } from "../lib/ordis";
 import styles from "./OrdisStage.module.css";
 
-export type OrdisMood = "idle" | "thinking" | "speaking";
+export type { OrdisMood };
 
 interface OrdisStageProps {
   mood: OrdisMood;
