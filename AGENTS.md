@@ -78,3 +78,15 @@ After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-s
 4. End with one short next-step suggestion.
 
 Full behavior rules live in `.cursor/rules/warframe-advisor.mdc`. Use the matching skill under `.cursor/skills/` for the task type.
+
+## Cursor Cloud specific instructions
+
+Dependency install (root npm, `web/` npm, and overlay pip) is handled by the startup update script; standard commands live in the `## Commands` section above and in `package.json`. Notes below are the non-obvious caveats for running things here.
+
+- **Three services, one long-running server.** The only local server is the Next.js web chat on port `3000` (`npm run web:dev`). The `src/` clients (`wf`/`market`/`patches`/`knowledge`) and the `overlay/` are invoked on demand; there is no database or other backing service to start.
+- **Web chat works without an API key for slash commands.** `/api/health` and slash commands (`/cycles`, `/market <slug>`, `/patches`, `/fissures`, etc.) are handled server-side without the LLM, so they run with no `OPENAI_API_KEY`. Only plain-language (non-slash) questions need `OPENAI_API_KEY` (and optional `OPENAI_MODEL`/`OPENAI_BASE_URL`) in `web/.env.local` — see [`docs/web-chat.md`](docs/web-chat.md). `web/.env.local` is not required for the server to boot.
+- **Live data needs outbound network.** CLIs and web tools call `api.warframestat.us`, `api.warframe.market`, and `www.warframe.com`. These reach the internet from the cloud VM.
+- **`knowledge crawl-overframe` is blocked from datacenter IPs.** overframe.gg returns a Cloudflare bot challenge from this network, so `npm run knowledge -- crawl-overframe`/`status` report `overframeStatus: partial` and fall back to the sample import — this is expected here, not a setup failure. Wiki-digest and other pulls also depend on outbound access.
+- **Overlay is a desktop GUI that cannot display in the cloud VM.** Do not try to open the window. Run its tests headless with `QT_QPA_PLATFORM=offscreen` (e.g. `cd overlay && QT_QPA_PLATFORM=offscreen python3 -m unittest discover -s tests`), and use `python3 -m wf_overlay --verify-external` for the external-only/anti-cheat policy check.
+- **PySide6/Qt needs system libraries** that are not installed by pip. If overlay imports fail with `libEGL.so.1: cannot open shared object file` (or similar Qt xcb errors), install: `libegl1 libgl1 libxkbcommon0 libdbus-1-3 libglib2.0-0 libfontconfig1 libxrender1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 libnss3`. These are OS packages (kept out of the update script) and are expected to persist in the VM image.
+- **Full verification gate:** `./scripts/cleanup-verify.sh` (typecheck + root tests, plus web/overlay if present) and `./scripts/cleanup-verify-all.sh` (adds overlay offscreen tests + web lint/test/build). Both auto-install missing `node_modules`.
