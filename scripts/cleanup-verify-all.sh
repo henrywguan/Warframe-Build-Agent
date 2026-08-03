@@ -42,9 +42,12 @@ npm --prefix web run test
 npm --prefix web run build
 
 echo "==> 7) space / simplification gate (fail on leftover conflict markers)"
-if git grep -n '<<<<<<<\|>>>>>>>' -- ':!*.md' ':!docs/**' >/dev/null 2>&1; then
+# Exclude this script itself — it contains the marker strings in the grep pattern.
+if git grep -nE '^(<<<<<<<|>>>>>>>|=======)' -- \
+  ':!*.md' ':!docs/**' ':!scripts/cleanup-verify-all.sh' >/dev/null 2>&1; then
   echo "ERROR: merge conflict markers present" >&2
-  git grep -n '<<<<<<<\|>>>>>>>' -- ':!*.md' ':!docs/**' || true
+  git grep -nE '^(<<<<<<<|>>>>>>>|=======)' -- \
+    ':!*.md' ':!docs/**' ':!scripts/cleanup-verify-all.sh' || true
   exit 1
 fi
 
