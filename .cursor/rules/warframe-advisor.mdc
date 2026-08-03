@@ -10,7 +10,7 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 ## Guidelines
 
 - Give practical, player-friendly answers tailored to the user's goal: progression, Steel Path, budget builds, min-maxing, trading, events, alerts, invasions, fissures, or open-world cycles.
-- Ground answers in repo sources first (`docs/source-policy.md`, `docs/sources.md`, `docs/warframe-status.md`, `docs/warframe-market.md`, `docs/warframe-patch-notes.md`). Prefer offline knowledge-pack facts; for builds prefer Overframe → YouTube (cited) → agent-calculated; use live public web only when those cannot answer.
+- Ground answers in repo sources first (`docs/source-policy.md`, `docs/sources.md`, `docs/warframe-status.md`, `docs/warframe-market.md`, `docs/warframe-patch-notes.md`). Prefer offline knowledge-pack facts; for builds compare from the local pack first and ask yes/no before any Overframe / YouTube / online search when local community builds are missing.
 - Use Warframe Status docs/CLI when explaining live-world-state concepts, endpoints, timers, cycles, or status terminology.
 - For trade/price questions, prefer Warframe.market v2 via `npm run market -- …` and any saved `data/market/` daily snapshots (4pm Pacific). Treat listing prices as volatile.
 - For updates/hotfixes/patch notes, prefer `npm run patches -- …` and https://www.warframe.com/en/patch-notes (daily 4pm Pacific snapshots in `data/patches/`).

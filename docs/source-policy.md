@@ -1,6 +1,6 @@
 # Source policy (web chat + overlay)
 
-How the agent chooses evidence. **Offline first for facts; builds from Overframe, YouTube, or agent calculation.**
+How the agent chooses evidence. **Local database first for build comparisons; ask before searching online.**
 
 ## Default — offline knowledge (not live web browsing)
 
@@ -12,24 +12,33 @@ For item stats, Warframe/weapon digests, mechanics context, and other non-live f
 
 ## Build-related requests
 
-When the player asks for a mod setup, “best build”, Steel Path config, loadout advice, or similar:
+When the player asks for a mod setup, “best build”, Steel Path config, loadout advice, or **build comparison**:
 
-| Priority | Source | Notes |
-| --- | --- | --- |
-| 1 | **Overframe** | Use top community builds from the local pack when present (`builds/by-item/`), or guidance grounded in Overframe when the player can open it. Popularity ≠ always optimal; check patch age. |
-| 2 | **YouTube builds** | Use when the player cites a creator/video, or when recommending a concrete public creator approach. Never invent fake video URLs or claim you watched a video you did not. |
-| 3 | **Agent-calculated** | Synthesize a best-effort build for the stated goal (core mods, flex, budget subs), grounded in offline item facts. |
+1. **Local first** — call/read the knowledge pack. Use catalog + wiki facts and any cached Overframe/import builds under `builds/by-item/` for the comparison.
+2. **If local Overframe builds exist** (`LOCAL_BUILDS_AVAILABLE`) — compare from that local data. Optionally refine with agent-calculated notes for goal/budget. Do **not** search online unless the player asks to widen the comparison.
+3. **If local Overframe builds are missing** (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`) — **stop and ask for confirmation** before any online search:
 
-If Overframe cache entries are missing (`overframeStatus: blocked` / no build file), say so briefly and fall through to YouTube (if cited) or agent-calculated advice — do not pretend the offline wiki digest alone is a full build guide.
+   > Search online (Overframe, YouTube, and other public build sources) for community comparisons?  
+   > Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.
+
+4. **Only after explicit yes** may the agent search or reason from online Overframe, YouTube, or other public build sources. Never invent fake video URLs.
+5. **If the player says no** — stay offline: local facts + agent-calculated best build only.
 
 ## Surfaces
 
 | Surface | Facts | Builds |
 | --- | --- | --- |
-| **Web chat** | `lookup_local_knowledge` | Overframe rows from pack → YouTube (cited) → agent-calculated |
-| **Overlay action cards** | N/A (rule cards) | **Agent-calculated** from loadout fields (`recommend_actions`) |
-| **Overlay chat → web API** | Same tools/prompt as web chat | Same as web chat (+ loadout context when sent) |
-| **Overlay chat → direct OpenAI** | No tool access; say so if pack/live data would help | Agent-calculated (+ Overframe/YouTube reasoning without fake links) |
+| **Web chat** | `lookup_local_knowledge` | Local pack first → ask yes/no before online Overframe/YouTube/public search |
+| **Overlay action cards** | Local-pack gate card | Agent-calculated cards + local/online confirmation card |
+| **Overlay chat → web API** | Same tools/prompt as web chat | Same confirmation flow (+ loadout context) |
+| **Overlay chat → direct OpenAI** | No tool access; say so if pack would help | Still ask before claiming an online search |
+
+## Markers
+
+| Marker | Meaning |
+| --- | --- |
+| `LOCAL_BUILDS_AVAILABLE` | Cached Overframe/import builds present — compare locally |
+| `ONLINE_SEARCH_CONFIRMATION_REQUIRED` | No local community builds — ask yes/no before online search |
 
 ## Related
 

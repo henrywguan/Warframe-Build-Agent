@@ -42,4 +42,4 @@ npm run knowledge -- status
 - CLI: `npm run knowledge -- lookup …`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 
-Prefer local knowledge for **item/mechanic facts** (offline browsing). For **build** requests, use Overframe rows from the pack when present, then YouTube (cited) or agent-calculated advice — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.
+Prefer local knowledge for **item/mechanic facts** and **build comparisons** first. If Overframe builds are missing from the pack, ask the player for confirmation before searching Overframe / YouTube / online sources — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.

@@ -13,9 +13,10 @@ Player wants a mod setup, “budget build”, “Steel Path config”, or upgrad
 
 1. Lock the stage: beginner / midgame / endgame / budget / min-max.
 2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md) for build sources:
-   - Check offline pack for **Overframe** top builds (`npm run knowledge -- lookup "<item>"` / `lookup_local_knowledge`)
-   - Prefer a **YouTube** creator approach when the player cites one (never invent fake video URLs)
-   - Otherwise give an **agent-calculated** best build for the goal
+   - Always check the offline pack first (`npm run knowledge -- lookup "<item>"` / `lookup_local_knowledge`) and compare from local data
+   - If local Overframe builds are missing, **ask yes/no** before any Overframe / YouTube / online search
+   - Only after explicit **yes** may you use online community sources (never invent fake video URLs)
+   - If **no**, stay local + agent-calculated for the goal
 3. Ground stats/mechanics in offline wiki/catalog facts from the pack (do not live-browse for those).
 4. State the intended content and damage strategy (e.g. viral + slash, raw heat, corrosive + blast).
 5. List **core mod priorities** first (must-have slots), then **flex slots**.

@@ -89,7 +89,8 @@ def _send_via_web_api(
                 "role": "assistant",
                 "content": (
                     "Understood. I'll use that overlay loadout context and follow "
-                    "source policy (offline facts; Overframe / YouTube / agent-calculated builds)."
+                    "source policy (local pack first for build comparisons; ask before "
+                    "any online Overframe/YouTube search)."
                 ),
             },
             *messages,

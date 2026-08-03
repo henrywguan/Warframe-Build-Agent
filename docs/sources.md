@@ -4,7 +4,7 @@ Use these in order when gathering evidence. Note disagreement reasons when sourc
 
 ## Priority
 
-For **web chat + overlay** source routing (offline facts vs build sources), see [`docs/source-policy.md`](source-policy.md). Summary: prefer the local knowledge pack for facts; for builds prefer Overframe → YouTube (cited) → agent-calculated.
+For **web chat + overlay** source routing, see [`docs/source-policy.md`](source-policy.md). Summary: prefer the local knowledge pack for facts and build comparisons; if local Overframe builds are missing, ask yes/no before searching Overframe / YouTube / online sources.
 
 1. **Repo docs** — `docs/warframe-status.md`, `docs/source-policy.md`, and this file for how to interpret live data and terminology.
 2. **Local knowledge pack** — offline WFCD + Wiki digests (`data/knowledge/`, `npm run knowledge -- …`) for item/mechanic facts without live web browsing.

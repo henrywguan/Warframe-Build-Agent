@@ -17,7 +17,7 @@ Player wants a mod setup, budget build, Steel Path config, or upgrade path.
 ## Procedure
 
 1. Lock the stage: beginner / midgame / endgame / budget / min-max.
-2. Build sources (in order): Overframe community setups → cited YouTube creator builds → agent-calculated for the goal. Ground item facts in wiki/offline knowledge; do not invent fake video URLs.
+2. Build sources: compare from local/offline knowledge first. If community builds are missing locally, ask yes/no before searching Overframe / YouTube / online sources. Only after yes may you use online comparisons; if no, stay local + agent-calculated. Do not invent fake video URLs.
 3. State intended content and damage strategy.
 4. List **core mod priorities**, then **flex slots**.
 5. Call out expensive pieces and give substitutions.
