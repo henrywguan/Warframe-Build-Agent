@@ -8,6 +8,24 @@ import {
 } from "./store.js";
 import type { CatalogItem } from "./types.js";
 
+const ONLINE_SEARCH_CONFIRMATION_REQUIRED = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
+const LOCAL_BUILDS_AVAILABLE = "LOCAL_BUILDS_AVAILABLE";
+
+function formatOnlineSearchConfirmation(itemNames: string[]): string {
+  const items =
+    itemNames.length === 0
+      ? "this item"
+      : itemNames.length === 1
+        ? itemNames[0]!
+        : itemNames.slice(0, 3).join(", ");
+  return [
+    `${ONLINE_SEARCH_CONFIRMATION_REQUIRED} for ${items}`,
+    `Local pack has catalog/wiki facts for comparison, but no cached Overframe community builds for ${items}.`,
+    "Search online (Overframe, YouTube, and other public build sources) for community comparisons?",
+    "Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.",
+  ].join("\n");
+}
+
 function normalize(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
@@ -64,6 +82,9 @@ export async function lookupLocalKnowledge(
     "",
   ];
 
+  const withBuilds: string[] = [];
+  const withoutBuilds: string[] = [];
+
   for (const item of matches) {
     chunks.push(`## ${item.name} (${item.kind})`);
     if (item.description) chunks.push(item.description);
@@ -80,24 +101,40 @@ export async function lookupLocalKnowledge(
 
     const builds = await loadItemBuilds(item.id, repoRoot);
     if (builds?.builds?.length) {
-      chunks.push("", "### Top builds (local)");
+      withBuilds.push(item.name);
+      chunks.push(
+        "",
+        `### ${LOCAL_BUILDS_AVAILABLE}`,
+        "### Overframe / imported community builds (local cache)",
+        "Compare using these local builds first. Do not search online unless the player asks.",
+      );
       for (const build of builds.builds) {
         chunks.push(
           `${build.rank}. ${build.name}${build.forma != null ? ` · ${build.forma} forma` : ""}${build.url ? ` · ${build.url}` : ""}`,
         );
         chunks.push(build.summary);
         if (build.mods?.length) chunks.push(`Mods: ${build.mods.join(", ")}`);
+        if (build.arcanes?.length) chunks.push(`Arcanes: ${build.arcanes.join(", ")}`);
       }
-    } else if (builds?.error) {
-      chunks.push("", `### Top builds unavailable: ${builds.error}`);
-    } else if (manifest.overframeStatus === "blocked") {
+    } else {
+      withoutBuilds.push(item.name);
       chunks.push(
         "",
-        "### Top builds unavailable",
-        "Overframe was blocked during pull (Cloudflare). Re-run knowledge pull where overframe.gg is reachable, or --import-builds.",
+        "### Overframe builds not in local cache for this item",
+        builds?.error
+          ? `Overframe unavailable: ${builds.error}`
+          : "No cached community builds in the local pack for this item.",
       );
     }
     chunks.push("");
+  }
+
+  if (withoutBuilds.length) {
+    chunks.push(formatOnlineSearchConfirmation(withoutBuilds));
+  } else if (withBuilds.length) {
+    chunks.push(
+      `${LOCAL_BUILDS_AVAILABLE}: local Overframe/import builds found for ${withBuilds.join(", ")}.`,
+    );
   }
 
   // Optional mod lookup if query looks like a mod name

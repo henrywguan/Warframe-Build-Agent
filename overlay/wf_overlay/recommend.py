@@ -1,13 +1,19 @@
 from __future__ import annotations
 
+from .local_knowledge import (
+    LOCAL_BUILDS_AVAILABLE_MARKER,
+    format_online_search_confirmation,
+    inspect_local_builds,
+)
 from .models import ActionRecommendation, Goal, LoadoutContext, WeaponSlot
 
 
 def recommend_actions(context: LoadoutContext) -> list[ActionRecommendation]:
     """Return prioritized overlay actions for Steel Path / endgame goals.
 
-    v1 is rule-based and does not trust on-screen DPS widgets. It assumes the
-    player is looking at arsenal/mod screens and wants practical next steps.
+    Agent-calculated (rule-based) recommendations from loadout fields — not a live
+    Overframe/YouTube scrape and not OCR. Local pack builds are checked first; if
+    missing, an action card asks the player to confirm online search via chat.
     """
     weapon = context.weapon_name.strip() or "this weapon"
     slot = context.slot
@@ -26,6 +32,37 @@ def recommend_actions(context: LoadoutContext) -> list[ActionRecommendation]:
             why="Recommendations below assume this target content profile.",
         )
     )
+
+    local = inspect_local_builds(weapon)
+    if local.has_local_builds:
+        actions.append(
+            ActionRecommendation(
+                priority=2,
+                category="Local data",
+                title=f"Compare local builds for {weapon}",
+                detail=(
+                    f"{LOCAL_BUILDS_AVAILABLE_MARKER}: {local.build_count} cached "
+                    f"Overframe/import build(s). Prefer local pack comparison before "
+                    f"any online search."
+                ),
+                why="Source policy: local database first for build comparisons.",
+            )
+        )
+    else:
+        actions.append(
+            ActionRecommendation(
+                priority=2,
+                category="Local data",
+                title="Confirm before online build search",
+                detail=(
+                    f"{local.detail} Open overlay chat and confirm online search "
+                    f"(Overframe / YouTube / public sources) if you want community "
+                    f"comparisons. Until then, cards below stay agent-calculated.\n\n"
+                    f"{format_online_search_confirmation(weapon)}"
+                ),
+                why="No local Overframe builds cached — ask before searching online.",
+            )
+        )
 
     if slot in {WeaponSlot.PRIMARY, WeaponSlot.SECONDARY}:
         actions.extend(_gun_actions(weapon, goal, mods, notes))

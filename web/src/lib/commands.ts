@@ -93,8 +93,20 @@ export function formatCommandList(): string {
   const lines = [
     "Warframe Build Agent — commands",
     "",
-    "Slash commands:",
+    "Web slash commands:",
     ...CHAT_COMMANDS.map((command) => `• ${command.usage} — ${command.description}`),
+    "",
+    "Cursor / agent commands (in Cursor chat):",
+    "• /cleanup-simplify — tidy recent diff + fast verify",
+    "• /cleanup-simplify -all — tidy + full overlay/web integrity suite",
+    "• /knowledge — pull or query offline knowledge pack (WFCD/Wiki/Overframe)",
+    "",
+    "Useful CLI:",
+    "• npm run wf -- summary | fissures --steel-path | cycles",
+    "• npm run market -- price <slug> | changes",
+    "• npm run patches -- latest | changes",
+    "• npm run knowledge -- status | lookup \"Coda Hema\" | crawl-overframe",
+    "• npm run cleanup:verify | cleanup:verify:all",
     "",
     "You can also ask in plain language, for example:",
     "• Budget Steel Path build for Coda Hema",
@@ -102,6 +114,7 @@ export function formatCommandList(): string {
     "• What’s up for Cetus night right now?",
     "",
     "Daily scrapes refresh around 4pm Pacific (market + patch notes).",
+    "Full catalog: docs/commands.md · cleanup docs: docs/cleanup-agent.md",
   ];
   return lines.join("\n");
 }

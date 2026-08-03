@@ -15,12 +15,16 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `docs/warframe-status.md` | Status API fields players care about |
 | `docs/warframe-market.md` | Warframe.market v2 pricing + daily 4pm Pacific pull |
 | `docs/warframe-patch-notes.md` | Official updates/hotfixes + daily 4pm Pacific check |
-| `docs/commands.md` | `/list` command catalog for web + agent chat |
+| `docs/commands.md` | Full `/list` catalog (web, Cursor, CLI) |
+| `docs/cleanup-agent.md` | `/cleanup-simplify` and `/cleanup-simplify -all` |
+| `.cursor/commands/` | Cursor slash commands (`cleanup-simplify`, `knowledge`) |
 | `config/market-watchlist.json` | Items tracked for daily price snapshots |
 | `data/market/` | Saved daily market snapshots / day-over-day changes |
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
 | `data/knowledge/` | Offline agent-usable wiki digests + Overframe top builds |
 | `docs/offline-knowledge.md` | How to pull/query the local knowledge pack |
+| `docs/overframe-crawl.md` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
+| `docs/source-policy.md` | Offline facts vs Overframe / YouTube / agent-calculated builds |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
 | `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |
@@ -60,6 +64,7 @@ cd overlay && python3 -m wf_overlay
 ./scripts/cleanup-verify.sh
 ./scripts/cleanup-verify-all.sh
 npm run knowledge -- pull
+npm run knowledge -- crawl-overframe
 npm run knowledge -- lookup "Coda Hema"
 ```
 

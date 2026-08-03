@@ -6,11 +6,19 @@ Pull or query the local offline Warframe knowledge pack (WFCD catalog, Warframe 
 npm run knowledge -- pull
 ```
 
+## Crawl Overframe → local DB (top 2 builds + mods/arcanes)
+
+```bash
+npm run knowledge -- crawl-overframe
+```
+
 If Overframe is Cloudflare-blocked from this network:
 
 ```bash
-npm run knowledge -- pull --import-builds ./data/knowledge/examples/builds-import.sample.json
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 ```
+
+See `docs/overframe-crawl.md`.
 
 ## Status / lookup
 
@@ -19,6 +27,6 @@ npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
 ```
 
-Prefer `lookup_local_knowledge` in web chat (and this pack via CLI/skill) for builds and item facts; use live tools for worldstate, market, and patch hubs.
+Prefer `lookup_local_knowledge` for **offline item facts**. For **builds**, use Overframe cache / YouTube / agent-calculated per `docs/source-policy.md`. Use live tools for worldstate, market, and patch hubs.
 
-See `docs/offline-knowledge.md`.
+See `docs/offline-knowledge.md` and `docs/source-policy.md`.

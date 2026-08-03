@@ -19,11 +19,12 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`hermes/`](hermes/) | Hermes Desktop/CLI importable profile distribution |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
 | [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
-| [`docs/commands.md`](docs/commands.md) | `/list` command catalog (web + agent chat) |
+| [`docs/commands.md`](docs/commands.md) | Full `/list` catalog (web slashes, Cursor commands, CLI) |
 | [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
 | [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
+| [`.cursor/commands/`](.cursor/commands/) | Cursor slash commands (`/cleanup-simplify`, `/knowledge`) |
 | [`.cursor/agents/`](.cursor/agents/) | Cursor subagents (cleanup-simplify) |
-| [`docs/cleanup-agent.md`](docs/cleanup-agent.md) | Cleanup subagent + git-change wiring |
+| [`docs/cleanup-agent.md`](docs/cleanup-agent.md) | `/cleanup-simplify` + `-all` integrity docs |
 
 ## Defaults
 
@@ -126,7 +127,7 @@ Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to V
 
 For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
 
-In the chat UI (and this agent chat), type **`/list`** for available commands — see [`docs/commands.md`](docs/commands.md).
+In the chat UI (and this agent chat), type **`/list`** for the full command catalog — web slashes, Cursor commands (`/cleanup-simplify`, `/cleanup-simplify -all`, `/knowledge`), and CLI — see [`docs/commands.md`](docs/commands.md). Cleanup modes: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
 
 ## Hermes Desktop import
 
@@ -170,8 +171,11 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
+| `npm run knowledge -- crawl-overframe` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
 | `npm run knowledge -- lookup <q>` | Query local knowledge pack |
-| `/cleanup-simplify` (Cursor) | Cleanup subagent — see [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
+| `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
+| `/cleanup-simplify -all` (Cursor) | Tidy + full overlay/web integrity suite |
+| `/knowledge` (Cursor) | Offline knowledge pack pull/lookup |
 
 ## Source notes
 

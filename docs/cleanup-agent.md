@@ -1,37 +1,40 @@
-# Cleanup-simplify subagent
+# Cleanup-simplify (`/cleanup-simplify` and `-all`)
 
 Keeps the codebase tidy after changes: simplify touched code, delete dead weight, and **keep the app working** (tests/typecheck green).  
 Supports a full integrity mode for overlay + web UI.
+
+## Quick start
+
+| Mode | Cursor command | Local script |
+| --- | --- | --- |
+| Default | `/cleanup-simplify` | `./scripts/cleanup-verify.sh` or `npm run cleanup:verify` |
+| Full integrity | `/cleanup-simplify -all` | `./scripts/cleanup-verify-all.sh` or `npm run cleanup:verify:all` |
+
+Cursor slash-command pack: [`.cursor/commands/cleanup-simplify.md`](../.cursor/commands/cleanup-simplify.md)
 
 ## What’s in the repo
 
 | Piece | Role |
 | --- | --- |
+| [`.cursor/commands/cleanup-simplify.md`](../.cursor/commands/cleanup-simplify.md) | Cursor **`/cleanup-simplify`** (+ `-all`) command |
 | [`.cursor/agents/cleanup-simplify.md`](../.cursor/agents/cleanup-simplify.md) | Cursor **subagent** — isolated cleanup worker |
-| [`.cursor/skills/cleanup-simplify/SKILL.md`](../.cursor/skills/cleanup-simplify/SKILL.md) | On-demand `/cleanup-simplify` (+ `-all`) skill |
+| [`.cursor/skills/cleanup-simplify/SKILL.md`](../.cursor/skills/cleanup-simplify/SKILL.md) | On-demand skill playbook |
 | [`.cursor/rules/cleanup-simplify.mdc`](../.cursor/rules/cleanup-simplify.mdc) | Always-on reminder to clean after substantive edits |
 | [`scripts/cleanup-verify.sh`](../scripts/cleanup-verify.sh) | Fast gate (typecheck, unit tests, overlay policy) |
 | [`scripts/cleanup-verify-all.sh`](../scripts/cleanup-verify-all.sh) | Full integrity suite for `/cleanup-simplify -all` |
 | [`scripts/install-cleanup-git-hook.sh`](../scripts/install-cleanup-git-hook.sh) | Optional local pre-commit verify hook |
 | [`overlay/tests/fixtures/`](../overlay/tests/fixtures/) | Overframe-style loadout + screenshot stand-in |
 
-## Use in Cursor chat
+## Default — `/cleanup-simplify`
 
-- `/cleanup-simplify` — tidy the recent diff + fast verify
-- `/cleanup-simplify -all` — tidy + full overlay/web integrity checklist
-- Parent agents should auto-delegate after substantive edits (see the cleanup rule)
+1. Review `git diff` / changed files only
+2. Simplify without changing behavior (prefer deletion; no drive-by refactors)
+3. Run `./scripts/cleanup-verify.sh`
+4. Summarize what was simplified vs left alone
 
-## `/cleanup-simplify -all` covers
+## Full integrity — `/cleanup-simplify -all`
 
-1. Overlay build recommendations for an Overframe-style fixture loadout (plus screenshot asset)
-2. Overlay buttons enabled and signal-wired (offscreen Qt)
-3. Overlay chat client mocked replies
-4. Web UI elements linked (Ordis, chat, composer, APIs)
-5. Web chat agent turn resolution (slash + model)
-6. Talking Ordis mood/trigger helpers and `data-mood="speaking"` render
-7. Functional suite: typecheck, tests, web lint/build, overlay `--verify-external`
-
-Run locally:
+Runs the default cleanup pass **plus** the product integrity suite:
 
 ```bash
 ./scripts/cleanup-verify-all.sh
@@ -39,10 +42,20 @@ Run locally:
 npm run cleanup:verify:all
 ```
 
+### Checklist (7 items)
+
+1. **Overlay recommendations** for an Overframe-style fixture loadout (+ screenshot asset)
+2. **Overlay buttons** exist, enabled, and signal-wired (offscreen Qt)
+3. **Overlay chat** returns proper mocked HTTPS replies (no live key required)
+4. **Web UI wiring** — Ordis stage, chat panel, composer, suggestion chips, API routes
+5. **Web chat agent** — slash-command and model turn resolution (`resolveChatTurn`)
+6. **Talking Ordis** — mood helpers + `data-mood="speaking"` on reply trigger path
+7. **Functional / simplified** — typecheck, unit tests, web lint/build, overlay `--verify-external`, no conflict markers
+
 ### Overlay fixture note
 
 Recommendations are **rule-based from loadout fields** (not OCR of Overframe pixels).  
-`overlay/tests/fixtures/overframe_coda_hema_sp.json` encodes a realistic Overframe-style Coda Hema Steel Path sample; the PNG is a capture stand-in. Replace/add fixtures to cover other builds.
+`overlay/tests/fixtures/overframe_coda_hema_sp.json` encodes a realistic Overframe-style Coda Hema Steel Path sample; the PNG is a capture stand-in.
 
 ## Automate on every git change
 
@@ -54,7 +67,7 @@ The subagent file does not self-trigger on git. Pick one:
 ./scripts/install-cleanup-git-hook.sh
 ```
 
-Blocks broken commits via `cleanup-verify.sh` (no LLM). For full integrity on demand, run `cleanup-verify-all.sh`.
+Blocks broken commits via `cleanup-verify.sh` (no LLM). For full integrity on demand, run `cleanup-verify-all.sh` or `/cleanup-simplify -all`.
 
 ### B) Cursor Cloud Automation (LLM cleanup on push/PR)
 
@@ -89,3 +102,7 @@ Finish work → `/cleanup-simplify` or `/cleanup-simplify -all` → commit.
 - Cloud Automations require your Cursor account + repo connection
 - Pre-commit hook is optional and local-only (not committed into `.git/hooks`)
 - Live OpenAI keys are not required for `-all` (chat paths are mocked)
+
+## See also
+
+- Full command catalog (`/list`): [`docs/commands.md`](commands.md)

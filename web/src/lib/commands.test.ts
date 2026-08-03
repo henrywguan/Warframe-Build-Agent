@@ -20,6 +20,10 @@ describe("slash commands", () => {
     assert.match(result.content, /\/list/);
     assert.match(result.content, /\/patches/);
     assert.match(result.content, /\/market/);
+    assert.match(result.content, /\/cleanup-simplify/);
+    assert.match(result.content, /\/cleanup-simplify -all/);
+    assert.match(result.content, /\/knowledge/);
+    assert.match(result.content, /docs\/commands\.md/);
     assert.deepEqual(result.toolsUsed, []);
   });
 

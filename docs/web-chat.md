@@ -59,7 +59,7 @@ Live `get_market_price` and `get_patch_notes_latest` work on any deploy. Saved d
 
 ## Slash commands
 
-Type **`/list`** in the chat for the full catalog. Common ones:
+Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands, CLI). Common web ones:
 
 | Command | Result |
 | --- | --- |
@@ -73,7 +73,7 @@ Type **`/list`** in the chat for the full catalog. Common ones:
 
 Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions still go through the model + tools.
 
-Full shared catalog: [`docs/commands.md`](commands.md).
+Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`docs/cleanup-agent.md`](cleanup-agent.md) (`/cleanup-simplify`, `/cleanup-simplify -all`).
 
 ## What the chat can tool-call
 
