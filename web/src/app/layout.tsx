@@ -59,8 +59,8 @@ export default function RootLayout({
       <body
         style={{
           fontFamily: "var(--font-rajdhani), var(--font-body)",
-          ["--font-display" as string]: "var(--font-orbitron), var(--font-display)",
-          ["--font-oxanium" as string]: "var(--font-orbitron)",
+          ["--font-display" as string]:
+            "var(--font-orbitron), Orbitron, sans-serif",
         }}
       >
         {children}
