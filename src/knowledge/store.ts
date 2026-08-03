@@ -7,6 +7,7 @@ import type {
   ItemBuilds,
   KnowledgeManifest,
   ModDigest,
+  OfficialDigest,
   WikiDigest,
 } from "./types.js";
 
@@ -29,6 +30,7 @@ export async function saveKnowledgePack(options: {
   wiki: WikiDigest[];
   builds: ItemBuilds[];
   mods: ModDigest[];
+  official?: OfficialDigest[];
   overframeStatus: KnowledgeManifest["overframeStatus"];
   notes: string[];
   /** When false (default), skip re-writing per-item wiki digests already flushed by pull. */
@@ -38,6 +40,9 @@ export async function saveKnowledgePack(options: {
   await mkdir(paths.root, { recursive: true });
   await mkdir(paths.wikiDir, { recursive: true });
   await mkdir(paths.buildsDir, { recursive: true });
+  if (options.official?.length) {
+    await mkdir(paths.officialDir, { recursive: true });
+  }
 
   await writeJson(paths.catalog, options.catalog);
   await writeJson(paths.wikiIndex, {
@@ -60,6 +65,15 @@ export async function saveKnowledgePack(options: {
   for (const entry of options.builds) {
     await writeJson(path.join(paths.buildsDir, `${entry.id}.json`), entry);
   }
+  if (options.official?.length) {
+    for (const digest of options.official) {
+      await writeJson(path.join(paths.officialDir, `${digest.id}.json`), digest);
+    }
+    await writeJson(paths.officialIndex, {
+      count: options.official.length,
+      ids: options.official.map((d) => d.id),
+    });
+  }
 
   const manifest: KnowledgeManifest = {
     version: 1,
@@ -68,12 +82,14 @@ export async function saveKnowledgePack(options: {
       wfcd: "https://api.warframestat.us",
       wiki: "https://wiki.warframe.com",
       overframe: "https://overframe.gg",
+      official: "https://www.warframe.com",
     },
     counts: {
       catalogItems: options.catalog.length,
       wikiDigests: options.wiki.length,
       buildEntries: options.builds.filter((b) => b.builds.length > 0).length,
       modsIndexed: options.mods.length,
+      officialDigests: options.official?.length ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,
@@ -106,6 +122,18 @@ export async function loadItemBuilds(
 
 export async function loadMods(repoRoot?: string): Promise<ModDigest[]> {
   return (await readJson<ModDigest[]>(knowledgePaths(repoRoot).mods)) || [];
+}
+
+export async function loadOfficialDigests(repoRoot?: string): Promise<OfficialDigest[]> {
+  const paths = knowledgePaths(repoRoot);
+  const index = await readJson<{ ids?: string[] }>(paths.officialIndex);
+  if (!index?.ids?.length) return [];
+  const out: OfficialDigest[] = [];
+  for (const id of index.ids) {
+    const digest = await readJson<OfficialDigest>(path.join(paths.officialDir, `${id}.json`));
+    if (digest) out.push(digest);
+  }
+  return out;
 }
 
 /** Update builds + mod index without rewriting wiki digests. */
@@ -141,12 +169,14 @@ export async function saveBuildCrawl(options: {
       wfcd: "https://api.warframestat.us",
       wiki: "https://wiki.warframe.com",
       overframe: "https://overframe.gg",
+      official: options.previous?.sources.official ?? "https://www.warframe.com",
     },
     counts: {
       catalogItems: options.catalog.length,
       wikiDigests: options.previous?.counts.wikiDigests ?? 0,
       buildEntries: options.builds.filter((b) => b.builds.length > 0).length,
       modsIndexed: options.mods.length,
+      officialDigests: options.previous?.counts.officialDigests ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,

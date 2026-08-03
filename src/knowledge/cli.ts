@@ -18,12 +18,13 @@ pull options:
   --include-archwing       Include Archwings in catalog
   --skip-wiki              Skip wiki digests
   --skip-overframe         Skip Overframe crawl
+  --skip-official          Skip warframe.com official digests
   --import-builds <file>   JSON import when Overframe is Cloudflare-blocked
   --concurrency <n>        Parallel workers (wiki default 4)
 
 crawl-overframe options:
   Crawl https://overframe.gg for every catalog warframe/weapon:
-  top 2 builds → open each build page → scan mods + arcanes → data/knowledge/
+  top 3 builds → open each build page → scan mods + arcanes → data/knowledge/
   --limit <n>              Only first N catalog items
   --include-archwing       Include Archwings
   --refresh-catalog        Re-pull WFCD catalog first
@@ -70,6 +71,7 @@ async function main() {
       includeArchwing: rest.includes("--include-archwing"),
       skipWiki: rest.includes("--skip-wiki"),
       skipOverframe: rest.includes("--skip-overframe"),
+      skipOfficial: rest.includes("--skip-official"),
       importBuildsPath: getFlag(rest, "--import-builds"),
       concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
     });

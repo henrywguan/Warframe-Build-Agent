@@ -1,6 +1,6 @@
 # Overframe crawl → local database
 
-Process to crawl [overframe.gg](https://overframe.gg/) for **every Warframe and weapon**, take the **top 2 builds**, scan **mods + arcanes** on each build page, and save into the local knowledge pack (`data/knowledge/`).
+Process to crawl [overframe.gg](https://overframe.gg/) for **every Warframe and weapon**, take the **top 3 builds**, scan **mods + arcanes** on each build page, and save into the local knowledge pack (`data/knowledge/`).
 
 ## Output layout
 

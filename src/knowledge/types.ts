@@ -1,5 +1,7 @@
 /** Agent-usable offline knowledge pack (no images). */
 
+import type { OverframeBuildRank } from "./constants.js";
+
 export type KnowledgeItemKind = "warframe" | "weapon" | "archwing" | "other";
 
 export interface KnowledgeManifest {
@@ -9,12 +11,14 @@ export interface KnowledgeManifest {
     wfcd: string;
     wiki: string;
     overframe: string;
+    official?: string;
   };
   counts: {
     catalogItems: number;
     wikiDigests: number;
     buildEntries: number;
     modsIndexed: number;
+    officialDigests?: number;
   };
   notes: string[];
   overframeStatus: "ok" | "blocked" | "partial" | "skipped";
@@ -54,7 +58,7 @@ export interface BuildModEntry {
 }
 
 export interface OverframeBuild {
-  rank: 1 | 2;
+  rank: OverframeBuildRank;
   name: string;
   url?: string;
   author?: string;
@@ -88,4 +92,25 @@ export interface ModDigest {
   pageUrl: string;
   /** Items whose crawled top builds referenced this mod/arcane */
   seenOnItems?: string[];
+}
+
+/** Digests from warframe.com (patch notes hub, news, etc.). */
+export interface OfficialDigest {
+  id: string;
+  title: string;
+  kind: "patch" | "news" | "page";
+  pageUrl: string;
+  extract: string;
+  publishedAt?: string;
+  fetchedAt: string;
+}
+
+/** Player loadout parsed from a screenshot / OCR / vision. */
+export interface ParsedLoadout {
+  itemName: string;
+  mods: string[];
+  arcanes: string[];
+  confidence?: "high" | "medium" | "low";
+  rawText?: string;
+  notes?: string[];
 }

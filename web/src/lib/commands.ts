@@ -1,3 +1,9 @@
+import {
+  compareLoadoutToTopBuilds,
+  formatLoadoutCompare,
+} from "@/lib/loadout-compare";
+import { parseLoadoutFromOcrText } from "@/lib/loadout-parse";
+import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { runChatTool } from "./tools";
 
 export interface ChatCommand {
@@ -20,6 +26,18 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     usage: "/help",
     description: "Alias for /list",
     kind: "meta",
+  },
+  {
+    name: "knowledge",
+    usage: "/knowledge <query>",
+    description: "Offline knowledge pack lookup (no LLM)",
+    kind: "tool",
+  },
+  {
+    name: "compare",
+    usage: "/compare <item> | mods…",
+    description: "Compare a pasted loadout to top 3 local Overframe builds",
+    kind: "tool",
   },
   {
     name: "summary",
@@ -245,6 +263,61 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
         content: await runChatTool("get_patch_notes_daily_changes", "{}"),
         toolsUsed: ["get_patch_notes_daily_changes"],
       };
+    case "knowledge":
+    case "lookup": {
+      const query = args.join(" ").trim();
+      if (!query) {
+        return {
+          handled: true,
+          content: "Usage: /knowledge <query>\nExample: /knowledge Coda Hema",
+          toolsUsed: [],
+        };
+      }
+      return {
+        handled: true,
+        content: await lookupLocalKnowledge(query),
+        toolsUsed: ["lookup_local_knowledge"],
+      };
+    }
+    case "compare": {
+      const raw = args.join(" ").trim();
+      if (!raw) {
+        return {
+          handled: true,
+          content: [
+            "Usage: /compare <item name> | <mod1, mod2, …>",
+            "Example: /compare Coda Hema | Serration, Vital Sense, Point Strike, Primary Merciless",
+            "Or attach a loadout screenshot in the composer.",
+          ].join("\n"),
+          toolsUsed: [],
+        };
+      }
+      const [itemPart, modsPart] = raw.split("|").map((part) => part.trim());
+      let loadout = await parseLoadoutFromOcrText(
+        modsPart ? `${itemPart}\n${modsPart.replace(/,/g, "\n")}` : raw,
+        itemPart || undefined,
+      );
+      if (itemPart) loadout = { ...loadout, itemName: itemPart };
+      if (modsPart) {
+        const names = modsPart
+          .split(/[,;\n]/)
+          .map((n) => n.trim())
+          .filter(Boolean);
+        const arcanes = names.filter((n) => /arcane|merciless|deadhead|acceleration|blessing|moeaze/i.test(n));
+        const mods = names.filter((n) => !arcanes.includes(n));
+        loadout = {
+          ...loadout,
+          mods: mods.length ? mods : loadout.mods,
+          arcanes: arcanes.length ? arcanes : loadout.arcanes,
+        };
+      }
+      const result = await compareLoadoutToTopBuilds(loadout, 3);
+      return {
+        handled: true,
+        content: formatLoadoutCompare(result),
+        toolsUsed: ["compare_loadout_to_overframe"],
+      };
+    }
     default:
       return {
         handled: true,

@@ -1,6 +1,6 @@
 # Mobile web chat UI
 
-A phone-friendly chat front-end lives in [`web/`](../web/). It talks to an OpenAI-compatible model and can call this repo’s Warframe Status, Warframe.market, and official patch-notes helpers for live / daily-scrape data.
+A phone-friendly chat front-end lives in [`web/`](../web/). It can run against an OpenAI-compatible model **or** a fully local knowledge chatbot (`CHAT_MODE=local` / no API key). It supports **loadout screenshot attachments** (vision model or local OCR) to compare against top-3 Overframe builds in the offline pack, plus Warframe Status, Warframe.market, and official patch-notes helpers.
 
 The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
@@ -13,7 +13,8 @@ Cursor Cloud / desktop chat is great while coding. This UI is for **on-the-go** 
 ```bash
 cd web
 cp .env.example .env.local
-# put OPENAI_API_KEY in .env.local
+# Option A: OPENAI_API_KEY (+ optional OPENAI_BASE_URL for Ollama/LM Studio)
+# Option B: CHAT_MODE=local  (offline knowledge + OCR, no cloud LLM)
 npm install
 npm run dev
 ```
@@ -32,9 +33,11 @@ Locally, daily-scrape tools also try `../data/market/` and `../data/patches/` wh
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | yes | Model access |
+| `OPENAI_API_KEY` | for model mode | Model access (OpenAI or local server key) |
 | `OPENAI_MODEL` | no | Default `gpt-4o-mini` |
-| `OPENAI_BASE_URL` | no | OpenAI-compatible proxy/base URL |
+| `OPENAI_VISION_MODEL` | no | Model used when a screenshot is attached |
+| `OPENAI_BASE_URL` | no | OpenAI-compatible proxy/base URL (Ollama, LM Studio, …) |
+| `CHAT_MODE` | no | `local` / `offline` = deterministic knowledge chatbot (no LLM) |
 | `CHAT_PASSWORD` | no | If set, gates the UI with a simple password cookie |
 | `MARKET_CHANGES_URL` | no | URL to `data/market/latest-changes.json` from the daily market job |
 | `PATCH_CHANGES_URL` | no | URL to `data/patches/latest-changes.json` from the daily patch job |
@@ -70,8 +73,12 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/market-changes` | Daily 4pm Pacific market scrape |
 | `/patches` / `/hotfix` | Latest official updates/hotfixes |
 | `/patch-changes` | Daily 4pm Pacific newly listed notes |
+| `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
+| `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
 
-Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions still go through the model + tools.
+**Screenshot compare:** use **Attach** in the composer, then Send. With a vision model configured, the agent reads item/mods/arcanes from the image and calls `compare_loadout_to_overframe`. In `CHAT_MODE=local`, tesseract OCR + the local pack do the same without OpenAI.
+
+Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions use the model + tools when configured, otherwise the local chatbot.
 
 Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`docs/cleanup-agent.md`](cleanup-agent.md) (`/cleanup-simplify`, `/cleanup-simplify -all`).
 
@@ -82,6 +89,8 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 - Latest saved daily market changes (4pm Pacific job)
 - Latest official updates/hotfixes (live hub scrape)
 - Newly listed patch notes since the previous daily snapshot (4pm Pacific job)
+- Offline knowledge lookup (`lookup_local_knowledge`)
+- Loadout vs top-3 Overframe compare (`compare_loadout_to_overframe`)
 
 ## Security notes
 

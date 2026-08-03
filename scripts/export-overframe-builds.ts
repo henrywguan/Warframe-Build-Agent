@@ -1,5 +1,5 @@
 /**
- * Local Playwright exporter for Overframe top-2 builds.
+ * Local Playwright exporter for Overframe top-3 builds.
  * Use when Node fetch is Cloudflare-blocked but a real browser can open overframe.gg.
  *
  *   npm run knowledge:export-overframe -- --limit 5
@@ -10,6 +10,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
+import { OVERFRAME_TOP_BUILDS, type OverframeBuildRank } from "../src/knowledge/constants.js";
 import {
   isCloudflareChallenge,
   parseBuildPageMods,
@@ -20,7 +21,7 @@ import type { CatalogItem, OverframeBuild } from "../src/knowledge/types.js";
 
 type ExportRow = {
   itemName: string;
-  builds: Array<Omit<OverframeBuild, "rank"> & { rank: 1 | 2 }>;
+  builds: Array<Omit<OverframeBuild, "rank"> & { rank: OverframeBuildRank }>;
 };
 
 type Args = {
@@ -47,7 +48,7 @@ function getFlag(args: string[], name: string): string | undefined {
 
 function parseArgs(argv: string[]): Args {
   if (argv.includes("-h") || argv.includes("--help")) {
-    console.log(`Export Overframe top-2 builds via Playwright.
+    console.log(`Export Overframe top-3 builds via Playwright.
 
 Usage:
   npm run knowledge:export-overframe -- [options]
@@ -329,7 +330,7 @@ async function exportItem(
 
   if (!options.skipBuildPages) {
     const enriched: OverframeBuild[] = [];
-    for (const build of builds.slice(0, 2)) {
+    for (const build of builds.slice(0, OVERFRAME_TOP_BUILDS)) {
       try {
         enriched.push(
           await enrichBuild(page, build, {
@@ -349,9 +350,9 @@ async function exportItem(
 
   return {
     itemName: item.name,
-    builds: builds.slice(0, 2).map((build, index) => ({
+    builds: builds.slice(0, OVERFRAME_TOP_BUILDS).map((build, index) => ({
       ...build,
-      rank: (index + 1) as 1 | 2,
+      rank: (index + 1) as OverframeBuildRank,
     })),
   };
 }
@@ -432,7 +433,7 @@ async function main(): Promise<void> {
   const rows = [...existing];
 
   console.log(
-    `Exporting Overframe top-2 builds for ${catalog.length} catalog items → ${args.out}`,
+    `Exporting Overframe top-3 builds for ${catalog.length} catalog items → ${args.out}`,
   );
   console.log(
     `Mode: ${args.connect ? `connect ${args.connect}` : args.headed ? "headed Chrome" : "headless"} · delay ${args.delayMs}ms${args.resume ? " · resume" : ""}`,

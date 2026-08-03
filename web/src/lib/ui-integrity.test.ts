@@ -21,6 +21,9 @@ describe("web UI wiring integrity", () => {
       "SUGGESTIONS",
       "BrandHeader",
       "Transmission log",
+      "Attach",
+      "image_url",
+      "attachment",
     ]) {
       assert.match(pageSource, new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
     }

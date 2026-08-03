@@ -1,4 +1,8 @@
 import type OpenAI from "openai";
+import {
+  compareLoadoutToTopBuilds,
+  formatLoadoutCompare,
+} from "@/lib/loadout-compare";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import {
@@ -150,6 +154,35 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "compare_loadout_to_overframe",
+      description:
+        "Compare a parsed player loadout (item name + mods + arcanes) against the top 3 local Overframe/import builds for that item. Use after reading a screenshot or when the player pastes their mods.",
+      parameters: {
+        type: "object",
+        properties: {
+          itemName: {
+            type: "string",
+            description: "Warframe or weapon name (e.g. Coda Hema, Revenant Prime)",
+          },
+          mods: {
+            type: "array",
+            items: { type: "string" },
+            description: "Mod names visible on the loadout",
+          },
+          arcanes: {
+            type: "array",
+            items: { type: "string" },
+            description: "Arcane names visible on the loadout",
+          },
+        },
+        required: ["itemName"],
+        additionalProperties: false,
+      },
+    },
+  },
 ];
 
 type ToolArgs = Record<string, unknown>;
@@ -208,6 +241,21 @@ export async function runChatTool(name: string, rawArgs: string): Promise<string
         const query = asString(args.query);
         if (!query) return "Missing required query.";
         return await lookupLocalKnowledge(query);
+      }
+      case "compare_loadout_to_overframe": {
+        const itemName = asString(args.itemName);
+        if (!itemName) return "Missing required itemName.";
+        const mods = Array.isArray(args.mods)
+          ? args.mods.map(String).filter(Boolean)
+          : [];
+        const arcanes = Array.isArray(args.arcanes)
+          ? args.arcanes.map(String).filter(Boolean)
+          : [];
+        const result = await compareLoadoutToTopBuilds(
+          { itemName, mods, arcanes },
+          3,
+        );
+        return formatLoadoutCompare(result);
       }
       default:
         return `Unknown tool: ${name}`;

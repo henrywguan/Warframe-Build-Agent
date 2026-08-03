@@ -1,5 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { pullCatalog } from "./catalog.js";
+import type { OverframeBuildRank } from "./constants.js";
+import { pullOfficialDigests } from "./official.js";
 import {
   buildsFromImport,
   crawlOverframeTopBuilds,
@@ -7,7 +9,7 @@ import {
 } from "./overframe.js";
 import { resolveRepoRoot } from "./repo-root.js";
 import { saveKnowledgePack } from "./store.js";
-import type { ItemBuilds, KnowledgeManifest, OverframeBuild } from "./types.js";
+import type { ItemBuilds, KnowledgeManifest, OfficialDigest, OverframeBuild } from "./types.js";
 import { pullWikiDigests } from "./wiki.js";
 
 export type PullOptions = {
@@ -16,6 +18,7 @@ export type PullOptions = {
   includeArchwing?: boolean;
   skipWiki?: boolean;
   skipOverframe?: boolean;
+  skipOfficial?: boolean;
   importBuildsPath?: string;
   concurrency?: number;
   onLog?: (line: string) => void;
@@ -23,7 +26,7 @@ export type PullOptions = {
 
 type ImportBuildRow = {
   itemName: string;
-  builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
+  builds: Array<Omit<OverframeBuild, "rank"> & { rank?: OverframeBuildRank }>;
 };
 
 async function loadImportedBuilds(filePath: string): Promise<ImportBuildRow[]> {
@@ -44,8 +47,8 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   const repoRoot = options.repoRoot ?? resolveRepoRoot();
   const log = options.onLog ?? ((line: string) => console.log(line));
   const notes: string[] = [
-    "Agent-usable text pack: WFCD catalog + Warframe Wiki extracts + Overframe top builds.",
-    "Media/images are intentionally omitted.",
+    "Agent-usable text pack: WFCD catalog + Warframe Wiki + official warframe.com digests + Overframe top builds.",
+    "Media/images are intentionally omitted from the pack (screenshots are handled at chat time).",
   ];
 
   log("Pulling WFCD catalog (warframes + weapons)...");
@@ -130,6 +133,26 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   // Drop empty Overframe stubs; blocked/partial status lives on the manifest.
   buildEntries = buildEntries.filter((entry) => entry.builds.length > 0);
 
+  let officialDigests: OfficialDigest[] = [];
+  if (!options.skipOfficial) {
+    log("Pulling official warframe.com digests (patch hub + news)...");
+    try {
+      const official = await pullOfficialDigests({
+        repoRoot,
+        limit: options.limit && options.limit > 0 ? Math.min(12, options.limit) : 12,
+        onLog: log,
+      });
+      officialDigests = official.digests;
+      notes.push(official.note);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      notes.push(`Official site digests failed: ${message}`);
+      log(`Official digests failed: ${message}`);
+    }
+  } else {
+    notes.push("Official site digests skipped.");
+  }
+
   const mods = indexModsFromBuilds(buildEntries);
   const manifest = await saveKnowledgePack({
     repoRoot,
@@ -137,12 +160,13 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
     wiki: wikiDigests,
     builds: buildEntries,
     mods,
+    official: officialDigests,
     overframeStatus,
     notes,
   });
 
   log(
-    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.buildEntries} build entries (${manifest.overframeStatus})`,
+    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
   );
   return manifest;
 }

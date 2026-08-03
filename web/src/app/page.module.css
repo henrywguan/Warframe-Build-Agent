@@ -167,12 +167,77 @@
 
 .composer {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   gap: 0.55rem;
   padding: 0.85rem;
   border-top: 1px solid rgba(122, 101, 52, 0.45);
   background: rgba(0, 0, 0, 0.35);
   animation: rise 860ms ease-out both;
+}
+
+.fileInput {
+  display: none;
+}
+
+.attachBtn {
+  align-self: end;
+  border: 1px solid rgba(122, 101, 52, 0.7);
+  border-radius: 1px;
+  padding: 0.75rem 0.85rem;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.attachBtn:hover:not(:disabled),
+.attachBtn:focus-visible:not(:disabled) {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  outline: none;
+}
+
+.attachBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-top: 1px solid rgba(122, 101, 52, 0.35);
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.attachThumb,
+.attachPreview {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border: 1px solid rgba(127, 231, 239, 0.35);
+  border-radius: 1px;
+}
+
+.attachPreview {
+  width: min(100%, 14rem);
+  height: auto;
+  max-height: 12rem;
+  margin-bottom: 0.55rem;
+}
+
+.attachClear {
+  border: 1px solid rgba(122, 101, 52, 0.65);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 1px;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+  font-size: 0.8rem;
 }
 
 .input {
@@ -301,11 +366,20 @@
   }
 
   .composer {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr;
   }
 
   .send {
+    grid-column: 1 / -1;
     width: 100%;
+  }
+
+  .attachBar {
+    grid-template-columns: auto 1fr;
+  }
+
+  .attachClear {
+    grid-column: 1 / -1;
   }
 
   .messages {

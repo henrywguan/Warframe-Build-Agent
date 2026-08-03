@@ -25,7 +25,7 @@ export type CrawlOverframeCliOptions = {
 
 type ImportBuildRow = {
   itemName: string;
-  builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
+  builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 | 3 }>;
 };
 
 async function loadImportedBuilds(filePath: string): Promise<ImportBuildRow[]> {
@@ -53,7 +53,7 @@ async function loadExistingBuilds(repoRoot: string): Promise<ItemBuilds[]> {
 
 /**
  * Crawl overframe.gg for every catalog warframe/weapon:
- * top 2 builds → open each build page → scan mods + arcanes → local pack.
+ * top 3 builds → open each build page → scan mods + arcanes → local pack.
  */
 export async function runOverframeCrawl(
   options: CrawlOverframeCliOptions = {},
@@ -61,7 +61,7 @@ export async function runOverframeCrawl(
   const repoRoot = options.repoRoot ?? resolveRepoRoot();
   const log = options.onLog ?? ((line: string) => console.log(line));
   const notes: string[] = [
-    "Overframe crawl: top 2 builds per item with mods + arcanes scanned into local knowledge pack.",
+    "Overframe crawl: top 3 builds per item with mods + arcanes scanned into local knowledge pack.",
   ];
 
   let catalog = options.refreshCatalog ? [] : await loadCatalog(repoRoot);
@@ -90,7 +90,7 @@ export async function runOverframeCrawl(
     overframeStatus = buildEntries.length ? "partial" : "blocked";
     notes.push(`Imported ${buildEntries.length} item build set(s) from ${options.importBuildsPath}.`);
   } else {
-    log("Crawling Overframe: item pages → top 2 builds → build pages (mods + arcanes)...");
+    log("Crawling Overframe: item pages → top 3 builds → build pages (mods + arcanes)...");
     const crawled = await crawlOverframeTopBuilds(catalog, {
       concurrency: options.concurrency ?? 2,
       delayMs: options.delayMs ?? 450,

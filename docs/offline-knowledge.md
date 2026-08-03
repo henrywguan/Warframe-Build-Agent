@@ -8,8 +8,9 @@ Local recall pack for builds and item facts — **text/structured data only** (n
 | --- | --- | --- |
 | `catalog/items.json` | [WFCD / warframestat.us](https://api.warframestat.us) | Warframes + weapons (incl. primes), slim stats |
 | `wiki/digests/*.json` | [Warframe Wiki API](https://wiki.warframe.com) | Plain-text digests per item |
-| `builds/by-item/*.json` | [Overframe](https://overframe.gg) crawl | Top 2 community builds per item (**mods + arcanes**) |
+| `builds/by-item/*.json` | [Overframe](https://overframe.gg) crawl | Top 3 community builds per item (**mods + arcanes**) |
 | `mods/index.json` | Aggregated from crawled builds | Unique mods/arcanes seen on top builds |
+| `official/digests/*.json` | [warframe.com](https://www.warframe.com) | Patch hub + news digests for local chatbot recall |
 | `manifest.json` | Generator metadata | Counts + Overframe status |
 
 ## Pull
@@ -18,7 +19,7 @@ Local recall pack for builds and item facts — **text/structured data only** (n
 # Full catalog + wiki digests + Overframe top builds (mods + arcanes)
 npm run knowledge -- pull
 
-# Dedicated Overframe crawl (top 2 builds → scan mods/arcanes → local DB)
+# Dedicated Overframe crawl (top 3 builds → scan mods/arcanes → local DB)
 npm run knowledge -- crawl-overframe
 npm run knowledge -- crawl-overframe --limit 10
 
@@ -48,7 +49,9 @@ Full crawl process: [`docs/overframe-crawl.md`](overframe-crawl.md).
 
 ## Agent use
 
-- Web chat tool: `lookup_local_knowledge`
+- Web chat tools: `lookup_local_knowledge`, `compare_loadout_to_overframe`
+- Web slash: `/knowledge <query>`, `/compare <item> | mods…`, screenshot Attach
+- Local chatbot (no OpenAI): set `CHAT_MODE=local` in `web/.env.local`
 - CLI: `npm run knowledge -- lookup …`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 

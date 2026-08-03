@@ -6,7 +6,7 @@ Pull or query the local offline Warframe knowledge pack (WFCD catalog, Warframe 
 npm run knowledge -- pull
 ```
 
-## Crawl Overframe → local DB (top 2 builds + mods/arcanes)
+## Crawl Overframe → local DB (top 3 builds + mods/arcanes)
 
 ```bash
 npm run knowledge -- crawl-overframe

@@ -27,7 +27,7 @@ Requires a Warframe-Build-Agent checkout with `data/knowledge/` populated (`term
    - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → ask yes/no before online search
 4. To refresh:
    - `npm run knowledge -- pull` (catalog + wiki + Overframe when reachable)
-   - `npm run knowledge -- crawl-overframe` (top 2 builds + mods/arcanes; residential network recommended)
+   - `npm run knowledge -- crawl-overframe` (top 3 builds + mods/arcanes; residential network recommended)
 
 ## Notes
 

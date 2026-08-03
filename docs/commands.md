@@ -25,8 +25,12 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/patches [n]` | Latest official updates/hotfixes |
 | `/hotfix` | Alias for `/patches` |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
+| `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
+| `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
 
-Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, the agent asks yes/no before online Overframe/YouTube search — see [`docs/source-policy.md`](source-policy.md).
+Attach a loadout screenshot in the web UI to OCR/vision-read the Warframe/weapon + mods/arcanes and compare against top-3 cached Overframe builds.
+
+Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, the agent asks yes/no before online Overframe/YouTube search — see [`docs/source-policy.md`](source-policy.md). For a no-OpenAI chatbot, set `CHAT_MODE=local` (see [`docs/web-chat.md`](web-chat.md)).
 
 ---
 

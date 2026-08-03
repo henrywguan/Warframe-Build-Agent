@@ -18,22 +18,55 @@ import styles from "./page.module.css";
 
 type Role = "user" | "assistant";
 
+type ContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string } };
+
 interface ChatMessage {
   id: string;
   role: Role;
   content: string;
+  imageUrl?: string;
   toolsUsed?: string[];
 }
 
 const SUGGESTIONS = [
   "/list",
+  "/knowledge Coda Hema",
   "/fissures sp",
   "/patches",
-  "/market mirage_prime_set",
 ];
+
+const MAX_IMAGE_BYTES = 1_600_000;
 
 function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function fileToDataUrl(file: File): Promise<string> {
+  // Downscale large phone screenshots so the chat payload stays reasonable.
+  const bitmap = await createImageBitmap(file);
+  const maxEdge = 1600;
+  const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not prepare screenshot for upload.");
+  }
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  let quality = 0.85;
+  let dataUrl = canvas.toDataURL("image/jpeg", quality);
+  while (dataUrl.length > MAX_IMAGE_BYTES && quality > 0.45) {
+    quality -= 0.1;
+    dataUrl = canvas.toDataURL("image/jpeg", quality);
+  }
+  return dataUrl;
 }
 
 function BrandHeader({ tagline }: { tagline: string }) {
@@ -54,10 +87,11 @@ export default function HomePage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Operator? Ordis is online. Ask in plain language, or type /list for commands (builds, fissures, market, hotfixes, and more). —Destruction— practical guidance awaits.",
+        "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Local knowledge mode works without OpenAI.",
     },
   ]);
   const [input, setInput] = useState("");
+  const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [passwordRequired, setPasswordRequired] = useState(false);
   const [authorized, setAuthorized] = useState(false);
@@ -65,8 +99,10 @@ export default function HomePage() {
   const [ready, setReady] = useState(false);
   const [pending, setPending] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [localMode, setLocalMode] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpokenIdRef = useRef<string | null>(null);
 
@@ -119,14 +155,17 @@ export default function HomePage() {
         ]);
         const healthJson = (await health.json()) as {
           openaiConfigured?: boolean;
+          localMode?: boolean;
+          chatReady?: boolean;
         };
         const authJson = (await auth.json()) as { passwordRequired?: boolean };
         if (cancelled) return;
         setPasswordRequired(Boolean(authJson.passwordRequired));
         setAuthorized(!authJson.passwordRequired);
-        if (!healthJson.openaiConfigured) {
+        setLocalMode(Boolean(healthJson.localMode));
+        if (!healthJson.chatReady) {
           setError(
-            "Chat backend needs OPENAI_API_KEY in web/.env.local (or your host env).",
+            "Chat needs OPENAI_API_KEY, a local OPENAI_BASE_URL model, or CHAT_MODE=local with the knowledge pack.",
           );
         }
       } catch {
@@ -156,31 +195,58 @@ export default function HomePage() {
     setPassword("");
   }
 
-  async function sendMessage(text: string) {
+  async function onPickFile(file: File | null) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Attach a screenshot image (PNG/JPEG/WebP).");
+      return;
+    }
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setAttachment(dataUrl);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function sendMessage(text: string, imageUrl?: string | null) {
     const content = text.trim();
-    if (!content || pending) return;
+    const image = imageUrl ?? attachment;
+    if ((!content && !image) || pending) return;
 
     setError(null);
     setSpeaking(false);
     const userMessage: ChatMessage = {
       id: uid(),
       role: "user",
-      content,
+      content: content || "Compare this loadout screenshot to the top Overframe builds.",
+      imageUrl: image || undefined,
     };
     const nextMessages = [...messages, userMessage];
     setMessages(nextMessages);
     setInput("");
+    setAttachment(null);
     setPending(true);
 
     try {
+      const payloadMessages = nextMessages
+        .filter((m) => m.id !== "welcome")
+        .map((m) => {
+          if (!m.imageUrl) {
+            return { role: m.role, content: m.content };
+          }
+          const parts: ContentPart[] = [
+            { type: "text", text: m.content },
+            { type: "image_url", image_url: { url: m.imageUrl } },
+          ];
+          return { role: m.role, content: parts };
+        });
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: nextMessages
-            .filter((m) => m.id !== "welcome")
-            .map(({ role, content: value }) => ({ role, content: value })),
-        }),
+        body: JSON.stringify({ messages: payloadMessages }),
       });
       const data = (await response.json()) as {
         message?: ChatMessage;
@@ -272,7 +338,7 @@ export default function HomePage() {
 
   return (
     <main className={styles.shell}>
-      <BrandHeader tagline="Builds, comparisons, live world-state, market, and patch notes — Ordis on the line." />
+      <BrandHeader tagline="Builds, screenshot compares, live world-state, market, and patch notes — Ordis on the line." />
 
       <div className={styles.centerStage}>
         <OrdisStage mood={mood} caption={ordisCaption(mood)} />
@@ -288,6 +354,14 @@ export default function HomePage() {
                 message.role === "user" ? styles.user : styles.assistant
               }`}
             >
+              {message.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  className={styles.attachPreview}
+                  src={message.imageUrl}
+                  alt="Attached loadout screenshot"
+                />
+              ) : null}
               {message.content}
               {message.toolsUsed?.length ? (
                 <div className={styles.meta}>Used: {message.toolsUsed.join(", ")}</div>
@@ -316,18 +390,58 @@ export default function HomePage() {
           ))}
         </div>
 
+        {attachment ? (
+          <div className={styles.attachBar}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.attachThumb} src={attachment} alt="Pending screenshot" />
+            <span>Screenshot ready — send to compare vs top Overframe builds</span>
+            <button
+              type="button"
+              className={styles.attachClear}
+              onClick={() => setAttachment(null)}
+            >
+              Remove
+            </button>
+          </div>
+        ) : null}
+
         <form className={styles.composer} onSubmit={onSubmit}>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className={styles.fileInput}
+            onChange={(event) => {
+              const file = event.target.files?.[0] ?? null;
+              void onPickFile(file);
+              event.target.value = "";
+            }}
+          />
+          <button
+            type="button"
+            className={styles.attachBtn}
+            disabled={pending}
+            aria-label="Attach loadout screenshot"
+            onClick={() => fileRef.current?.click()}
+          >
+            Attach
+          </button>
           <textarea
             ref={inputRef}
             className={styles.input}
             rows={2}
-            placeholder="Try /list, /patches, or ask in plain language…"
+            placeholder="Ask in plain language, /knowledge Coda Hema, or attach a loadout screenshot…"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={onKeyDown}
             disabled={pending}
           />
-          <button className={styles.send} type="submit" disabled={pending || !input.trim()}>
+          <button
+            className={styles.send}
+            type="submit"
+            disabled={pending || (!input.trim() && !attachment)}
+          >
             Send
           </button>
         </form>
@@ -336,7 +450,9 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : "Tip: type /list for commands. Patch/market dailies refresh ~4pm Pacific."}
+          : localMode
+            ? "Local mode: offline knowledge + OCR compare (no OpenAI key). Tip: /list"
+            : "Tip: attach a loadout screenshot to compare vs top 3 Overframe builds. /list for commands."}
       </p>
     </main>
   );

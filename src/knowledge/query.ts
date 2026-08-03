@@ -4,6 +4,7 @@ import {
   loadItemBuilds,
   loadManifest,
   loadMods,
+  loadOfficialDigests,
   loadWikiDigest,
 } from "./store.js";
 import type { CatalogItem } from "./types.js";
@@ -148,6 +149,27 @@ export async function lookupLocalKnowledge(
     chunks.push("## Mod digests");
     for (const { mod } of modHits) {
       chunks.push(`### ${mod.name}`, mod.extract || "(no extract)", "");
+    }
+  }
+
+  const official = await loadOfficialDigests(repoRoot);
+  const officialHits = official
+    .map((digest) => ({
+      digest,
+      score: Math.max(scoreName(query, digest.title), scoreName(query, digest.extract.slice(0, 200))),
+    }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+  if (officialHits.length) {
+    chunks.push("## Official warframe.com digests");
+    for (const { digest } of officialHits) {
+      chunks.push(
+        `### ${digest.title} (${digest.kind})`,
+        digest.pageUrl,
+        digest.extract.slice(0, 2500),
+        "",
+      );
     }
   }
 
