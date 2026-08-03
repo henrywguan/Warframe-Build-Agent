@@ -32,9 +32,49 @@ npm run knowledge -- pull
 
 ## Cloudflare note
 
-`overframe.gg` often returns a Cloudflare challenge from datacenter/CI IPs. The crawler detects that (`overframeStatus: "blocked"`) and exits without inventing builds.
+`overframe.gg` often returns a Cloudflare challenge from datacenter/CI IPs (and sometimes from Node `fetch` even on home Wi‑Fi). The crawler detects that (`overframeStatus: "blocked"`) and exits without inventing builds.
 
-Run `crawl-overframe` on a **residential network** (or browser-exported JSON via `--import-builds`) to populate the local database.
+### Option A — Playwright browser export (recommended on laptops)
+
+When plain `npm run knowledge -- crawl-overframe` stays blocked, use a real browser session.
+
+**If Cloudflare loops** in the automated window, attach to normal Chrome instead:
+
+```powershell
+# 1) Close all Chrome windows, then:
+& "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" `
+  --remote-debugging-port=9222 `
+  --user-data-dir="$env:TEMP\wf-overframe-chrome"
+
+# 2) In that Chrome tab, open https://overframe.gg and pass Cloudflare once
+
+# 3) In another terminal (repo root):
+npm run knowledge:export-overframe -- --connect http://127.0.0.1:9222 --limit 5
+```
+
+Default (persistent real Chrome profile, no `--connect`):
+
+```bash
+npm install
+npx playwright install chromium
+
+# Smoke test
+npm run knowledge:export-overframe -- --limit 5
+
+# Full catalog (resume-safe)
+npm run knowledge:export-overframe -- --resume
+
+# Import into the local knowledge pack
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
+```
+
+Useful flags: `--out <file>`, `--delay <ms>`, `--headless`, `--skip-build-pages`, `--resume`, `--connect <cdp-url>`.
+
+The exporter **does not reload** after you solve Cloudflare (reload was re-triggering the loop).
+
+### Option B — residential Node crawl / manual JSON
+
+Run `crawl-overframe` on a network that is not challenged, or hand-write JSON for `--import-builds` (shape below).
 
 ## Import JSON shape
 
