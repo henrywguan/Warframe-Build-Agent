@@ -21,6 +21,14 @@ export const metadata: Metadata = {
     "Mobile-friendly Warframe advisor chat for builds, comparisons, world-state, and market context — with an Ordis-inspired cephalon stage.",
   applicationName: "Warframe Build Agent",
   manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/ordis-icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   appleWebApp: {
     capable: true,
     title: "WF Build Agent",
