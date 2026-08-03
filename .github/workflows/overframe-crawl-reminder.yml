@@ -1,0 +1,98 @@
+name: Overframe crawl reminder
+
+# Nudge to run the residential Overframe crawl (Cloudflare blocks most CI IPs).
+on:
+  schedule:
+    # Mondays 15:00 UTC (~8am Pacific / 11am Eastern)
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: overframe-crawl-reminder
+  cancel-in-progress: false
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open or update reminder issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = "Reminder: run Overframe crawl (residential network)";
+            const body = [
+              "## Overframe crawl reminder",
+              "",
+              "CI/cloud IPs are usually Cloudflare-blocked for https://overframe.gg/.",
+              "Run this on a **residential** network to fill the local build DB (top 2 builds + mods/arcanes):",
+              "",
+              "```bash",
+              "npm run knowledge -- crawl-overframe",
+              "```",
+              "",
+              "Optional:",
+              "",
+              "```bash",
+              "npm run knowledge -- crawl-overframe --limit 10",
+              "npm run knowledge -- status",
+              "npm run knowledge -- lookup \"Coda Hema\"",
+              "```",
+              "",
+              "Docs: [`docs/overframe-crawl.md`](../blob/main/docs/overframe-crawl.md)",
+              "",
+              "_Opened/updated by the weekly \`overframe-crawl-reminder\` workflow. Close when done; it will reopen next Monday if still needed._",
+            ].join("\n");
+
+            const labels = ["reminder", "knowledge-pack"];
+            // Ensure labels exist (ignore errors if missing permissions/duplicates).
+            for (const name of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name,
+                  color: name === "reminder" ? "f9d0c4" : "0e8a16",
+                });
+              } catch (_) {
+                /* label may already exist */
+              }
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "reminder",
+              per_page: 20,
+            });
+            const match = existing.data.find((issue) => issue.title === title);
+            if (match) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: match.number,
+                body: [
+                  "### Weekly nudge",
+                  "",
+                  "Still open — please run when on a residential network:",
+                  "",
+                  "```bash",
+                  "npm run knowledge -- crawl-overframe",
+                  "```",
+                ].join("\n"),
+              });
+              core.info(`Commented on existing reminder issue #${match.number}`);
+              return;
+            }
+
+            const created = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels,
+            });
+            core.info(`Created reminder issue #${created.data.number}`);
