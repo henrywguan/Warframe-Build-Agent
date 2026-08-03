@@ -1,6 +1,6 @@
 # Exporting this agent to Hermes Desktop
 
-Yes — this repo includes a Hermes-compatible profile distribution.
+Yes — this repo includes a Hermes-compatible profile distribution (**v0.2.0**).
 
 ## Quick path (recommended)
 
@@ -27,20 +27,25 @@ hermes profile install ./hermes --name warframe-build-agent --alias
 
 ## What Hermes gets
 
-- `SOUL.md` — Warframe Build Agent identity (system prompt slot #1)
+- `SOUL.md` — Ordis / Warframe Build Agent identity (source policy included)
 - Skills under `skills/warframe/`:
   - `compare-gear`
-  - `recommend-build`
+  - `recommend-build` (+ local-first / ask-before-online source policy)
   - `explain-mechanics`
   - `world-state`
   - `market-prices`
-- Reference docs for Status / Market / source priority
+  - `patch-notes`
+  - `offline-knowledge`
+- Reference docs for Status / Market / sources / source policy
 
 ## What Hermes does **not** get automatically
 
 - Your API keys (add them in the profile `.env`)
-- The Next.js web UI (`web/`) — that’s separate; Hermes Desktop is the chat surface here
-- Guaranteed shell access to `npm run wf` / `npm run market` unless you set the profile terminal cwd to this repo checkout
+- The Next.js web UI (`web/`) or arsenal overlay (`overlay/`)
+- The full offline knowledge pack (`data/knowledge/`) — regenerate in a repo checkout:
+  - `npm run knowledge -- pull`
+  - `npm run knowledge -- crawl-overframe` (residential network; Cloudflare often blocks CI)
+- Guaranteed shell access to CLIs unless you set the profile terminal cwd to this repo checkout
 
 ## Skills-only install
 
@@ -49,13 +54,7 @@ If you only want the skills on an existing Hermes profile:
 ```bash
 mkdir -p ~/.hermes/skills/warframe
 cp -R hermes/skills/warframe/* ~/.hermes/skills/warframe/
-# and/or copy SOUL.md ideas into ~/.hermes/SOUL.md carefully
-```
-
-Or install individual SKILL.md URLs once published on a raw GitHub path:
-
-```bash
-hermes skills install https://raw.githubusercontent.com/<org>/<repo>/main/hermes/skills/warframe/compare-gear/SKILL.md
+# and/or merge SOUL.md ideas into ~/.hermes/SOUL.md carefully
 ```
 
 ## Verify
@@ -64,3 +63,5 @@ hermes skills install https://raw.githubusercontent.com/<org>/<repo>/main/hermes
 hermes -p warframe-build-agent skills list
 hermes -p warframe-build-agent chat -q "Budget Steel Path primary ideas"
 ```
+
+After import, re-check that skills include `offline-knowledge` and `patch-notes`, and that Ordis asks before online build search when the local Overframe cache is empty.
