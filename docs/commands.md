@@ -52,12 +52,14 @@ Details:
 | Skill | Use when |
 | --- | --- |
 | `cleanup-simplify` | After edits; optional `-all` integrity |
-| `offline-knowledge` | Local pack lookup / pull |
+| `offline-knowledge` | Local pack lookup / pull / crawl |
 | `recommend-build` | Mod setups / budget / Steel Path builds |
 | `compare-gear` | Weapon/frame comparisons |
 | `explain-mechanics` | Game systems explanations |
 | `world-state` | Live fissures/cycles/alerts guidance |
 | `patch-notes` | Updates/hotfixes workflow |
+
+Hermes Desktop import ships the matching player-facing skills (v0.2.0) under `hermes/skills/warframe/` — see [`docs/hermes-export.md`](hermes-export.md).
 
 ---
 

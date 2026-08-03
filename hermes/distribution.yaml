@@ -1,6 +1,6 @@
 name: warframe-build-agent
-version: 0.1.0
-description: "Warframe advisor for builds, gear comparisons, mechanics, live world-state, and market context"
+version: 0.2.0
+description: "Warframe advisor (Ordis) for builds, comparisons, mechanics, offline knowledge, live world-state, market, and patch notes"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"
