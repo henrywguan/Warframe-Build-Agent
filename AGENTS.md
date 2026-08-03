@@ -21,6 +21,7 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
 | `data/knowledge/` | Offline agent-usable wiki digests + Overframe top builds |
 | `docs/offline-knowledge.md` | How to pull/query the local knowledge pack |
+| `docs/overframe-crawl.md` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
 | `docs/source-policy.md` | Offline facts vs Overframe / YouTube / agent-calculated builds |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
@@ -61,6 +62,7 @@ cd overlay && python3 -m wf_overlay
 ./scripts/cleanup-verify.sh
 ./scripts/cleanup-verify-all.sh
 npm run knowledge -- pull
+npm run knowledge -- crawl-overframe
 npm run knowledge -- lookup "Coda Hema"
 ```
 

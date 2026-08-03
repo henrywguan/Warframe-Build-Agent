@@ -1,1 +1,218 @@
-[]
+[
+  {
+    "name": "Adaptation",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Adaptation",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Arcane Acceleration",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Arcane_Acceleration",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Arcane Blessing",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Arcane_Blessing",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Blind Rage",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Blind_Rage",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Carbide Deposit",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Carbide_Deposit",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Critical Delay",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Critical_Delay",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Galvanized Chamber",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Galvanized_Chamber",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Hammer Shot",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Hammer_Shot",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Hellfire",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Hellfire",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "High Voltage",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/High_Voltage",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Moeaze",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Moeaze",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Point Strike",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Point_Strike",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Primary Deadhead",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primary_Deadhead",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Primary Merciless",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primary_Merciless",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Primed Continuity",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primed_Continuity",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Primed Fast Hands",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primed_Fast_Hands",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Primed Flow",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primed_Flow",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Rime Rounds",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Rime_Rounds",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Rolling Guard",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Rolling_Guard",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Serration",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Serration",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  },
+  {
+    "name": "Stretch",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Stretch",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Transient Fortitude",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Transient_Fortitude",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Umbral Intensify",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Umbral_Intensify",
+    "seenOnItems": [
+      "Revenant Prime"
+    ]
+  },
+  {
+    "name": "Vital Sense",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Vital_Sense",
+    "seenOnItems": [
+      "Coda Hema"
+    ]
+  }
+]

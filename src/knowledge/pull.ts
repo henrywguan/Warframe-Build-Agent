@@ -1,9 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { pullCatalog } from "./catalog.js";
-import { buildsFromImport, pullOverframeTopBuilds } from "./overframe.js";
+import {
+  buildsFromImport,
+  crawlOverframeTopBuilds,
+  indexModsFromBuilds,
+} from "./overframe.js";
 import { resolveRepoRoot } from "./repo-root.js";
 import { saveKnowledgePack } from "./store.js";
-import type { ItemBuilds, KnowledgeManifest, ModDigest, OverframeBuild } from "./types.js";
+import type { ItemBuilds, KnowledgeManifest, OverframeBuild } from "./types.js";
 import { pullWikiDigests } from "./wiki.js";
 
 export type PullOptions = {
@@ -77,19 +81,22 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   let buildEntries: ItemBuilds[] = [];
 
   if (!options.skipOverframe) {
-    log("Pulling Overframe top builds (best-effort)...");
-    const scraped = await pullOverframeTopBuilds(catalog, {
+    log("Crawling Overframe top builds + mods/arcanes (best-effort)...");
+    const scraped = await crawlOverframeTopBuilds(catalog, {
       concurrency: Math.min(2, options.concurrency ?? 2),
-      onProgress: (done, total) => {
+      onLog: log,
+      onProgress: (done, total, name) => {
         if (done % 25 === 0 || done === total) {
-          log(`  overframe ${done}/${total}`);
+          log(`  overframe ${done}/${total} (last: ${name})`);
         }
       },
     });
     buildEntries = scraped.entries;
     overframeStatus = scraped.status;
     notes.push(scraped.note);
-    log(`Overframe scrape: ${scraped.entries.filter((e) => e.builds.length).length} items with builds (${overframeStatus})`);
+    log(
+      `Overframe crawl: ${scraped.entries.filter((e) => e.builds.length).length} items with builds (${overframeStatus})`,
+    );
   } else {
     notes.push("Overframe scrape skipped.");
   }
@@ -123,7 +130,7 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   // Drop empty Overframe stubs; blocked/partial status lives on the manifest.
   buildEntries = buildEntries.filter((entry) => entry.builds.length > 0);
 
-  const mods: ModDigest[] = [];
+  const mods = indexModsFromBuilds(buildEntries);
   const manifest = await saveKnowledgePack({
     repoRoot,
     catalog,

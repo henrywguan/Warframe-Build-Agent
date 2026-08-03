@@ -114,6 +114,7 @@ export async function lookupLocalKnowledge(
         );
         chunks.push(build.summary);
         if (build.mods?.length) chunks.push(`Mods: ${build.mods.join(", ")}`);
+        if (build.arcanes?.length) chunks.push(`Arcanes: ${build.arcanes.join(", ")}`);
       }
     } else {
       withoutBuilds.push(item.name);

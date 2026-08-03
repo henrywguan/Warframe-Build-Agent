@@ -1,125 +1,33 @@
 import { fetchText, mapPool, sleep } from "./http.js";
+import {
+  isCloudflareChallenge,
+  parseBuildPageMods,
+  parseTopBuildLinks,
+  summarizeBuild,
+} from "./overframe-parse.js";
 import type { CatalogItem, ItemBuilds, OverframeBuild } from "./types.js";
 
 /**
  * Overframe is Cloudflare-protected from many datacenter IPs.
- * This module best-effort fetches public HTML and parses top builds when reachable.
- * Use --import-builds to load a JSON export captured on a machine that can access overframe.gg.
+ * Crawl item pages for top-2 builds, then each build page for mods + arcanes.
+ * Use --import-builds when this network is blocked.
  */
 
 export type OverframePullStatus = "ok" | "blocked" | "partial" | "skipped";
+
+const BROWSER_UA =
+  "Mozilla/5.0 (compatible; WarframeBuildAgent/0.1; +https://github.com/henrywguan/Warframe-Build-Agent)";
 
 function overframeSearchUrl(itemName: string): string {
   return `https://overframe.gg/search/?q=${encodeURIComponent(itemName)}`;
 }
 
 function overframeItemGuessUrl(itemName: string): string {
-  const slug = itemName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const slug = itemName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
   return `https://overframe.gg/items/${slug}/`;
-}
-
-/** Very small HTML helpers — Overframe markup changes; keep tolerant. */
-function stripTags(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function parseBuildsFromHtml(itemName: string, html: string): OverframeBuild[] {
-  // Prefer Next.js payload when present
-  const nextMatch = html.match(
-    /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
-  );
-  if (nextMatch?.[1]) {
-    try {
-      const data = JSON.parse(nextMatch[1]) as unknown;
-      const found = collectBuildsFromUnknown(data).slice(0, 2);
-      if (found.length) return found;
-    } catch {
-      // fall through to regex heuristics
-    }
-  }
-
-  // Heuristic: build cards / links
-  const builds: OverframeBuild[] = [];
-  const linkRe =
-    /href="(https:\/\/overframe\.gg\/build\/\d+\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-  let match: RegExpExecArray | null;
-  const seen = new Set<string>();
-  while ((match = linkRe.exec(html)) && builds.length < 2) {
-    const url = match[1]!;
-    if (seen.has(url)) continue;
-    seen.add(url);
-    const label = stripTags(match[2] || "").slice(0, 160);
-    builds.push({
-      rank: (builds.length + 1) as 1 | 2,
-      name: label || `${itemName} build #${builds.length + 1}`,
-      url,
-      summary: label || `Top community build for ${itemName} on Overframe.`,
-    });
-  }
-  return builds;
-}
-
-function collectBuildsFromUnknown(value: unknown, out: OverframeBuild[] = []): OverframeBuild[] {
-  if (out.length >= 2) return out;
-  if (Array.isArray(value)) {
-    for (const entry of value) collectBuildsFromUnknown(entry, out);
-    return out;
-  }
-  if (!value || typeof value !== "object") return out;
-  const row = value as Record<string, unknown>;
-
-  const maybeUrl =
-    typeof row.url === "string"
-      ? row.url
-      : typeof row.buildUrl === "string"
-        ? row.buildUrl
-        : typeof row.slug === "string" && typeof row.id === "number"
-          ? `https://overframe.gg/build/${row.id}/${row.slug}`
-          : undefined;
-
-  const maybeName =
-    typeof row.name === "string"
-      ? row.name
-      : typeof row.title === "string"
-        ? row.title
-        : undefined;
-
-  const hasMods = Array.isArray(row.mods) || Array.isArray(row.modList);
-  if (maybeName && (maybeUrl || hasMods)) {
-    const mods = Array.isArray(row.mods)
-      ? row.mods.map(String)
-      : Array.isArray(row.modList)
-        ? row.modList.map(String)
-        : undefined;
-    out.push({
-      rank: (out.length + 1) as 1 | 2,
-      name: maybeName,
-      url: maybeUrl,
-      author: typeof row.author === "string" ? row.author : undefined,
-      rating: typeof row.rating === "number" ? row.rating : undefined,
-      forma: typeof row.forma === "number" ? row.forma : undefined,
-      updatedAt: typeof row.updatedAt === "string" ? row.updatedAt : undefined,
-      mods,
-      summary:
-        mods?.length
-          ? `${maybeName} — mods: ${mods.slice(0, 16).join(", ")}`
-          : maybeName,
-    });
-  }
-
-  for (const nested of Object.values(row)) {
-    if (out.length >= 2) break;
-    collectBuildsFromUnknown(nested, out);
-  }
-  return out.slice(0, 2);
 }
 
 export async function probeOverframeAccess(): Promise<{
@@ -128,13 +36,9 @@ export async function probeOverframeAccess(): Promise<{
   detail: string;
 }> {
   const result = await fetchText("https://overframe.gg/", {
-    headers: {
-      Accept: "text/html",
-      "User-Agent":
-        "Mozilla/5.0 (compatible; WarframeBuildAgent/0.1; +https://github.com/henrywguan/Warframe-Build-Agent)",
-    },
+    headers: { Accept: "text/html", "User-Agent": BROWSER_UA },
   });
-  if (result.status === 403 || /just a moment/i.test(result.text)) {
+  if (isCloudflareChallenge(result.status, result.text)) {
     return {
       reachable: false,
       status: result.status,
@@ -148,25 +52,71 @@ export async function probeOverframeAccess(): Promise<{
   };
 }
 
-export async function pullOverframeTopBuilds(
+async function fetchHtml(url: string): Promise<{ ok: boolean; status: number; text: string }> {
+  return fetchText(url, {
+    headers: {
+      Accept: "text/html",
+      Referer: "https://overframe.gg/",
+      "User-Agent": BROWSER_UA,
+    },
+  });
+}
+
+async function enrichBuildFromPage(
+  build: OverframeBuild,
+  delayMs: number,
+): Promise<OverframeBuild> {
+  if (!build.url) return build;
+  if ((build.mods?.length || 0) + (build.arcanes?.length || 0) >= 6) return build;
+  await sleep(delayMs);
+  const page = await fetchHtml(build.url);
+  if (isCloudflareChallenge(page.status, page.text)) {
+    return { ...build, notes: "Cloudflare challenge on build page" };
+  }
+  if (!page.ok) {
+    return { ...build, notes: `Build page HTTP ${page.status}` };
+  }
+  const parsed = parseBuildPageMods(page.text);
+  const mods = parsed.mods.length ? parsed.mods : build.mods;
+  const arcanes = parsed.arcanes.length ? parsed.arcanes : build.arcanes;
+  return {
+    ...build,
+    name: parsed.name || build.name,
+    author: parsed.author || build.author,
+    forma: parsed.forma ?? build.forma,
+    mods,
+    arcanes,
+    modEntries: parsed.modEntries.length ? parsed.modEntries : build.modEntries,
+    summary: summarizeBuild(parsed.name || build.name, mods ?? [], arcanes ?? []),
+  };
+}
+
+export type CrawlOverframeOptions = {
+  concurrency?: number;
+  delayMs?: number;
+  /** Skip enriching build detail pages (mods/arcanes). */
+  skipBuildPages?: boolean;
+  onProgress?: (done: number, total: number, itemName: string) => void;
+  onLog?: (line: string) => void;
+};
+
+/** Full crawl: top 2 builds per catalog item, with mods + arcanes from build pages. */
+export async function crawlOverframeTopBuilds(
   items: CatalogItem[],
-  options?: {
-    concurrency?: number;
-    delayMs?: number;
-    onProgress?: (done: number, total: number) => void;
-  },
+  options: CrawlOverframeOptions = {},
 ): Promise<{ status: OverframePullStatus; entries: ItemBuilds[]; note: string }> {
+  const log = options.onLog ?? (() => undefined);
   const probe = await probeOverframeAccess();
   if (!probe.reachable) {
     return {
       status: "blocked",
       entries: [],
-      note: `${probe.detail}. Re-run on a residential network or pass --import-builds <file>.`,
+      note: `${probe.detail}. Re-run crawl-overframe on a residential network, or pass --import-builds <file>.`,
     };
   }
 
-  const concurrency = options?.concurrency ?? 2;
-  const delayMs = options?.delayMs ?? 400;
+  const concurrency = Math.max(1, options.concurrency ?? 2);
+  const delayMs = options.delayMs ?? 450;
   let done = 0;
   let failures = 0;
 
@@ -174,14 +124,10 @@ export async function pullOverframeTopBuilds(
     const urls = [overframeItemGuessUrl(item.name), overframeSearchUrl(item.name)];
     let builds: OverframeBuild[] = [];
     let error: string | undefined;
+
     for (const url of urls) {
-      const page = await fetchText(url, {
-        headers: {
-          Accept: "text/html",
-          Referer: "https://overframe.gg/",
-        },
-      });
-      if (page.status === 403 || /just a moment/i.test(page.text)) {
+      const page = await fetchHtml(url);
+      if (isCloudflareChallenge(page.status, page.text)) {
         error = "Cloudflare challenge while fetching item page";
         failures += 1;
         break;
@@ -190,16 +136,31 @@ export async function pullOverframeTopBuilds(
         error = `HTTP ${page.status}`;
         continue;
       }
-      builds = parseBuildsFromHtml(item.name, page.text);
+      builds = parseTopBuildLinks(item.name, page.text);
       if (builds.length) {
         error = undefined;
         break;
       }
-      error = "No builds parsed from Overframe HTML";
+      error = "No builds parsed from Overframe item/search HTML";
+    }
+
+    if (builds.length && !options.skipBuildPages) {
+      const enriched: OverframeBuild[] = [];
+      for (const build of builds.slice(0, 2)) {
+        try {
+          enriched.push(await enrichBuildFromPage(build, delayMs));
+        } catch (err) {
+          enriched.push({
+            ...build,
+            notes: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+      builds = enriched;
     }
 
     done += 1;
-    options?.onProgress?.(done, items.length);
+    options.onProgress?.(done, items.length, item.name);
     await sleep(delayMs);
 
     return {
@@ -207,23 +168,38 @@ export async function pullOverframeTopBuilds(
       itemName: item.name,
       source: builds.length ? ("overframe" as const) : ("unavailable" as const),
       fetchedAt: new Date().toISOString(),
-      builds,
+      builds: builds.slice(0, 2).map((b, i) => ({ ...b, rank: (i + 1) as 1 | 2 })),
       error,
     } satisfies ItemBuilds;
   });
 
-  const withBuilds = entries.filter((e) => e.builds.length > 0).length;
+  const withBuilds = entries.filter((e) => e.builds.length > 0);
+  const withMods = withBuilds.filter((e) =>
+    e.builds.some((b) => (b.mods?.length || 0) + (b.arcanes?.length || 0) > 0),
+  ).length;
   const status: OverframePullStatus =
-    withBuilds === 0 ? "blocked" : withBuilds < entries.length ? "partial" : "ok";
+    withBuilds.length === 0 ? "blocked" : withBuilds.length < entries.length ? "partial" : "ok";
+
+  log(
+    `Overframe crawl: ${withBuilds.length}/${entries.length} items with builds, ${withMods} with mod/arcane lists`,
+  );
 
   return {
     status,
-    entries,
+    entries: withBuilds,
     note:
       status === "ok"
-        ? `Fetched top builds for ${withBuilds} items`
-        : `Fetched ${withBuilds}/${entries.length} items (${failures} hard failures)`,
+        ? `Crawled top builds + mods/arcanes for ${withBuilds.length} items`
+        : `Crawled ${withBuilds.length}/${items.length} items (${failures} hard failures; ${withMods} with mod lists)`,
   };
+}
+
+/** @deprecated alias — prefer crawlOverframeTopBuilds */
+export async function pullOverframeTopBuilds(
+  items: CatalogItem[],
+  options?: CrawlOverframeOptions,
+) {
+  return crawlOverframeTopBuilds(items, options);
 }
 
 export function buildsFromImport(
@@ -244,14 +220,52 @@ export function buildsFromImport(
       itemName: item.name,
       source: "import",
       fetchedAt,
-      builds: hit.builds.slice(0, 2).map((build, index) => ({
-        ...build,
-        rank: (build.rank ?? ((index + 1) as 1 | 2)),
-        summary:
-          build.summary ||
-          `${build.name}${build.mods?.length ? ` — mods: ${build.mods.join(", ")}` : ""}`,
-      })),
+      builds: hit.builds.slice(0, 2).map((build, index) => {
+        const mods = build.mods ?? [];
+        const arcanes = build.arcanes ?? [];
+        return {
+          ...build,
+          rank: (build.rank ?? ((index + 1) as 1 | 2)),
+          mods: mods.length ? mods : undefined,
+          arcanes: arcanes.length ? arcanes : undefined,
+          summary:
+            build.summary ||
+            summarizeBuild(build.name, mods, arcanes),
+        };
+      }),
     });
   }
   return out;
+}
+
+/** Aggregate unique mods/arcanes referenced by crawled builds into ModDigest rows. */
+export function indexModsFromBuilds(entries: ItemBuilds[]): import("./types.js").ModDigest[] {
+  const map = new Map<string, import("./types.js").ModDigest>();
+  for (const entry of entries) {
+    for (const build of entry.builds) {
+      const pairs: Array<{ name: string; kind: "mod" | "arcane" }> = [
+        ...(build.mods ?? []).map((name) => ({ name, kind: "mod" as const })),
+        ...(build.arcanes ?? []).map((name) => ({ name, kind: "arcane" as const })),
+        ...(build.modEntries ?? []).map((e) => ({ name: e.name, kind: e.kind })),
+      ];
+      for (const { name, kind } of pairs) {
+        const key = `${kind}:${name.toLowerCase()}`;
+        const existing = map.get(key);
+        if (existing) {
+          if (!existing.seenOnItems?.includes(entry.itemName)) {
+            existing.seenOnItems = [...(existing.seenOnItems ?? []), entry.itemName];
+          }
+          continue;
+        }
+        map.set(key, {
+          name,
+          kind,
+          extract: `${kind} seen on Overframe top builds`,
+          pageUrl: `https://wiki.warframe.com/w/${encodeURIComponent(name.replace(/ /g, "_"))}`,
+          seenOnItems: [entry.itemName],
+        });
+      }
+    }
+  }
+  return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
 }

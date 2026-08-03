@@ -45,6 +45,14 @@ export interface WikiDigest {
   fetchedAt: string;
 }
 
+/** One mod/arcane row scanned from an Overframe build. */
+export interface BuildModEntry {
+  name: string;
+  kind: "mod" | "arcane";
+  rank?: number;
+  slot?: string;
+}
+
 export interface OverframeBuild {
   rank: 1 | 2;
   name: string;
@@ -55,7 +63,12 @@ export interface OverframeBuild {
   updatedAt?: string;
   /** Human-readable mod list / loadout summary for the agent */
   summary: string;
+  /** Flat mod names (compat + quick display) */
   mods?: string[];
+  /** Flat arcane names */
+  arcanes?: string[];
+  /** Structured mod/arcane rows when the crawler could parse them */
+  modEntries?: BuildModEntry[];
   notes?: string;
 }
 
@@ -70,6 +83,9 @@ export interface ItemBuilds {
 
 export interface ModDigest {
   name: string;
+  kind: "mod" | "arcane";
   extract: string;
   pageUrl: string;
+  /** Items whose crawled top builds referenced this mod/arcane */
+  seenOnItems?: string[];
 }

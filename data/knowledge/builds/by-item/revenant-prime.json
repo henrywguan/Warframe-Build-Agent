@@ -2,7 +2,7 @@
   "id": "revenant-prime",
   "itemName": "Revenant Prime",
   "source": "import",
-  "fetchedAt": "2026-08-03T01:15:12.702Z",
+  "fetchedAt": "2026-08-03T01:42:00.666Z",
   "builds": [
     {
       "rank": 1,
@@ -18,6 +18,10 @@
         "Rolling Guard",
         "Umbral Intensify",
         "Primed Flow"
+      ],
+      "arcanes": [
+        "Arcane Blessing",
+        "Moeaze"
       ]
     }
   ]

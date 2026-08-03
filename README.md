@@ -170,6 +170,7 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
+| `npm run knowledge -- crawl-overframe` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
 | `npm run knowledge -- lookup <q>` | Query local knowledge pack |
 | `/cleanup-simplify` (Cursor) | Cleanup subagent — see [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 

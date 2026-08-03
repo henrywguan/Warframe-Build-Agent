@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { runOverframeCrawl } from "./crawl-overframe.js";
 import { lookupLocalKnowledge } from "./query.js";
 import { pullKnowledgePack } from "./pull.js";
 import { loadManifest } from "./store.js";
@@ -8,16 +9,28 @@ function usage(): never {
 
 Usage:
   npm run knowledge -- pull [options]
+  npm run knowledge -- crawl-overframe [options]
   npm run knowledge -- lookup <query>
   npm run knowledge -- status
 
-Options for pull:
+pull options:
   --limit <n>              Only first N catalog items (dev/sample)
   --include-archwing       Include Archwings in catalog
   --skip-wiki              Skip wiki digests
-  --skip-overframe         Skip Overframe build fetch
-  --import-builds <file>   JSON import of top builds when Overframe is blocked
-  --concurrency <n>        Parallel wiki fetch workers (default 4)
+  --skip-overframe         Skip Overframe crawl
+  --import-builds <file>   JSON import when Overframe is Cloudflare-blocked
+  --concurrency <n>        Parallel workers (wiki default 4)
+
+crawl-overframe options:
+  Crawl https://overframe.gg for every catalog warframe/weapon:
+  top 2 builds → open each build page → scan mods + arcanes → data/knowledge/
+  --limit <n>              Only first N catalog items
+  --include-archwing       Include Archwings
+  --refresh-catalog        Re-pull WFCD catalog first
+  --concurrency <n>        Parallel item workers (default 2)
+  --delay <ms>             Delay between requests (default 450)
+  --skip-build-pages       Only collect build links (skip mod/arcane scan)
+  --import-builds <file>   Import JSON instead of live crawl
 `);
   process.exit(1);
 }
@@ -59,6 +72,22 @@ async function main() {
       skipOverframe: rest.includes("--skip-overframe"),
       importBuildsPath: getFlag(rest, "--import-builds"),
       concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
+    });
+    return;
+  }
+
+  if (command === "crawl-overframe") {
+    const limitRaw = getFlag(rest, "--limit");
+    const concurrencyRaw = getFlag(rest, "--concurrency");
+    const delayRaw = getFlag(rest, "--delay");
+    await runOverframeCrawl({
+      limit: limitRaw ? Number(limitRaw) : undefined,
+      includeArchwing: rest.includes("--include-archwing"),
+      refreshCatalog: rest.includes("--refresh-catalog"),
+      concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
+      delayMs: delayRaw ? Number(delayRaw) : undefined,
+      skipBuildPages: rest.includes("--skip-build-pages"),
+      importBuildsPath: getFlag(rest, "--import-builds"),
     });
     return;
   }

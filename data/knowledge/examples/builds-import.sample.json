@@ -6,7 +6,8 @@
         "rank": 1,
         "name": "Sample SP Viral Heat (import stub)",
         "forma": 3,
-        "summary": "Steel Path sample — viral + heat status primary with comfortable ammo. Replace with a real Overframe export when available.",
+        "url": "https://overframe.gg/build/0/sample-coda-hema-sp",
+        "summary": "Steel Path sample — viral + heat status primary with comfortable ammo. Replace with a real Overframe crawl export when available.",
         "mods": [
           "Serration",
           "High Voltage",
@@ -16,7 +17,8 @@
           "Carbide Deposit",
           "Galvanized Chamber",
           "Primed Fast Hands"
-        ]
+        ],
+        "arcanes": ["Primary Merciless", "Arcane Acceleration"]
       },
       {
         "rank": 2,
@@ -31,8 +33,9 @@
           "Hammer Shot",
           "Rime Rounds",
           "Hellfire",
-          "Vital Sense"
-        ]
+          "Critical Delay"
+        ],
+        "arcanes": ["Primary Deadhead"]
       }
     ]
   },
@@ -53,7 +56,8 @@
           "Rolling Guard",
           "Umbral Intensify",
           "Primed Flow"
-        ]
+        ],
+        "arcanes": ["Arcane Blessing", "Moeaze"]
       }
     ]
   }

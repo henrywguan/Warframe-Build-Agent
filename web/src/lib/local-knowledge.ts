@@ -38,6 +38,7 @@ interface ItemBuilds {
     name: string;
     summary: string;
     mods?: string[];
+    arcanes?: string[];
     url?: string;
     forma?: number;
   }>;
@@ -193,6 +194,7 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
         );
         chunks.push(build.summary);
         if (build.mods?.length) chunks.push(`Mods: ${build.mods.join(", ")}`);
+        if (build.arcanes?.length) chunks.push(`Arcanes: ${build.arcanes.join(", ")}`);
         if (build.url) chunks.push(build.url);
       }
     } else {

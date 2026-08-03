@@ -6,11 +6,19 @@ Pull or query the local offline Warframe knowledge pack (WFCD catalog, Warframe 
 npm run knowledge -- pull
 ```
 
+## Crawl Overframe → local DB (top 2 builds + mods/arcanes)
+
+```bash
+npm run knowledge -- crawl-overframe
+```
+
 If Overframe is Cloudflare-blocked from this network:
 
 ```bash
-npm run knowledge -- pull --import-builds ./data/knowledge/examples/builds-import.sample.json
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 ```
+
+See `docs/overframe-crawl.md`.
 
 ## Status / lookup
 
