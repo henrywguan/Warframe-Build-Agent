@@ -131,6 +131,8 @@ In the chat UI (and this agent chat), type **`/list`** for the full command cata
 
 ## Hermes Desktop import
 
+Profile **v0.2.0** includes offline knowledge, patch notes, and local-first build source policy.
+
 ```bash
 ./scripts/pack-hermes-profile.sh
 hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
@@ -142,7 +144,7 @@ Or install the folder directly:
 hermes profile install ./hermes --name warframe-build-agent --alias
 ```
 
-Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
+Point Hermes `terminal.cwd` at this repo checkout for `npm run knowledge` / `wf` / `market` / `patches`. Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
 
 ## Agent usage (Cursor)
 
