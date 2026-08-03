@@ -15,7 +15,9 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `docs/warframe-status.md` | Status API fields players care about |
 | `docs/warframe-market.md` | Warframe.market v2 pricing + daily 4pm Pacific pull |
 | `docs/warframe-patch-notes.md` | Official updates/hotfixes + daily 4pm Pacific check |
-| `docs/commands.md` | `/list` command catalog for web + agent chat |
+| `docs/commands.md` | Full `/list` catalog (web, Cursor, CLI) |
+| `docs/cleanup-agent.md` | `/cleanup-simplify` and `/cleanup-simplify -all` |
+| `.cursor/commands/` | Cursor slash commands (`cleanup-simplify`, `knowledge`) |
 | `config/market-watchlist.json` | Items tracked for daily price snapshots |
 | `data/market/` | Saved daily market snapshots / day-over-day changes |
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
