@@ -1,18 +1,22 @@
 :root {
-  --ink: #152028;
-  --ink-soft: #3a4a55;
-  --panel: rgba(248, 251, 253, 0.82);
-  --panel-strong: #f7fafc;
-  --line: rgba(21, 32, 40, 0.12);
-  --teal: #0c7c7c;
-  --teal-deep: #065a5a;
-  --copper: #9a6b2f;
-  --danger: #9b2c2c;
-  --shadow: 0 18px 50px rgba(21, 32, 40, 0.12);
-  --radius: 18px;
-  --font-display: "Oxanium", "Segoe UI", sans-serif;
-  --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+  --ink: #e8eef5;
+  --ink-soft: rgba(196, 208, 220, 0.72);
+  --void: #04070c;
+  --panel: rgba(10, 16, 24, 0.92);
+  --panel-strong: rgba(14, 22, 32, 0.96);
+  --line: rgba(122, 101, 52, 0.7);
+  --line-bright: #d7b56d;
+  --cyan: #7fe7ef;
+  --cyan-deep: #00c4cc;
+  --gold: #d7b56d;
+  --gold-dim: #7a6534;
+  --danger: #e06b6b;
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  --radius: 2px;
+  --font-display: "Orbitron", "Oxanium", sans-serif;
+  --font-body: "Rajdhani", "Source Sans 3", sans-serif;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
 }
 
 * {
@@ -26,9 +30,10 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   background:
-    radial-gradient(1200px 700px at 10% -10%, rgba(12, 124, 124, 0.18), transparent 55%),
-    radial-gradient(900px 600px at 100% 0%, rgba(154, 107, 47, 0.14), transparent 50%),
-    linear-gradient(160deg, #e7eef3 0%, #d7e3ea 45%, #c9d7e0 100%);
+    radial-gradient(900px 520px at 50% -8%, rgba(0, 196, 204, 0.14), transparent 55%),
+    radial-gradient(700px 480px at 100% 10%, rgba(215, 181, 109, 0.1), transparent 50%),
+    radial-gradient(800px 600px at 0% 80%, rgba(0, 196, 204, 0.06), transparent 55%),
+    linear-gradient(180deg, #0e141e 0%, #080c12 45%, #04070c 100%);
 }
 
 body::before {
@@ -36,16 +41,16 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.28;
   background-image:
-    linear-gradient(rgba(21, 32, 40, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(21, 32, 40, 0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(circle at 50% 30%, black, transparent 75%);
+    linear-gradient(rgba(127, 231, 239, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(215, 181, 109, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at 50% 28%, black, transparent 78%);
 }
 
 a {
-  color: var(--teal-deep);
+  color: var(--cyan);
 }
 
 button,
@@ -55,5 +60,5 @@ textarea {
 }
 
 ::selection {
-  background: rgba(12, 124, 124, 0.22);
+  background: rgba(0, 196, 204, 0.35);
 }

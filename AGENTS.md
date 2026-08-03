@@ -15,7 +15,10 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `data/market/` | Saved daily snapshots / day-over-day changes |
 | `src/` | Warframe Status + Warframe.market clients and CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
+| `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |
+| `exports/` | Packed Hermes profile archive(s) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
+| `docs/hermes-export.md` | How to import this agent into Hermes Desktop |
 | `overlay/` | Desktop arsenal overlay (external region capture + action recommendations; no memory editing) |
 | `docs/overlay.md` | Overlay usage + external-only policy / `--verify-external` safeguards |
 
@@ -38,6 +41,7 @@ npm run market -- price mirage_prime_set
 npm run market -- pull --force
 npm run market -- changes
 npm run web:dev
+./scripts/pack-hermes-profile.sh
 npm test
 cd overlay && python3 -m wf_overlay
 ```
