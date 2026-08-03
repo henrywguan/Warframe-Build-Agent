@@ -15,7 +15,9 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`config/market-watchlist.json`](config/market-watchlist.json) | Items tracked for daily price snapshots |
 | [`src/`](src/) | Status + Market TypeScript clients and CLIs |
 | [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
+| [`hermes/`](hermes/) | Hermes Desktop/CLI importable profile distribution |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
+| [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
 | [`.cursor/agents/`](.cursor/agents/) | Cursor subagents (cleanup-simplify) |
 | [`docs/cleanup-agent.md`](docs/cleanup-agent.md) | Cleanup subagent + git-change wiring |
 
@@ -89,6 +91,21 @@ npm run dev
 Or from repo root: `npm run web:dev`
 
 Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to Vercel (or similar) and open it on your phone — details in [`docs/web-chat.md`](docs/web-chat.md).
+
+## Hermes Desktop import
+
+```bash
+./scripts/pack-hermes-profile.sh
+hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
+```
+
+Or install the folder directly:
+
+```bash
+hermes profile install ./hermes --name warframe-build-agent --alias
+```
+
+Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
 
 ## Agent usage (Cursor)
 

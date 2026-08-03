@@ -8,3 +8,4 @@ dist/
 !**/.env.example
 web/.next/
 web/node_modules/
+exports/.staging-*/

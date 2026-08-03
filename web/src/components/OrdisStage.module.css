@@ -1,0 +1,415 @@
+.stage {
+  --cyan: #7fe7ef;
+  --gold: #d7b56d;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0 0.15rem;
+  animation: stageIn 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.field {
+  position: relative;
+  width: min(72vw, 220px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.cephalon {
+  width: 88%;
+  height: 88%;
+  z-index: 2;
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgba(127, 231, 239, 0.18));
+  animation: floatIdle 5.2s ease-in-out infinite;
+}
+
+.cube {
+  transform-origin: 100px 100px;
+  transform-box: fill-box;
+}
+
+.core {
+  transform-origin: 100px 90px;
+  animation: corePulse 2.8s ease-in-out infinite;
+}
+
+.pupil {
+  transform-origin: 100px 90px;
+  animation: pupilGlow 2.8s ease-in-out infinite;
+}
+
+.cracks {
+  opacity: 0.55;
+}
+
+.radio .arc,
+.radio .arcLate {
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.ring,
+.wave {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid transparent;
+  opacity: 0;
+}
+
+.ring {
+  border-color: rgba(215, 181, 109, 0.22);
+  box-shadow: inset 0 0 24px rgba(127, 231, 239, 0.06);
+}
+
+.wave {
+  border-color: rgba(127, 231, 239, 0.45);
+}
+
+.caption {
+  margin: 0;
+  max-width: 36ch;
+  text-align: center;
+  font-family: var(--font-display), var(--font-oxanium), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(196, 208, 220, 0.72);
+  min-height: 1.2em;
+  transition: color 220ms ease;
+}
+
+/* Idle */
+.idle .ring1 {
+  opacity: 0.35;
+  animation: ringBreath 4.5s ease-in-out infinite;
+}
+
+.idle .wave1 {
+  opacity: 0.12;
+  animation: softRipple 4.8s ease-out infinite;
+}
+
+/* Thinking — consulting / pending */
+.thinking .cephalon {
+  animation: floatThink 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 22px rgba(127, 231, 239, 0.35));
+}
+
+.thinking .cube {
+  animation: cubeTilt 1.8s ease-in-out infinite;
+}
+
+.thinking .core {
+  animation: corePulse 1.1s ease-in-out infinite;
+}
+
+.thinking .cracks {
+  opacity: 0.85;
+  animation: crackFlicker 0.9s steps(2, end) infinite;
+}
+
+.thinking .ring1,
+.thinking .ring2,
+.thinking .ring3 {
+  opacity: 0.55;
+  animation: ringExpand 1.6s ease-out infinite;
+}
+
+.thinking .ring2 {
+  animation-delay: 0.35s;
+}
+
+.thinking .ring3 {
+  animation-delay: 0.7s;
+}
+
+.thinking .caption {
+  color: var(--cyan);
+}
+
+/* Speaking — agent reply */
+.speaking .cephalon {
+  animation: speakBob 0.55s ease-in-out infinite;
+  filter: drop-shadow(0 0 28px rgba(127, 231, 239, 0.55));
+}
+
+.speaking .cube {
+  animation: cubeShatter 0.7s ease-in-out infinite;
+}
+
+.speaking .core {
+  animation: coreSpeak 0.45s ease-in-out infinite;
+}
+
+.speaking .pupil {
+  animation: pupilSpeak 0.45s ease-in-out infinite;
+}
+
+.speaking .cracks {
+  opacity: 1;
+  animation: crackSpeak 0.35s steps(2, end) infinite;
+  stroke: #b8fbff;
+}
+
+.speaking .radio .arc {
+  animation: arcPulse 0.7s ease-out infinite;
+}
+
+.speaking .radio .arcLate {
+  animation: arcPulse 0.7s ease-out 0.18s infinite;
+}
+
+.speaking .wave1,
+.speaking .wave2,
+.speaking .wave3,
+.speaking .wave4 {
+  animation: speechRipple 1.05s cubic-bezier(0.15, 0.75, 0.35, 1) infinite;
+}
+
+.speaking .wave2 {
+  animation-delay: 0.18s;
+}
+
+.speaking .wave3 {
+  animation-delay: 0.36s;
+}
+
+.speaking .wave4 {
+  animation-delay: 0.54s;
+}
+
+.speaking .ring1,
+.speaking .ring2 {
+  opacity: 0.4;
+  animation: ringExpand 0.9s ease-out infinite;
+}
+
+.speaking .ring2 {
+  animation-delay: 0.25s;
+}
+
+.speaking .caption {
+  color: var(--gold);
+}
+
+@keyframes stageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatIdle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatThink {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+@keyframes speakBob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-3px) scale(1.03);
+  }
+  70% {
+    transform: translateY(1px) scale(0.99);
+  }
+}
+
+@keyframes cubeTilt {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes cubeShatter {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-0.6px, 0.4px) rotate(-1.2deg);
+  }
+  55% {
+    transform: translate(0.7px, -0.5px) rotate(1.4deg);
+  }
+  80% {
+    transform: translate(-0.3px, 0.2px) rotate(-0.6deg);
+  }
+}
+
+@keyframes corePulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes coreSpeak {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes pupilGlow {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pupilSpeak {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes crackFlicker {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes crackSpeak {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes ringBreath {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.25;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.45;
+  }
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.28);
+    opacity: 0;
+  }
+}
+
+@keyframes softRipple {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.18;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes speechRipple {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.65;
+    border-color: rgba(127, 231, 239, 0.7);
+  }
+  70% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+    border-color: rgba(215, 181, 109, 0.25);
+  }
+}
+
+@keyframes arcPulse {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  45% {
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cephalon,
+  .cube,
+  .core,
+  .pupil,
+  .cracks,
+  .ring,
+  .wave,
+  .radio .arc,
+  .radio .arcLate {
+    animation: none !important;
+  }
+
+  .idle .ring1,
+  .thinking .ring1,
+  .speaking .wave1 {
+    opacity: 0.4;
+  }
+}
