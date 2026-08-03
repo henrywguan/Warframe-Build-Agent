@@ -1,0 +1,16 @@
+---
+description: After substantive code changes, simplify touched code and keep verification green
+alwaysApply: true
+---
+
+# Cleanup after changes
+
+When you finish a substantive code change set (feature, bugfix, or multi-file edit):
+
+1. Prefer delegating to the **cleanup-simplify** subagent (`.cursor/agents/cleanup-simplify.md`) or follow `.cursor/skills/cleanup-simplify/SKILL.md`.
+2. Limit cleanup to files you changed.
+3. Preserve behavior and public contracts (CLI flags, JSON shapes, workflows).
+4. Run `./scripts/cleanup-verify.sh` before you consider the task done.
+5. If cleanup would risk breaking the app, skip it and note why.
+
+Do not run expansive refactors unrelated to the current task.

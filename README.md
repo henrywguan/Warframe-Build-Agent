@@ -20,6 +20,8 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
 | [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
 | [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
+| [`.cursor/agents/`](.cursor/agents/) | Cursor subagents (cleanup-simplify) |
+| [`docs/cleanup-agent.md`](docs/cleanup-agent.md) | Cleanup subagent + git-change wiring |
 
 ## Defaults
 
@@ -143,6 +145,8 @@ For live data, prefer `npm run wf -- …` and `npm run market -- …`.
 | `npm test` | Unit tests (mocked fetch + formatters) |
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Emit `dist/` |
+| `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
+| `/cleanup-simplify` (Cursor) | Cleanup subagent — see [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 
 ## Source notes
 
