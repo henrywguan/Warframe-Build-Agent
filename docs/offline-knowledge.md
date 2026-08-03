@@ -42,4 +42,4 @@ npm run knowledge -- status
 - CLI: `npm run knowledge -- lookup …`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 
-Prefer local knowledge for build/mod/item recall; keep using live tools for fissures, market, and patch hubs.
+Prefer local knowledge for **item/mechanic facts** (offline browsing). For **build** requests, use Overframe rows from the pack when present, then YouTube (cited) or agent-calculated advice — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.

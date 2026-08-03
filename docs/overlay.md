@@ -52,7 +52,7 @@ python3 -m wf_overlay --verify-external
 ## Why this shape
 
 - **Saved regions**, not whole-screen OCR — more accurate and less noisy on Warframe UI
-- **Action cards**, not a fake DPS readout — recommendations come from loadout context + rules
+- **Action cards**, not a fake DPS readout — **agent-calculated** recommendations from loadout context + rules (not live Overframe/YouTube scrapes). Chat build advice follows [`docs/source-policy.md`](source-policy.md).
 - **Python + PySide6** — fast to iterate; fine latency for hotkey / button workflows
 - **External pixels only** — safe boundary vs memory tools
 - **Warframe-inspired theme** — void panels, Orokin gold frames, energy cyan controls (original styling, not game assets)

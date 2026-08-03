@@ -32,7 +32,7 @@ def send_chat(
         raise ChatClientError(settings_help_text())
 
     if cfg.chat_api_url:
-        return _send_via_web_api(messages, cfg)
+        return _send_via_web_api(messages, cfg, loadout_context=loadout_context)
 
     payload_messages: list[dict[str, str]] = [
         {"role": "system", "content": build_system_prompt(loadout_context)},
@@ -62,15 +62,41 @@ def send_chat(
     return text
 
 
-def _send_via_web_api(messages: list[dict[str, str]], cfg: ChatSettings) -> str:
+def _send_via_web_api(
+    messages: list[dict[str, str]],
+    cfg: ChatSettings,
+    *,
+    loadout_context: str = "",
+) -> str:
     headers = {"Content-Type": "application/json"}
     # Web chat may expect a password cookie; also accept a header for overlay use.
     if cfg.chat_password:
         headers["x-chat-password"] = cfg.chat_password
         headers["Cookie"] = f"wf_chat_auth={cfg.chat_password}"
+    # Web API applies its own system prompt (incl. source policy + offline tools).
+    # Seed loadout context so arsenal chat still sees what the overlay is looking at.
+    outbound = list(messages)
+    if loadout_context.strip():
+        outbound = [
+            {
+                "role": "user",
+                "content": (
+                    "[Overlay loadout context — use for build advice]\n"
+                    + loadout_context.strip()
+                ),
+            },
+            {
+                "role": "assistant",
+                "content": (
+                    "Understood. I'll use that overlay loadout context and follow "
+                    "source policy (offline facts; Overframe / YouTube / agent-calculated builds)."
+                ),
+            },
+            *messages,
+        ]
     data = _post_json(
         cfg.chat_api_url,
-        {"messages": messages},
+        {"messages": outbound},
         headers=headers,
     )
     if isinstance(data.get("error"), str) and data["error"]:

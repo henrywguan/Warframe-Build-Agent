@@ -1,24 +1,23 @@
 ---
 name: offline-knowledge
-description: Look up local offline Warframe knowledge pack (wiki digests + Overframe top builds) before inventing builds.
+description: Look up local offline Warframe knowledge pack (wiki digests + cached Overframe builds) for facts; use build-source policy for mod setups.
 ---
 
 # Offline knowledge
 
 ## When to use
 
-- User asks for builds, frame/weapon facts, mod context
-- Live browsing is unnecessary or unavailable
+- Player asks about frame/weapon facts, digests, or mechanics context that the pack can answer
 - After `npm run knowledge -- pull` has populated `data/knowledge/`
+- Before inventing item stats from memory
 
 ## Steps
 
 1. Check pack exists: `npm run knowledge -- status`
 2. Query: `npm run knowledge -- lookup "<item>"`
 3. In web chat, call tool `lookup_local_knowledge` with the item/topic
-4. If Overframe builds are missing (`overframeStatus: blocked`), say so and use wiki/catalog stats + general advice; suggest re-pulling builds on a network that can reach overframe.gg or importing builds JSON
+4. For **build** requests, follow [`docs/source-policy.md`](../../../docs/source-policy.md): Overframe cache rows → cited YouTube → agent-calculated. If Overframe builds are missing, say so and do not treat the wiki digest alone as a full build.
 
-## Do not
+## Source policy reminder
 
-- Invent precise Overframe rankings when the local pack has no builds for that item
-- Treat local pack prices/timers as live (use Status/Market tools for those)
+Default = offline facts. Builds = Overframe / YouTube / agent-calculated. Live tools stay for worldstate, market, and patches.

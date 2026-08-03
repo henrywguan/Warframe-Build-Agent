@@ -80,7 +80,11 @@ export async function lookupLocalKnowledge(
 
     const builds = await loadItemBuilds(item.id, repoRoot);
     if (builds?.builds?.length) {
-      chunks.push("", "### Top builds (local)");
+      chunks.push(
+        "",
+        "### Overframe / imported community builds (local cache)",
+        "Use as Overframe build evidence; still apply agent-calculated goals/budget or a cited YouTube creator when relevant.",
+      );
       for (const build of builds.builds) {
         chunks.push(
           `${build.rank}. ${build.name}${build.forma != null ? ` · ${build.forma} forma` : ""}${build.url ? ` · ${build.url}` : ""}`,
@@ -88,13 +92,13 @@ export async function lookupLocalKnowledge(
         chunks.push(build.summary);
         if (build.mods?.length) chunks.push(`Mods: ${build.mods.join(", ")}`);
       }
-    } else if (builds?.error) {
-      chunks.push("", `### Top builds unavailable: ${builds.error}`);
-    } else if (manifest.overframeStatus === "blocked") {
+    } else {
       chunks.push(
         "",
-        "### Top builds unavailable",
-        "Overframe was blocked during pull (Cloudflare). Re-run knowledge pull where overframe.gg is reachable, or --import-builds.",
+        "### Overframe builds not in local cache for this item",
+        builds?.error
+          ? `Overframe unavailable: ${builds.error}`
+          : "For build requests: use a cited YouTube creator or an agent-calculated best build grounded in the wiki/catalog facts above.",
       );
     }
     chunks.push("");

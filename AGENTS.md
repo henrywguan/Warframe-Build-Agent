@@ -21,6 +21,7 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
 | `data/knowledge/` | Offline agent-usable wiki digests + Overframe top builds |
 | `docs/offline-knowledge.md` | How to pull/query the local knowledge pack |
+| `docs/source-policy.md` | Offline facts vs Overframe / YouTube / agent-calculated builds |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
 | `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |

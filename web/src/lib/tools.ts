@@ -1,5 +1,6 @@
 import type OpenAI from "openai";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
+import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import {
   liveAlerts,
   liveCycles,
@@ -135,8 +136,7 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "lookup_local_knowledge",
-      description:
-        "Recall offline agent-usable Warframe data from the local knowledge pack (WFCD catalog, Warframe Wiki digests, Overframe top builds when present). Use for builds, frame/weapon facts, and mod context without live web browsing.",
+      description: LOCAL_KNOWLEDGE_TOOL_DESCRIPTION,
       parameters: {
         type: "object",
         properties: {

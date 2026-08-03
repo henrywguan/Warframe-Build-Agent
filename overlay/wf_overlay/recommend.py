@@ -6,8 +6,9 @@ from .models import ActionRecommendation, Goal, LoadoutContext, WeaponSlot
 def recommend_actions(context: LoadoutContext) -> list[ActionRecommendation]:
     """Return prioritized overlay actions for Steel Path / endgame goals.
 
-    v1 is rule-based and does not trust on-screen DPS widgets. It assumes the
-    player is looking at arsenal/mod screens and wants practical next steps.
+    Agent-calculated (rule-based) recommendations from loadout fields — not a live
+    Overframe/YouTube scrape and not OCR. For chat build advice, see source policy
+    in chat_prompt.py (Overframe → YouTube → agent-calculated).
     """
     weapon = context.weapon_name.strip() or "this weapon"
     slot = context.slot
