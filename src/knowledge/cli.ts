@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { runOverframeCrawl } from "./crawl-overframe.js";
 import { lookupLocalKnowledge } from "./query.js";
-import { pullKnowledgePack } from "./pull.js";
+import { pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
 import { loadManifest } from "./store.js";
 
 function usage(): never {
@@ -9,6 +9,7 @@ function usage(): never {
 
 Usage:
   npm run knowledge -- pull [options]
+  npm run knowledge -- pull-mechanics [options]
   npm run knowledge -- crawl-overframe [options]
   npm run knowledge -- lookup <query>
   npm run knowledge -- status
@@ -19,8 +20,13 @@ pull options:
   --skip-wiki              Skip wiki digests
   --skip-overframe         Skip Overframe crawl
   --skip-official          Skip warframe.com official digests
+  --skip-mechanics         Skip curated mechanics/resource digests
   --import-builds <file>   JSON import when Overframe is Cloudflare-blocked
   --concurrency <n>        Parallel workers (wiki default 4)
+
+pull-mechanics options:
+  Refresh Damage/Status/Armor/faction/resource digests only (fast)
+  --concurrency <n>        Parallel workers (default 3)
 
 crawl-overframe options:
   Crawl https://overframe.gg for every catalog warframe/weapon:
@@ -72,7 +78,16 @@ async function main() {
       skipWiki: rest.includes("--skip-wiki"),
       skipOverframe: rest.includes("--skip-overframe"),
       skipOfficial: rest.includes("--skip-official"),
+      skipMechanics: rest.includes("--skip-mechanics"),
       importBuildsPath: getFlag(rest, "--import-builds"),
+      concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
+    });
+    return;
+  }
+
+  if (command === "pull-mechanics") {
+    const concurrencyRaw = getFlag(rest, "--concurrency");
+    await pullMechanicsOnly({
       concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
     });
     return;

@@ -93,7 +93,9 @@ npm run patches -- changes
 # Offline knowledge pack / Overframe crawl
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- lookup "rad viral or corrosive magnetic"
 npm run knowledge -- pull
+npm run knowledge -- pull-mechanics
 npm run knowledge -- crawl-overframe
 npm run knowledge:export-overframe -- --limit 5
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json

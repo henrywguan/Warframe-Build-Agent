@@ -11,6 +11,7 @@ Local recall pack for builds and item facts — **text/structured data only** (n
 | `builds/by-item/*.json` | [Overframe](https://overframe.gg) crawl | Top 3 community builds per item (**mods + arcanes**) |
 | `mods/index.json` | Aggregated from crawled builds | Unique mods/arcanes seen on top builds |
 | `official/digests/*.json` | [warframe.com](https://www.warframe.com) | Patch hub + news digests for local chatbot recall |
+| `mechanics/digests/*.json` | [Warframe Wiki](https://wiki.warframe.com) | Curated mechanics/resource pages (Damage, Status, Armor, factions, Forma, relics, …) |
 | `manifest.json` | Generator metadata | Counts + Overframe status |
 
 ## Pull
@@ -23,6 +24,9 @@ npm run knowledge -- pull
 npm run knowledge -- crawl-overframe
 npm run knowledge -- crawl-overframe --limit 10
 
+# Mechanics + resource digests only (Damage/Status/Armor/factions/… — fast)
+npm run knowledge -- pull-mechanics
+
 # Dev sample
 npm run knowledge -- pull --limit 25
 
@@ -33,10 +37,21 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-exp
 # Or import a hand-written / sample JSON:
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 
-# Lookup
+# Lookup (items + mechanics)
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- lookup "rad viral or corrosive magnetic"
 npm run knowledge -- status
 ```
+
+### Mechanics pack
+
+`pull-mechanics` (also part of full `pull`) fetches curated Wiki pages into `data/knowledge/mechanics/`:
+
+- Damage types: Viral, Corrosive, Magnetic, Radiation, Heat/Cold/Toxin/Electricity/Gas/Blast, IPS
+- Status Effect, Armor, Shields, Health, Critical Hit, enemy scaling
+- Factions, Steel Path, Archon Hunt, mods/arcanes/Forma, Kuva/Endo/relics
+
+These are what let a local chatbot answer elemental stacking questions without OpenAI.
 
 ### Overframe note
 

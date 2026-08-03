@@ -174,7 +174,8 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
 | `npm run knowledge -- crawl-overframe` | Crawl Overframe top-3 builds + mods/arcanes into local DB |
-| `npm run knowledge -- lookup <q>` | Query local knowledge pack |
+| `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics) |
+| `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
 | `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 | `/cleanup-simplify -all` (Cursor) | Tidy + full overlay/web integrity suite |
 | `/knowledge` (Cursor) | Offline knowledge pack pull/lookup |

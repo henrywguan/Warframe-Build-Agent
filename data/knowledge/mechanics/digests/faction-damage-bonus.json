@@ -1,0 +1,22 @@
+{
+  "id": "faction-damage-bonus",
+  "title": "Faction Damage Bonus",
+  "kind": "combat",
+  "aliases": [
+    "faction damage",
+    "bane mods",
+    "smite",
+    "expel"
+  ],
+  "summary": "Faction damage multipliers and bane mods.",
+  "pageUrl": "https://wiki.warframe.com/w/Faction_Damage_Bonus",
+  "extract": "Faction Damage Bonuses increase damage done to all enemy types of the corresponding Faction, including Bosses. It is calculated as a total damage multiplier against the faction in question. \n\nMechanics\nFaction Damage Bonuses increase the weapon's raw damage, and is applied a second time to Damage over Time (DoT) from status effects created by it, known as \"double dipping\". For complete mechanics see Damage over Time#DoT Damage Scaling.\nFaction Damage Mods exist for  Grineer,  Corpus,  Infested,  Orokin, and  The Murmur for each of the 4 main weapon types (Rifle, Shotgun, Pistol and Melee) as well as Railjack for those applicable, and all factions have a Primed variant. Damage is increased by x1.05 per rank, up to x1.30 for regular mods and x1.55 for Primed ones, with a base mod equip cost of 4 and they all have a  polarity. Faction mods against  Sentient only exist for melee weapons, which have the  polarity and a lower damage bonus but enjoys a set effect when both  Sacrificial Pressure and  Sacrificial Steel are equipped together. Currently,  Anarchs, Narmer,  Scaldra,  Techrot,  Stalker, and  Wild lack any faction mods.\n Grineer,  Corpus, and  Infested Faction Mods have no effect on their  Corrupted or  Narmer counterparts. For example,  Bane of Grineer will work on  Lancer but not on  Corrupted Lancer or  Narmer Lancer. Likewise,  Infested Faction Mods have no effect on  Techrot.\n\nList of Faction Mods\n\nList of Faction Damage Bonus Abilities\n\nNotes\n Paracesis has an innate passive (unlocked at each rank above 30) that will increase its damage against  Sentients.\n\nTrivia\nFaction damage mods for Infested, Corpus, and Grineer were added in Update 9.0 (2013-07-13), while Faction damage mods for Corrupted were added in Update 21.0 (2017-06-29).\n\nPatch Notes\n\nSee Also\nFaction Damage Mods",
+  "sections": {
+    "mechanics": "Faction Damage Bonuses increase the weapon's raw damage, and is applied a second time to Damage over Time (DoT) from status effects created by it, known as \"double dipping\". For complete mechanics see Damage over Time#DoT Damage Scaling.\nFaction Damage Mods exist for  Grineer,  Corpus,  Infested,  Orokin, and  The Murmur for each of the 4 main weapon types (Rifle, Shotgun, Pistol and Melee) as well as Railjack for those applicable, and all factions have a Primed variant. Damage is increased by x1.05 per rank, up to x1.30 for regular mods and x1.55 for Primed ones, with a base mod equip cost of 4 and they all have a  polarity. Faction mods against  Sentient only exist for melee weapons, which have the  polarity and a lower damage bonus but enjoys a set effect when both  Sacrificial Pressure and  Sacrificial Steel are equipped together. Currently,  Anarchs, Narmer,  Scaldra,  Techrot,  Stalker, and  Wild lack any faction mods.\n Grineer,  Corpus, and  Infested Faction Mods have no effect on their  Corrupted or  Narmer counterparts. For example,  Bane of Grineer will work on  Lancer but not on  Corrupted Lancer or  Narmer Lancer. Likewise,  Infested Faction Mods have no effect on  Techrot.\n\nList of Faction Mods\n\nList of Faction Damage Bonus Abilities",
+    "notes": "Paracesis has an innate passive (unlocked at each rank above 30) that will increase its damage against  Sentients.\n\nTrivia\nFaction damage mods for Infested, Corpus, and Grineer were added in Update 9.0 (2013-07-13), while Faction damage mods for Corrupted were added in Update 21.0 (2017-06-29).\n\nPatch Notes",
+    "see_also": "Faction Damage Mods"
+  },
+  "fetchedAt": "2026-08-03T23:47:58.553Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

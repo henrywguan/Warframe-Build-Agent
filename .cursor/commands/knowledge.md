@@ -6,6 +6,15 @@ Pull or query the local offline Warframe knowledge pack (WFCD catalog, Warframe 
 npm run knowledge -- pull
 ```
 
+## Refresh mechanics / resource digests
+
+```bash
+npm run knowledge -- pull-mechanics
+npm run knowledge -- lookup "rad viral or corrosive magnetic"
+```
+
+Pulls curated Wiki pages (Damage types, Status Effect, Armor/Shields, factions, Forma, relics, …) for local chatbot recall.
+
 ## Crawl Overframe → local DB (top 3 builds + mods/arcanes)
 
 ```bash

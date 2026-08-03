@@ -6,6 +6,7 @@ import type {
   CatalogItem,
   ItemBuilds,
   KnowledgeManifest,
+  MechanicsDigest,
   ModDigest,
   OfficialDigest,
   WikiDigest,
@@ -31,6 +32,7 @@ export async function saveKnowledgePack(options: {
   builds: ItemBuilds[];
   mods: ModDigest[];
   official?: OfficialDigest[];
+  mechanics?: MechanicsDigest[];
   overframeStatus: KnowledgeManifest["overframeStatus"];
   notes: string[];
   /** When false (default), skip re-writing per-item wiki digests already flushed by pull. */
@@ -42,6 +44,9 @@ export async function saveKnowledgePack(options: {
   await mkdir(paths.buildsDir, { recursive: true });
   if (options.official?.length) {
     await mkdir(paths.officialDir, { recursive: true });
+  }
+  if (options.mechanics?.length) {
+    await mkdir(paths.mechanicsDir, { recursive: true });
   }
 
   await writeJson(paths.catalog, options.catalog);
@@ -74,6 +79,21 @@ export async function saveKnowledgePack(options: {
       ids: options.official.map((d) => d.id),
     });
   }
+  if (options.mechanics?.length) {
+    for (const digest of options.mechanics) {
+      await writeJson(path.join(paths.mechanicsDir, `${digest.id}.json`), digest);
+    }
+    await writeJson(paths.mechanicsIndex, {
+      count: options.mechanics.length,
+      ids: options.mechanics.map((d) => d.id),
+      kinds: Object.fromEntries(
+        [...new Set(options.mechanics.map((d) => d.kind))].map((kind) => [
+          kind,
+          options.mechanics!.filter((d) => d.kind === kind).length,
+        ]),
+      ),
+    });
+  }
 
   const manifest: KnowledgeManifest = {
     version: 1,
@@ -90,6 +110,7 @@ export async function saveKnowledgePack(options: {
       buildEntries: options.builds.filter((b) => b.builds.length > 0).length,
       modsIndexed: options.mods.length,
       officialDigests: options.official?.length ?? 0,
+      mechanicsDigests: options.mechanics?.length ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,
@@ -136,6 +157,70 @@ export async function loadOfficialDigests(repoRoot?: string): Promise<OfficialDi
   return out;
 }
 
+export async function loadMechanicsDigests(repoRoot?: string): Promise<MechanicsDigest[]> {
+  const paths = knowledgePaths(repoRoot);
+  const index = await readJson<{ ids?: string[] }>(paths.mechanicsIndex);
+  if (!index?.ids?.length) return [];
+  const out: MechanicsDigest[] = [];
+  for (const id of index.ids) {
+    const digest = await readJson<MechanicsDigest>(
+      path.join(paths.mechanicsDir, `${id}.json`),
+    );
+    if (digest) out.push(digest);
+  }
+  return out;
+}
+
+/** Update mechanics digests without rewriting catalog/wiki/builds. */
+export async function saveMechanicsCrawl(options: {
+  repoRoot?: string;
+  mechanics: MechanicsDigest[];
+  notes: string[];
+  previous?: KnowledgeManifest | null;
+}): Promise<KnowledgeManifest> {
+  const paths = knowledgePaths(options.repoRoot);
+  await mkdir(paths.root, { recursive: true });
+  await mkdir(paths.mechanicsDir, { recursive: true });
+
+  for (const digest of options.mechanics) {
+    await writeJson(path.join(paths.mechanicsDir, `${digest.id}.json`), digest);
+  }
+  await writeJson(paths.mechanicsIndex, {
+    count: options.mechanics.length,
+    ids: options.mechanics.map((d) => d.id),
+    kinds: Object.fromEntries(
+      [...new Set(options.mechanics.map((d) => d.kind))].map((kind) => [
+        kind,
+        options.mechanics.filter((d) => d.kind === kind).length,
+      ]),
+    ),
+  });
+
+  const previous = options.previous;
+  const manifest: KnowledgeManifest = {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    sources: {
+      wfcd: previous?.sources.wfcd ?? "https://api.warframestat.us",
+      wiki: previous?.sources.wiki ?? "https://wiki.warframe.com",
+      overframe: previous?.sources.overframe ?? "https://overframe.gg",
+      official: previous?.sources.official ?? "https://www.warframe.com",
+    },
+    counts: {
+      catalogItems: previous?.counts.catalogItems ?? 0,
+      wikiDigests: previous?.counts.wikiDigests ?? 0,
+      buildEntries: previous?.counts.buildEntries ?? 0,
+      modsIndexed: previous?.counts.modsIndexed ?? 0,
+      officialDigests: previous?.counts.officialDigests ?? 0,
+      mechanicsDigests: options.mechanics.length,
+    },
+    notes: [...(previous?.notes ?? []).slice(-8), ...options.notes],
+    overframeStatus: previous?.overframeStatus ?? "skipped",
+  };
+  await writeJson(paths.manifest, manifest);
+  return manifest;
+}
+
 /** Update builds + mod index without rewriting wiki digests. */
 export async function saveBuildCrawl(options: {
   repoRoot?: string;
@@ -177,6 +262,7 @@ export async function saveBuildCrawl(options: {
       buildEntries: options.builds.filter((b) => b.builds.length > 0).length,
       modsIndexed: options.mods.length,
       officialDigests: options.previous?.counts.officialDigests ?? 0,
+      mechanicsDigests: options.previous?.counts.mechanicsDigests ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,

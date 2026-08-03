@@ -13,7 +13,19 @@ interface Manifest {
     catalogItems: number;
     wikiDigests: number;
     buildEntries: number;
+    mechanicsDigests?: number;
   };
+}
+
+interface MechanicsDigest {
+  id: string;
+  title: string;
+  kind: string;
+  aliases?: string[];
+  summary?: string;
+  pageUrl?: string;
+  extract: string;
+  sections?: Record<string, string>;
 }
 
 interface CatalogItem {
@@ -80,6 +92,57 @@ function scoreName(query: string, name: string): number {
   return qTokens.filter((t) => nTokens.has(t)).length * 15;
 }
 
+function scoreMechanics(query: string, digest: MechanicsDigest): number {
+  const labels = [
+    digest.title,
+    digest.id.replace(/-/g, " "),
+    digest.summary || "",
+    ...(digest.aliases || []),
+  ];
+  let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
+  const stop = new Set([
+    "the",
+    "and",
+    "or",
+    "vs",
+    "for",
+    "with",
+    "best",
+    "better",
+    "stack",
+    "should",
+    "would",
+    "does",
+    "is",
+    "it",
+    "to",
+    "a",
+    "an",
+    "of",
+    "on",
+    "in",
+  ]);
+  let tokenScore = 0;
+  for (const token of normalize(query)
+    .split(" ")
+    .filter((t) => t.length >= 2)) {
+    if (stop.has(token)) continue;
+    for (const label of labels) {
+      const n = normalize(label);
+      if (!n) continue;
+      if (n === token || n.split(" ").includes(token)) {
+        tokenScore += token.length <= 3 ? 55 : 70;
+        break;
+      }
+      if (token.length >= 3 && n.split(" ").some((part) => part.startsWith(token))) {
+        tokenScore += 45;
+        break;
+      }
+    }
+  }
+  return Math.max(best, Math.min(100, tokenScore));
+}
+
 export type LocalBuildLookup = {
   root: string | null;
   matches: CatalogItem[];
@@ -144,9 +207,27 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     .slice(0, 5)
     .map((row) => row.item);
 
-  if (!matches.length) {
+  const mechanicsIndex = await readJson<{ ids?: string[] }>(
+    path.join(root, "mechanics", "index.json"),
+  );
+  const mechanics: MechanicsDigest[] = [];
+  for (const id of mechanicsIndex?.ids ?? []) {
+    const digest = await readJson<MechanicsDigest>(
+      path.join(root, "mechanics", "digests", `${id}.json`),
+    );
+    if (digest) mechanics.push(digest);
+  }
+  const mechanicsHits = mechanics
+    .map((digest) => ({ digest, score: scoreMechanics(query, digest) }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, 8)
+    .map((row) => row.digest);
+
+  if (!matches.length && !mechanicsHits.length) {
     return [
-      `No local catalog match for “${query}”. Pack has ${manifest.counts.catalogItems} items.`,
+      `No local catalog or mechanics match for “${query}”. Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests.`,
+      "Run: npm run knowledge -- pull-mechanics",
       "",
       formatOnlineSearchConfirmation([query]),
     ].join("\n");
@@ -154,12 +235,24 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
 
   const chunks: string[] = [
     `Local knowledge pack (${manifest.generatedAt})`,
-    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · catalog: ${manifest.counts.catalogItems}`,
+    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
     "",
   ];
 
+  if (mechanicsHits.length) {
+    chunks.push("# Mechanics / resource digests", "");
+    for (const digest of mechanicsHits) {
+      chunks.push(`## ${digest.title} (${digest.kind})`);
+      if (digest.summary) chunks.push(digest.summary);
+      if (digest.pageUrl) chunks.push(digest.pageUrl);
+      chunks.push("", "### Mechanics digest", digest.extract.slice(0, 6000), "");
+    }
+  }
+
   const withBuilds: string[] = [];
   const withoutBuilds: string[] = [];
+
+  if (matches.length) chunks.push("# Item digests", "");
 
   for (const item of matches) {
     chunks.push(`## ${item.name} (${item.kind})`);

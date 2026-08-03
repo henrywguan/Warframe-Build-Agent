@@ -3,11 +3,12 @@ import {
   loadCatalog,
   loadItemBuilds,
   loadManifest,
+  loadMechanicsDigests,
   loadMods,
   loadOfficialDigests,
   loadWikiDigest,
 } from "./store.js";
-import type { CatalogItem } from "./types.js";
+import type { CatalogItem, MechanicsDigest } from "./types.js";
 
 const ONLINE_SEARCH_CONFIRMATION_REQUIRED = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
 const LOCAL_BUILDS_AVAILABLE = "LOCAL_BUILDS_AVAILABLE";
@@ -44,6 +45,85 @@ function scoreName(query: string, name: string): number {
   return overlap * 15;
 }
 
+/** Score a mechanics digest against a free-text query (title + aliases + summary). */
+export function scoreMechanicsDigest(query: string, digest: MechanicsDigest): number {
+  const labels = [
+    digest.title,
+    digest.id.replace(/-/g, " "),
+    digest.summary,
+    ...digest.aliases,
+  ];
+  let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
+
+  // Also score each query token against short aliases ("viral", "rad", "sp").
+  const qTokens = normalize(query)
+    .split(" ")
+    .filter((t) => t.length >= 2);
+  const stop = new Set([
+    "the",
+    "and",
+    "or",
+    "vs",
+    "for",
+    "with",
+    "into",
+    "from",
+    "that",
+    "this",
+    "what",
+    "when",
+    "how",
+    "best",
+    "better",
+    "stack",
+    "should",
+    "would",
+    "does",
+    "is",
+    "it",
+    "to",
+    "a",
+    "an",
+    "of",
+    "on",
+    "in",
+  ]);
+
+  let tokenScore = 0;
+  for (const token of qTokens) {
+    if (stop.has(token)) continue;
+    for (const label of labels) {
+      const n = normalize(label);
+      if (!n) continue;
+      if (n === token || n.split(" ").includes(token)) {
+        tokenScore += token.length <= 3 ? 55 : 70;
+        break;
+      }
+      // "radiation".startsWith("rad") for short player shorthand
+      if (token.length >= 3 && n.split(" ").some((part) => part.startsWith(token))) {
+        tokenScore += 45;
+        break;
+      }
+    }
+  }
+
+  best = Math.max(best, Math.min(100, tokenScore));
+  return best;
+}
+
+export function findMechanicsMatches(
+  digests: MechanicsDigest[],
+  query: string,
+  limit = 6,
+): MechanicsDigest[] {
+  return digests
+    .map((digest) => ({ digest, score: scoreMechanicsDigest(query, digest) }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, limit)
+    .map((row) => row.digest);
+}
+
 export function findCatalogMatches(
   catalog: CatalogItem[],
   query: string,
@@ -57,6 +137,24 @@ export function findCatalogMatches(
     .map((row) => row.item);
 }
 
+function formatMechanicsChunk(digest: MechanicsDigest, extractLimit = 6000): string[] {
+  const lines = [
+    `## ${digest.title} (${digest.kind})`,
+    digest.summary,
+    digest.pageUrl,
+    "",
+    "### Mechanics digest",
+    digest.extract.slice(0, extractLimit),
+  ];
+  if (digest.sections) {
+    for (const [name, body] of Object.entries(digest.sections).slice(0, 4)) {
+      lines.push("", `### ${name}`, body.slice(0, 2500));
+    }
+  }
+  lines.push("");
+  return lines;
+}
+
 export async function lookupLocalKnowledge(
   query: string,
   options?: { repoRoot?: string; limit?: number },
@@ -67,24 +165,43 @@ export async function lookupLocalKnowledge(
     return [
       "Local knowledge pack not found.",
       "Run: npm run knowledge -- pull",
+      "Or for mechanics only: npm run knowledge -- pull-mechanics",
       "Optional: npm run knowledge -- pull --import-builds ./builds.json",
     ].join("\n");
   }
 
   const catalog = await loadCatalog(repoRoot);
   const matches = findCatalogMatches(catalog, query, options?.limit ?? 5);
-  if (!matches.length) {
-    return `No local catalog match for “${query}”. Pack has ${manifest.counts.catalogItems} items (generated ${manifest.generatedAt}).`;
+  const mechanics = await loadMechanicsDigests(repoRoot);
+  const mechanicsHits = findMechanicsMatches(mechanics, query, 8);
+
+  if (!matches.length && !mechanicsHits.length) {
+    return [
+      `No local catalog or mechanics match for “${query}”.`,
+      `Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests (generated ${manifest.generatedAt}).`,
+      "Try: npm run knowledge -- pull-mechanics",
+    ].join("\n");
   }
 
   const chunks: string[] = [
     `Local knowledge pack (${manifest.generatedAt})`,
-    `Overframe builds: ${manifest.overframeStatus} · wiki digests: ${manifest.counts.wikiDigests} · catalog: ${manifest.counts.catalogItems}`,
+    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
     "",
   ];
 
+  if (mechanicsHits.length) {
+    chunks.push("# Mechanics / resource digests", "");
+    for (const digest of mechanicsHits) {
+      chunks.push(...formatMechanicsChunk(digest));
+    }
+  }
+
   const withBuilds: string[] = [];
   const withoutBuilds: string[] = [];
+
+  if (matches.length) {
+    chunks.push("# Item digests", "");
+  }
 
   for (const item of matches) {
     chunks.push(`## ${item.name} (${item.kind})`);

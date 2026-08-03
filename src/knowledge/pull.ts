@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { pullCatalog } from "./catalog.js";
 import type { OverframeBuildRank } from "./constants.js";
+import { pullMechanicsDigests } from "./mechanics.js";
 import { pullOfficialDigests } from "./official.js";
 import {
   buildsFromImport,
@@ -8,8 +9,14 @@ import {
   indexModsFromBuilds,
 } from "./overframe.js";
 import { resolveRepoRoot } from "./repo-root.js";
-import { saveKnowledgePack } from "./store.js";
-import type { ItemBuilds, KnowledgeManifest, OfficialDigest, OverframeBuild } from "./types.js";
+import { loadManifest, saveKnowledgePack, saveMechanicsCrawl } from "./store.js";
+import type {
+  ItemBuilds,
+  KnowledgeManifest,
+  MechanicsDigest,
+  OfficialDigest,
+  OverframeBuild,
+} from "./types.js";
 import { pullWikiDigests } from "./wiki.js";
 
 export type PullOptions = {
@@ -19,6 +26,7 @@ export type PullOptions = {
   skipWiki?: boolean;
   skipOverframe?: boolean;
   skipOfficial?: boolean;
+  skipMechanics?: boolean;
   importBuildsPath?: string;
   concurrency?: number;
   onLog?: (line: string) => void;
@@ -47,7 +55,7 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   const repoRoot = options.repoRoot ?? resolveRepoRoot();
   const log = options.onLog ?? ((line: string) => console.log(line));
   const notes: string[] = [
-    "Agent-usable text pack: WFCD catalog + Warframe Wiki + official warframe.com digests + Overframe top builds.",
+    "Agent-usable text pack: WFCD catalog + Warframe Wiki item digests + mechanics/resource digests + official warframe.com digests + Overframe top builds.",
     "Media/images are intentionally omitted from the pack (screenshots are handled at chat time).",
   ];
 
@@ -153,6 +161,34 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
     notes.push("Official site digests skipped.");
   }
 
+  let mechanicsDigests: MechanicsDigest[] = [];
+  if (!options.skipMechanics) {
+    log("Pulling curated mechanics + resource digests (Damage, Status, Armor, factions…)...");
+    try {
+      const mechanics = await pullMechanicsDigests({
+        repoRoot,
+        concurrency: Math.min(3, options.concurrency ?? 3),
+        onLog: log,
+        onProgress: (done, total, name) => {
+          if (done % 5 === 0 || done === total) {
+            log(`  mechanics ${done}/${total} (last: ${name})`);
+          }
+        },
+      });
+      mechanicsDigests = mechanics.digests;
+      notes.push(mechanics.note);
+      if (mechanics.failed.length) {
+        notes.push(`Mechanics digests failed for: ${mechanics.failed.join(", ")}`);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      notes.push(`Mechanics digests failed: ${message}`);
+      log(`Mechanics digests failed: ${message}`);
+    }
+  } else {
+    notes.push("Mechanics digests skipped.");
+  }
+
   const mods = indexModsFromBuilds(buildEntries);
   const manifest = await saveKnowledgePack({
     repoRoot,
@@ -161,12 +197,43 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
     builds: buildEntries,
     mods,
     official: officialDigests,
+    mechanics: mechanicsDigests,
     overframeStatus,
     notes,
   });
 
   log(
-    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
+    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
+  );
+  return manifest;
+}
+
+/** Pull/refresh only the curated mechanics + resource digests. */
+export async function pullMechanicsOnly(options: {
+  repoRoot?: string;
+  concurrency?: number;
+  onLog?: (line: string) => void;
+} = {}): Promise<KnowledgeManifest> {
+  const repoRoot = options.repoRoot ?? resolveRepoRoot();
+  const log = options.onLog ?? ((line: string) => console.log(line));
+  log("Pulling curated mechanics + resource digests...");
+  const result = await pullMechanicsDigests({
+    repoRoot,
+    concurrency: options.concurrency ?? 3,
+    onLog: log,
+    onProgress: (done, total, name) => {
+      if (done % 5 === 0 || done === total) log(`  mechanics ${done}/${total} (last: ${name})`);
+    },
+  });
+  const previous = await loadManifest(repoRoot);
+  const manifest = await saveMechanicsCrawl({
+    repoRoot,
+    mechanics: result.digests,
+    notes: [result.note],
+    previous,
+  });
+  log(
+    `Mechanics pack updated: ${manifest.counts.mechanicsDigests ?? 0} digests (catalog ${manifest.counts.catalogItems}, wiki ${manifest.counts.wikiDigests} unchanged)`,
   );
   return manifest;
 }

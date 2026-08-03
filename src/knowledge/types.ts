@@ -19,6 +19,7 @@ export interface KnowledgeManifest {
     buildEntries: number;
     modsIndexed: number;
     officialDigests?: number;
+    mechanicsDigests?: number;
   };
   notes: string[];
   overframeStatus: "ok" | "blocked" | "partial" | "skipped";
@@ -103,6 +104,30 @@ export interface OfficialDigest {
   extract: string;
   publishedAt?: string;
   fetchedAt: string;
+}
+
+/** Curated mechanics / faction / resource digests for local chatbot recall. */
+export interface MechanicsDigest {
+  id: string;
+  title: string;
+  kind:
+    | "damage"
+    | "status"
+    | "defense"
+    | "combat"
+    | "faction"
+    | "progression"
+    | "resource"
+    | "modding"
+    | "mode";
+  aliases: string[];
+  summary: string;
+  pageUrl: string;
+  extract: string;
+  sections?: Record<string, string>;
+  fetchedAt: string;
+  source: "wiki";
+  fetchMethod?: "extract" | "parse";
 }
 
 /** Player loadout parsed from a screenshot / OCR / vision. */
