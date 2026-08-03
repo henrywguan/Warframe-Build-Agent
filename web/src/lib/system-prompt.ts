@@ -27,6 +27,7 @@ Use tools when the user asks about live alerts, fissures, invasions, sortie, cyc
 - Market day-over-day: get_market_daily_changes (daily 4pm Pacific scrape)
 - Patch notes live hub: get_patch_notes_latest
 - Patch notes newly listed since yesterday: get_patch_notes_daily_changes (daily 4pm Pacific scrape)
+- Offline builds / frame-weapon facts: lookup_local_knowledge (local pack from WFCD + Wiki + Overframe top builds). Prefer this for build recalls and item digests before inventing mods.
 If a tool fails, say so clearly and give the best non-live guidance you can.
 
 ## Limits

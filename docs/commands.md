@@ -20,6 +20,12 @@ Type **`/list`** in the mobile web chat or in this Cursor Warframe agent chat to
 | `/hotfix` | Alias for `/patches` |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
 
+Offline builds/item facts use the `lookup_local_knowledge` tool (local pack from WFCD + Wiki + Overframe). Plain-language questions still work.
+
+| Cursor command | What it does |
+| --- | --- |
+| `/knowledge` | Pull or query the offline knowledge pack (see `.cursor/commands/knowledge.md`) |
+
 Plain-language questions still work (builds, comparisons, mechanics).
 
 ## Cursor / agent chat (`/list`)
@@ -37,6 +43,9 @@ npm run market -- price mirage_prime_set
 npm run market -- changes
 npm run patches -- latest
 npm run patches -- changes
+npm run knowledge -- status
+npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- pull
 npm run web:dev
 ```
 
