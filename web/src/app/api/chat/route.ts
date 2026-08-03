@@ -5,7 +5,7 @@ import type {
   ChatCompletionToolMessageParam,
 } from "openai/resources/chat/completions";
 import { isAuthorized } from "@/lib/auth";
-import { isSlashCommand, runSlashCommand } from "@/lib/commands";
+import { resolveChatTurn } from "@/lib/chat-turn";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import { chatTools, runChatTool } from "@/lib/tools";
 
@@ -28,6 +28,70 @@ function getClient(): OpenAI {
     apiKey,
     baseURL: process.env.OPENAI_BASE_URL || undefined,
   });
+}
+
+async function runModelCompletion(
+  incoming: IncomingMessage[],
+  model: string,
+): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+  const client = getClient();
+  const messages: ChatCompletionMessageParam[] = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...incoming
+      .filter((m) => m.content?.trim())
+      .slice(-20)
+      .map((m) => ({
+        role: m.role,
+        content: m.content,
+      })),
+  ];
+
+  const toolsUsed: string[] = [];
+  let guard = 0;
+
+  while (guard < 4) {
+    guard += 1;
+    const completion = await client.chat.completions.create({
+      model,
+      messages,
+      tools: chatTools,
+      tool_choice: "auto",
+      temperature: 0.4,
+    });
+
+    const choice = completion.choices[0]?.message;
+    if (!choice) {
+      throw new Error("Model returned an empty response");
+    }
+
+    messages.push(choice);
+
+    const toolCalls = choice.tool_calls ?? [];
+    if (!toolCalls.length) {
+      return {
+        content: choice.content?.trim() || "I do not have a response for that.",
+        toolsUsed,
+        model,
+      };
+    }
+
+    for (const call of toolCalls) {
+      if (call.type !== "function") continue;
+      toolsUsed.push(call.function.name);
+      const result = await runChatTool(
+        call.function.name,
+        call.function.arguments ?? "{}",
+      );
+      const toolMessage: ChatCompletionToolMessageParam = {
+        role: "tool",
+        tool_call_id: call.id,
+        content: result,
+      };
+      messages.push(toolMessage);
+    }
+  }
+
+  throw new Error("Too many tool rounds. Try a narrower question.");
 }
 
 export async function POST(request: Request) {
@@ -53,93 +117,18 @@ export async function POST(request: Request) {
   const model = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
 
   try {
-    const latestUser = [...incoming].reverse().find((m) => m.role === "user");
-    if (latestUser && isSlashCommand(latestUser.content)) {
-      const result = await runSlashCommand(latestUser.content);
-      if (result.handled) {
-        return NextResponse.json({
-          message: {
-            role: "assistant" as const,
-            content: result.content,
-          },
-          toolsUsed: result.toolsUsed,
-          model: "slash-command",
-        });
-      }
-    }
-
-    const client = getClient();
-    const messages: ChatCompletionMessageParam[] = [
-      { role: "system", content: SYSTEM_PROMPT },
-      ...incoming
-        .filter((m) => m.content?.trim())
-        .slice(-20)
-        .map((m) => ({
-          role: m.role,
-          content: m.content,
-        })),
-    ];
-
-    const toolsUsed: string[] = [];
-    let guard = 0;
-
-    while (guard < 4) {
-      guard += 1;
-      const completion = await client.chat.completions.create({
-        model,
-        messages,
-        tools: chatTools,
-        tool_choice: "auto",
-        temperature: 0.4,
-      });
-
-      const choice = completion.choices[0]?.message;
-      if (!choice) {
-        return NextResponse.json(
-          { error: "Model returned an empty response" },
-          { status: 502 },
-        );
-      }
-
-      messages.push(choice);
-
-      const toolCalls = choice.tool_calls ?? [];
-      if (!toolCalls.length) {
-        return NextResponse.json({
-          message: {
-            role: "assistant" as const,
-            content: choice.content?.trim() || "I do not have a response for that.",
-          },
-          toolsUsed,
-          model,
-        });
-      }
-
-      for (const call of toolCalls) {
-        if (call.type !== "function") continue;
-        toolsUsed.push(call.function.name);
-        const result = await runChatTool(
-          call.function.name,
-          call.function.arguments ?? "{}",
-        );
-        const toolMessage: ChatCompletionToolMessageParam = {
-          role: "tool",
-          tool_call_id: call.id,
-          content: result,
-        };
-        messages.push(toolMessage);
-      }
-    }
-
-    return NextResponse.json(
-      {
-        error: "Too many tool rounds. Try a narrower question.",
-        toolsUsed,
-      },
-      { status: 502 },
-    );
+    const result = await resolveChatTurn(incoming, {
+      runModel: (messages) => runModelCompletion(messages, model),
+    });
+    return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("Too many tool rounds")) {
+      return NextResponse.json({ error: message }, { status: 502 });
+    }
+    if (message.includes("empty response")) {
+      return NextResponse.json({ error: message }, { status: 502 });
+    }
     const status = message.includes("OPENAI_API_KEY") ? 503 : 500;
     return NextResponse.json({ error: message }, { status });
   }

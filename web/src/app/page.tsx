@@ -7,7 +7,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { OrdisStage, type OrdisMood } from "../components/OrdisStage";
+import { OrdisStage } from "../components/OrdisStage";
+import {
+  SPEAKING_MS,
+  deriveOrdisMood,
+  ordisCaption,
+  shouldTriggerSpeaking,
+} from "../lib/ordis";
 import styles from "./page.module.css";
 
 type Role = "user" | "assistant";
@@ -26,16 +32,8 @@ const SUGGESTIONS = [
   "/market mirage_prime_set",
 ];
 
-const SPEAKING_MS = 3400;
-
 function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function ordisCaption(mood: OrdisMood): string {
-  if (mood === "thinking") return "Consulting the ship’s systems…";
-  if (mood === "speaking") return "Ordis is transmitting…";
-  return "Operator? Ordis is standing by.";
 }
 
 function BrandHeader({ tagline }: { tagline: string }) {
@@ -72,7 +70,7 @@ export default function HomePage() {
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpokenIdRef = useRef<string | null>(null);
 
-  const mood: OrdisMood = pending ? "thinking" : speaking ? "speaking" : "idle";
+  const mood = deriveOrdisMood(pending, speaking);
 
   function triggerSpeaking(messageId: string) {
     if (lastSpokenIdRef.current === messageId) return;
@@ -98,7 +96,14 @@ export default function HomePage() {
 
   useEffect(() => {
     const last = messages[messages.length - 1];
-    if (!last || last.role !== "assistant" || last.id === "welcome" || pending) {
+    if (
+      !last ||
+      !shouldTriggerSpeaking({
+        role: last.role,
+        id: last.id,
+        pending,
+      })
+    ) {
       return;
     }
     triggerSpeaking(last.id);

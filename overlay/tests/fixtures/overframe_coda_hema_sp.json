@@ -1,0 +1,22 @@
+{
+  "source": "overframe-style sample loadout (fixture for integrity checks)",
+  "source_url_example": "https://overframe.gg/build/",
+  "notes": "Captures are external screenshots only; v1 recommendations use this structured loadout (not OCR). Swap fixtures to exercise other Overframe builds.",
+  "weapon_name": "Coda Hema",
+  "slot": "primary",
+  "goal": "steel_path",
+  "player_notes": "Overframe SP viral heat sample — ammo economy matters",
+  "detected_mods": [
+    "Serration",
+    "Hellfire",
+    "Rime Rounds",
+    "Vital Sense",
+    "Point Strike"
+  ],
+  "screenshot": "overframe_coda_hema_sp.png",
+  "expect": {
+    "min_actions": 3,
+    "title_needles": ["viral", "steel", "focus", "validate"],
+    "ui_status_needle": "Coda Hema"
+  }
+}

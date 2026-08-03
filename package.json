@@ -19,7 +19,10 @@
     "typecheck": "tsc --noEmit",
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build",
-    "web:start": "npm --prefix web run start"
+    "web:start": "npm --prefix web run start",
+    "web:test": "npm --prefix web run test",
+    "cleanup:verify": "./scripts/cleanup-verify.sh",
+    "cleanup:verify:all": "./scripts/cleanup-verify-all.sh"
   },
   "engines": {
     "node": ">=20"

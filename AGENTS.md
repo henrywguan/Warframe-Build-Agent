@@ -56,9 +56,10 @@ npm run web:dev
 npm test
 cd overlay && python3 -m wf_overlay
 ./scripts/cleanup-verify.sh
+./scripts/cleanup-verify-all.sh
 ```
 
-After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
+After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. For overlay + web integrity, use `/cleanup-simplify -all` (`./scripts/cleanup-verify-all.sh`). Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
 
 ## How to answer players
 
