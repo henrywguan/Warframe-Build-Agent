@@ -1,0 +1,257 @@
+/* Warframe-inspired arsenal theme (original styling — not game assets).
+   Void black panels, Orokin gold frames, energy cyan interactions. */
+
+* {
+  font-family: "Rajdhani", "Orbitron", "Segoe UI Semibold", "Segoe UI", sans-serif;
+  color: #e8eef5;
+}
+
+QWidget#OverlayRoot {
+  background: transparent;
+}
+
+QFrame#Panel {
+  background: qlineargradient(
+    x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 rgba(14, 20, 30, 0.96),
+    stop: 0.55 rgba(8, 12, 18, 0.97),
+    stop: 1 rgba(4, 7, 12, 0.98)
+  );
+  border: 1px solid #7a6534;
+  border-top: 2px solid #d7b56d;
+  border-radius: 2px;
+}
+
+QFrame#HeaderRule {
+  background: qlineargradient(
+    x1: 0, y1: 0, x2: 1, y2: 0,
+    stop: 0 rgba(215, 181, 109, 0.05),
+    stop: 0.5 rgba(215, 181, 109, 0.85),
+    stop: 1 rgba(215, 181, 109, 0.05)
+  );
+  min-height: 2px;
+  max-height: 2px;
+  border: none;
+}
+
+QLabel#Brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #f3efe4;
+}
+
+QLabel#BrandAccent {
+  color: #7fe7ef;
+}
+
+QLabel#Tagline, QLabel#Hint, QLabel#Meta {
+  color: rgba(196, 208, 220, 0.72);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+QLabel#Section {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d7b56d;
+  padding-top: 2px;
+}
+
+QLineEdit, QPlainTextEdit, QComboBox {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(122, 101, 52, 0.7);
+  border-radius: 1px;
+  padding: 8px 10px;
+  color: #e8eef5;
+  selection-background-color: rgba(0, 196, 204, 0.35);
+}
+
+QLineEdit:focus, QPlainTextEdit:focus, QComboBox:focus {
+  border: 1px solid #7fe7ef;
+}
+
+QComboBox::drop-down {
+  border: none;
+  width: 22px;
+}
+
+QComboBox QAbstractItemView {
+  background: #0b1018;
+  border: 1px solid #7a6534;
+  selection-background-color: rgba(0, 196, 204, 0.28);
+  color: #e8eef5;
+}
+
+QPushButton {
+  background: rgba(20, 28, 38, 0.9);
+  border: 1px solid #7a6534;
+  border-radius: 1px;
+  padding: 8px 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f3efe4;
+}
+
+QPushButton:hover {
+  background: rgba(40, 54, 70, 0.95);
+  border: 1px solid #d7b56d;
+  color: #ffffff;
+}
+
+QPushButton:pressed {
+  background: rgba(0, 196, 204, 0.18);
+  border: 1px solid #7fe7ef;
+}
+
+QPushButton#Primary {
+  background: qlineargradient(
+    x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 #1aa3ad,
+    stop: 1 #0c6d74
+  );
+  border: 1px solid #7fe7ef;
+  color: #041016;
+}
+
+QPushButton#Primary:hover {
+  background: qlineargradient(
+    x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 #2bc4cf,
+    stop: 1 #118690
+  );
+  border: 1px solid #b7f7fc;
+}
+
+QPushButton#Action {
+  background: rgba(12, 18, 26, 0.92);
+  border: 1px solid #9a8044;
+  color: #f3efe4;
+  text-align: center;
+}
+
+QPushButton#Action:hover {
+  background: rgba(215, 181, 109, 0.14);
+  border: 1px solid #d7b56d;
+}
+
+QPushButton#Ghost {
+  background: transparent;
+  border: 1px solid rgba(122, 101, 52, 0.55);
+  color: #d7b56d;
+}
+
+QPushButton#Ghost:hover {
+  border: 1px solid #d7b56d;
+  color: #f3efe4;
+}
+
+QPushButton#DangerGhost {
+  background: transparent;
+  border: 1px solid rgba(180, 70, 70, 0.55);
+  color: #e8a0a0;
+}
+
+QPushButton#DangerGhost:hover {
+  border: 1px solid #e07070;
+  color: #ffd0d0;
+}
+
+QCheckBox {
+  spacing: 8px;
+  color: rgba(232, 238, 245, 0.88);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+QCheckBox::indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 1px;
+  border: 1px solid #7a6534;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+QCheckBox::indicator:checked {
+  background: #00c4cc;
+  border-color: #7fe7ef;
+}
+
+QFrame#ChatPanel {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(122, 101, 52, 0.65);
+  border-left: 3px solid #00c4cc;
+  border-radius: 1px;
+  padding: 10px;
+}
+
+QTextEdit#ChatTranscript, QPlainTextEdit#ChatInput {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(122, 101, 52, 0.55);
+  border-radius: 1px;
+  padding: 8px;
+  color: #e8eef5;
+}
+
+QFrame#ActionCard {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(122, 101, 52, 0.45);
+  border-left: 3px solid #d7b56d;
+  border-radius: 1px;
+}
+
+QLabel#ActionPriority {
+  color: #7fe7ef;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+QLabel#ActionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f3efe4;
+}
+
+QLabel#ActionDetail, QLabel#ActionWhy {
+  font-size: 12px;
+  color: rgba(196, 208, 220, 0.82);
+}
+
+QLabel#ActionCategory {
+  font-size: 11px;
+  color: #d7b56d;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+QScrollArea {
+  border: none;
+  background: transparent;
+}
+
+QScrollBar:vertical {
+  background: rgba(0, 0, 0, 0.25);
+  width: 8px;
+  margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+  background: rgba(215, 181, 109, 0.45);
+  border-radius: 1px;
+  min-height: 24px;
+}
+
+QScrollBar::handle:vertical:hover {
+  background: rgba(127, 231, 239, 0.55);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+  height: 0;
+}
