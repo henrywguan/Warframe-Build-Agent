@@ -22,6 +22,8 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `exports/` | Packed Hermes profile archive(s) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
 | `docs/hermes-export.md` | How to import this agent into Hermes Desktop |
+| `overlay/` | Desktop arsenal overlay (external region capture + action recommendations; no memory editing) |
+| `docs/overlay.md` | Overlay usage + external-only policy / `--verify-external` safeguards |
 
 ## Default assumptions
 
@@ -49,6 +51,7 @@ npm run patches -- changes
 npm run web:dev
 ./scripts/pack-hermes-profile.sh
 npm test
+cd overlay && python3 -m wf_overlay
 ```
 
 ## How to answer players

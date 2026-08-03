@@ -20,6 +20,8 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
 | [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
 | [`docs/commands.md`](docs/commands.md) | `/list` command catalog (web + agent chat) |
+| [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
+| [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
 
 ## Defaults
 
@@ -94,6 +96,19 @@ const patches = new PatchNotesClient();
 const notes = await patches.listEntries();
 ```
 
+## Desktop overlay (arsenal coaching)
+
+Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, get prioritized Steel Path / endgame actions, and chat with the Build Agent in a minimizable panel while in-game. **Fully external** — separate window + desktop screenshots + HTTPS chat; no Warframe process touch. Set `OPENAI_API_KEY` in `~/.config/warframe-build-agent/overlay.env`. Verify with `python3 -m wf_overlay --verify-external`.
+
+```bash
+cd overlay
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python3 -m wf_overlay
+```
+
+Details: [`docs/overlay.md`](docs/overlay.md).
+
 ## Mobile web chat (on the go)
 
 ```bash
@@ -146,6 +161,7 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `npm run patches -- <cmd>` | Official patch notes / hotfix checks |
 | `npm run web:dev` | Mobile chat UI (local) |
 | `npm run web:build` | Build chat UI |
+| `python3 -m wf_overlay` (from `overlay/`) | Desktop arsenal overlay |
 | `npm test` | Unit tests (mocked fetch + formatters) |
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Emit `dist/` |
