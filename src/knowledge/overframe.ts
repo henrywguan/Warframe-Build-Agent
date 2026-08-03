@@ -158,17 +158,9 @@ export async function pullOverframeTopBuilds(
 ): Promise<{ status: OverframePullStatus; entries: ItemBuilds[]; note: string }> {
   const probe = await probeOverframeAccess();
   if (!probe.reachable) {
-    const entries = items.map((item) => ({
-      id: item.id,
-      itemName: item.name,
-      source: "unavailable" as const,
-      fetchedAt: new Date().toISOString(),
-      builds: [],
-      error: probe.detail,
-    }));
     return {
       status: "blocked",
-      entries,
+      entries: [],
       note: `${probe.detail}. Re-run on a residential network or pass --import-builds <file>.`,
     };
   }
@@ -242,23 +234,16 @@ export function buildsFromImport(
   }>,
 ): ItemBuilds[] {
   const byName = new Map(imported.map((row) => [row.itemName.toLowerCase(), row]));
-  return items.map((item) => {
+  const fetchedAt = new Date().toISOString();
+  const out: ItemBuilds[] = [];
+  for (const item of items) {
     const hit = byName.get(item.name.toLowerCase());
-    if (!hit) {
-      return {
-        id: item.id,
-        itemName: item.name,
-        source: "unavailable",
-        fetchedAt: new Date().toISOString(),
-        builds: [],
-        error: "Not present in import file",
-      };
-    }
-    return {
+    if (!hit?.builds?.length) continue;
+    out.push({
       id: item.id,
       itemName: item.name,
       source: "import",
-      fetchedAt: new Date().toISOString(),
+      fetchedAt,
       builds: hit.builds.slice(0, 2).map((build, index) => ({
         ...build,
         rank: (build.rank ?? ((index + 1) as 1 | 2)),
@@ -266,6 +251,7 @@ export function buildsFromImport(
           build.summary ||
           `${build.name}${build.mods?.length ? ` — mods: ${build.mods.join(", ")}` : ""}`,
       })),
-    };
-  });
+    });
+  }
+  return out;
 }
