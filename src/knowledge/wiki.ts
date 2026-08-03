@@ -1,4 +1,7 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { fetchJson, mapPool, sleep } from "./http.js";
+import { knowledgePaths } from "./paths.js";
 import type { CatalogItem, WikiDigest } from "./types.js";
 
 const WIKI_API = "https://wiki.warframe.com/api.php";
@@ -96,11 +99,14 @@ async function resolveWikiArticle(
 export async function pullWikiDigests(
   items: CatalogItem[],
   options?: {
+    repoRoot?: string;
     concurrency?: number;
     onProgress?: (done: number, total: number, name: string) => void;
   },
 ): Promise<{ digests: WikiDigest[]; failed: number }> {
   const concurrency = Math.max(1, options?.concurrency ?? 4);
+  const wikiDir = knowledgePaths(options?.repoRoot).wikiDir;
+  await mkdir(wikiDir, { recursive: true });
   let done = 0;
   let failed = 0;
 
@@ -119,6 +125,12 @@ export async function pullWikiDigests(
           extract: page.extract.slice(0, 120_000),
           fetchedAt: new Date().toISOString(),
         };
+        // Write incrementally so long pulls survive interruption.
+        await writeFile(
+          path.join(wikiDir, `${digest.id}.json`),
+          `${JSON.stringify(digest, null, 2)}\n`,
+          "utf8",
+        );
         return digest;
       } catch {
         failed += 1;

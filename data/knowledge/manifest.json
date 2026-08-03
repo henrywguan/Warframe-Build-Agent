@@ -1,22 +1,23 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-03T01:13:40.942Z",
+  "generatedAt": "2026-08-03T01:15:12.848Z",
   "sources": {
     "wfcd": "https://api.warframestat.us",
     "wiki": "https://wiki.warframe.com",
     "overframe": "https://overframe.gg"
   },
   "counts": {
-    "catalogItems": 5,
-    "wikiDigests": 5,
-    "buildEntries": 0,
+    "catalogItems": 761,
+    "wikiDigests": 751,
+    "buildEntries": 2,
     "modsIndexed": 0
   },
   "notes": [
     "Agent-usable text pack: WFCD catalog + Warframe Wiki extracts + Overframe top builds.",
     "Media/images are intentionally omitted.",
-    "Pull limited to first 5 catalog items.",
-    "Cloudflare bot challenge blocked overframe.gg from this network. Re-run on a residential network or pass --import-builds <file>."
+    "Wiki digests failed for 10 items.",
+    "Cloudflare bot challenge blocked overframe.gg from this network. Re-run on a residential network or pass --import-builds <file>.",
+    "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json."
   ],
-  "overframeStatus": "blocked"
+  "overframeStatus": "partial"
 }

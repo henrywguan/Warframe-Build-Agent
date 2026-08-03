@@ -69,6 +69,7 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   if (!options.skipWiki) {
     log("Pulling Warframe Wiki digests...");
     const result = await pullWikiDigests(catalog, {
+      repoRoot,
       concurrency: options.concurrency ?? 4,
       onProgress: (done, total, name) => {
         if (done % 25 === 0 || done === total) {

@@ -20,7 +20,7 @@ Type **`/list`** in the mobile web chat or in this Cursor Warframe agent chat to
 | `/hotfix` | Alias for `/patches` |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
 
-Offline builds/item facts use the `lookup_local_knowledge` tool (local pack from WFCD + Wiki + Overframe). Plain-language questions still work.
+Offline builds/item facts use the `lookup_local_knowledge` tool (local pack from WFCD + Wiki + Overframe).
 
 | Cursor command | What it does |
 | --- | --- |

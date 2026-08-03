@@ -1,6 +1,6 @@
 # Offline knowledge pack (agent-usable)
 
-Local recall pack for builds and item facts — **text/structured data only** (no wiki images). Target size ~100–200 MB once Overframe top builds are populated.
+Local recall pack for builds and item facts — **text/structured data only** (no wiki images). A full wiki+catalog pack is typically only a few MB; Overframe top-build text stays small unless you import a large build dump.
 
 ## What’s inside (`data/knowledge/`)
 
