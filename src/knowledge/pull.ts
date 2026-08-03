@@ -12,38 +12,27 @@ export type PullOptions = {
   includeArchwing?: boolean;
   skipWiki?: boolean;
   skipOverframe?: boolean;
-  skipCatalog?: boolean;
   importBuildsPath?: string;
   concurrency?: number;
   onLog?: (line: string) => void;
 };
 
-type ImportFile =
-  | Array<{
-      itemName: string;
-      builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
-    }>
-  | {
-      builds?: Array<{
-        itemName: string;
-        builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
-      }>;
-    };
+type ImportBuildRow = {
+  itemName: string;
+  builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
+};
 
-async function loadImportedBuilds(filePath: string) {
-  const raw = JSON.parse(await readFile(filePath, "utf8")) as ImportFile;
+async function loadImportedBuilds(filePath: string): Promise<ImportBuildRow[]> {
+  const raw = JSON.parse(await readFile(filePath, "utf8")) as
+    | ImportBuildRow[]
+    | { builds?: ImportBuildRow[] };
   return Array.isArray(raw) ? raw : (raw.builds ?? []);
 }
 
 function mergeBuildEntries(primary: ItemBuilds[], secondary: ItemBuilds[]): ItemBuilds[] {
   const map = new Map<string, ItemBuilds>();
   for (const entry of secondary) map.set(entry.id, entry);
-  for (const entry of primary) {
-    const existing = map.get(entry.id);
-    if (!existing || entry.builds.length > 0) {
-      map.set(entry.id, entry);
-    }
-  }
+  for (const entry of primary) map.set(entry.id, entry);
   return [...map.values()];
 }
 
@@ -118,7 +107,7 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
           .join(", ")})`,
       );
     }
-    const imported = buildsFromImport(catalog, importedRows).filter((e) => e.builds.length > 0);
+    const imported = buildsFromImport(catalog, importedRows);
     buildEntries = mergeBuildEntries(imported, buildEntries);
     if (imported.length > 0) {
       overframeStatus = overframeStatus === "blocked" ? "partial" : "ok";
@@ -128,15 +117,13 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
         `Import file had no matching catalog items (${importedRows.length} row(s) read from ${options.importBuildsPath}).`,
       );
     }
-    log(`Builds after import: ${buildEntries.filter((e) => e.builds.length).length} items with builds`);
+    log(`Builds after import: ${buildEntries.length} items with builds`);
   }
 
-  // Keep only populated build files (Cloudflare-blocked stubs are noted on the manifest).
+  // Drop empty Overframe stubs; blocked/partial status lives on the manifest.
   buildEntries = buildEntries.filter((entry) => entry.builds.length > 0);
 
-  // Reserved for a future mod-index pull; keep file present for schema stability.
   const mods: ModDigest[] = [];
-
   const manifest = await saveKnowledgePack({
     repoRoot,
     catalog,
