@@ -1,6 +1,6 @@
 # Mobile web chat UI
 
-A phone-friendly chat front-end lives in [`web/`](../web/). It talks to an OpenAI-compatible model and can call this repo’s Warframe Status + Warframe.market helpers for live data.
+A phone-friendly chat front-end lives in [`web/`](../web/). It talks to an OpenAI-compatible model and can call this repo’s Warframe Status, Warframe.market, and official patch-notes helpers for live / daily-scrape data.
 
 The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
@@ -26,6 +26,8 @@ From repo root you can also run:
 npm run web:dev
 ```
 
+Locally, daily-scrape tools also try `../data/market/` and `../data/patches/` when env URLs are unset.
+
 ## Environment
 
 | Variable | Required | Purpose |
@@ -34,25 +36,52 @@ npm run web:dev
 | `OPENAI_MODEL` | no | Default `gpt-4o-mini` |
 | `OPENAI_BASE_URL` | no | OpenAI-compatible proxy/base URL |
 | `CHAT_PASSWORD` | no | If set, gates the UI with a simple password cookie |
-| `MARKET_CHANGES_URL` | no | URL to `latest-changes.json` from the daily market job |
+| `MARKET_CHANGES_URL` | no | URL to `data/market/latest-changes.json` from the daily market job |
+| `PATCH_CHANGES_URL` | no | URL to `data/patches/latest-changes.json` from the daily patch job |
+| `PATCH_SNAPSHOT_URL` | no | URL to `data/patches/latest-snapshot.json` (fallback if live hub fetch fails) |
 
 ## Deploy (Vercel, etc.)
 
 1. Set the project **root directory** to `web` (or deploy from `web/`).
 2. Add env vars: `OPENAI_API_KEY`, optional `CHAT_PASSWORD`, optional model/base URL.
-3. Ensure the host can reach:
+3. For daily scrapes after Actions commit to `main`, set:
+   - `MARKET_CHANGES_URL` → raw `data/market/latest-changes.json`
+   - `PATCH_CHANGES_URL` → raw `data/patches/latest-changes.json`
+   - optional `PATCH_SNAPSHOT_URL` → raw `data/patches/latest-snapshot.json`
+4. Ensure the host can reach:
    - your model provider
    - `https://api.warframestat.us`
    - `https://api.warframe.market`
-4. Deploy.
+   - `https://www.warframe.com` (live patch-notes hub)
+5. Deploy.
 
-Live `get_market_price` works on any deploy. Saved day-over-day changes need `MARKET_CHANGES_URL` pointing at `data/market/latest-changes.json` (for example a raw GitHub URL after the daily job commits).
+Live `get_market_price` and `get_patch_notes_latest` work on any deploy. Saved day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files during repo-root/dev runs).
+
+## Slash commands
+
+Type **`/list`** in the chat for the full catalog. Common ones:
+
+| Command | Result |
+| --- | --- |
+| `/list` | Show available commands |
+| `/fissures [sp] [tier]` | Live fissures |
+| `/cycles` / `/sortie` / `/alerts` / `/invasions` | Live worldstate slices |
+| `/market <slug>` | Live Warframe.market price |
+| `/market-changes` | Daily 4pm Pacific market scrape |
+| `/patches` / `/hotfix` | Latest official updates/hotfixes |
+| `/patch-changes` | Daily 4pm Pacific newly listed notes |
+
+Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions still go through the model + tools.
+
+Full shared catalog: [`docs/commands.md`](commands.md).
 
 ## What the chat can tool-call
 
 - Worldstate summary, fissures, cycles, sortie, invasions, alerts
 - Warframe.market v2 price by slug
-- Latest saved daily market changes (when snapshot data exists)
+- Latest saved daily market changes (4pm Pacific job)
+- Latest official updates/hotfixes (live hub scrape)
+- Newly listed patch notes since the previous daily snapshot (4pm Pacific job)
 
 ## Security notes
 

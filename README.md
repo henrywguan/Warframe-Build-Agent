@@ -12,12 +12,14 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 | [`docs/sources.md`](docs/sources.md) | Source priority and conflict handling |
 | [`docs/warframe-status.md`](docs/warframe-status.md) | Status field meanings + CLI map |
 | [`docs/warframe-market.md`](docs/warframe-market.md) | Market v2 pricing + daily 4pm Pacific pull |
+| [`docs/warframe-patch-notes.md`](docs/warframe-patch-notes.md) | Official updates/hotfixes + daily 4pm Pacific check |
 | [`config/market-watchlist.json`](config/market-watchlist.json) | Items tracked for daily price snapshots |
-| [`src/`](src/) | Status + Market TypeScript clients and CLIs |
+| [`src/`](src/) | Status, Market, and Patch Notes clients + CLIs |
 | [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
 | [`hermes/`](hermes/) | Hermes Desktop/CLI importable profile distribution |
 | [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
 | [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
+| [`docs/commands.md`](docs/commands.md) | `/list` command catalog (web + agent chat) |
 | [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
 | [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
 | [`.cursor/agents/`](.cursor/agents/) | Cursor subagents (cleanup-simplify) |
@@ -28,7 +30,7 @@ A Warframe guide agent that compares weapons, recommends builds, explains game m
 - **Platform:** `pc` — Warframe is cross-play; this agent treats **PC and mobile** as the same default worldstate path.
 - World-state: `https://api.warframestat.us`
 - Market prices: `https://api.warframe.market/v2/`
-- Daily market snapshots target **4:00 PM America/Los_Angeles** (PST/PDT)
+- Daily market + patch-notes checks target **4:00 PM America/Los_Angeles** (PST/PDT)
 
 ## Setup
 
@@ -66,12 +68,24 @@ npm run market -- changes
 
 Daily automation: [`.github/workflows/market-daily-prices.yml`](.github/workflows/market-daily-prices.yml) runs near 4pm Pacific, writes `data/market/`, and commits when there are updates. Edit [`config/market-watchlist.json`](config/market-watchlist.json) to change tracked items.
 
+## Patch notes CLI (updates / hotfixes)
+
+```bash
+npm run patches -- status
+npm run patches -- latest
+npm run patches -- pull --force
+npm run patches -- changes
+```
+
+Source: [warframe.com/en/patch-notes](https://www.warframe.com/en/patch-notes). Daily automation: [`.github/workflows/patch-notes-daily.yml`](.github/workflows/patch-notes-daily.yml) writes `data/patches/` near 4pm Pacific.
+
 ## Library usage
 
 ```ts
 import {
   WarframeStatusClient,
   WarframeMarketClient,
+  PatchNotesClient,
 } from "./src/index.ts";
 
 const status = new WarframeStatusClient(); // platform: pc
@@ -79,6 +93,9 @@ const summary = await status.getSummary();
 
 const market = new WarframeMarketClient();
 const top = await market.getTopOrders("mirage_prime_set");
+
+const patches = new PatchNotesClient();
+const notes = await patches.listEntries();
 ```
 
 ## Desktop overlay (arsenal coaching)
@@ -107,6 +124,10 @@ Or from repo root: `npm run web:dev`
 
 Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to Vercel (or similar) and open it on your phone — details in [`docs/web-chat.md`](docs/web-chat.md).
 
+For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
+
+In the chat UI (and this agent chat), type **`/list`** for available commands — see [`docs/commands.md`](docs/commands.md).
+
 ## Hermes Desktop import
 
 ```bash
@@ -131,7 +152,7 @@ Open this repo in Cursor and ask player-facing questions, for example:
 - “What’s up for fissures / Cetus night right now?”
 - “How did Mirage Prime Set move vs yesterday’s market snapshot?”
 
-For live data, prefer `npm run wf -- …` and `npm run market -- …`.
+For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run patches -- …`.
 
 ## Scripts
 
@@ -139,6 +160,7 @@ For live data, prefer `npm run wf -- …` and `npm run market -- …`.
 | --- | --- |
 | `npm run wf -- <cmd>` | World-state CLI |
 | `npm run market -- <cmd>` | Warframe.market v2 CLI |
+| `npm run patches -- <cmd>` | Official patch notes / hotfix checks |
 | `npm run web:dev` | Mobile chat UI (local) |
 | `npm run web:build` | Build chat UI |
 | `python3 -m wf_overlay` (from `overlay/`) | Desktop arsenal overlay |

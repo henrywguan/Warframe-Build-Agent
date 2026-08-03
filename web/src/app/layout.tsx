@@ -18,7 +18,7 @@ const rajdhani = Rajdhani({
 export const metadata: Metadata = {
   title: "Warframe Build Agent",
   description:
-    "Mobile-friendly Warframe advisor chat for builds, comparisons, world-state, and market context — with an Ordis-inspired cephalon stage.",
+    "Mobile-friendly Warframe advisor chat for builds, comparisons, world-state, market, and patch notes — with an Ordis-inspired cephalon stage.",
   applicationName: "Warframe Build Agent",
   manifest: "/manifest.webmanifest",
   icons: {

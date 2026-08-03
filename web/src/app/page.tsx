@@ -20,10 +20,10 @@ interface ChatMessage {
 }
 
 const SUGGESTIONS = [
-  "Steel Path fissures right now?",
-  "Budget viral slash primary ideas",
-  "Cetus / Vallis / Cambion cycles",
-  "Price check mirage_prime_set",
+  "/list",
+  "/fissures sp",
+  "/patches",
+  "/market mirage_prime_set",
 ];
 
 const SPEAKING_MS = 3400;
@@ -56,7 +56,7 @@ export default function HomePage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Operator? Ordis is online. Ask for builds, weapon comparisons, live fissures/cycles, or a market price check. —Destruction— practical guidance awaits.",
+        "Operator? Ordis is online. Ask in plain language, or type /list for commands (builds, fissures, market, hotfixes, and more). —Destruction— practical guidance awaits.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -267,7 +267,7 @@ export default function HomePage() {
 
   return (
     <main className={styles.shell}>
-      <BrandHeader tagline="Builds, comparisons, live world-state, and market context — Ordis on the line." />
+      <BrandHeader tagline="Builds, comparisons, live world-state, market, and patch notes — Ordis on the line." />
 
       <div className={styles.centerStage}>
         <OrdisStage mood={mood} caption={ordisCaption(mood)} />
@@ -316,7 +316,7 @@ export default function HomePage() {
             ref={inputRef}
             className={styles.input}
             rows={2}
-            placeholder="Ask about a build, fissures, cycles, or a market slug…"
+            placeholder="Try /list, /patches, or ask in plain language…"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={onKeyDown}
@@ -331,7 +331,7 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : "Tip: market slugs look like mirage_prime_set. Live data can shift while you read."}
+          : "Tip: type /list for commands. Patch/market dailies refresh ~4pm Pacific."}
       </p>
     </main>
   );
