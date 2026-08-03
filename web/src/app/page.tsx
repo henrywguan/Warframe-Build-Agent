@@ -32,10 +32,22 @@ function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function ordisCaption(mood: OrdisMood, pending: boolean): string {
-  if (mood === "thinking" || pending) return "Consulting the ship’s systems…";
+function ordisCaption(mood: OrdisMood): string {
+  if (mood === "thinking") return "Consulting the ship’s systems…";
   if (mood === "speaking") return "Ordis is transmitting…";
   return "Operator? Ordis is standing by.";
+}
+
+function BrandHeader({ tagline }: { tagline: string }) {
+  return (
+    <header className={styles.brand}>
+      <h1 className={styles.brandMark}>
+        Warframe <span>Build Agent</span>
+      </h1>
+      <hr className={styles.brandRule} />
+      <p className={styles.tagline}>{tagline}</p>
+    </header>
+  );
 }
 
 export default function HomePage() {
@@ -58,12 +70,12 @@ export default function HomePage() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastSpokenIdRef = useRef<string | null>("welcome");
+  const lastSpokenIdRef = useRef<string | null>(null);
 
   const mood: OrdisMood = pending ? "thinking" : speaking ? "speaking" : "idle";
 
   function triggerSpeaking(messageId: string) {
-    if (lastSpokenIdRef.current === messageId && messageId !== "welcome") return;
+    if (lastSpokenIdRef.current === messageId) return;
     lastSpokenIdRef.current = messageId;
     setSpeaking(true);
     if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
@@ -74,7 +86,6 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    // Welcome line: brief Ordis speak on first paint
     triggerSpeaking("welcome");
     return () => {
       if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
@@ -87,8 +98,9 @@ export default function HomePage() {
 
   useEffect(() => {
     const last = messages[messages.length - 1];
-    if (!last || last.role !== "assistant" || last.id === "welcome") return;
-    if (pending) return;
+    if (!last || last.role !== "assistant" || last.id === "welcome" || pending) {
+      return;
+    }
     triggerSpeaking(last.id);
   }, [messages, pending]);
 
@@ -96,8 +108,10 @@ export default function HomePage() {
     let cancelled = false;
     (async () => {
       try {
-        const health = await fetch("/api/health");
-        const auth = await fetch("/api/auth");
+        const [health, auth] = await Promise.all([
+          fetch("/api/health"),
+          fetch("/api/auth"),
+        ]);
         const healthJson = (await health.json()) as {
           openaiConfigured?: boolean;
         };
@@ -173,11 +187,10 @@ export default function HomePage() {
         throw new Error(data.error || "Chat request failed");
       }
 
-      const replyId = uid();
       setMessages((current) => [
         ...current,
         {
-          id: replyId,
+          id: uid(),
           role: "assistant",
           content: data.message?.content || "No response.",
           toolsUsed: data.toolsUsed,
@@ -215,13 +228,7 @@ export default function HomePage() {
   if (!ready) {
     return (
       <main className={styles.shell}>
-        <header className={styles.brand}>
-          <h1 className={styles.brandMark}>
-            Warframe <span>Build Agent</span>
-          </h1>
-          <hr className={styles.brandRule} />
-          <p className={styles.tagline}>Awakening cephalon…</p>
-        </header>
+        <BrandHeader tagline="Awakening cephalon…" />
         <div className={styles.centerStage}>
           <OrdisStage mood="thinking" caption="Initializing…" />
         </div>
@@ -232,15 +239,7 @@ export default function HomePage() {
   if (passwordRequired && !authorized) {
     return (
       <main className={styles.shell}>
-        <header className={styles.brand}>
-          <h1 className={styles.brandMark}>
-            Warframe <span>Build Agent</span>
-          </h1>
-          <hr className={styles.brandRule} />
-          <p className={styles.tagline}>
-            Cephalon lock engaged. Enter your access password, Operator.
-          </p>
-        </header>
+        <BrandHeader tagline="Cephalon lock engaged. Enter your access password, Operator." />
         <div className={styles.centerStage}>
           <OrdisStage mood="idle" caption="Awaiting clearance…" />
         </div>
@@ -268,18 +267,10 @@ export default function HomePage() {
 
   return (
     <main className={styles.shell}>
-      <header className={styles.brand}>
-        <h1 className={styles.brandMark}>
-          Warframe <span>Build Agent</span>
-        </h1>
-        <hr className={styles.brandRule} />
-        <p className={styles.tagline}>
-          Builds, comparisons, live world-state, and market context — Ordis on the line.
-        </p>
-      </header>
+      <BrandHeader tagline="Builds, comparisons, live world-state, and market context — Ordis on the line." />
 
       <div className={styles.centerStage}>
-        <OrdisStage mood={mood} caption={ordisCaption(mood, pending)} />
+        <OrdisStage mood={mood} caption={ordisCaption(mood)} />
       </div>
 
       <section className={styles.chatPanel} aria-label="Chat">

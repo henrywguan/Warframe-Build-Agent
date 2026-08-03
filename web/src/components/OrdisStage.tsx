@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./OrdisStage.module.css";
 
 export type OrdisMood = "idle" | "thinking" | "speaking";
@@ -55,10 +53,8 @@ export function OrdisStage({ mood, caption }: OrdisStageProps) {
             </filter>
           </defs>
 
-          {/* Soft void halo */}
           <circle cx="100" cy="100" r="72" fill="url(#ordisCore)" opacity="0.35" />
 
-          {/* Cracked hexahedron / cephalon body */}
           <g className={styles.cube} filter="url(#ordisGlow)">
             <polygon
               points="100,34 158,68 158,132 100,166 42,132 42,68"
@@ -91,7 +87,6 @@ export function OrdisStage({ mood, caption }: OrdisStageProps) {
               strokeWidth="1.2"
             />
 
-            {/* Inner octahedral core */}
             <polygon
               className={styles.core}
               points="100,62 128,90 100,118 72,90"
@@ -101,7 +96,6 @@ export function OrdisStage({ mood, caption }: OrdisStageProps) {
             />
             <circle className={styles.pupil} cx="100" cy="90" r="7.5" fill="#e8fbff" />
 
-            {/* Fracture lines */}
             <g className={styles.cracks} stroke="#7fe7ef" strokeWidth="1.15" fill="none">
               <path d="M86 58 L94 78 L82 96" opacity="0.85" />
               <path d="M118 70 L108 88 L124 108" opacity="0.7" />
@@ -110,7 +104,6 @@ export function OrdisStage({ mood, caption }: OrdisStageProps) {
             </g>
           </g>
 
-          {/* Speech radio arcs (SVG complement to CSS rings) */}
           <g className={styles.radio} fill="none" stroke="#7fe7ef">
             <path
               className={styles.arc}
