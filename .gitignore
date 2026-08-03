@@ -11,3 +11,4 @@ web/node_modules/
 exports/.staging-*/
 # Optional huge scratch exports; the committed knowledge pack under data/knowledge stays tracked
 data/knowledge/.cache/
+data/knowledge/builds-export*.json

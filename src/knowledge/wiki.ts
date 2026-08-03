@@ -1,5 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import path from "node:path";
+import { writeFileDurable } from "./fs-write.js";
 import { fetchJson, mapPool, sleep } from "./http.js";
 import { knowledgePaths } from "./paths.js";
 import type { CatalogItem, WikiDigest } from "./types.js";
@@ -126,10 +127,9 @@ export async function pullWikiDigests(
           fetchedAt: new Date().toISOString(),
         };
         // Write incrementally so long pulls survive interruption.
-        await writeFile(
+        await writeFileDurable(
           path.join(wikiDir, `${digest.id}.json`),
           `${JSON.stringify(digest, null, 2)}\n`,
-          "utf8",
         );
         return digest;
       } catch {

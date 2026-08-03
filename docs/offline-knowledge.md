@@ -25,7 +25,11 @@ npm run knowledge -- crawl-overframe --limit 10
 # Dev sample
 npm run knowledge -- pull --limit 25
 
-# If Overframe is Cloudflare-blocked (common on datacenter IPs):
+# If Overframe is Cloudflare-blocked (common on datacenter IPs / Node fetch):
+npm run knowledge:export-overframe -- --limit 5
+npm run knowledge:export-overframe -- --resume
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
+# Or import a hand-written / sample JSON:
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 
 # Lookup

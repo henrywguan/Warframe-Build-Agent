@@ -91,6 +91,8 @@ npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
 npm run knowledge -- pull
 npm run knowledge -- crawl-overframe
+npm run knowledge:export-overframe -- --limit 5
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 
 # Web + overlay

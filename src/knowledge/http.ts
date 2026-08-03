@@ -30,14 +30,22 @@ export async function fetchText(
   }
 }
 
-export async function fetchJson<T>(url: string): Promise<T> {
-  const result = await fetchText(url, {
-    headers: { Accept: "application/json" },
-  });
-  if (!result.ok) {
-    throw new Error(`HTTP ${result.status} for ${url}`);
+export async function fetchJson<T>(url: string, options?: { retries?: number }): Promise<T> {
+  const retries = Math.max(0, options?.retries ?? 3);
+  let lastStatus = 0;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const result = await fetchText(url, {
+      headers: { Accept: "application/json" },
+    });
+    if (result.ok) {
+      return JSON.parse(result.text) as T;
+    }
+    lastStatus = result.status;
+    const retryable = result.status === 429 || result.status >= 500;
+    if (!retryable || attempt === retries) break;
+    await sleep(250 * 2 ** attempt);
   }
-  return JSON.parse(result.text) as T;
+  throw new Error(`HTTP ${lastStatus} for ${url}`);
 }
 
 export function sleep(ms: number): Promise<void> {

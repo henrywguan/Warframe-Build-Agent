@@ -1,5 +1,6 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { writeFileDurable } from "./fs-write.js";
 import { knowledgePaths } from "./paths.js";
 import type {
   CatalogItem,
@@ -11,7 +12,7 @@ import type {
 
 async function writeJson(filePath: string, data: unknown): Promise<void> {
   await mkdir(path.dirname(filePath), { recursive: true });
-  await writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+  await writeFileDurable(filePath, `${JSON.stringify(data, null, 2)}\n`);
 }
 
 async function readJson<T>(filePath: string): Promise<T | null> {
@@ -30,6 +31,8 @@ export async function saveKnowledgePack(options: {
   mods: ModDigest[];
   overframeStatus: KnowledgeManifest["overframeStatus"];
   notes: string[];
+  /** When false (default), skip re-writing per-item wiki digests already flushed by pull. */
+  rewriteWikiDigests?: boolean;
 }): Promise<KnowledgeManifest> {
   const paths = knowledgePaths(options.repoRoot);
   await mkdir(paths.root, { recursive: true });
@@ -48,8 +51,11 @@ export async function saveKnowledgePack(options: {
   });
   await writeJson(paths.mods, options.mods);
 
-  for (const digest of options.wiki) {
-    await writeJson(path.join(paths.wikiDir, `${digest.id}.json`), digest);
+  // Skip by default: digests are flushed in pullWikiDigests; rewrites thrash OneDrive locks.
+  if (options.rewriteWikiDigests) {
+    for (const digest of options.wiki) {
+      await writeJson(path.join(paths.wikiDir, `${digest.id}.json`), digest);
+    }
   }
   for (const entry of options.builds) {
     await writeJson(path.join(paths.buildsDir, `${entry.id}.json`), entry);
