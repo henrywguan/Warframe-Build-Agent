@@ -1,0 +1,60 @@
+[
+  {
+    "itemName": "Coda Hema",
+    "builds": [
+      {
+        "rank": 1,
+        "name": "Sample SP Viral Heat (import stub)",
+        "forma": 3,
+        "summary": "Steel Path sample — viral + heat status primary with comfortable ammo. Replace with a real Overframe export when available.",
+        "mods": [
+          "Serration",
+          "High Voltage",
+          "Rime Rounds",
+          "Vital Sense",
+          "Point Strike",
+          "Carbide Deposit",
+          "Galvanized Chamber",
+          "Primed Fast Hands"
+        ]
+      },
+      {
+        "rank": 2,
+        "name": "Sample Critical Flex (import stub)",
+        "forma": 4,
+        "summary": "Higher crit flex sample for stronger riven/base crit rolls.",
+        "mods": [
+          "Serration",
+          "Point Strike",
+          "Vital Sense",
+          "Galvanized Chamber",
+          "Hammer Shot",
+          "Rime Rounds",
+          "Hellfire",
+          "Vital Sense"
+        ]
+      }
+    ]
+  },
+  {
+    "itemName": "Revenant Prime",
+    "builds": [
+      {
+        "rank": 1,
+        "name": "Sample Mesmer Tank (import stub)",
+        "forma": 2,
+        "summary": "General-use Mesmer Skin tank sample for Steel Path.",
+        "mods": [
+          "Blind Rage",
+          "Transient Fortitude",
+          "Primed Continuity",
+          "Stretch",
+          "Adaptation",
+          "Rolling Guard",
+          "Umbral Intensify",
+          "Primed Flow"
+        ]
+      }
+    ]
+  }
+]

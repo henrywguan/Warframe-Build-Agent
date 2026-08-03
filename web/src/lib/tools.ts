@@ -1,4 +1,5 @@
 import type OpenAI from "openai";
+import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import {
   liveAlerts,
   liveCycles,
@@ -130,6 +131,25 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "lookup_local_knowledge",
+      description:
+        "Recall offline agent-usable Warframe data from the local knowledge pack (WFCD catalog, Warframe Wiki digests, Overframe top builds when present). Use for builds, frame/weapon facts, and mod context without live web browsing.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "Item or topic to look up (e.g. 'Coda Hema', 'Revenant Prime', 'Serration')",
+          },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
 ];
 
 type ToolArgs = Record<string, unknown>;
@@ -184,6 +204,11 @@ export async function runChatTool(name: string, rawArgs: string): Promise<string
       }
       case "get_patch_notes_daily_changes":
         return await livePatchNotesDailyChanges();
+      case "lookup_local_knowledge": {
+        const query = asString(args.query);
+        if (!query) return "Missing required query.";
+        return await lookupLocalKnowledge(query);
+      }
       default:
         return `Unknown tool: ${name}`;
     }

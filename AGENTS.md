@@ -19,6 +19,8 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `config/market-watchlist.json` | Items tracked for daily price snapshots |
 | `data/market/` | Saved daily market snapshots / day-over-day changes |
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
+| `data/knowledge/` | Offline agent-usable wiki digests + Overframe top builds |
+| `docs/offline-knowledge.md` | How to pull/query the local knowledge pack |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
 | `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |
@@ -57,6 +59,8 @@ npm test
 cd overlay && python3 -m wf_overlay
 ./scripts/cleanup-verify.sh
 ./scripts/cleanup-verify-all.sh
+npm run knowledge -- pull
+npm run knowledge -- lookup "Coda Hema"
 ```
 
 After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. For overlay + web integrity, use `/cleanup-simplify -all` (`./scripts/cleanup-verify-all.sh`). Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).

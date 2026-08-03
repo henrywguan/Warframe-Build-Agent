@@ -1,0 +1,24 @@
+{
+  "id": "revenant-prime",
+  "itemName": "Revenant Prime",
+  "source": "import",
+  "fetchedAt": "2026-08-03T01:15:12.702Z",
+  "builds": [
+    {
+      "rank": 1,
+      "name": "Sample Mesmer Tank (import stub)",
+      "forma": 2,
+      "summary": "General-use Mesmer Skin tank sample for Steel Path.",
+      "mods": [
+        "Blind Rage",
+        "Transient Fortitude",
+        "Primed Continuity",
+        "Stretch",
+        "Adaptation",
+        "Rolling Guard",
+        "Umbral Intensify",
+        "Primed Flow"
+      ]
+    }
+  ]
+}
