@@ -1,90 +1,122 @@
-# Local LLM setup (Hermes + Qwen / OpenAI-compatible)
+# Local LLM setup (Hermes + Ollama / Qwen)
 
-Use this profile with a **local** OpenAI-compatible model (Qwen 3.6, Qwen2.5, Llama, etc.). Facts come from the repo’s offline pack + CLIs — not from the model’s training data.
+Use a **local** OpenAI-compatible model so Ordis runs on your machine.  
+Facts still come from this repo’s offline pack and CLIs — not from the model inventing Warframe stats.
 
-## Recommended stack
+**New to Hermes?** Follow the full import guide first:  
+→ [`docs/hermes-export.md`](../docs/hermes-export.md)
 
-1. **Clone this repo** (needs `data/knowledge/` + Node CLIs)
-2. **Install deps** at repo root: `npm install`
-3. **Confirm pack:** `npm run knowledge -- status`
-4. **Run a local OpenAI-compatible server** (examples below)
-5. **Import Hermes profile** and point `terminal.cwd` at the repo root
-6. **Configure Hermes model provider** to that local endpoint
+---
 
-## Example: Ollama (Qwen)
+## Checklist
+
+1. This repo is on your computer and you ran `npm install`  
+2. `npm run knowledge -- status` works  
+3. Hermes profile **warframe-build-agent** is imported and active  
+4. Hermes **working directory** points at this repo root  
+5. A local server (Ollama / LM Studio / …) is running  
+6. Hermes provider points at that server  
+
+---
+
+## Ollama (recommended)
+
+### 1. Install Ollama
+
+Download: https://ollama.com  
+
+### 2. Download a chat model
 
 ```bash
-# Install / pull a chat model (name may vary by release)
-ollama pull qwen3.6
-# or: ollama pull qwen2.5:14b
-
-# Ollama exposes OpenAI-compatible API at http://127.0.0.1:11434/v1
+ollama pull qwen2.5
 ```
 
-In Hermes profile config / UI (provider names vary by Hermes version):
+Other fine options: `qwen3.6`, `qwen2.5:14b`, etc. **Use the same name** in Hermes.
 
-```yaml
-model:
-  provider: openai
-  name: qwen3.6          # must match the Ollama tag
-  # base_url / api_base: http://127.0.0.1:11434/v1
-```
+### 3. Configure Hermes
 
-Profile `.env` (typical):
+| Setting | Value |
+| --- | --- |
+| Provider | OpenAI-compatible |
+| Base URL | `http://127.0.0.1:11434/v1` |
+| API key | `ollama` (any non-empty text is OK) |
+| Model | `qwen2.5` |
+
+If your Hermes build uses a profile `.env` file:
 
 ```bash
 OPENAI_API_KEY=ollama
 OPENAI_BASE_URL=http://127.0.0.1:11434/v1
-# If Hermes uses different env names, map them in the Desktop provider UI.
+OPENAI_MODEL=qwen2.5
 ```
 
-## Example: LM Studio / vLLM
+### 4. Test
 
-Point Hermes at the local OpenAI-compatible base URL (often `http://127.0.0.1:1234/v1` for LM Studio) and set the model id shown in that app.
+In Hermes chat:
 
-## What Ordis should use locally
+> Lookup Arcane Energize from the local knowledge pack.
 
-With `terminal.cwd` = repo root, prefer shell tools over inventing numbers:
+---
+
+## LM Studio / vLLM
+
+1. Start the local server in that app.  
+2. Copy its OpenAI-compatible Base URL (LM Studio is often `http://127.0.0.1:1234/v1`).  
+3. Paste Base URL + model id into Hermes.  
+4. API key can be any placeholder if the server does not require one.
+
+---
+
+## Commands Ordis should prefer
+
+With Hermes cwd = this repo:
 
 | Goal | Command |
 | --- | --- |
 | Pack health | `npm run knowledge -- status` |
 | Item / mechanics / arcanes | `npm run knowledge -- lookup "<query>"` |
-| Loadout vs Overframe top builds | `npm run knowledge -- compare-loadout "<item>" --mods "..." [--arcanes "..."]` |
+| Loadout vs Overframe | `npm run knowledge -- compare-loadout "<item>" --mods "..." [--arcanes "..."]` |
 | Modded DPS | `npm run knowledge -- dps "<weapon>" --preset typical` |
 | DPS A vs B | `npm run knowledge -- compare-dps "<A>" "<B>" --preset typical` |
-| Refresh mechanics | `npm run knowledge -- pull-mechanics` |
-| Refresh arcanes | `npm run knowledge -- pull-arcanes` |
-| Refresh Overframe builds | `npm run knowledge -- crawl-overframe` (residential IP) |
 | Live world-state | `npm run wf -- summary` |
 | Market | `npm run market -- price <slug>` |
 | Patches | `npm run patches -- latest` |
 
-## Pack refresh / sidecar
-
-If `data/knowledge/` is missing or stale:
+Refresh pack pieces:
 
 ```bash
-npm run knowledge -- pull --skip-overframe   # catalog + wiki + mechanics + arcanes
+npm run knowledge -- pull --skip-overframe
 npm run knowledge -- pull-mechanics
 npm run knowledge -- pull-arcanes
-# Overframe (often Cloudflare-blocked on cloud IPs):
-npm run knowledge -- crawl-overframe
-# or:
-./scripts/pack-knowledge-sidecar.sh   # optional tarball of data/knowledge/
 ```
 
-## Web UI alternative
+Overframe builds (may need a browser/home network): see [`docs/overframe-crawl.md`](../docs/overframe-crawl.md).
 
-Same local model works in `web/`:
+---
+
+## Same model in the web UI
+
+You do **not** have to edit files. Run `npm run web:dev`, open http://localhost:3000, tap **LLM / Ollama**, and enter the same Base URL / key / model.
+
+Or use `web/.env.local`:
 
 ```bash
-cd web
-cp .env.example .env.local
-# OPENAI_BASE_URL=http://127.0.0.1:11434/v1
-# OPENAI_API_KEY=ollama
-# OPENAI_MODEL=qwen3.6
-npm run dev
+OPENAI_BASE_URL=http://127.0.0.1:11434/v1
+OPENAI_API_KEY=ollama
+OPENAI_MODEL=qwen2.5
 ```
 
-Or set `CHAT_MODE=local` for a deterministic no-LLM chatbot over the same pack.
+`CHAT_MODE=local` = deterministic knowledge chatbot with **no** LLM.
+
+Details: [`docs/web-chat.md`](../docs/web-chat.md).
+
+---
+
+## Troubleshooting
+
+| Issue | Try this |
+| --- | --- |
+| Connection refused | Is Ollama running? Is the Base URL exactly `…/v1`? |
+| Wrong / empty answers | Is Hermes cwd the repo root? Run `npm run knowledge -- status` |
+| Model not found | `ollama list` — model name must match Hermes |
+| Still inventing builds | Overframe cache may be empty — import builds or allow online search when Ordis asks |

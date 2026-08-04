@@ -1,6 +1,11 @@
-# Offline knowledge pack (agent-usable)
+# Offline knowledge pack
 
-Local recall pack for builds and item facts — **text/structured data only** (no wiki images). A full wiki+catalog pack is typically only a few MB; Overframe top-build text stays small unless you import a large build dump.
+Local facts Ordis (and the web/CLI tools) read from disk — **text only**, no wiki images.
+
+**New here?** Start with [`getting-started.md`](getting-started.md).  
+**Hermes users:** after import, keep this pack fresh so lookups stay accurate — see [`hermes-export.md`](hermes-export.md).
+
+A full catalog + digests pack is usually only a few MB. Overframe build text stays small unless you import a large dump.
 
 ## What’s inside (`data/knowledge/`)
 

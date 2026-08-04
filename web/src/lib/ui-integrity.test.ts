@@ -11,6 +11,7 @@ describe("web UI wiring integrity", () => {
   it("keeps Ordis stage, chat panel, composer, and API linked", () => {
     for (const needle of [
       "OrdisStage",
+      "MessageBody",
       "deriveOrdisMood",
       "shouldTriggerSpeaking",
       'aria-label="Chat"',
@@ -23,9 +24,12 @@ describe("web UI wiring integrity", () => {
       "Transmission log",
       "clearChat",
       "Clear",
+      "LLM / Ollama",
+      "LlmSettingsPanel",
       "Attach",
       "image_url",
       "attachment",
+      "topZone",
     ]) {
       assert.match(pageSource, new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
     }

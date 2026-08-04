@@ -1,85 +1,97 @@
-# Warframe Build Agent — Hermes profile distribution
+# Warframe Build Agent — Hermes profile
 
-This folder is a **Hermes Agent profile distribution** you can import into Hermes Desktop / CLI.
+This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or CLI.
 
-**Profile version:** `0.3.0` — local-LLM friendly (Qwen / Ollama / OpenAI-compatible) + full offline knowledge CLI surface.
+**Not a Hermes user yet?** Use the full beginner guide (recommended):
 
-## Install options
+→ **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-### A) Import the packed archive (best for Desktop)
+**Profile version:** `0.3.0` (Hermes ≥ 0.12.0)  
+Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.
 
-From the repo root:
+---
+
+## Fast path (after you have this repo + `npm install`)
+
+### Desktop
+
+1. From the **repo root**, pack the profile:
 
 ```bash
 ./scripts/pack-hermes-profile.sh
+```
+
+2. In Hermes Desktop: **Profiles → Import** → choose  
+   `exports/warframe-build-agent-hermes-profile.tar.gz`  
+3. Name it `warframe-build-agent` and **activate** it.  
+4. Set the profile **working directory** to the **Warframe-Build-Agent** folder (the one with `package.json`).  
+5. Connect Ollama or OpenAI — see [`LOCAL_LLM.md`](LOCAL_LLM.md).
+
+### CLI
+
+```bash
+# From Warframe-Build-Agent root:
+hermes profile install ./hermes --name warframe-build-agent --alias
+hermes profile use warframe-build-agent
+```
+
+Or import the packed archive:
+
+```bash
 hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
 ```
 
-Optional knowledge sidecar (same time):
+---
 
-```bash
-./scripts/pack-hermes-profile.sh --with-knowledge
-```
-
-In Hermes Desktop: use **Profiles → Import** (or the CLI above) and select the `.tar.gz`.
-
-### B) Install from this folder
-
-```bash
-hermes profile install ./hermes --name warframe-build-agent --alias
-```
-
-### C) From a GitHub checkout
-
-```bash
-git clone https://github.com/henrywguan/Warframe-Build-Agent.git
-cd Warframe-Build-Agent && npm install
-hermes profile install ./hermes --name warframe-build-agent --alias
-```
-
-`hermes profile install <git-url>` expects `distribution.yaml` at the **repository root**, so for this monorepo use the local `hermes/` path or the packed `.tar.gz` instead.
-
-## After install
-
-```bash
-hermes profile use warframe-build-agent
-# or:
-hermes -p warframe-build-agent chat
-```
-
-1. Point profile `terminal.cwd` at this **repo root**.
-2. Configure a **local model** (recommended): see [`LOCAL_LLM.md`](LOCAL_LLM.md) for Qwen 3.6 / Ollama / LM Studio.
-3. Verify pack: `npm run knowledge -- status`.
-
-## What’s included
+## What’s inside
 
 | Path | Role |
 | --- | --- |
 | `SOUL.md` | Ordis identity + source policy |
-| `LOCAL_LLM.md` | Local Qwen / OpenAI-compatible setup |
-| `skills/warframe/compare-gear` | Gear comparisons (+ DPS CLI) |
-| `skills/warframe/recommend-build` | Builds (local pack first; ask before online) |
-| `skills/warframe/explain-mechanics` | Systems via mechanics digests |
-| `skills/warframe/offline-knowledge` | Items + mechanics + arcanes lookup |
-| `skills/warframe/loadout-compare` | Pasted loadout vs Overframe top builds |
-| `skills/warframe/modded-dps` | Offline modded DPS / A vs B |
-| `skills/warframe/world-state` | Live Status |
-| `skills/warframe/market-prices` | Warframe.market |
-| `skills/warframe/patch-notes` | Updates / hotfixes |
-| `distribution.yaml` | Hermes distribution manifest (`0.3.0`) |
-| `config.yaml` | Light defaults |
+| `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
+| `skills/warframe/*` | Compare, builds, mechanics, knowledge, loadout, DPS, world-state, market, patches |
+| `distribution.yaml` | Hermes distribution manifest |
+| `config.yaml` / `profile.yaml` | Light defaults |
 
-## What is **not** bundled in the lean profile
+---
 
-- Full `data/knowledge/` pack — use the repo checkout, or `./scripts/pack-knowledge-sidecar.sh`
-- Next.js web UI (`web/`) and desktop overlay (`overlay/`)
-- Cloud API keys (local Ollama typically uses a dummy key)
+## After import — must do
+
+1. **Working folder = this repo root** (so `npm run knowledge` works).  
+2. **Model provider** configured (Ollama example):
+
+| Field | Value |
+| --- | --- |
+| Base URL | `http://127.0.0.1:11434/v1` |
+| API key | `ollama` |
+| Model | `qwen2.5` (or whatever you pulled) |
+
+3. Smoke test in Hermes chat:  
+   `Lookup Arcane Energize from the local knowledge pack`
+
+---
+
+## What is not in the lean profile archive
+
+- Full `data/knowledge/` files — keep a normal checkout of this repo (or pack with `--with-knowledge`)  
+- Web UI (`web/`) and overlay (`overlay/`) — optional extras  
+
+---
 
 ## Operator commands Ordis should run
 
 ```bash
+npm run knowledge -- status
 npm run knowledge -- lookup "Primary Merciless"
 npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run wf -- summary
 ```
+
+---
+
+## More help
+
+- Beginner Hermes guide: [`docs/hermes-export.md`](../docs/hermes-export.md)  
+- Getting started hub: [`docs/getting-started.md`](../docs/getting-started.md)  
+- Offline pack: [`docs/offline-knowledge.md`](../docs/offline-knowledge.md)
