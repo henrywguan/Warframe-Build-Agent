@@ -8,7 +8,8 @@ describe("local knowledge focus", () => {
       "Please provide me the maximum damage build for Enkaus",
     );
     assert.match(text, /## Enkaus \(weapon\)/);
-    assert.match(text, /ONLINE_SEARCH_CONFIRMATION_REQUIRED for Enkaus/);
+    assert.match(text, /LOCAL_BUILDS_AVAILABLE/);
+    assert.match(text, /Galvanized Aptitude/);
     assert.doesNotMatch(text, /# Mechanics \/ resource digests/);
     assert.doesNotMatch(text, /## Blast/i);
   });

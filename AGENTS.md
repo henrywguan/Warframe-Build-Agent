@@ -50,8 +50,12 @@ npm run wf -- summary
 npm run wf -- fissures --steel-path
 npm run wf -- sortie
 npm run wf -- cycles
+npm run wf -- baro
+npm run wf -- nightwave
+npm run wf -- archon
 npm run market -- status
 npm run market -- price mirage_prime_set
+npm run market -- slug-search "Mirage Prime set"
 npm run market -- pull --force
 npm run market -- changes
 npm run patches -- latest
@@ -69,6 +73,9 @@ npm run knowledge -- pull-mechanics
 npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- farm "Enkaus"
+npm run knowledge -- builds "Coda Hema"
+npm run knowledge -- preset-list
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 ```

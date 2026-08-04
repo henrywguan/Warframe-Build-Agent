@@ -79,10 +79,11 @@ npm run knowledge -- lookup "Primary Merciless"
 
 ### Modded DPS calculator
 
-`data/knowledge/dps/common-mods.json` holds curated max-rank mod multipliers. The calculator estimates **burst + sustained DPS** for one weapon or an A vs B compare under a shared mod list/preset (e.g. `rifle-viral-heat`, `typical`).
+`data/knowledge/dps/common-mods.json` holds curated max-rank mod multipliers (**asOf 2026-08-03**). Steel Path presets prefer **Galvanized Aptitude + Galvanized Chamber** over Serration/Split Chamber. The calculator estimates **burst + sustained DPS** for one weapon or an A vs B compare under a shared mod list/preset (e.g. `rifle-viral-heat`, `rifle-viral-electric`, `typical`, `rifle-budget`).
 
 ```bash
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+npm run knowledge -- dps "Enkaus" --preset rifle-viral-electric
 ```
 
 This is arsenal-style guidance (direct damage, crit, multishot, fire rate, reload, simple elemental combines, optional Viral amp). It is **not** a full simulator (no slash DoT ticks, full armor TTK, rivens, most arcanes, incarnon transforms, or galvanized stacks).

@@ -173,9 +173,10 @@ function round(n: number, digits = 1): number {
   return Math.round(n * m) / m;
 }
 
-export function formatDpsEstimate(estimate: DpsEstimate): string {
+export function formatDpsEstimate(estimate: DpsEstimate, asOf?: string): string {
   const lines = [
     `## ${estimate.weaponName} (${estimate.weaponClass}) — modded DPS estimate`,
+    asOf ? `Curated mod DB as of ${asOf}` : "",
     `Mods applied (${estimate.modsApplied.length}): ${estimate.modsApplied.join(", ") || "(none)"}`,
     estimate.unknownMods.length
       ? `Unmodeled mods: ${estimate.unknownMods.join(", ")}`
@@ -202,5 +203,10 @@ export function formatDpsEstimate(estimate: DpsEstimate): string {
   if (estimate.guidance?.notes?.length) {
     lines.push("", "Notes:", ...estimate.guidance.notes.map((n) => `• ${n}`));
   }
+  lines.push(
+    "",
+    "• Prefer Galvanized Aptitude/Chamber over Serration/Split Chamber for Steel Path (as of 2026-08).",
+    "• Primary arcanes (Merciless/Debilitate/Crux/Overcharge) are separate from these mod slots.",
+  );
   return lines.filter(Boolean).join("\n");
 }

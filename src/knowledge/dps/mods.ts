@@ -109,13 +109,23 @@ export function resolvePresetMods(
   if (direct) return [...direct.mods];
 
   // Auto-pick by class when user asks for "typical" / "standard".
-  if (/typical|standard|default|viral.?heat|status/.test(key)) {
+  if (/typical|standard|default|viral.?heat|status|max.?damage|maximum/.test(key)) {
     if (weaponClass === "pistol") return [...(file.presets["pistol-viral-heat"]?.mods ?? [])];
     if (weaponClass === "shotgun") return [...(file.presets["shotgun-viral-heat"]?.mods ?? [])];
     return [...(file.presets["rifle-viral-heat"]?.mods ?? [])];
   }
+  if (/viral.?electric|electric.?dps|beam/.test(key)) {
+    return [
+      ...(file.presets["rifle-viral-electric"]?.mods ??
+        file.presets["rifle-viral-heat"]?.mods ??
+        []),
+    ];
+  }
   if (/corrosive/.test(key)) {
     return [...(file.presets["rifle-corrosive-heat"]?.mods ?? [])];
+  }
+  if (/budget|beginner|accessible/.test(key)) {
+    return [...(file.presets["rifle-budget"]?.mods ?? [])];
   }
   if (/raw|crit/.test(key)) {
     return [...(file.presets["rifle-raw-crit"]?.mods ?? [])];

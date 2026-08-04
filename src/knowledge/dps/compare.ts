@@ -94,7 +94,7 @@ export async function estimateModdedDps(
     faction: options.faction,
     viralAmp,
   });
-  return { ok: true, estimate, text: formatDpsEstimate(estimate) };
+  return { ok: true, estimate, text: formatDpsEstimate(estimate, common.asOf) };
 }
 
 export async function compareWeaponsDps(
@@ -195,9 +195,9 @@ export async function compareWeaponsDps(
   const text = [
     compare.summary,
     "",
-    formatDpsEstimate(a),
+    formatDpsEstimate(a, common.asOf),
     "",
-    formatDpsEstimate(b),
+    formatDpsEstimate(b, common.asOf),
     "",
     "Caveats: offline arsenal-style estimate only — not incarnon/riven/arcane/DoT/armor TTK simulation.",
   ].join("\n");

@@ -12,6 +12,12 @@ import {
 import { loadCommonMods } from "./dps/mods.js";
 import { parseOverframeHtmlPaths } from "./overframe-html.js";
 import { lookupLocalKnowledge } from "./query.js";
+import {
+  formatFarmRoute,
+  formatLocalBuildsOnly,
+  formatPresetList,
+  syncModsAsOf,
+} from "./pack-shortcuts.js";
 import { pullArcanesOnly, pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
 import { loadManifest } from "./store.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -26,7 +32,12 @@ Usage:
   npm run knowledge -- pull-arcanes [options]
   npm run knowledge -- crawl-overframe [options]
   npm run knowledge -- parse-overframe-html <file|dir> [...] [options]
+  npm run knowledge -- import-builds <file> [--merge]
   npm run knowledge -- lookup <query>
+  npm run knowledge -- farm <item>
+  npm run knowledge -- builds <item>
+  npm run knowledge -- preset-list
+  npm run knowledge -- sync-mods --asOf YYYY-MM-DD
   npm run knowledge -- dps <weapon> [--preset name|--mods a,b,c]
   npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset name|--mods a,b,c]
   npm run knowledge -- compare-loadout <item> --mods a,b,c [--arcanes x,y]
@@ -109,6 +120,65 @@ async function main() {
     const query = rest.join(" ").trim();
     if (!query) usage();
     console.log(await lookupLocalKnowledge(query));
+    return;
+  }
+
+  if (command === "farm") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      console.error('Usage: npm run knowledge -- farm "<item>"');
+      process.exit(1);
+    }
+    console.log(await formatFarmRoute(query));
+    return;
+  }
+
+  if (command === "builds" || command === "build") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      console.error('Usage: npm run knowledge -- builds "<item>"');
+      process.exit(1);
+    }
+    console.log(await formatLocalBuildsOnly(query));
+    return;
+  }
+
+  if (command === "preset-list" || command === "presets") {
+    console.log(await formatPresetList());
+    return;
+  }
+
+  if (command === "sync-mods") {
+    const asOf =
+      getFlag(rest, "--asOf") ??
+      getFlag(rest, "--as-of") ??
+      new Date().toISOString().slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(asOf)) {
+      console.error("Usage: npm run knowledge -- sync-mods --asOf YYYY-MM-DD");
+      process.exit(1);
+    }
+    console.log(await syncModsAsOf(asOf));
+    return;
+  }
+
+  if (command === "import-builds") {
+    const file =
+      getFlag(rest, "--file") ??
+      rest.find((arg, idx, arr) => {
+        if (arg.startsWith("--") || arr[idx - 1] === "--file") return false;
+        return true;
+      });
+    if (!file) {
+      console.error(
+        "Usage: npm run knowledge -- import-builds <file> [--merge]\nAlias of crawl-overframe --import-builds",
+      );
+      process.exit(1);
+    }
+    // --merge is accepted for docs/muscle-memory; import already merges by item id.
+    if (rest.includes("--merge")) {
+      console.log("Note: --merge accepted (import merges by item into by-item/).");
+    }
+    await runOverframeCrawl({ importBuildsPath: file });
     return;
   }
 

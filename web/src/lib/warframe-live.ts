@@ -461,6 +461,206 @@ export async function livePatchNotesLatest(limit = 8): Promise<string> {
   return lines.join("\n");
 }
 
+export async function liveBaro(): Promise<string> {
+  const trader = await statusGet<{
+    character?: string;
+    location?: string;
+    active?: boolean;
+    activation?: string;
+    expiry?: string;
+    inventory?: Array<{
+      item?: string;
+      ducats?: number;
+      credits?: number;
+    }>;
+  }>("voidTrader");
+
+  if (!trader?.character && !trader?.location) {
+    return "No Void Trader (Baro) data available.";
+  }
+
+  const arriving = trader.activation
+    ? Date.parse(trader.activation) > Date.now()
+    : false;
+  const active =
+    typeof trader.active === "boolean"
+      ? trader.active
+      : !arriving && !!trader.expiry && Date.parse(trader.expiry) > Date.now();
+
+  const lines = [
+    `${trader.character ?? "Baro Ki'Teer"} @ ${trader.location ?? "?"}`,
+    active
+      ? `Present — leaves in ${humanizeExpiry(trader.expiry)}`
+      : `Not present — arrives in ${humanizeExpiry(trader.activation)}`,
+  ];
+
+  const inventory = trader.inventory ?? [];
+  if (active && inventory.length) {
+    lines.push(`Inventory (${inventory.length} items):`);
+    for (const item of inventory.slice(0, 25)) {
+      lines.push(
+        `• ${item.item ?? "item"} — ${item.ducats ?? "?"} ducats / ${item.credits?.toLocaleString() ?? "?"} credits`,
+      );
+    }
+    if (inventory.length > 25) {
+      lines.push(`…and ${inventory.length - 25} more`);
+    }
+  } else if (!active) {
+    lines.push("Inventory listed when Baro is present.");
+  }
+
+  lines.push("", "Source: api.warframestat.us (platform: pc) — timers can shift.");
+  return lines.join("\n");
+}
+
+export async function liveNightwave(): Promise<string> {
+  const nightwave = await statusGet<{
+    season?: number;
+    phase?: number;
+    expiry?: string;
+    activeChallenges?: Array<{
+      title?: string;
+      desc?: string;
+      reputation?: number;
+      isDaily?: boolean;
+      isElite?: boolean;
+    }>;
+  }>("nightwave");
+
+  if (!nightwave) return "No Nightwave data available.";
+  const challenges = nightwave.activeChallenges ?? [];
+  const lines = [
+    `Nightwave — season ${nightwave.season ?? "?"} / phase ${nightwave.phase ?? "?"}`,
+    `Timer: ${humanizeExpiry(nightwave.expiry)}`,
+    `Active challenges (${challenges.length}):`,
+  ];
+  if (!challenges.length) {
+    lines.push("  None listed.");
+  } else {
+    for (const challenge of challenges) {
+      const tags = [
+        challenge.isDaily ? "daily" : "weekly",
+        challenge.isElite ? "elite" : null,
+      ]
+        .filter(Boolean)
+        .join(", ");
+      lines.push(
+        `• ${challenge.title ?? "Challenge"} [${tags}] — ${challenge.reputation ?? "?"} standing`,
+      );
+      if (challenge.desc) lines.push(`   ${challenge.desc}`);
+    }
+  }
+  lines.push("", "Source: api.warframestat.us (platform: pc)");
+  return lines.join("\n");
+}
+
+export async function liveArchonHunt(): Promise<string> {
+  const hunt = await statusGet<{
+    boss?: string;
+    faction?: string;
+    expiry?: string;
+    missions?: Array<{ type?: string; typeKey?: string; node?: string }>;
+  }>("archonHunt");
+
+  if (!hunt?.boss) return "No Archon Hunt data available.";
+  const lines = [
+    `Archon Hunt — ${hunt.boss}`,
+    `Faction: ${hunt.faction ?? "?"}`,
+    `Timer: ${humanizeExpiry(hunt.expiry)}`,
+    "Missions:",
+  ];
+  for (const [i, mission] of (hunt.missions ?? []).entries()) {
+    lines.push(
+      `  ${i + 1}. ${mission.type ?? mission.typeKey ?? "Mission"} @ ${mission.node ?? "?"}`,
+    );
+  }
+  lines.push("", "Source: api.warframestat.us (platform: pc)");
+  return lines.join("\n");
+}
+
+export async function liveEvents(): Promise<string> {
+  const events = await statusGet<
+    Array<{
+      description?: string;
+      tooltip?: string;
+      expiry?: string;
+      health?: number;
+      currentScore?: number;
+      maximumScore?: number;
+    }>
+  >("events");
+
+  if (!events?.length) return "No events listed.";
+  const lines = ["Active events (platform: pc)", ""];
+  for (const event of events) {
+    const title = event.description ?? event.tooltip ?? "Event";
+    const progress =
+      typeof event.health === "number"
+        ? `health ${event.health}`
+        : typeof event.currentScore === "number" &&
+            typeof event.maximumScore === "number"
+          ? `score ${event.currentScore}/${event.maximumScore}`
+          : null;
+    lines.push(
+      `• ${title}${progress ? ` (${progress})` : ""} — ${humanizeExpiry(event.expiry)}`,
+    );
+  }
+  lines.push("", "Source: api.warframestat.us — timers can shift.");
+  return lines.join("\n");
+}
+
+function scoreMarketName(query: string, name: string, slug: string): number {
+  const q = query.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const n = name.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const s = slug.toLowerCase().replace(/_/g, " ");
+  if (!q) return 0;
+  if (n === q || s === q) return 100;
+  if (slug === query.toLowerCase().replace(/\s+/g, "_")) return 95;
+  if (n.startsWith(q) || s.startsWith(q)) return 80;
+  if (n.includes(q) || s.includes(q)) return 60;
+  const qTokens = q.split(" ").filter(Boolean);
+  const nTokens = new Set(n.split(" ").filter(Boolean));
+  return qTokens.filter((t) => nTokens.has(t)).length * 18;
+}
+
+export async function liveMarketSlugSearch(query: string): Promise<string> {
+  const items = await marketGet<
+    Array<{
+      slug: string;
+      i18n?: Record<string, { name?: string }>;
+    }>
+  >("/items");
+
+  const scored = items
+    .map((item) => {
+      const name = item.i18n?.en?.name ?? item.slug;
+      return {
+        slug: item.slug,
+        name,
+        score: scoreMarketName(query, name, item.slug),
+      };
+    })
+    .filter((row) => row.score >= 40)
+    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+    .slice(0, 12);
+
+  if (!scored.length) {
+    return [
+      `No Warframe.market slug match for “${query}”.`,
+      "Try a shorter name, or browse https://warframe.market",
+    ].join("\n");
+  }
+
+  const lines = [
+    `Warframe.market slug search — “${query}”`,
+    "",
+    ...scored.map((row) => `• ${row.name} → ${row.slug}`),
+    "",
+    "Next: /market <slug>",
+  ];
+  return lines.join("\n");
+}
+
 export async function livePatchNotesDailyChanges(): Promise<string> {
   const loaded = await loadDailyJson<DailyPatchChanges>({
     envUrl: process.env.PATCH_CHANGES_URL,

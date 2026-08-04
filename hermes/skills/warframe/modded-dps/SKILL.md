@@ -29,7 +29,9 @@ Requires a Warframe-Build-Agent checkout (`terminal.cwd` → repo root) with `da
 
 ## Presets
 
-`rifle-viral-heat`, `rifle-corrosive-heat`, `rifle-raw-crit`, `pistol-viral-heat`, `shotgun-viral-heat`, `typical`
+`rifle-viral-heat`, `rifle-viral-electric`, `rifle-corrosive-heat`, `rifle-raw-crit`, `rifle-budget`, `pistol-viral-heat`, `shotgun-viral-heat`, `typical`
+
+Curated mod DB **asOf 2026-08-03** (Galvanized Steel Path shells preferred).
 
 ## Scope / honesty
 

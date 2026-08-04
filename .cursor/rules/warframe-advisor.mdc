@@ -39,9 +39,9 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 
 If the user types `/list`, `/help`, or asks what commands are available, reply with the catalog in [`docs/commands.md`](docs/commands.md):
 
-1. Mobile web slash commands (`/knowledge`, `/compare`, `/dps`, `/summary`, `/fissures`, `/cycles`, `/sortie`, `/invasions`, `/alerts`, `/market <slug>`, `/market-changes`, `/patches`, `/patch-changes`)
+1. Mobile web slash commands (`/summary`, `/fissures`, `/cycles`, `/sortie`, `/invasions`, `/alerts`, `/baro`, `/nightwave`, `/archon`, `/event`, `/build`, `/farm`, `/arcanes`, `/preset`, `/slug`, `/market <slug>`, `/market-changes`, `/patches`, `/patch-changes`, `/knowledge`, `/compare`, `/dps`)
 2. Cursor commands: `/cleanup-simplify`, `/cleanup-simplify -all`, `/knowledge`
-3. Local CLI shortcuts (`npm run wf -- …`, `npm run market -- …`, `npm run patches -- …`, `npm run knowledge -- status|lookup|dps|compare-dps|compare-loadout|pull-mechanics|pull-arcanes|…`, `npm run cleanup:verify[:all]`, `npm run web:dev`)
+3. Local CLI shortcuts (`npm run wf -- …`, `npm run market -- …`, `npm run patches -- …`, `npm run knowledge -- status|lookup|farm|builds|preset-list|dps|…`, `npm run cleanup:verify[:all]`, `npm run web:dev`)
 4. Note that market + patch scrapes refresh around **4pm Pacific**
 5. Point to `docs/commands.md` (full list) and `docs/cleanup-agent.md` (cleanup modes)
 

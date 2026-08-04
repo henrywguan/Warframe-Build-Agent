@@ -8,12 +8,23 @@ import { searchCommunityBuildsOnline, searchWebOnline } from "@/lib/online-commu
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import { runOfflineDps } from "@/lib/offline-dps";
 import {
+  packArcaneLookup,
+  packBuildLookup,
+  packFarmLookup,
+  packPresetList,
+} from "@/lib/pack-commands";
+import {
   liveAlerts,
+  liveArchonHunt,
+  liveBaro,
   liveCycles,
+  liveEvents,
   liveFissures,
   liveInvasions,
   liveMarketDailyChanges,
   liveMarketPrice,
+  liveMarketSlugSearch,
+  liveNightwave,
   livePatchNotesDailyChanges,
   livePatchNotesLatest,
   liveSortie,
@@ -126,6 +137,38 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
   {
     type: "function",
     function: {
+      name: "get_baro",
+      description: "Get Baro Ki'Teer (Void Trader) location, timer, and inventory when present.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_nightwave",
+      description: "Get Nightwave season/phase and active challenges.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_archon_hunt",
+      description: "Get the weekly Archon Hunt boss, faction, and missions.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_events",
+      description: "Get active worldstate events and timers.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "get_market_price",
       description:
         "Get live Warframe.market v2 top-order price summary for an item slug (e.g. mirage_prime_set).",
@@ -140,6 +183,84 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
         required: ["slug"],
         additionalProperties: false,
       },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "search_market_slug",
+      description:
+        "Fuzzy-search Warframe.market item names to resolve the correct market slug before pricing.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "Item display name or partial slug (e.g. Mirage Prime set)",
+          },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "lookup_local_builds",
+      description:
+        "List top local Overframe/import builds for an item from the offline pack (no LLM).",
+      parameters: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "Item name (e.g. Coda Hema)" },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "lookup_farm_route",
+      description:
+        "Extract acquisition/farming notes for an item from the local wiki digest.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "Item name to farm" },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "lookup_arcanes",
+      description:
+        "Look up Arcane Enhancement digests from the local pack by name or slot (primary/warframe/…).",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "Arcane name or slot (e.g. Primary Merciless, primary)",
+          },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "list_dps_presets",
+      description: "List curated offline DPS mod presets and their asOf date.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
   {
@@ -229,7 +350,7 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     function: {
       name: "estimate_modded_dps",
       description:
-        "Offline arsenal-style modded DPS calculator using the local catalog + curated mod multipliers. Use for weapon damage/DPS questions and A vs B compares without live search. Presets: rifle-viral-heat, rifle-corrosive-heat, rifle-raw-crit, pistol-viral-heat, shotgun-viral-heat, typical.",
+        "Offline arsenal-style modded DPS calculator using the local catalog + curated mod multipliers (DB asOf 2026-08-03). Prefers Galvanized Steel Path shells over Serration/Split Chamber. Presets: rifle-viral-heat, rifle-viral-electric, rifle-corrosive-heat, rifle-raw-crit, rifle-budget, pistol-viral-heat, shotgun-viral-heat, typical. Mention Primary Debilitate/Merciless as separate arcane recommendations.",
       parameters: {
         type: "object",
         properties: {
@@ -282,6 +403,15 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
+async function withRequiredQuery(
+  args: ToolArgs,
+  run: (query: string) => Promise<string>,
+): Promise<string> {
+  const query = asString(args.query);
+  if (!query) return "Missing required query.";
+  return run(query);
+}
+
 export async function runChatTool(
   name: string,
   rawArgs: string,
@@ -311,11 +441,29 @@ export async function runChatTool(
         return await liveInvasions();
       case "get_alerts":
         return await liveAlerts();
+      case "get_baro":
+        return await liveBaro();
+      case "get_nightwave":
+        return await liveNightwave();
+      case "get_archon_hunt":
+        return await liveArchonHunt();
+      case "get_events":
+        return await liveEvents();
       case "get_market_price": {
         const slug = asString(args.slug);
         if (!slug) return "Missing required slug.";
         return await liveMarketPrice(slug);
       }
+      case "search_market_slug":
+        return await withRequiredQuery(args, liveMarketSlugSearch);
+      case "lookup_local_builds":
+        return await withRequiredQuery(args, packBuildLookup);
+      case "lookup_farm_route":
+        return await withRequiredQuery(args, packFarmLookup);
+      case "lookup_arcanes":
+        return await withRequiredQuery(args, packArcaneLookup);
+      case "list_dps_presets":
+        return await packPresetList();
       case "get_market_daily_changes":
         return await liveMarketDailyChanges();
       case "get_patch_notes_latest": {

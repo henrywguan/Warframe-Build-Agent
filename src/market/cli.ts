@@ -28,6 +28,7 @@ const DEFAULT_DATA_DIR = path.join(ROOT, "data/market");
 
 const COMMANDS = [
   "price",
+  "slug-search",
   "snapshot",
   "changes",
   "pull",
@@ -39,6 +40,7 @@ type Command = (typeof COMMANDS)[number];
 interface ParsedArgs {
   command: Command;
   slug?: string;
+  query?: string;
   json: boolean;
   force: boolean;
   watchlist: string;
@@ -53,12 +55,13 @@ Usage:
   npm run market -- <command> [args] [options]
 
 Commands:
-  price <slug>     Live top-order summary for one item
-  snapshot         Pull watchlist snapshot now (no timezone gate)
-  changes          Show latest saved day-over-day changes
-  pull             Daily job: snapshot at 4pm Pacific, write changes
-  status           Show Pacific time / pull-window status
-  help             Show help
+  price <slug>            Live top-order summary for one item
+  slug-search <query>     Fuzzy item name → market slug
+  snapshot                Pull watchlist snapshot now (no timezone gate)
+  changes                 Show latest saved day-over-day changes
+  pull                    Daily job: snapshot at 4pm Pacific, write changes
+  status                  Show Pacific time / pull-window status
+  help                    Show help
 
 Options:
   --watchlist <path>   Default: config/market-watchlist.json
@@ -121,8 +124,17 @@ function parseArgs(argv: string[]): ParsedArgs {
         break;
       }
       default:
-        if (parsed.command === "price" && !parsed.slug && !token.startsWith("-")) {
-          parsed.slug = token;
+        if (
+          (parsed.command === "price" || parsed.command === "slug-search") &&
+          !parsed.slug &&
+          !parsed.query &&
+          !token.startsWith("-")
+        ) {
+          if (parsed.command === "price") parsed.slug = token;
+          else {
+            parsed.query = [token, ...args].join(" ").trim();
+            args.length = 0;
+          }
           break;
         }
         throw new Error(`Unknown option or argument "${token}"`);
@@ -130,6 +142,20 @@ function parseArgs(argv: string[]): ParsedArgs {
   }
 
   return parsed;
+}
+
+function scoreMarketName(query: string, name: string, slug: string): number {
+  const q = query.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const n = name.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const s = slug.toLowerCase().replace(/_/g, " ");
+  if (!q) return 0;
+  if (n === q || s === q) return 100;
+  if (slug === query.toLowerCase().replace(/\s+/g, "_")) return 95;
+  if (n.startsWith(q) || s.startsWith(q)) return 80;
+  if (n.includes(q) || s.includes(q)) return 60;
+  const qTokens = q.split(" ").filter(Boolean);
+  const nTokens = new Set(n.split(" ").filter(Boolean));
+  return qTokens.filter((t) => nTokens.has(t)).length * 18;
 }
 
 async function main(): Promise<void> {
@@ -179,6 +205,41 @@ async function main(): Promise<void> {
         name: item?.i18n?.en?.name ?? parsed.slug,
       });
       print(summary, formatItemPrice(summary));
+      break;
+    }
+    case "slug-search": {
+      if (!parsed.query) {
+        throw new Error(
+          'Command "slug-search" requires a query, e.g. npm run market -- slug-search "Mirage Prime set"',
+        );
+      }
+      const client = new WarframeMarketClient({ platform: parsed.platform });
+      const items = await client.listItems();
+      const scored = items
+        .map((item) => {
+          const name = item.i18n?.en?.name ?? item.slug;
+          return {
+            slug: item.slug,
+            name,
+            score: scoreMarketName(parsed.query!, name, item.slug),
+          };
+        })
+        .filter((row) => row.score >= 40)
+        .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+        .slice(0, 12);
+      const payload = { query: parsed.query, matches: scored };
+      print(
+        payload,
+        scored.length
+          ? [
+              `Warframe.market slug search — “${parsed.query}”`,
+              "",
+              ...scored.map((row) => `• ${row.name} → ${row.slug}`),
+              "",
+              "Next: npm run market -- price <slug>",
+            ].join("\n")
+          : `No slug match for “${parsed.query}”.`,
+      );
       break;
     }
     case "snapshot": {
