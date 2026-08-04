@@ -38,7 +38,7 @@ export function formatOnlineSearchConfirmation(itemNames: string[]): string {
 }
 
 export function looksLikeBuildRequest(text: string): boolean {
-  return /\b(builds?|mod\s*setup|loadout|forma|steel\s*path\s*(build|config|setup)|best\s+(build|setup|mods?)|compare\s+builds?|community\s+builds?)\b/i.test(
+  return /\b(builds?|mod\s*setup|loadout|forma|steel\s*path(\s+(build|config|setup))?|best\s+(build|setup|mods?)|max(imum)?\s+damage(\s+build)?|compare\s+builds?|community\s+builds?|crawl\s+(the\s+)?web|search\s+online)\b/i.test(
     text,
   );
 }
@@ -48,8 +48,10 @@ export function parseOnlineSearchConsent(text: string): "yes" | "no" | null {
   const t = text.trim().toLowerCase();
   if (!t) return null;
   if (
-    /^(yes|y|yeah|yep|sure|ok|okay|please|go ahead|search|search online|do it)\b/.test(t) ||
-    /\b(yes[,.]?\s+search|search online|go ahead|allow online)\b/.test(t)
+    /^(yes|y|yeah|yep|sure|ok|okay|please|go ahead|search|search online|do it|crawl)\b/.test(t) ||
+    /\b(yes[,.]?\s+search|search online|go ahead|allow online|crawl\s+(the\s+)?web|look\s+online)\b/.test(
+      t,
+    )
   ) {
     return "yes";
   }

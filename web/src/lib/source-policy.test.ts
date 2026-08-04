@@ -96,8 +96,17 @@ describe("web source policy (local first + online confirmation)", () => {
 
   it("detects build requests and yes/no consent", () => {
     assert.equal(looksLikeBuildRequest("best build for Coda Hema?"), true);
+    assert.equal(
+      looksLikeBuildRequest("maximum damage build for Enkaus"),
+      true,
+    );
+    assert.equal(
+      looksLikeBuildRequest("crawl the web for steel path Enkaus"),
+      true,
+    );
     assert.equal(looksLikeBuildRequest("what time is cetus night?"), false);
     assert.equal(parseOnlineSearchConsent("yes"), "yes");
+    assert.equal(parseOnlineSearchConsent("crawl the web"), "yes");
     assert.equal(parseOnlineSearchConsent("search online"), "yes");
     assert.equal(parseOnlineSearchConsent("no"), "no");
     assert.equal(parseOnlineSearchConsent("stay local"), "no");

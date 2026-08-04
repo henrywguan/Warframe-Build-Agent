@@ -91,16 +91,25 @@ function normalize(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function scoreName(query: string, name: string): number {
   const q = normalize(query);
   const n = normalize(name);
   if (!q || !n) return 0;
   if (n === q) return 100;
-  if (n.startsWith(q)) return 80;
+  if (n.startsWith(q) || q.startsWith(n)) return 90;
+  // Whole-word item name inside a longer ask ("best build for Enkaus").
+  if (n.length >= 3 && new RegExp(`(?:^| )${escapeRegExp(n)}(?: |$)`).test(q)) {
+    return 85;
+  }
   if (n.includes(q)) return 60;
-  const qTokens = q.split(" ");
-  const nTokens = new Set(n.split(" "));
-  return qTokens.filter((t) => nTokens.has(t)).length * 15;
+  const qTokens = q.split(" ").filter(Boolean);
+  const nTokens = new Set(n.split(" ").filter(Boolean));
+  const overlap = qTokens.filter((t) => nTokens.has(t)).length;
+  return overlap * 15;
 }
 
 function scoreMechanics(query: string, digest: MechanicsDigest): number {
@@ -132,6 +141,23 @@ function scoreMechanics(query: string, digest: MechanicsDigest): number {
     "of",
     "on",
     "in",
+    "damage",
+    "maximum",
+    "max",
+    "build",
+    "builds",
+    "weapon",
+    "weapons",
+    "steel",
+    "path",
+    "crawl",
+    "web",
+    "online",
+    "please",
+    "give",
+    "me",
+    "the",
+    "provide",
   ]);
   let tokenScore = 0;
   for (const token of normalize(query)
@@ -159,6 +185,9 @@ function scoreMechanics(query: string, digest: MechanicsDigest): number {
   return best;
 }
 
+const WIKI_EXTRACT_LIMIT = 2800;
+const MECHANICS_EXTRACT_LIMIT = 2200;
+
 export type LocalBuildLookup = {
   root: string | null;
   matches: CatalogItem[];
@@ -176,7 +205,7 @@ export async function inspectLocalBuilds(query: string): Promise<LocalBuildLooku
     (await readJson<CatalogItem[]>(path.join(root, "catalog", "items.json"))) || [];
   const matches = catalog
     .map((item) => ({ item, score: scoreName(query, item.name) }))
-    .filter((row) => row.score > 0)
+    .filter((row) => row.score >= 40)
     .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
     .slice(0, 5)
     .map((row) => row.item);
@@ -216,13 +245,18 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     ].join("\n");
   }
 
-  const matches = catalog
+  const scoredMatches = catalog
     .map((item) => ({ item, score: scoreName(query, item.name) }))
-    .filter((row) => row.score > 0)
+    .filter((row) => row.score >= 40)
     .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
-    .slice(0, 5)
-    .map((row) => row.item);
+    .slice(0, 5);
+  const matches = scoredMatches.map((row) => row.item);
+  const strongItemHit = scoredMatches.some((row) => row.score >= 80);
 
+  const wantsMechanics =
+    /\b(mechanic|mechanics|status|proc|armor|shield|overguard|scaling|damage type|elemental)\b/i.test(
+      query,
+    );
   const mechanicsIndex = await readJson<{ ids?: string[] }>(
     path.join(root, "mechanics", "index.json"),
   );
@@ -233,12 +267,18 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     );
     if (digest) mechanics.push(digest);
   }
-  const mechanicsHits = mechanics
-    .map((digest) => ({ digest, score: scoreMechanics(query, digest) }))
-    .filter((row) => row.score >= 45)
-    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
-    .slice(0, 8)
-    .map((row) => row.digest);
+  const mechanicsHits =
+    strongItemHit && !wantsMechanics
+      ? []
+      : mechanics
+          .map((digest) => ({ digest, score: scoreMechanics(query, digest) }))
+          .filter((row) => row.score >= 55)
+          .sort(
+            (a, b) =>
+              b.score - a.score || a.digest.title.localeCompare(b.digest.title),
+          )
+          .slice(0, 4)
+          .map((row) => row.digest);
 
   const arcanesIndex = await readJson<{ ids?: string[] }>(
     path.join(root, "arcanes", "index.json"),
@@ -297,26 +337,7 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     "",
   ];
 
-  if (mechanicsHits.length) {
-    chunks.push("# Mechanics / resource digests", "");
-    for (const digest of mechanicsHits) {
-      chunks.push(`## ${digest.title} (${digest.kind})`);
-      if (digest.summary) chunks.push(digest.summary);
-      if (digest.pageUrl) chunks.push(digest.pageUrl);
-      chunks.push("", "### Mechanics digest", digest.extract.slice(0, 6000), "");
-    }
-  }
-
-  if (arcaneHits.length) {
-    chunks.push("# Arcane digests", "");
-    for (const digest of arcaneHits) {
-      chunks.push(`## ${digest.title} (${digest.slot})`);
-      if (digest.summary) chunks.push(digest.summary);
-      if (digest.pageUrl) chunks.push(digest.pageUrl);
-      chunks.push("", "### Arcane digest", digest.extract.slice(0, 5000), "");
-    }
-  }
-
+  // Item digests first — keep the model focused on the named gear, not stray mechanics pages.
   const withBuilds: string[] = [];
   const withoutBuilds: string[] = [];
 
@@ -332,9 +353,13 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
       path.join(root, "wiki", "digests", `${item.id}.json`),
     );
     if (wiki?.extract) {
-      chunks.push("", "### Wiki digest", wiki.extract);
+      const extract =
+        wiki.extract.length > WIKI_EXTRACT_LIMIT
+          ? `${wiki.extract.slice(0, WIKI_EXTRACT_LIMIT)}…`
+          : wiki.extract;
+      chunks.push("", "### Wiki digest", extract);
       if (wiki.sections?.abilities) {
-        chunks.push("", "### Abilities", wiki.sections.abilities);
+        chunks.push("", "### Abilities", wiki.sections.abilities.slice(0, 2000));
       }
     }
 
@@ -371,6 +396,31 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     chunks.push("");
   }
 
+  if (mechanicsHits.length) {
+    chunks.push("# Mechanics / resource digests", "");
+    for (const digest of mechanicsHits) {
+      chunks.push(`## ${digest.title} (${digest.kind})`);
+      if (digest.summary) chunks.push(digest.summary);
+      if (digest.pageUrl) chunks.push(digest.pageUrl);
+      chunks.push(
+        "",
+        "### Mechanics digest",
+        digest.extract.slice(0, MECHANICS_EXTRACT_LIMIT),
+        "",
+      );
+    }
+  }
+
+  if (arcaneHits.length && (!strongItemHit || /\barcane/i.test(query))) {
+    chunks.push("# Arcane digests", "");
+    for (const digest of arcaneHits) {
+      chunks.push(`## ${digest.title} (${digest.slot})`);
+      if (digest.summary) chunks.push(digest.summary);
+      if (digest.pageUrl) chunks.push(digest.pageUrl);
+      chunks.push("", "### Arcane digest", digest.extract.slice(0, 2000), "");
+    }
+  }
+
   if (withoutBuilds.length && !withBuilds.length) {
     chunks.push(formatOnlineSearchConfirmation(withoutBuilds));
   } else if (withoutBuilds.length) {
@@ -378,11 +428,16 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
       formatOnlineSearchConfirmation(withoutBuilds),
       "(Some matched items did have local builds above — prefer those for comparison first.)",
     );
-  } else {
+  } else if (withBuilds.length) {
     chunks.push(
       `${LOCAL_BUILDS_AVAILABLE_MARKER}: local Overframe/import builds found for ${withBuilds.join(", ")}. Compare from local data; do not prompt for online search unless the player asks.`,
     );
   }
+
+  chunks.push(
+    "",
+    "Answer using the item/wiki facts above for this query. Do not summarize unrelated mechanics pages (for example Blast/Railjack) unless the player asked about those mechanics.",
+  );
 
   return chunks.join("\n").trim();
 }
