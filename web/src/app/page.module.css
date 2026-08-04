@@ -449,8 +449,4 @@
   .brandRule {
     margin-top: 0.35rem;
   }
-
-  .centerStage :global(.field) {
-    width: min(56vw, 160px);
-  }
 }
