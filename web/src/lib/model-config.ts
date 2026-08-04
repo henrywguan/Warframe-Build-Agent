@@ -91,3 +91,44 @@ export function resolveModel(
   }
   return client?.model?.trim() || fallback;
 }
+
+/** True when the OpenAI SDK / fetch failed to reach the model host. */
+export function isLlmConnectionError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  const lower = message.toLowerCase();
+  if (
+    lower.includes("connection error") ||
+    lower.includes("econnrefused") ||
+    lower.includes("fetch failed") ||
+    lower.includes("network") ||
+    lower.includes("enotfound") ||
+    lower.includes("etimedout") ||
+    lower.includes("socket hang up")
+  ) {
+    return true;
+  }
+  const cause =
+    error instanceof Error && error.cause instanceof Error
+      ? error.cause.message.toLowerCase()
+      : "";
+  return (
+    cause.includes("econnrefused") ||
+    cause.includes("fetch failed") ||
+    cause.includes("enotfound")
+  );
+}
+
+export function formatLlmConnectionError(
+  error: unknown,
+  client?: Partial<ClientLlmConfig>,
+): string {
+  const base =
+    resolveBaseUrl(client) ||
+    process.env.OPENAI_BASE_URL?.trim() ||
+    "the configured LLM endpoint";
+  const localHint =
+    /127\.0\.0\.1|localhost/i.test(base)
+      ? " Start Ollama (or your local server), or open LLM / Ollama → Clear to use the offline chatbot."
+      : " Check the Base URL / API key in LLM / Ollama, or Clear to use the offline chatbot.";
+  return `Could not reach ${base}.${localHint}`;
+}
