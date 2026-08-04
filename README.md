@@ -71,7 +71,7 @@ npm run web:dev
 Open http://localhost:3000  
 
 Tap **LLM / Ollama** to set Base URL and API key in the browser (no `.env` editing required).  
-Details: [`docs/web-chat.md`](docs/web-chat.md)
+Phone on home Wi‑Fi: `npm run web:dev:lan` or `npm run web:build && npm run web:start:lan` — see [`docs/web-chat.md`](docs/web-chat.md#use-from-another-device-on-your-home-wi-fi-lan).
 
 ### 3) Terminal
 
@@ -142,7 +142,9 @@ Market and patch-note snapshots refresh around **4:00 PM Pacific** via GitHub Ac
 | `npm run market -- <cmd>` | Warframe.market |
 | `npm run patches -- <cmd>` | Official updates / hotfixes |
 | `npm run knowledge -- …` | Offline pack pull / lookup / DPS / loadout compare |
-| `npm run web:dev` | Web chat |
+| `npm run web:dev` | Web chat (localhost) |
+| `npm run web:dev:lan` | Web chat bound for home Wi‑Fi devices |
+| `npm run web:start:lan` | Production web chat on LAN (after `web:build`) |
 | `./scripts/pack-hermes-profile.sh` | Pack Hermes `.tar.gz` for Desktop import |
 | `npm test` | Unit tests |
 
