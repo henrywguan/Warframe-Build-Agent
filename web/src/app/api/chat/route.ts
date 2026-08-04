@@ -28,6 +28,10 @@ import {
   looksLikeBuildRequest,
   resolveOnlineBuildSearchAllowed,
 } from "@/lib/source-policy";
+import {
+  fallbackFromToolResults,
+  maybeAugmentLookupWithLiveSearch,
+} from "@/lib/live-search-augment";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import {
   MAX_TOOL_ROUNDS,
@@ -127,6 +131,7 @@ async function runModelCompletion(
     aiChat: Boolean(aiChat),
   });
   const toolsUsed: string[] = [];
+  const toolPayloads: string[] = [];
   const seenToolCalls = new Set<string>();
   let guard = 0;
 
@@ -149,8 +154,9 @@ async function runModelCompletion(
 
     const toolCalls = choice.tool_calls ?? [];
     if (!toolCalls.length) {
+      const content = choice.content?.trim();
       return {
-        content: choice.content?.trim() || "I do not have a response for that.",
+        content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
         toolsUsed,
         model,
       };
@@ -161,12 +167,29 @@ async function runModelCompletion(
       toolsUsed.push(call.function.name);
       const args = call.function.arguments ?? "{}";
       const dedupe = dedupeToolCall(seenToolCalls, call.function.name, args);
-      const raw = dedupe.duplicate
+      let raw = dedupe.duplicate
         ? dedupe.stub!
         : await runChatTool(call.function.name, args, {
             onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
             aiChat: Boolean(aiChat),
           });
+
+      if (!dedupe.duplicate) {
+        const augmented = await maybeAugmentLookupWithLiveSearch({
+          toolName: call.function.name,
+          rawArgs: args,
+          result: raw,
+          onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+          aiChat: Boolean(aiChat),
+        });
+        raw = augmented.result;
+        for (const extra of augmented.extraTools) {
+          toolsUsed.push(extra);
+          seenToolCalls.add(`${extra}:${args.trim() || "{}"}`);
+        }
+      }
+
+      toolPayloads.push(raw);
       const toolMessage: ChatCompletionToolMessageParam = {
         role: "tool",
         tool_call_id: call.id,
@@ -188,12 +211,11 @@ async function runModelCompletion(
   });
   const finalChoice = finalCompletion.choices[0]?.message;
   const content = finalChoice?.content?.trim();
-  if (!content) {
-    throw new Error(
-      "Model kept calling tools without answering. Try a narrower question, or Clear LLM settings to use the offline chatbot.",
-    );
-  }
-  return { content, toolsUsed, model };
+  return {
+    content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
+    toolsUsed,
+    model,
+  };
 }
 
 function shouldPreferLocal(
