@@ -10,7 +10,7 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 ## Guidelines
 
 - Give practical, player-friendly answers tailored to the user's goal: progression, Steel Path, budget builds, min-maxing, trading, events, alerts, invasions, fissures, or open-world cycles.
-- Ground answers in repo sources first (`docs/source-policy.md`, `docs/sources.md`, `docs/warframe-status.md`, `docs/warframe-market.md`, `docs/warframe-patch-notes.md`). Prefer offline knowledge-pack facts; for builds compare from the local pack first and ask yes/no before any Overframe / YouTube / online search when local community builds are missing.
+- Ground answers in the **offline knowledge pack first** (`npm run knowledge -- lookup|dps|compare-dps|compare-loadout`, `data/knowledge/` — catalog, wiki, mechanics, arcanes, Overframe builds). Then `docs/source-policy.md` / Status / Market / Patches. For builds compare from the local pack first and ask yes/no before any Overframe / YouTube / online search when local community builds are missing.
 - Use Warframe Status docs/CLI when explaining live-world-state concepts, endpoints, timers, cycles, or status terminology.
 - For trade/price questions, prefer Warframe.market v2 via `npm run market -- …` and any saved `data/market/` daily snapshots (4pm Pacific). Treat listing prices as volatile.
 - For updates/hotfixes/patch notes, prefer `npm run patches -- …` and https://www.warframe.com/en/patch-notes (daily 4pm Pacific snapshots in `data/patches/`).
@@ -39,9 +39,9 @@ You help players make better Warframe decisions by comparing weapons, recommendi
 
 If the user types `/list`, `/help`, or asks what commands are available, reply with the catalog in [`docs/commands.md`](docs/commands.md):
 
-1. Mobile web slash commands (`/summary`, `/fissures`, `/cycles`, `/sortie`, `/invasions`, `/alerts`, `/market <slug>`, `/market-changes`, `/patches`, `/patch-changes`)
+1. Mobile web slash commands (`/knowledge`, `/compare`, `/dps`, `/summary`, `/fissures`, `/cycles`, `/sortie`, `/invasions`, `/alerts`, `/market <slug>`, `/market-changes`, `/patches`, `/patch-changes`)
 2. Cursor commands: `/cleanup-simplify`, `/cleanup-simplify -all`, `/knowledge`
-3. Local CLI shortcuts (`npm run wf -- …`, `npm run market -- …`, `npm run patches -- …`, `npm run knowledge -- …`, `npm run cleanup:verify[:all]`, `npm run web:dev`)
+3. Local CLI shortcuts (`npm run wf -- …`, `npm run market -- …`, `npm run patches -- …`, `npm run knowledge -- status|lookup|dps|compare-dps|compare-loadout|pull-mechanics|pull-arcanes|…`, `npm run cleanup:verify[:all]`, `npm run web:dev`)
 4. Note that market + patch scrapes refresh around **4pm Pacific**
 5. Point to `docs/commands.md` (full list) and `docs/cleanup-agent.md` (cleanup modes)
 
@@ -49,9 +49,11 @@ Keep the `/list` reply concise and scannable; do not pad with extra sections.
 
 ## Tools in this repo
 
+- Prefer `npm run knowledge -- <command>` for offline facts, mechanics, arcanes, loadout compare, and modded DPS.
 - Prefer `npm run wf -- <command>` for live world-state (alerts, fissures, invasions, sortie, cycles, etc.).
 - Prefer `npm run market -- <command>` for Warframe.market v2 prices and daily changes.
 - Prefer `npm run patches -- <command>` for official updates/hotfixes/patch-note checks.
-- The mobile web chat lives in `web/` (`docs/web-chat.md`); keep tool behavior aligned with the Status/Market/Patches clients (including daily 4pm Pacific scrapes) and the `/list` command catalog.
-- The desktop arsenal overlay lives in `overlay/` (`docs/overlay.md`): region snip + prioritized Steel Path / endgame action cards via `python3 -m wf_overlay`. It is **external-only** (separate window + desktop pixels + user input). Never suggest memory reading/writing, injection, global input hooks, or input automation into Warframe. Be clear that no tool can guarantee Easy Anti-Cheat will never false-positive.
-- Load the matching skill under `.cursor/skills/` for compare / build / mechanics / world-state / patch-notes workflows.
+- The mobile web chat lives in `web/` (`docs/web-chat.md`); local LLM via `OPENAI_BASE_URL` (Qwen/Ollama) or `CHAT_MODE=local`.
+- The desktop arsenal overlay lives in `overlay/` (`docs/overlay.md`): prefer `CHAT_API_URL` → web `/api/chat` for pack tools. It is **external-only**. Never suggest memory reading/writing, injection, global input hooks, or input automation into Warframe.
+- Load the matching skill under `.cursor/skills/` for compare / build / mechanics / loadout-compare / modded-dps / offline-knowledge / world-state / patch-notes workflows.
+- Hermes profile: `hermes/` + `docs/hermes-export.md` + `hermes/LOCAL_LLM.md`.

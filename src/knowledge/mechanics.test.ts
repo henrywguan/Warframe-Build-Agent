@@ -79,3 +79,34 @@ describe("mechanics lookup scoring", () => {
     assert.ok(ids.includes("damage-magnetic") || ids.includes("damage-radiation"));
   });
 });
+
+describe("live pack lookup ranking", () => {
+  it("surfaces mechanics before arcane noise for viral / status effect", async () => {
+    const { lookupLocalKnowledge } = await import("./query.js");
+    const viral = await lookupLocalKnowledge("viral");
+    assert.match(viral, /# Mechanics \/ resource digests/);
+    const viralMech = viral.indexOf("# Mechanics / resource digests");
+    const viralArcane = viral.indexOf("# Arcane digests");
+    if (viralArcane !== -1) {
+      assert.ok(viralMech < viralArcane, "mechanics section should precede arcanes for viral");
+    }
+    assert.match(viral, /Viral/i);
+    assert.doesNotMatch(viral.slice(0, 400), /Arcane Truculence/);
+
+    const status = await lookupLocalKnowledge("status effect");
+    assert.match(status, /# Mechanics \/ resource digests/);
+    assert.match(status, /## Status Effect/);
+    const statusMech = status.indexOf("# Mechanics / resource digests");
+    const statusArcane = status.indexOf("# Arcane digests");
+    if (statusArcane !== -1) {
+      assert.ok(statusMech < statusArcane);
+    }
+  });
+
+  it("still finds named arcanes by title", async () => {
+    const { lookupLocalKnowledge } = await import("./query.js");
+    const text = await lookupLocalKnowledge("Arcane Energize");
+    assert.match(text, /# Arcane digests/);
+    assert.match(text, /Arcane Energize/);
+  });
+});

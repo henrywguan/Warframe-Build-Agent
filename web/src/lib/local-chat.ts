@@ -116,6 +116,14 @@ async function handlePlainLocal(text: string): Promise<LocalChatResult> {
   const dpsCompare = text.match(
     /^\s*(?:which\s+has\s+higher\s+(?:damage|dps)\s*[,:-]?\s*)?(.+?)\s+(?:vs|versus|or)\s+(.+?)(?:\?|$)/i,
   );
+  const dpsPreset = /corrosive/i.test(text)
+    ? "rifle-corrosive-heat"
+    : /raw|crit/i.test(text)
+      ? "rifle-raw-crit"
+      : /viral|heat/i.test(text)
+        ? "rifle-viral-heat"
+        : "typical";
+
   if (
     dpsCompare ||
     (/\b(dps|damage)\b/i.test(text) && /\b(vs|versus|or)\b/i.test(text))
@@ -134,12 +142,29 @@ async function handlePlainLocal(text: string): Promise<LocalChatResult> {
         content: await runOfflineDps({
           weapon,
           weaponB,
-          preset: /corrosive/i.test(text)
-            ? "rifle-corrosive-heat"
-            : /raw|crit/i.test(text)
-              ? "rifle-raw-crit"
-              : "typical",
+          preset: dpsPreset,
         }),
+        toolsUsed,
+        model: "local-knowledge",
+      };
+    }
+  }
+
+  // Single-weapon DPS: "what's Coda Hema DPS?" / "Coda Hema damage estimate"
+  const singleDps = text.match(
+    /^\s*(?:what(?:'?s|\s+is)?|estimate|calc(?:ulate)?|show)?\s*(?:the\s+)?(?:modded\s+)?(?:dps|damage)\s+(?:of|for|on)\s+(.+?)(?:\?|$)/i,
+  ) || text.match(
+    /^\s*(.+?)\s+(?:modded\s+)?(?:dps|damage(?:\s+estimate)?)\s*\??\s*$/i,
+  );
+  if (singleDps?.[1] && /\b(dps|damage)\b/i.test(text) && !/\b(vs|versus)\b/i.test(text)) {
+    const weapon = singleDps[1]
+      .replace(/\b(the|a|an|weapon|rifle|for|of|please)\b/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (weapon && weapon.length >= 2 && weapon.length < 48) {
+      toolsUsed.push("estimate_modded_dps");
+      return {
+        content: await runOfflineDps({ weapon, preset: dpsPreset }),
         toolsUsed,
         model: "local-knowledge",
       };

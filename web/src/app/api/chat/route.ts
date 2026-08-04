@@ -14,6 +14,10 @@ import {
 } from "@/lib/chat-types";
 import { resolveChatTurn } from "@/lib/chat-turn";
 import { preferLocalChat, runLocalChat } from "@/lib/local-chat";
+import {
+  conversationAllowsOnlineBuildSearch,
+  looksLikeBuildRequest,
+} from "@/lib/source-policy";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import { chatTools, runChatTool } from "@/lib/tools";
 
@@ -56,15 +60,38 @@ async function runModelCompletion(
   model: string,
 ): Promise<{ content: string; toolsUsed: string[]; model: string }> {
   const client = getClient();
+  const history: ChatCompletionMessageParam[] = incoming
+    .filter((m) => messageText(m.content) || hasImages([m]))
+    .slice(-20)
+    .map((m): ChatCompletionMessageParam => {
+      const content = toModelContent(m.content);
+      if (m.role === "assistant") {
+        return {
+          role: "assistant",
+          content: typeof content === "string" ? content : messageText(m.content),
+        };
+      }
+      return { role: "user", content };
+    });
+
+  const consentMessages = incoming.map((m) => ({
+    role: m.role,
+    content: messageText(m.content),
+  }));
+  const onlineAllowed = conversationAllowsOnlineBuildSearch(consentMessages);
+  const latestUser = [...incoming].reverse().find((m) => m.role === "user");
+  const buildAsk = latestUser
+    ? looksLikeBuildRequest(messageText(latestUser.content))
+    : false;
+  const consentNote = buildAsk
+    ? onlineAllowed
+      ? "\n\n## Runtime consent\nPlayer has allowed online build search in this conversation. You may use public Overframe/YouTube sources when local builds are insufficient. Still prefer the local pack first."
+      : "\n\n## Runtime consent\nPlayer has NOT consented to online build search. Stay on local pack + agent-calculated only. If Overframe builds are missing, ask yes/no — do not invent community builds."
+    : "";
+
   const messages: ChatCompletionMessageParam[] = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...incoming
-      .filter((m) => messageText(m.content) || hasImages([m]))
-      .slice(-20)
-      .map((m) => ({
-        role: m.role,
-        content: toModelContent(m.content),
-      })),
+    { role: "system", content: `${SYSTEM_PROMPT}${consentNote}` },
+    ...history,
   ];
 
   const toolsUsed: string[] = [];

@@ -1,32 +1,34 @@
 ---
 name: compare-gear
-description: Compare Warframe weapons, Warframes, companions, or gear for a stated goal such as Steel Path, budget, or progression.
+description: Compare Warframe weapons, Warframes, companions, or gear for Steel Path, budget, or progression goals using the offline pack first.
 ---
 
 # Compare gear
 
 ## When to use
 
-Player asks which option is better, “A vs B”, or wants a shortlist for a role.
+Operator asks which option is better, “A vs B”, or wants a shortlist for a role.
 
-## Steps
+## Procedure
 
-1. Confirm the goal (Steel Path, star chart, EDA/ETA, farming, fashion, etc.) and any hard constraints.
-2. Pull stats/mechanics from wiki-backed knowledge; check Overframe only for build popularity context.
-3. Compare with a short table or bullets covering:
-   - Damage profile (IPS / elements / viral-slash / heat / etc.)
+1. Confirm the goal (Steel Path, star chart, EDA/ETA, farming, fashion, etc.) and hard constraints.
+2. Pull stats/mechanics from the offline knowledge pack first (`npm run knowledge -- lookup "<item>"`).
+3. For raw damage questions under a shared mod plan, run `npm run knowledge -- compare-dps "<A>" "<B>" --preset typical`.
+4. For community build context, prefer local Overframe cache; if missing, ask yes/no before online Overframe/YouTube search (see `docs/source-policy.md`).
+5. Compare with a short table or bullets:
+   - Damage profile
    - Crit vs status lean
-   - Usability (AoE, ammo, reload, move-and-shoot)
-   - Survivability / safety impact
+   - Usability (AoE, ammo, reload)
+   - Survivability impact
    - Accessibility (MR, farm path, plat cost)
    - Build cost to feel good
-4. Recommend one primary pick for the stated goal, plus when the runner-up wins.
-5. Suggest one next step (farm path, companion pairing, or a budget build skill follow-up).
+6. Recommend one primary pick, plus when the runner-up wins.
+7. Suggest one next step.
 
 ## Output shape
 
-- **Pick:** …
-- **Why:** 2–4 bullets
-- **Tradeoffs table**
+- **Pick**
+- **Why** (2–4 bullets)
+- **Tradeoffs**
 - **When to choose the alternative**
 - **Next step**

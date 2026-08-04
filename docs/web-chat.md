@@ -97,8 +97,9 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 - Latest saved daily market changes (4pm Pacific job)
 - Latest official updates/hotfixes (live hub scrape)
 - Newly listed patch notes since the previous daily snapshot (4pm Pacific job)
-- Offline knowledge lookup (`lookup_local_knowledge`)
+- Offline knowledge lookup (`lookup_local_knowledge`) — items, mechanics digests, arcane digests, Overframe builds
 - Loadout vs top-3 Overframe compare (`compare_loadout_to_overframe`)
+- Offline modded DPS / A vs B (`estimate_modded_dps`)
 
 ## Security notes
 

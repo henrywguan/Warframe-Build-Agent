@@ -104,13 +104,13 @@ function scoreName(query: string, name: string): number {
 }
 
 function scoreMechanics(query: string, digest: MechanicsDigest): number {
+  // Title/aliases/id only — summaries often repeat "status effect" across damage pages.
   const labels = [
     digest.title,
     digest.id.replace(/-/g, " "),
-    digest.summary || "",
     ...(digest.aliases || []),
   ];
-  const best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
+  let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
   const stop = new Set([
     "the",
     "and",
@@ -151,7 +151,12 @@ function scoreMechanics(query: string, digest: MechanicsDigest): number {
       }
     }
   }
-  return Math.max(best, Math.min(100, tokenScore));
+  best = Math.max(best, Math.min(100, tokenScore));
+  if (best < 50 && digest.summary) {
+    const summaryHit = scoreName(query, digest.summary);
+    if (summaryHit >= 60) best = Math.max(best, 40);
+  }
+  return best;
 }
 
 export type LocalBuildLookup = {
@@ -245,19 +250,34 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     );
     if (digest) arcanes.push(digest);
   }
+  const qNorm = normalize(query);
+  const arcaneListMode =
+    /^(arcane|arcanes)s?$/.test(qNorm) || /\barcanes?\b/.test(qNorm);
+  const arcaneMinScore = arcaneListMode ? 45 : 70;
   const arcaneHits = arcanes
-    .map((digest) => ({
-      digest,
-      score: scoreMechanics(query, {
+    .map((digest) => {
+      // Title/aliases only — ignore summary/extract so "viral" doesn't match random arcanes.
+      let score = scoreMechanics(query, {
         id: digest.id,
         title: digest.title,
         kind: "modding",
-        aliases: [...(digest.aliases || []), digest.slot, "arcane"],
-        summary: digest.summary,
-        extract: digest.extract,
-      }),
-    }))
-    .filter((row) => row.score >= 45)
+        aliases: [...(digest.aliases || []), digest.slot, `${digest.slot} arcane`, "arcane"],
+        summary: "",
+        extract: "",
+      });
+      if (
+        arcaneListMode &&
+        qNorm.includes(digest.slot) &&
+        digest.slot !== "other"
+      ) {
+        score = Math.max(score, 70);
+      }
+      if (arcaneListMode && (qNorm === "arcane" || qNorm === "arcanes")) {
+        score = Math.max(score, 50);
+      }
+      return { digest, score };
+    })
+    .filter((row) => row.score >= arcaneMinScore)
     .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
     .slice(0, 8)
     .map((row) => row.digest);
@@ -277,16 +297,6 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     "",
   ];
 
-  if (arcaneHits.length) {
-    chunks.push("# Arcane digests", "");
-    for (const digest of arcaneHits) {
-      chunks.push(`## ${digest.title} (${digest.slot})`);
-      if (digest.summary) chunks.push(digest.summary);
-      if (digest.pageUrl) chunks.push(digest.pageUrl);
-      chunks.push("", "### Arcane digest", digest.extract.slice(0, 5000), "");
-    }
-  }
-
   if (mechanicsHits.length) {
     chunks.push("# Mechanics / resource digests", "");
     for (const digest of mechanicsHits) {
@@ -294,6 +304,16 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
       if (digest.summary) chunks.push(digest.summary);
       if (digest.pageUrl) chunks.push(digest.pageUrl);
       chunks.push("", "### Mechanics digest", digest.extract.slice(0, 6000), "");
+    }
+  }
+
+  if (arcaneHits.length) {
+    chunks.push("# Arcane digests", "");
+    for (const digest of arcaneHits) {
+      chunks.push(`## ${digest.title} (${digest.slot})`);
+      if (digest.summary) chunks.push(digest.summary);
+      if (digest.pageUrl) chunks.push(digest.pageUrl);
+      chunks.push("", "### Arcane digest", digest.extract.slice(0, 5000), "");
     }
   }
 

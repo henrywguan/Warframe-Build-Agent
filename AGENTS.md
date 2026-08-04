@@ -77,8 +77,8 @@ After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-s
 
 ## How to answer players
 
-1. Identify the goal (compare, build, mechanic, progression, trade, live status).
-2. Ground claims in repo sources first (`docs/`), then Status CLI/API, then current public web info.
+1. Identify the goal (compare, build, mechanic, arcane, DPS, loadout, progression, trade, live status).
+2. Ground claims in the **offline knowledge pack** first (`npm run knowledge -- lookup|dps|compare-dps|compare-loadout`), then `docs/` / Status / Market / Patches. Ask yes/no before online build search when local Overframe builds are missing.
 3. Lead with a clear recommendation, then tradeoffs.
 4. End with one short next-step suggestion.
 

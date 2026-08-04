@@ -58,9 +58,11 @@ Details:
 | --- | --- |
 | `cleanup-simplify` | After edits; optional `-all` integrity |
 | `offline-knowledge` | Local pack lookup / pull / crawl |
+| `loadout-compare` | Pasted loadout vs top Overframe builds |
+| `modded-dps` | Offline modded DPS / A vs B |
 | `recommend-build` | Mod setups / budget / Steel Path builds |
 | `compare-gear` | Weapon/frame comparisons |
-| `explain-mechanics` | Game systems explanations |
+| `explain-mechanics` | Game systems (pack digests first) |
 | `world-state` | Live fissures/cycles/alerts guidance |
 | `patch-notes` | Updates/hotfixes workflow |
 

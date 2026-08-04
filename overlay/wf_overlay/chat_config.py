@@ -57,9 +57,11 @@ def load_chat_settings() -> ChatSettings:
 def settings_help_text() -> str:
     path = config_dir() / "overlay.env"
     return (
-        "Chat needs OPENAI_API_KEY (or CHAT_API_URL to your web chat).\n"
+        "Chat needs CHAT_API_URL (recommended — uses offline knowledge pack tools)\n"
+        "or OPENAI_API_KEY for direct model chat (no pack tools).\n"
         f"Set env vars or create {path} with:\n"
-        "OPENAI_API_KEY=sk-...\n"
-        "OPENAI_MODEL=gpt-4o-mini\n"
-        "# optional: CHAT_API_URL=http://127.0.0.1:3000/api/chat"
+        "CHAT_API_URL=http://127.0.0.1:3000/api/chat\n"
+        "# optional: CHAT_PASSWORD=...\n"
+        "# alternative (no pack tools): OPENAI_API_KEY=... OPENAI_MODEL=qwen3.6\n"
+        "# OPENAI_BASE_URL=http://127.0.0.1:11434/v1"
     )

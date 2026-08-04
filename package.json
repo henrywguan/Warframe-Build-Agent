@@ -7,7 +7,8 @@
   "bin": {
     "wf-status": "./dist/cli.js",
     "wf-market": "./dist/market/cli.js",
-    "wf-patches": "./dist/patches/cli.js"
+    "wf-patches": "./dist/patches/cli.js",
+    "wf-knowledge": "./dist/knowledge/cli.js"
   },
   "scripts": {
     "build": "tsc",

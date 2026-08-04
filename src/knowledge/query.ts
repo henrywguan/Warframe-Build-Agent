@@ -46,12 +46,13 @@ function scoreName(query: string, name: string): number {
   return overlap * 15;
 }
 
-/** Score a mechanics digest against a free-text query (title + aliases + summary). */
+/** Score a mechanics digest against a free-text query (title + aliases; summary is weak only). */
 export function scoreMechanicsDigest(query: string, digest: MechanicsDigest): number {
+  // Title/aliases/id only for primary ranking — summaries often say "status effect"
+  // and would otherwise bury the Status Effect page under every damage type.
   const labels = [
     digest.title,
     digest.id.replace(/-/g, " "),
-    digest.summary,
     ...digest.aliases,
   ];
   let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
@@ -109,6 +110,12 @@ export function scoreMechanicsDigest(query: string, digest: MechanicsDigest): nu
   }
 
   best = Math.max(best, Math.min(100, tokenScore));
+
+  // Weak summary hint only when title/aliases did not already match.
+  if (best < 50 && digest.summary) {
+    const summaryHit = scoreName(query, digest.summary);
+    if (summaryHit >= 60) best = Math.max(best, 40);
+  }
   return best;
 }
 
@@ -125,16 +132,20 @@ export function findMechanicsMatches(
     .map((row) => row.digest);
 }
 
-/** Score an arcane digest against a free-text query. */
+/**
+ * Score an arcane digest against a free-text query.
+ * Title + aliases only — never summary/extract (those mention damage types and
+ * bury mechanics digests under unrelated arcanes for queries like "viral").
+ */
 export function scoreArcaneDigest(query: string, digest: ArcaneDigest): number {
   return scoreMechanicsDigest(query, {
     id: digest.id,
     title: digest.title,
     kind: "modding",
     aliases: [...digest.aliases, digest.slot, `${digest.slot} arcane`, "arcane"],
-    summary: digest.summary,
+    summary: "",
     pageUrl: digest.pageUrl,
-    extract: digest.extract,
+    extract: "",
     fetchedAt: digest.fetchedAt,
     source: "wiki",
   });
@@ -148,6 +159,8 @@ export function findArcaneMatches(
   const q = normalize(query);
   // Broad "arcanes" / "primary arcanes" list queries.
   const listMode = /^(arcane|arcanes)s?$/.test(q) || /\barcanes?\b/.test(q);
+  // Without an explicit arcane cue, require a strong title/alias hit.
+  const minScore = listMode ? 45 : 70;
   return digests
     .map((digest) => {
       let score = scoreArcaneDigest(query, digest);
@@ -155,7 +168,7 @@ export function findArcaneMatches(
       if (listMode && (q === "arcane" || q === "arcanes")) score = Math.max(score, 50);
       return { digest, score };
     })
-    .filter((row) => row.score >= 45)
+    .filter((row) => row.score >= minScore)
     .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
     .slice(0, limit)
     .map((row) => row.digest);
@@ -228,6 +241,14 @@ export async function lookupLocalKnowledge(
     "",
   ];
 
+  // Mechanics first — player elemental/status questions should not be buried under arcanes.
+  if (mechanicsHits.length) {
+    chunks.push("# Mechanics / resource digests", "");
+    for (const digest of mechanicsHits) {
+      chunks.push(...formatMechanicsChunk(digest));
+    }
+  }
+
   if (arcaneHits.length) {
     chunks.push("# Arcane digests", "");
     for (const digest of arcaneHits) {
@@ -240,13 +261,6 @@ export async function lookupLocalKnowledge(
         digest.extract.slice(0, 5000),
         "",
       );
-    }
-  }
-
-  if (mechanicsHits.length) {
-    chunks.push("# Mechanics / resource digests", "");
-    for (const digest of mechanicsHits) {
-      chunks.push(...formatMechanicsChunk(digest));
     }
   }
 

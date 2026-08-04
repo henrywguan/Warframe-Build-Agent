@@ -7,7 +7,7 @@ Process to crawl [overframe.gg](https://overframe.gg/) for **every Warframe and 
 | Path | Contents |
 | --- | --- |
 | `data/knowledge/catalog/items.json` | WFCD warframes + weapons |
-| `data/knowledge/builds/by-item/<id>.json` | Top 2 builds with `mods[]`, `arcanes[]`, URLs |
+| `data/knowledge/builds/by-item/<id>.json` | Top 3 builds with `mods[]`, `arcanes[]`, URLs |
 | `data/knowledge/mods/index.json` | Unique mods/arcanes seen across crawled builds |
 | `data/knowledge/manifest.json` | Counts + `overframeStatus` |
 
