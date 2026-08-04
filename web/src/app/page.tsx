@@ -23,6 +23,15 @@ import {
   loadLlmConfig,
   saveLlmConfig,
 } from "../lib/model-config";
+import {
+  loadOnlineSearchEnabled,
+  saveOnlineSearchEnabled,
+} from "../lib/online-search-pref";
+import {
+  defaultAiChatEnabled,
+  loadAiChatPreference,
+  saveAiChatEnabled,
+} from "../lib/ai-chat-pref";
 import styles from "./page.module.css";
 
 type Role = "user" | "assistant";
@@ -45,7 +54,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Tap LLM / Ollama to connect a local model without editing .env.",
+    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Toggle AI for smart LLM replies (needs LLM / Ollama). Online search crawls community builds separately.",
 };
 
 const MAX_IMAGE_BYTES = 1_600_000;
@@ -122,9 +131,10 @@ export default function HomePage() {
   const [ready, setReady] = useState(false);
   const [pending, setPending] = useState(false);
   const [speaking, setSpeaking] = useState(false);
-  const [localMode, setLocalMode] = useState(false);
   const [llmConfig, setLlmConfig] = useState<ClientLlmConfig>(emptyLlmConfig);
   const [showLlmSettings, setShowLlmSettings] = useState(false);
+  const [onlineSearch, setOnlineSearch] = useState(false);
+  const [aiChat, setAiChat] = useState(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -175,6 +185,9 @@ export default function HomePage() {
   useEffect(() => {
     const saved = loadLlmConfig();
     setLlmConfig(saved);
+    setOnlineSearch(loadOnlineSearchEnabled());
+    const savedAi = loadAiChatPreference();
+    setAiChat(savedAi ?? defaultAiChatEnabled(llmConfigReady(saved)));
     let cancelled = false;
     (async () => {
       try {
@@ -192,10 +205,11 @@ export default function HomePage() {
         setPasswordRequired(Boolean(authJson.passwordRequired));
         setAuthorized(!authJson.passwordRequired);
         const browserLlm = llmConfigReady(saved);
-        setLocalMode(Boolean(healthJson.localMode) && !browserLlm);
-        if (!healthJson.chatReady && !browserLlm) {
+        const aiOn = savedAi ?? defaultAiChatEnabled(browserLlm || Boolean(healthJson.openaiConfigured));
+        setAiChat(aiOn);
+        if (!healthJson.chatReady && !browserLlm && aiOn) {
           setError(
-            "Chat needs an LLM — tap LLM / Ollama to add a key or Ollama URL, or use CHAT_MODE=local with the knowledge pack.",
+            "AI chat needs an LLM — tap LLM / Ollama to add a key or Ollama URL, or turn AI off for the offline chatbot.",
           );
         }
       } catch {
@@ -279,6 +293,8 @@ export default function HomePage() {
         body: JSON.stringify({
           messages: payloadMessages,
           llm: llmConfigReady(llmConfig) ? llmConfig : undefined,
+          onlineSearch: onlineSearch || undefined,
+          aiChat,
         }),
       });
       const data = (await response.json()) as {
@@ -444,11 +460,60 @@ export default function HomePage() {
         <div className={styles.suggestions}>
           <button
             type="button"
+            className={`${styles.chip} ${aiChat ? styles.chipActive : ""}`}
+            disabled={pending}
+            aria-pressed={aiChat}
+            title={
+              aiChat
+                ? "AI chat on — smart LLM replies with optional web search"
+                : "AI off — offline knowledge chatbot only"
+            }
+            onClick={() => {
+              setAiChat((prev) => {
+                const next = !prev;
+                if (next && !llmConfigReady(llmConfig)) {
+                  setShowLlmSettings(true);
+                  setError(
+                    "AI needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
+                  );
+                  saveAiChatEnabled(false);
+                  return false;
+                }
+                saveAiChatEnabled(next);
+                if (next) setError(null);
+                return next;
+              });
+            }}
+          >
+            AI {aiChat ? "on" : "off"}
+          </button>
+          <button
+            type="button"
             className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
             disabled={pending}
             onClick={() => setShowLlmSettings((open) => !open)}
           >
             LLM / Ollama
+          </button>
+          <button
+            type="button"
+            className={`${styles.chip} ${onlineSearch ? styles.chipActive : ""}`}
+            disabled={pending}
+            aria-pressed={onlineSearch}
+            title={
+              onlineSearch
+                ? "Live Overframe + community build crawl is on"
+                : "Turn on to crawl Overframe / community builds when local pack is missing"
+            }
+            onClick={() => {
+              setOnlineSearch((prev) => {
+                const next = !prev;
+                saveOnlineSearchEnabled(next);
+                return next;
+              });
+            }}
+          >
+            Online search {onlineSearch ? "on" : "off"}
           </button>
           {SUGGESTIONS.map((suggestion) => (
             <button
@@ -471,8 +536,13 @@ export default function HomePage() {
               saveLlmConfig(config);
               setLlmConfig(config);
               const ready = llmConfigReady(config);
-              setLocalMode(!ready);
-              if (ready) setError(null);
+              if (ready) {
+                setError(null);
+                if (!aiChat) {
+                  setAiChat(true);
+                  saveAiChatEnabled(true);
+                }
+              }
             }}
           />
         ) : null}
@@ -550,11 +620,11 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : llmConfigReady(llmConfig)
-            ? `LLM: ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}`
-            : localMode
-              ? "Local mode: offline knowledge + OCR compare (no OpenAI key). Tip: LLM / Ollama"
-              : "Tip: attach a loadout screenshot, or set LLM / Ollama. /list for commands."}
+          : aiChat && llmConfigReady(llmConfig)
+            ? `AI on · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
+            : aiChat
+              ? "AI on — configure LLM / Ollama to chat"
+              : "AI off — offline knowledge chatbot. Toggle AI on for smart LLM replies."}
       </p>
     </main>
   );

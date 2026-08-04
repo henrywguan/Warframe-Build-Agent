@@ -4,6 +4,7 @@ import {
   formatLoadoutCompare,
 } from "@/lib/loadout-compare";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
+import { searchCommunityBuildsOnline, searchWebOnline } from "@/lib/online-community-search";
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import { runOfflineDps } from "@/lib/offline-dps";
 import {
@@ -18,6 +19,46 @@ import {
   liveSortie,
   liveWorldstateSummary,
 } from "@/lib/warframe-live";
+
+const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
+  type: "function",
+  function: {
+    name: "search_web",
+    description:
+      "General public web search (DuckDuckGo + Warframe Wiki) to back up AI answers with live sources. Use when facts may be patch-sensitive, time-sensitive, or missing from local tools. Available when the WebUI AI toggle is on. Cite only returned URLs.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          description: "Search query (e.g. 'Steel Path Excalibur survivability 2026')",
+        },
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
+};
+
+const SEARCH_COMMUNITY_BUILDS_TOOL: OpenAI.Chat.ChatCompletionTool = {
+  type: "function",
+  function: {
+    name: "search_community_builds",
+    description:
+      "Live crawl of community build sources when Online search is enabled: Overframe.gg top builds (mods when available), DuckDuckGo web results, YouTube links, and Warframe Wiki opensearch. Call after lookup_local_knowledge when local Overframe builds are missing or the player wants wider community comparison. Requires Online search toggle (or chat yes).",
+    parameters: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          description: "Item or build topic (e.g. Coda Hema, Revenant Prime steel path)",
+        },
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
+};
 
 export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
   {
@@ -106,7 +147,7 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     function: {
       name: "get_market_daily_changes",
       description:
-        "Read the latest saved day-over-day Warframe.market watchlist changes from the daily 4pm Pacific snapshot job.",
+        "Read day-over-day Warframe.market price changes from the daily 4pm Pacific scrape snapshot.",
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
@@ -114,14 +155,13 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "get_patch_notes_latest",
-      description:
-        "Get the latest official Warframe PC updates/hotfixes from warframe.com/en/patch-notes (live hub scrape).",
+      description: "Get the latest official Warframe updates/hotfixes from warframe.com.",
       parameters: {
         type: "object",
         properties: {
           limit: {
             type: "number",
-            description: "How many recent entries to return (default 8)",
+            description: "Max entries to return (default 8)",
           },
         },
         additionalProperties: false,
@@ -208,11 +248,11 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
           },
           preset: {
             type: "string",
-            description: "Mod preset id (default typical / rifle-viral-heat by class)",
+            description: "Curated mod preset id",
           },
           viralAmp: {
             type: "number",
-            description: "Optional Viral health amp multiplier override (default ~2.5 when viral mods present)",
+            description: "Optional viral amp multiplier",
           },
         },
         additionalProperties: false,
@@ -220,6 +260,17 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     },
   },
 ];
+
+/** Base tools, plus AI web search and/or community crawl based on UI toggles. */
+export function getChatTools(options?: {
+  onlineSearch?: boolean;
+  aiChat?: boolean;
+}): OpenAI.Chat.ChatCompletionTool[] {
+  const tools = [...chatTools];
+  if (options?.aiChat) tools.push(SEARCH_WEB_TOOL);
+  if (options?.onlineSearch) tools.push(SEARCH_COMMUNITY_BUILDS_TOOL);
+  return tools;
+}
 
 type ToolArgs = Record<string, unknown>;
 
@@ -231,7 +282,11 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
-export async function runChatTool(name: string, rawArgs: string): Promise<string> {
+export async function runChatTool(
+  name: string,
+  rawArgs: string,
+  options?: { onlineSearch?: boolean; aiChat?: boolean },
+): Promise<string> {
   let args: ToolArgs = {};
   try {
     args = rawArgs ? (JSON.parse(rawArgs) as ToolArgs) : {};
@@ -277,6 +332,29 @@ export async function runChatTool(name: string, rawArgs: string): Promise<string
         const query = asString(args.query);
         if (!query) return "Missing required query.";
         return await lookupLocalKnowledge(query);
+      }
+      case "search_web": {
+        if (!options?.aiChat) {
+          return [
+            "AI_CHAT_DISABLED: the AI toggle is off.",
+            "Tell the player to turn on AI in the chat UI for smart replies with web search, or answer from local tools only.",
+          ].join("\n");
+        }
+        const query = asString(args.query);
+        if (!query) return "Missing required query.";
+        return await searchWebOnline(query);
+      }
+      case "search_community_builds": {
+        if (!options?.onlineSearch) {
+          return [
+            "ONLINE_SEARCH_DISABLED: the Online search toggle is off.",
+            "Tell the player to turn on Online search in the chat UI (or reply yes), then call search_community_builds again.",
+            "Do not invent Overframe/YouTube URLs.",
+          ].join("\n");
+        }
+        const query = asString(args.query);
+        if (!query) return "Missing required query.";
+        return await searchCommunityBuildsOnline(query);
       }
       case "compare_loadout_to_overframe": {
         const itemName = asString(args.itemName);

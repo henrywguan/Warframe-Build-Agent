@@ -10,9 +10,9 @@ export const SOURCE_POLICY = `## Source policy
 - **Build-related requests** (mod setups, “best build”, Steel Path config, loadout advice, comparisons):
   1. Always call \`lookup_local_knowledge\` first and compare using **local pack** data (catalog/wiki + cached Overframe builds when present).
   2. If the tool reports \`LOCAL_BUILDS_AVAILABLE\`, use those local Overframe/import builds for the comparison. You may still refine with agent-calculated notes for the player's goal/budget.
-  3. If the tool reports \`ONLINE_SEARCH_CONFIRMATION_REQUIRED\` / local Overframe builds are missing: **stop and ask the player for confirmation** before any Overframe / YouTube / other online build search. Use the confirmation prompt from the tool (yes = allow online search; no = stay local + agent-calculated only).
-  4. Only after an explicit **yes** (or clear consent) in this conversation may you search or reason from online Overframe, YouTube, or other public build sources. Never invent fake video URLs.
-  5. If the player says **no**, stay offline: local facts + agent-calculated best build only.
+  3. If the tool reports \`ONLINE_SEARCH_CONFIRMATION_REQUIRED\` / local Overframe builds are missing: **stop and ask the player for confirmation** before any Overframe / YouTube / other online build search — unless the WebUI **Online search** toggle is on (that counts as standing consent). Use the confirmation prompt from the tool (yes = allow online search; no = stay local + agent-calculated only).
+  4. Only after an explicit **yes**, clear consent, or the Online search toggle may you call \`search_community_builds\` (live Overframe + DuckDuckGo web/YouTube + Wiki) or reason from those tool results. Never invent fake video URLs.
+  5. If the player says **no** (and the toggle is off), stay offline: local facts + agent-calculated best build only.
 - Do not browse online for builds proactively. A wiki/catalog digest alone is not a full community build comparison.`;
 
 export const LOCAL_KNOWLEDGE_TOOL_DESCRIPTION =
@@ -38,7 +38,7 @@ export function formatOnlineSearchConfirmation(itemNames: string[]): string {
 }
 
 export function looksLikeBuildRequest(text: string): boolean {
-  return /\b(builds?|mod\s*setup|loadout|forma|steel\s*path\s*(build|config|setup)|best\s+(build|setup|mods?)|compare\s+builds?|community\s+builds?)\b/i.test(
+  return /\b(builds?|mod\s*setup|loadout|forma|steel\s*path(\s+(build|config|setup))?|best\s+(build|setup|mods?)|max(imum)?\s+damage(\s+build)?|compare\s+builds?|community\s+builds?|crawl\s+(the\s+)?web|search\s+online)\b/i.test(
     text,
   );
 }
@@ -48,8 +48,10 @@ export function parseOnlineSearchConsent(text: string): "yes" | "no" | null {
   const t = text.trim().toLowerCase();
   if (!t) return null;
   if (
-    /^(yes|y|yeah|yep|sure|ok|okay|please|go ahead|search|search online|do it)\b/.test(t) ||
-    /\b(yes[,.]?\s+search|search online|go ahead|allow online)\b/.test(t)
+    /^(yes|y|yeah|yep|sure|ok|okay|please|go ahead|search|search online|do it|crawl)\b/.test(t) ||
+    /\b(yes[,.]?\s+search|search online|go ahead|allow online|crawl\s+(the\s+)?web|look\s+online)\b/.test(
+      t,
+    )
   ) {
     return "yes";
   }
@@ -74,4 +76,30 @@ export function conversationAllowsOnlineBuildSearch(
     if (consent === "no") return false;
   }
   return false;
+}
+
+/** Combine chat yes/no history with the WebUI Online search toggle. */
+export function resolveOnlineBuildSearchAllowed(options: {
+  messages: Array<{ role: string; content: string }>;
+  uiToggle?: boolean;
+}): boolean {
+  return options.uiToggle === true || conversationAllowsOnlineBuildSearch(options.messages);
+}
+
+export function annotateToolResultForOnlineConsent(
+  result: string,
+  onlineSearchEnabled: boolean,
+): string {
+  if (
+    !onlineSearchEnabled ||
+    !result.includes(ONLINE_SEARCH_CONFIRMATION_MARKER)
+  ) {
+    return result;
+  }
+  return [
+    result,
+    "",
+    "ONLINE_SEARCH_ALLOWED: player consented (Online search toggle and/or chat yes).",
+    "Call search_community_builds now for live Overframe + public web/YouTube/Wiki results. Do NOT ask yes/no. Prefer local pack first; use the live tool when builds are still missing.",
+  ].join("\n");
 }
