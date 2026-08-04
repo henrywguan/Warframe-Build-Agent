@@ -1,6 +1,16 @@
 # Overframe crawl → local database
 
-Process to crawl [overframe.gg](https://overframe.gg/) for **every Warframe and weapon**, take the **top 3 builds**, scan **mods + arcanes** on each build page, and save into the local knowledge pack (`data/knowledge/`).
+Process to collect [overframe.gg](https://overframe.gg/) **top 3 builds** (mods + arcanes) for Warframes/weapons into the local knowledge pack (`data/knowledge/`).
+
+## Reality check (Cloudflare)
+
+Overframe sits behind Cloudflare. There is **no public Overframe API**. Automated Node `fetch`, headless browsers, and many “scrapers” get a challenge page — even on home Wi‑Fi.
+
+**Do not chase Cloudflare bypass tools.** The reliable approach is:
+
+1. You open Overframe in a normal browser and pass the challenge as a human.
+2. We extract the **text/JSON already in that tab** (`__NEXT_DATA__`), offline.
+3. Import that JSON into the knowledge pack.
 
 ## Output layout
 
@@ -11,70 +21,66 @@ Process to crawl [overframe.gg](https://overframe.gg/) for **every Warframe and 
 | `data/knowledge/mods/index.json` | Unique mods/arcanes seen across crawled builds |
 | `data/knowledge/manifest.json` | Counts + `overframeStatus` |
 
-## Commands
+---
+
+## Recommended: browser extract (Cloudflare-safe)
+
+### Option A — DevTools console snippet (best when automation fights you)
+
+1. Open Chrome/Edge/Firefox, go to `https://overframe.gg`, pass Cloudflare.
+2. Open an **item page** (shows top builds) or a **build page** (full mods).
+3. DevTools → Console → paste the contents of [`scripts/overframe-browser-extract.js`](../scripts/overframe-browser-extract.js) → Enter.
+4. A JSON file downloads (and is copied to the clipboard when allowed).
+5. Merge / accumulate into `data/knowledge/builds-export.json`, then:
 
 ```bash
-# Full crawl (catalog items → item pages → build pages → mods/arcanes)
-npm run knowledge -- crawl-overframe
-
-# Dev sample
-npm run knowledge -- crawl-overframe --limit 10
-
-# Refresh WFCD catalog first
-npm run knowledge -- crawl-overframe --refresh-catalog
-
-# When Cloudflare blocks this network: import a JSON export instead
-npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
-
-# Also available inside a full pack pull
-npm run knowledge -- pull
+npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
 ```
 
-## Cloudflare note
+Tip: on an item page, if `__NEXT_DATA__` already embeds mod lists on the top cards, one paste can capture all three builds. If cards are links-only, open each top build and run the snippet again (the parse/import merge path will combine by item name).
 
-`overframe.gg` often returns a Cloudflare challenge from datacenter/CI IPs (and sometimes from Node `fetch` even on home Wi‑Fi). The crawler detects that (`overframeStatus: "blocked"`) and exits without inventing builds.
+### Option B — Save page as HTML, parse offline (text-only)
 
-### Option A — Playwright browser export (recommended on laptops)
+1. In your browser (after Cloudflare), open the item/build page.
+2. Save page: **Ctrl+S** / **Cmd+S** → “Webpage, HTML only” into a folder, e.g. `data/knowledge/overframe-html/`.
+3. Parse with no network:
 
-When plain `npm run knowledge -- crawl-overframe` stays blocked, use a real browser session.
+```bash
+npm run knowledge -- parse-overframe-html ./data/knowledge/overframe-html --import
+# or write export only:
+npm run knowledge -- parse-overframe-html ./page.html --out ./data/knowledge/builds-export.json
+```
 
-**If Cloudflare loops** in the automated window, attach to normal Chrome instead:
+`--import` writes/merges `builds-export.json` and loads it into the pack.
+
+### Option C — Playwright attached to your real Chrome (CDP)
+
+Still uses a human-passed session; better for bulk once Option A works for a few items.
 
 ```powershell
-# 1) Close all Chrome windows, then:
+# Close Chrome, then start with remote debugging:
 & "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" `
   --remote-debugging-port=9222 `
   --user-data-dir="$env:TEMP\wf-overframe-chrome"
 
-# 2) In that Chrome tab, open https://overframe.gg and pass Cloudflare once
-
-# 3) In another terminal (repo root):
+# In that window: open overframe.gg, pass Cloudflare, leave it open.
 npm run knowledge:export-overframe -- --connect http://127.0.0.1:9222 --limit 5
-```
-
-Default (persistent real Chrome profile, no `--connect`):
-
-```bash
-npm install
-npx playwright install chromium
-
-# Smoke test
-npm run knowledge:export-overframe -- --limit 5
-
-# Full catalog (resume-safe)
-npm run knowledge:export-overframe -- --resume
-
-# Import into the local knowledge pack
+npm run knowledge:export-overframe -- --connect http://127.0.0.1:9222 --resume
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
 ```
 
-Useful flags: `--out <file>`, `--delay <ms>`, `--headless`, `--skip-build-pages`, `--resume`, `--connect <cdp-url>`.
+If CDP navigations re-trigger Cloudflare, fall back to Option A/B for those items.
 
-The exporter **does not reload** after you solve Cloudflare (reload was re-triggering the loop).
+### Option D — live Node crawl (often blocked)
 
-### Option B — residential Node crawl / manual JSON
+```bash
+npm run knowledge -- crawl-overframe
+npm run knowledge -- crawl-overframe --limit 10
+```
 
-Run `crawl-overframe` on a network that is not challenged, or hand-write JSON for `--import-builds` (shape below).
+When blocked, `overframeStatus` becomes `blocked` / `partial` and nothing is invented.
+
+---
 
 ## Import JSON shape
 
@@ -98,6 +104,20 @@ See `data/knowledge/examples/builds-import.sample.json`:
 ]
 ```
 
+## What does *not* work (and why)
+
+| Approach | Why it fails |
+| --- | --- |
+| Plain `curl` / Node `fetch` | Cloudflare challenge HTML, not the app |
+| Headless Playwright/Puppeteer | Often challenged as a bot |
+| “Cloudflare bypass” scrapers / captcha farms | Fragile, against site ToS, not something this repo supports |
+| Imaginary Overframe public API | Does not exist |
+| Third-party MCP “lookup_builds” tools | Still hit Overframe (same wall) unless they already cached data |
+
+## Companions note
+
+The WFCD catalog pull currently covers **warframes + weapons**. Companions need a catalog expansion before they appear in bulk export queues; you can still import companion rows manually via the JSON shape above (`itemName` matching).
+
 ## Agent use
 
-After a successful crawl, build comparisons use local Overframe rows first (`lookup_local_knowledge`). If builds are still missing for an item, the agent asks yes/no before any online search — see [`docs/source-policy.md`](source-policy.md).
+After a successful import, build comparisons use local Overframe rows first (`lookup_local_knowledge` / `compare-loadout`). If builds are still missing for an item, the agent asks yes/no before any online search — see [`docs/source-policy.md`](source-policy.md).

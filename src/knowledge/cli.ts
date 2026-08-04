@@ -10,9 +10,12 @@ import {
   formatPresetHelp,
 } from "./dps/compare.js";
 import { loadCommonMods } from "./dps/mods.js";
+import { parseOverframeHtmlPaths } from "./overframe-html.js";
 import { lookupLocalKnowledge } from "./query.js";
 import { pullArcanesOnly, pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
 import { loadManifest } from "./store.js";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 function usage(): never {
   console.log(`Warframe offline knowledge pack
@@ -22,6 +25,7 @@ Usage:
   npm run knowledge -- pull-mechanics [options]
   npm run knowledge -- pull-arcanes [options]
   npm run knowledge -- crawl-overframe [options]
+  npm run knowledge -- parse-overframe-html <file|dir> [...] [options]
   npm run knowledge -- lookup <query>
   npm run knowledge -- dps <weapon> [--preset name|--mods a,b,c]
   npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset name|--mods a,b,c]
@@ -70,6 +74,13 @@ crawl-overframe options:
   --delay <ms>             Delay between requests (default 450)
   --skip-build-pages       Only collect build links (skip mod/arcane scan)
   --import-builds <file>   Import JSON instead of live crawl
+
+parse-overframe-html options:
+  Cloudflare-safe: parse HTML/__NEXT_DATA__ saved from a real browser tab
+  (or JSON from scripts/overframe-browser-extract.js). No network calls.
+  --out <file>             Write/merge import JSON (default data/knowledge/builds-export.json)
+  --item <name>            Force item name for single-file parses
+  --import                 Also run crawl-overframe --import-builds on --out
 `);
   process.exit(1);
 }
@@ -247,6 +258,64 @@ async function main() {
       skipBuildPages: rest.includes("--skip-build-pages"),
       importBuildsPath: getFlag(rest, "--import-builds"),
     });
+    return;
+  }
+
+  if (command === "parse-overframe-html") {
+    const out =
+      getFlag(rest, "--out") ??
+      path.join(process.cwd(), "data/knowledge/builds-export.json");
+    const itemName = getFlag(rest, "--item");
+    const doImport = rest.includes("--import");
+    const inputs = rest.filter((arg, idx, arr) => {
+      if (arg.startsWith("--")) return false;
+      const prev = arr[idx - 1];
+      return !prev || !["--out", "--item"].includes(prev);
+    });
+    if (!inputs.length) {
+      console.error(
+        "Usage: npm run knowledge -- parse-overframe-html <file|dir> [...] [--out file] [--import]",
+      );
+      process.exit(1);
+    }
+    const { rows, skipped, errors } = await parseOverframeHtmlPaths(inputs, {
+      itemName,
+    });
+    let merged = rows;
+    try {
+      const previous = JSON.parse(await readFile(out, "utf8")) as unknown;
+      const prevRows = Array.isArray(previous)
+        ? previous
+        : previous && typeof previous === "object" && Array.isArray((previous as { builds?: unknown }).builds)
+          ? (previous as { builds: unknown[] }).builds
+          : [];
+      const byName = new Map<string, (typeof rows)[number]>();
+      for (const row of prevRows as typeof rows) {
+        if (row?.itemName) byName.set(String(row.itemName).toLowerCase(), row);
+      }
+      for (const row of rows) byName.set(row.itemName.toLowerCase(), row);
+      merged = [...byName.values()];
+    } catch {
+      // no previous export
+    }
+    await mkdir(path.dirname(out), { recursive: true });
+    await writeFile(out, `${JSON.stringify(merged, null, 2)}\n`, "utf8");
+    console.log(
+      `Wrote ${merged.length} item row(s) → ${out} (parsed ${rows.length}, skipped ${skipped.length}, errors ${errors.length})`,
+    );
+    if (skipped.length) {
+      console.log(`  skipped: ${skipped.slice(0, 5).join(", ")}${skipped.length > 5 ? "…" : ""}`);
+    }
+    if (errors.length) {
+      console.log(`  errors: ${errors.slice(0, 5).join(" | ")}`);
+    }
+    if (doImport) {
+      await runOverframeCrawl({ importBuildsPath: out });
+    } else {
+      console.log(
+        `Import with: npm run knowledge -- crawl-overframe --import-builds "${out}"`,
+      );
+    }
     return;
   }
 

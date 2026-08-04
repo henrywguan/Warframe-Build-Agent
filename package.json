@@ -17,6 +17,7 @@
     "patches": "tsx src/patches/cli.ts",
     "knowledge": "tsx src/knowledge/cli.ts",
     "knowledge:export-overframe": "tsx scripts/export-overframe-builds.ts",
+    "knowledge:parse-overframe-html": "tsx src/knowledge/cli.ts parse-overframe-html",
     "hermes:pack": "./scripts/pack-hermes-profile.sh",
     "hermes:pack:with-knowledge": "./scripts/pack-hermes-profile.sh --with-knowledge",
     "knowledge:pack": "./scripts/pack-knowledge-sidecar.sh",

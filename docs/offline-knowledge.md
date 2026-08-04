@@ -84,12 +84,14 @@ This is arsenal-style guidance (direct damage, crit, multishot, fire rate, reloa
 
 ### Overframe note
 
-`overframe.gg` often returns a Cloudflare challenge from cloud/CI networks. The crawler detects that (`overframeStatus: "blocked"`) and still allows wiki/catalog pulls. To fill builds with mods/arcanes:
+`overframe.gg` is Cloudflare-protected (often even on home Wi‑Fi). There is no public API. Prefer **Cloudflare-safe extract**:
 
-1. Run `npm run knowledge -- crawl-overframe` on a machine that can open Overframe in a browser, **or**
-2. Provide `--import-builds` JSON (see `data/knowledge/examples/builds-import.sample.json`).
+1. Open Overframe in a normal browser, pass the challenge, then either:
+   - paste [`scripts/overframe-browser-extract.js`](../scripts/overframe-browser-extract.js) in the DevTools console, or
+   - save the page as HTML and run `npm run knowledge -- parse-overframe-html <file|dir> --import`
+2. Or attach Playwright to that browser via CDP (`npm run knowledge:export-overframe -- --connect …`).
 
-Full crawl process: [`docs/overframe-crawl.md`](overframe-crawl.md).
+Full guide: [`docs/overframe-crawl.md`](overframe-crawl.md).
 
 ## Agent use
 
