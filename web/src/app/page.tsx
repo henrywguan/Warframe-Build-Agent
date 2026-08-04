@@ -37,6 +37,13 @@ const SUGGESTIONS = [
   "/patches",
 ];
 
+const WELCOME_MESSAGE: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Local knowledge mode works without OpenAI.",
+};
+
 const MAX_IMAGE_BYTES = 1_600_000;
 
 function uid(): string {
@@ -82,14 +89,7 @@ function BrandHeader({ tagline }: { tagline: string }) {
 }
 
 export default function HomePage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Local knowledge mode works without OpenAI.",
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +100,7 @@ export default function HomePage() {
   const [pending, setPending] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [localMode, setLocalMode] = useState(false);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -127,7 +127,9 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const scroller = messagesRef.current;
+    if (!scroller) return;
+    scroller.scrollTo({ top: scroller.scrollHeight, behavior: "smooth" });
   }, [messages, pending]);
 
   useEffect(() => {
@@ -296,6 +298,23 @@ export default function HomePage() {
     }
   }
 
+  function clearChat() {
+    if (pending) return;
+    setMessages([{ ...WELCOME_MESSAGE }]);
+    setInput("");
+    setAttachment(null);
+    setError(null);
+    setSpeaking(false);
+    lastSpokenIdRef.current = null;
+    if (speakTimerRef.current) {
+      clearTimeout(speakTimerRef.current);
+      speakTimerRef.current = null;
+    }
+    inputRef.current?.focus();
+  }
+
+  const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
+
   if (!ready) {
     return (
       <main className={styles.shell}>
@@ -345,8 +364,19 @@ export default function HomePage() {
       </div>
 
       <section className={styles.chatPanel} aria-label="Chat">
-        <p className={styles.panelLabel}>Transmission log</p>
-        <div className={styles.messages}>
+        <div className={styles.panelHeader}>
+          <p className={styles.panelLabel}>Transmission log</p>
+          <button
+            type="button"
+            className={styles.clearBtn}
+            disabled={!canClearChat}
+            onClick={clearChat}
+            aria-label="Clear chat log"
+          >
+            Clear
+          </button>
+        </div>
+        <div className={styles.messages} ref={messagesRef}>
           {messages.map((message) => (
             <article
               key={message.id}
@@ -373,7 +403,6 @@ export default function HomePage() {
               Checking the latest intel…
             </article>
           ) : null}
-          <div ref={bottomRef} />
         </div>
 
         <div className={styles.suggestions}>

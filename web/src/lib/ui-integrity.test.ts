@@ -21,6 +21,8 @@ describe("web UI wiring integrity", () => {
       "SUGGESTIONS",
       "BrandHeader",
       "Transmission log",
+      "clearChat",
+      "Clear",
       "Attach",
       "image_url",
       "attachment",
@@ -33,5 +35,11 @@ describe("web UI wiring integrity", () => {
     assert.match(pageSource, /onClick=\{\(\) => void sendMessage\(suggestion\)\}/);
     assert.match(pageSource, /onSubmit=\{onSubmit\}/);
     assert.match(pageSource, /type="submit"/);
+  });
+
+  it("keeps clear chat control wired to clearChat", () => {
+    assert.match(pageSource, /function clearChat\(\)/);
+    assert.match(pageSource, /onClick=\{clearChat\}/);
+    assert.match(pageSource, /aria-label="Clear chat log"/);
   });
 });
