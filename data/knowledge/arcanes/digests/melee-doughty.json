@@ -1,0 +1,15 @@
+{
+  "id": "melee-doughty",
+  "title": "Melee Doughty",
+  "slot": "melee",
+  "aliases": [
+    "Melee Doughty",
+    "melee arcane"
+  ],
+  "summary": "Melee Doughty is an Arcane Enhancement for Melee weapons that increases Critical Multiplier dependent on  Puncture status chance.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Doughty",
+  "extract": "Melee Doughty is an Arcane Enhancement for Melee weapons that increases Critical Multiplier dependent on  Puncture status chance.\n\nEffect\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 2 - Fresh Slice.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nBonus Critical Multiplier is determined by the following: round(Puncture Status Chance×0.1×Critical Multiplier Bonus)\nBuff is rounded to one decimal place.\nThis means that with a maxed Melee Doughty and 114.6% chance of applying a  Puncture gives:\n114.6 * 0.1 * 1 =  +11.5x Critical Multiplier.\nCapped at +50x Critical Multiplier.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.587Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "primary-overcharge",
+  "title": "Primary Overcharge",
+  "slot": "primary",
+  "aliases": [
+    "Primary Overcharge",
+    "primary arcane"
+  ],
+  "summary": "Primary Overcharge is an Primary Arcane that grants Multishot while Energy is above 90%.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Overcharge",
+  "extract": "Primary Overcharge is an Primary Arcane that grants Multishot while Energy is above 90%.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nPrimary Overcharge has no effect when playing  Hildryn or  Lavos, due to neither Warframe having any energy to use.\nRequires 1,000 Max Energy for the full effect of this Arcane at rank 5 to be applied.\nThis means even  Garuda Prime with  Primed Flow does not have enough energy to take full advantage of this bonus. Other sources of Max Energy such as Archon Shards or  Arcane Battery must be used to achieve the full effect.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.991Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

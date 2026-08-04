@@ -1,0 +1,16 @@
+{
+  "id": "arcane-battery",
+  "title": "Arcane Battery",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Battery",
+    "Battery",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Battery is an Arcane Enhancement for Warframes that increases maximum energy per point of armor, up to 1,000 additional energy.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Battery",
+  "extract": "Arcane Battery is an Arcane Enhancement for Warframes that increases maximum energy per point of armor, up to 1,000 additional energy.\n\nEffect\n\nAcquisition\nCan be obtained from Ascension's optional Sister of Parvos, summoned by acquiring 3 Sister Beacons during the elevator ride.\nCan be purchased from Ordis in the Drifter's Camp for 10  Vestigial Motes, for a total of 210 for max rank.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nMaximum energy changes dynamically based on any changes to armor.\nAs such, being inflicted with a  Corrosive or  Heat status effect will remove armor and some of your bonus energy, requiring you to regain it.\n Heat procs are far more common and more deadly, as they will remove up to half of your total armor while burning.\n Health Conversion is unwieldy on Simulacrum and might look like it isn't properly updating, but it does work mostly reliably in normal missions.\nIf armor is reduced, such as losing a stack of Health Conversion, any energy overflow will immediately disappear.\nWhen combined with  Preparation or similar effects, the increased energy maximum is applied first, resulting in a higher starting energy as well.\n\nTips\nWorks well with mods like  Quick Thinking and  Rage.\n Qorvex,  Valkyr Prime, and  Kullervo have high base armor that grants them effective use of this arcane.\nEffects that can grant increased armor include:\n Atlas's Passive\n Chroma's  Vex Armor and  Cold Elemental Ward\n Frost's Passive\n Grendel's Passive and  Gourmand\nHelminth's  Parasitic Armor\n Hydroid's  Plunder\n Inaros'  Scarab Shell\n Nyx's  Psychic Bolts\n Oberon's  Renewal and  Hallowed Reckoning\n Octavia's  Metronome\n Rhino's  Ironclad Charge\n Valkyr's  Warcry\n Vauban's  Bastille\n Wukong's  Defy\n Steel Fiber\n Health Conversion\n Arcane Guardian\n Arcane Reaper\n Arcane Tanker\n Arcane Ultimatum\n Melee Fortification\n Unairu's  Stone Skin\nSyndicate Justice effects (+15%).\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.871Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

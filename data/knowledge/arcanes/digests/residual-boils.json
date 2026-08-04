@@ -1,0 +1,14 @@
+{
+  "id": "residual-boils",
+  "title": "Residual Boils",
+  "slot": "other",
+  "aliases": [
+    "Residual Boils"
+  ],
+  "summary": "Residual Boils is an Arcane Enhancement for Kitguns that grants them the ability to create hives of  Heat on kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Residual_Boils",
+  "extract": "Residual Boils is an Arcane Enhancement for Kitguns that grants them the ability to create hives of  Heat on kill.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nResidual Boils can be acquired from Rotation A of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nExplosions have a radial falloff of ~90%\nExplosions have a 20% chance to proc  Heat status.\nResidual Arcanes can only have two active puddles at a time. For example; creating two puddles with a primary kitgun will prevent both your primary and secondary kitgun from creating any until the first two expire.\nWill deal heat explosions that do not add or combine with weapon elemental effects, retaining heat damage on explosions.\n\nTrivia\nThe Orokin Writing on the Residual Boils' image roughly translates to \"Lesions\", an inconsistency shared with  Residual Malodor. It is possible that Lesions was an earlier name of the Enhancement used during development.\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.223Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

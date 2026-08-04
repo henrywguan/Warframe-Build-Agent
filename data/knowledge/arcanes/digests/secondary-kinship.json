@@ -1,0 +1,15 @@
+{
+  "id": "secondary-kinship",
+  "title": "Secondary Kinship",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Kinship",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Kinship is an Arcane Enhancement for  that provides a secondary Critical Chance bonus per unique Warframe buff applied to allies.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Kinship",
+  "extract": "Secondary Kinship is an Arcane Enhancement for  that provides a secondary Critical Chance bonus per unique Warframe buff applied to allies.\n\nEffect\n\nAcquisition\nSecondary Kinship can be obtained from Mirror Defense as a Rotation B reward. Alternatively it can be purchased from Otak for 60  Belric Crystal Fragment and  Rania Crystal Fragment each, for a total of 1,260 of each for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nStacks additively with other critical chance bonuses like  Pistol Gambit.\nA  Bolto with a max rank  Pistol Gambit and 3 stacks of Secondary Kinship will have 16% × (1 + 120% + 3 × 20%) = 44.8% critical hit chance.\nThe bonus is per target affected by each buff.\nFunctions with the following:\nHelminthable buffs indicated with (H).\n\nTips\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.140Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

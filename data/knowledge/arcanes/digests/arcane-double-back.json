@@ -1,0 +1,16 @@
+{
+  "id": "arcane-double-back",
+  "title": "Arcane Double Back",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Double Back",
+    "Double Back",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Double Back is an Arcane Enhancement for Warframes that increases Damage Reduction on performing Maneuvers.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Double_Back",
+  "extract": "Arcane Double Back is an Arcane Enhancement for Warframes that increases Damage Reduction on performing Maneuvers.\n\nEffect\n\nAcquisition\nArcane Double Back can be obtained from Mirror Defense as a Rotation C reward. Alternatively it can be purchased from Otak for 60  Belric Crystal Fragment and  Rania Crystal Fragment each, for a total of 1,260 of each for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nTo get full stacks, player must perform all 3 actions: Dodge, Double Jump, and Bullet Jump, but they can be in any order.\nFor example, two Bullet Jumps in a row will only provide one stack of the buff while a Bullet Jump + Dodge roll will provide two stacks.\nEach stack is additive with each other (e.g. +75% DR at 3 stacks), but multiplicative with other sources of Damage Reduction.\nEach stack has an independent timer.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.720Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

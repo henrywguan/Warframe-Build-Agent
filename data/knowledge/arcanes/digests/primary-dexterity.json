@@ -1,0 +1,15 @@
+{
+  "id": "primary-dexterity",
+  "title": "Primary Dexterity",
+  "slot": "primary",
+  "aliases": [
+    "Primary Dexterity",
+    "primary arcane"
+  ],
+  "summary": "Primary Dexterity is a Primary Arcane that on melee kill increases primary weapon damage for 20 seconds and stacks up to 6 times. At max rank, it also passively increases Melee Combo Counter duration.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Dexterity",
+  "extract": "Primary Dexterity is a Primary Arcane that on melee kill increases primary weapon damage for 20 seconds and stacks up to 6 times. At max rank, it also passively increases Melee Combo Counter duration.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for defeating Acolytes in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe damage bonus stacks additively with other damage mods like  Serration.\nWhen the buff times out, one stack is lost and the buff duration resets.\nCompanions can also activate the melee kill condition if they are using a melee weapon such as Claws, Deconstructor or any of the Hound weapons.\n\nTips\nIf players would rather prefer to focus on melee and not on shooting targets, they can opt to equip this Arcane and  Secondary Dexterity, both at max rank, on their ranged weapons simply to provide their passive melee combo counter buffs that grant up to 15 seconds.\nWhen equipped on an Archgun, the combo duration buff will still apply even if the archgun is never deployed, allowing for bonus combo duration without sacrificing your primary weapon's Arcane slot.\n\nPatch History\n\nSee Also\n Secondary Dexterity, the secondary equivalent.",
+  "fetchedAt": "2026-08-04T00:12:13.496Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "arcane-guardian",
+  "title": "Arcane Guardian",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Guardian",
+    "Guardian",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Guardian is an Arcane Enhancement that provides a 15% chance whenever the player receives damage to increase the Warframe's armor for 20 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Guardian",
+  "extract": "Arcane Guardian is an Arcane Enhancement that provides a 15% chance whenever the player receives damage to increase the Warframe's armor for 20 seconds.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Guardian was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Guardian from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Guardian from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Guardian from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Guardian from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Guardian from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe additional armor is not affected by mods and is additive to total armor. For example, a  Chroma with a max rank  Steel Fiber, and active Rank 5  Arcane Guardian will have an armor rating of:Base Armor × (1 + Armor Mods) + Arcane Guardian = 370 × (1 + 1.1) + 900 = 1,677 armor.\nThe Arcane Duration cannot be refreshed, while one instance is still active.\nThis Arcane cannot be activated while  Revenant's  Mesmer Skin or Righteous Negation (granted by  Oberon's passive) is active.\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.504Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

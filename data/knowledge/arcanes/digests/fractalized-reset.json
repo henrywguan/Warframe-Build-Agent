@@ -1,0 +1,14 @@
+{
+  "id": "fractalized-reset",
+  "title": "Fractalized Reset",
+  "slot": "other",
+  "aliases": [
+    "Fractalized Reset"
+  ],
+  "summary": "Fractalized Reset is a Primary Arcane that grants them additional Reload speed on ability cast for 5s.",
+  "pageUrl": "https://wiki.warframe.com/w/Fractalized_Reset",
+  "extract": "Fractalized Reset is a Primary Arcane that grants them additional Reload speed on ability cast for 5s.\n\nEffect\n\nAcquisition\nFractalized Reset can be purchased from Cavalero for  5,000, requiring Rank 1 - Fallen with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nStacks additively with other sources of reload speed bonus such as  Fast Hands.\n\nBugs\n Dex Pixia and  Diwata can trigger this arcane. However the bonus doesn't seem to affect them.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.109Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

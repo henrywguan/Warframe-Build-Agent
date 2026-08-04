@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-ghost",
+  "title": "Virtuos Ghost",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Ghost",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Ghost is an Arcane Enhancement for Operator Amps that grants a 40% chance to increase status chance for 12 seconds on headshots.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Ghost",
+  "extract": "Virtuos Ghost is an Arcane Enhancement for Operator Amps that grants a 40% chance to increase status chance for 12 seconds on headshots.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  10,000 upon reaching the rank of Architect.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Virtuos Ghost was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:16.356Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

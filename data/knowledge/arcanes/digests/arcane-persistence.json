@@ -1,0 +1,16 @@
+{
+  "id": "arcane-persistence",
+  "title": "Arcane Persistence",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Persistence",
+    "Persistence",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Persistence is an Arcane Enhancement for Warframes that restricts damage taken while  Armor is at least 700, at the cost of losing all  Shields .",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Persistence",
+  "extract": "Arcane Persistence is an Arcane Enhancement for Warframes that restricts damage taken while  Armor is at least 700, at the cost of losing all  Shields .\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nArcane Persistence's effects can be lost if the user's  Armor is reduced below 700, such as from  Corrosive or  Heat status effects.\nTo fully withstand  Corrosive(-26%), a minimum of only 946  Armor is needed.\nTo fully withstand  Heat(-50%), a minimum of 1400  Armor is needed.\nWith both status effects together(-63%), a minimum of 1892  Armor is needed.\nArcane Persistence is disabled if the user receives a  Magnetic status effect or is within an ability nullification field such as  Nullifiers.\nDespite the phrasing, the arcane will function with exactly 700  Armor.\nDoes not work on self-inflicted sources of damage;\n Garuda's  Bloodletting will not reduce the health drain.\nChanges Hijack's Shield drain to Health drain.\nThis Arcane is detrimental for Archwings; since no Archwing can reach the minimum threshold of 700  Armor (outside of using  Azure Archon Shards), it will disable the player's shields without granting any benefits, leaving them vulnerable.\n\nTips\n Health Conversion allows any Warframe to meet the 700  Armor condition.\n4x  Azure Archon Shard grants +600  Armor. 3x  Tauforged Azure Archon Shard grants +675  Armor.\n Arcane Grace requires 8334  Health to reach 500 Health/second. This assumes 100% uptime on Grace which is unrealistic, so more health to give the arcane a chance to trigger is advised.\n Inaros can easily keep  Arcane Persistence active by healing with  Sandstorm, and gaining enough  Armor and Status Immunity with  Scarab Shell.\n Nidus also greatly benefit from  Arcane Persistence especially when combined with  Parasitic Vitality .\nWith  Ravenous he can easily outheal the maximum of 500 damage/sec all while being protected from negative status effects .\n Parasitic Link when casted on an enemy, will redirect all negative status effects towards the target , offering  Nidus another way to protect himself from a potential  Arcane Persistence deactivation.\n\nBugs\nWorks with  Overguard from any source, but only caps the damage of the first hit every 1 second to 500.\nThis makes it unviable to utilize as a survival tool for frames that rely mostly on their shields or overguard to stay alive, such as  Styanax with his Intrepid Stand augment.\nWorks with  Quick Thinking and  Gladiator Finesse, but only caps the damage of each hit to 500, not the damage per second.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.310Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

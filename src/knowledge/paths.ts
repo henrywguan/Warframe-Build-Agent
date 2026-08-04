@@ -19,5 +19,7 @@ export function knowledgePaths(repoRoot = process.cwd()) {
     officialDir: path.join(root, "official", "digests"),
     mechanicsIndex: path.join(root, "mechanics", "index.json"),
     mechanicsDir: path.join(root, "mechanics", "digests"),
+    arcanesIndex: path.join(root, "arcanes", "index.json"),
+    arcanesDir: path.join(root, "arcanes", "digests"),
   };
 }

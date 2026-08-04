@@ -1,0 +1,16 @@
+{
+  "id": "arcane-crepuscular",
+  "title": "Arcane Crepuscular",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Crepuscular",
+    "Crepuscular",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Crepuscular is an Arcane Enhancement for Warframes that increases Ability Strength and Final Critical Multiplier when Invisible.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Crepuscular",
+  "extract": "Arcane Crepuscular is an Arcane Enhancement for Warframes that increases Ability Strength and Final Critical Multiplier when Invisible.\n\nEffect\nNote: The ingame description rounds the final critical multiplier values. The true values are as follows:\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 5 - Pizza Party.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nApplies to some abilities.\nMain article: Universal Weapon Bonuses\nCritical damage bonus applies to all equipped weapons, and abilities that can crit, with the exception of  Gyre.\nCritical damage multiplier is a flat final and follows the formula 1 + (tier * (crit multi - 1 + final)) where the first tier is yellow (eg. skana multi is 1.5x which is brought to 4.5x (4.5x on yellow, 8x on orange, 11.5x on red and so on) the impact lessens depending on modded critical multiplier)\nWill function with  Wisp's passive invisibility while in the air, granting the arcane's effects while she is airborne.  Wil-O-Wisp grants Wisp invisibility while the decoy is active, allowing her to more easily gain the arcane's effects.\nWisp's passive invisibility will work for single shot of non-melee weapons, as Wisp briefly becomes visible after firing any other weapon.\n Nokko can benefit from the Final Critical Multipler part of this arcane if he is in  Reroot at the time critical damage is dealt; however, because Ability Strength is snapshotted at the time an ability is cast, and because abilities cannot be cast during Reroot, the Ability Strength buff cannot be accessed during Reroot.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.700Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

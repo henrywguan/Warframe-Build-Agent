@@ -1,0 +1,15 @@
+{
+  "id": "melee-retaliation",
+  "title": "Melee Retaliation",
+  "slot": "melee",
+  "aliases": [
+    "Melee Retaliation",
+    "melee arcane"
+  ],
+  "summary": "Melee Retaliation is a Melee Arcane Enhancement that grants bonus Melee Damage for every current Shields up to a certain amount. The bonus is halved for Overshields.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Retaliation",
+  "extract": "Melee Retaliation is a Melee Arcane Enhancement that grants bonus Melee Damage for every current Shields up to a certain amount. The bonus is halved for Overshields.\n\nEffect\n\nAcquisition\nAwarded for killing The Fragmented on Effervo, Deimos.\nAwarded for killing Whispers in Albrecht's Laboratories missions.\nAwarded for killing Gruzzlings in non-Disruption Albrecht's Laboratories mission.\nCan be bought from Bird 3 of  Cavia for  5,000, requiring Rank 3 - Colleague.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nDamage bonus is additive to mods like  Pressure Point.\nDamage bonus is shown in the buff UI.\nRequires 2800 shields to achieve the max bonus (2200 shields with max overshields active (1600 for  Harrow)).\nDamage bonus only increases after hitting a new multiple of 200 shields or overshields, it does not scale smoothly with shields/overshields.\nDamage bonus is given by the following equation:Damage Bonus=30%⋅⌊Current Shields200⌋+15%⋅⌊Current Overshields200⌋\nFor example, a frame with 700 shields and 300 overshields give a\n30% * floor (700/200) + 15% * floor (300/200) = 105% damage bonus.\nMax bonus can be more easily achieved using  Arcane Expertise.\n\nTips\n Melee Retaliation goes exceptionally well on  Hildryn, whose high shields can allow Retaliation to get to max with ease, provided she is fitted with the proper shield boosting mods.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.073Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

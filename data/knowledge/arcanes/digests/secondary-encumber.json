@@ -1,0 +1,15 @@
+{
+  "id": "secondary-encumber",
+  "title": "Secondary Encumber",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Encumber",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Encumber is a Secondary Arcane that, on a status effect from a secondary weapon, has a chance to apply an additional random status effect.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Encumber",
+  "extract": "Secondary Encumber is a Secondary Arcane that, on a status effect from a secondary weapon, has a chance to apply an additional random status effect.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nSecondary Encumber can be obtained from Mirror Defense as a Rotation C reward.\nPurchaseable from Otak in the Necralisk for 60  Belric Crystal Fragment and  Rania Crystal Fragment each, with a total of 1,260 of each for max rank.\nPossible reward from Deepmines Bounties from Nightcap.\nPurchaseable from Nightcap in Fortuna for 10  Fergolyte each, with a total of 210 for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nEncumber will only apply a max of 1 additional status effect per instant of time, similar to a very short cooldown.\nMultishot and Status Chance values over 100% do not bypass this limit, but more multishot does allow more chances of an Encumber proc until one succeeds.\nThe average Encumber chance per shot can be calculated by: 1 - (1 - 24% × min(statusChance, 1)) ^ pelletCount\nHitting multiple targets at the same time will only allow up to one proc for only one of the affected targets per instant.\nExplosions, Hitscan Punch Through ( Twin Kohmak), Beam Chains ( Kuva Nukor), Multibeams ( Ocucor,  Vermisplicer (Secondary)) and other simultaneous attacks will only proc up to once on a single target at a time.\nProjectile Multishot ( Detron) will only proc once per small target because the projectiles typically strike within Encumber's cooldown.\nDelayed hits such as projectile rebounds ( Cyanex), embed delays ( Kompressa), and travel time punch-through ( Catchmoon (Primary)) can proc Encumber multiple times per shot because their hits do not always occur at the same time.\nForced procs ( Hystrix) can trigger Encumber.\nAs of Update 38.5, Exalted Weapons ( Mesa's  Regulators,  Titania's  Dex Pixia,  Dante's  Noctua  Hildryn's  Balefire Charger) can equip and trigger Encumber.\nProcs from Exalted Weapons can activate Arcanes and mods that require status effects from abilities, such as  Arcane Impetus and  Archon Continuity.\nRandom proc is uniformly chosen from the following and is independent from the weapon's damage distribution:\n Impact\n Puncture\n Slash\n Heat\n Cold\n Electricity\n Toxin\n Blast\n Corrosive\n Magnetic\n Viral\n Gas\n Radiation\n\nReferences\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.804Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "arcane-primary-charger",
+  "title": "Arcane Primary Charger",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Primary Charger",
+    "Primary Charger",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Primary Charger is an Arcane Enhancement that provides a 30% chance on killing an enemy with a melee weapon to increase the damage of primary weapons for 12 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Primary_Charger",
+  "extract": "Arcane Primary Charger is an Arcane Enhancement that provides a 30% chance on killing an enemy with a melee weapon to increase the damage of primary weapons for 12 seconds.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nAwarded from Arbitrations missions.\nCan be purchased from the Arbitrations vendor in the  Arbiters of Hexis room in Relays for 10  Vitus Essence.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe buff is additive to damage mods.\nFor example,  Braton with max  Serration and 200% bonus from  Arcane Primary Charger will have: 24.0 × (1 + 165% + 200%) = 111.6 damage\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.620Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

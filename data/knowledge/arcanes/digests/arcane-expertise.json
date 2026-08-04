@@ -1,0 +1,16 @@
+{
+  "id": "arcane-expertise",
+  "title": "Arcane Expertise",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Expertise",
+    "Expertise",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Expertise is an Arcane Enhancement for Warframes that increases Shields based on Ability Strength.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Expertise",
+  "extract": "Arcane Expertise is an Arcane Enhancement for Warframes that increases Shields based on Ability Strength.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nShield bonus is equal to current  Ability Strength stat minus 100%. For example, 150% strength will grant +50% shield capacity.\nShield bonus is additive to  Redirection and other similar mods.\nAbility Strength below 100% will reduce shield maximum.\nTemporary strength buffs such as  Energy Conversion and  Growing Power will grant additional shields while they are active.\nUpon a strength buff expiring, shield capacity will be immediately readjusted. Leftover shields past the new maximum capacity will be converted into temporary Overshields.\nThe temporary shield bonus from single-use strength buffs is removed before the ability is activated. For example, if Energy Conversion is active before casting  Parasitic Armor, the +50% shield bonus given by the temporary strength will not be taken into account for Parasitic Armor's buff.\nGaining another instance of the strength buff before the cast animation finishes will allow the ability to scale with the temporary shield bonus. For example with Energy Conversion, picking up another energy orb during the cast animation will allow the +50% shield bonus to be taken into account.\nThe buff works in Archwing mode.\nWith the arcane equipped, players will load into the mission with a buff proportional to the Warframe's modded power strength (extra shields will be converted to Overshields). Afterwards, the Archwing's max shields will be increased proportional to the Archwing's modded strength.\nThe increase in max shields does not scale correctly with either the Warframe's or Archwing's modded strength.[citation needed]\n\nTips\nSynergizes well with  Melee Retaliation and  Parasitic Armor.\nWarframes that benefit from high shields, such as  Hildryn, can use the arcane in place of (or in addition to) a shield mod like  Primed Redirection.\n\nBugs\n Precision Intensify will grant 90% extra shield capacity, but only while the fourth ability is selected. By default, the selected ability can be changed with the scroll wheel on keyboard and mouse. Activating the ability will also select it, and leave it selected until a different ability is used or selected.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.241Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

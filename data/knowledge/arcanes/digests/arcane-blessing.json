@@ -1,0 +1,16 @@
+{
+  "id": "arcane-blessing",
+  "title": "Arcane Blessing",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Blessing",
+    "Blessing",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Blessing is an Arcane Enhancement for Warframes that increases Health on Health Orb pickups.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Blessing",
+  "extract": "Arcane Blessing is an Arcane Enhancement for Warframes that increases Health on Health Orb pickups.\n\nEffect\n\nAcquisition\nArcane Blessing can be obtained from Conjunction Survival Circulus on Lua as a Rotation C reward. Alternatively it can be purchased from Archimedean Yonta for 15  Lua Thrax Plasm each, with a total of 315 for max rank.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nAt all ranks, it will take 50 Health Orbs to reach the maximum Health bonus.\nThis arcane allows Health Orbs to be picked up without needing to be below full health until the maximum number of stacks is reached.\nUnlike most stackable Arcane buffs, Arcane Blessing's bonus persists until death.\nCompanions with  Link Vitality will have their health increase alongside the Warframe.\nUniversal Orbs, such as those spawned by  Transmutation Probe, will act as health orbs and provide a stack of bonus health.\n\nTips\nMost effective on Warframes that can reliably spawn Health Orbs, such as:\n Citrine's  Fractured Blast\n Dagath's  Grave Spirit when in Spectral Form.\n Follie's Passive\n Nekros'  Desecrate\n Nezha's  Blazing Chakram and  Reaping Chakram\n Nova's Passive and  Molecular Prime\n Oberon's  Reckoning\n Oraxia's  Mercy's Kiss\n Protea's  Dispensary – refills 100 Health\n Trinity's  Pool of Life\n Uriel's Passive\n Voruna's  Lycath's Hunt\nA Sentinel/MOA (Companion) equipped with  Synth Deconstruct\n Broken Scepter interacting with organic corpses\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.150Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

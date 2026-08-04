@@ -1,0 +1,14 @@
+{
+  "id": "molt-augmented",
+  "title": "Molt Augmented",
+  "slot": "other",
+  "aliases": [
+    "Molt Augmented"
+  ],
+  "summary": "Molt Augmented is an Arcane Enhancement for the Warframe that grants additional Ability Strength for every enemy killed.",
+  "pageUrl": "https://wiki.warframe.com/w/Molt_Augmented",
+  "extract": "Molt Augmented is an Arcane Enhancement for the Warframe that grants additional Ability Strength for every enemy killed.\n\nEffect\n\nAcquisition\nMolt Augmented can be purchased from Cavalero for  10,000, requiring Rank 5 - Angel with  The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nAt rank 5, it will still take 250 kills to reach the maximum of 60% Ability Strength bonus.\nKills must be direct kills, and not kill assists, to stack up the bonus.\nKills from all sources, not just Warframe abilities, count in raising the stacks\nThis includes kills while in Archwing mode and with Railjack turrets and abilities, though they do not seem to benefit from it.\nCompanion kills are included.\nMercy kills and kills as Operator or in a Necramech will not add to the stack.\nUnlike most stackable Arcane buffs, Molt Augmented's bonus persists until death.\n\nBugs\nWhile  Nokko is in his Sprodling form due to  Reroot, he cannot stack Molt Augmented from any kills including kills from  Sporesprings that are still active or Damage over Time effects from Companions.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.297Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

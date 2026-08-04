@@ -1,0 +1,15 @@
+{
+  "id": "secondary-deadhead",
+  "title": "Secondary Deadhead",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Deadhead",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Deadhead is a Secondary Arcane that increases secondary weapon damage on headshot kill for 24 seconds and stacks up to 3 times. At max rank, it also passively increases headshot damage multiplier and reduces recoil.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Deadhead",
+  "extract": "Secondary Deadhead is a Secondary Arcane that increases secondary weapon damage on headshot kill for 24 seconds and stacks up to 3 times. At max rank, it also passively increases headshot damage multiplier and reduces recoil.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for defeating Acolytes in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe damage bonus stacks additively with other damage mods like  Hornet Strike.\nWhen the buff times out, one stack is lost and the buff duration resets.\nHeadshot bonus stacks additively with similar buffs, such as  Prowl.\nKills from some status procs on the target's head do not count as a headshot kill.\n Electricity and  Gas procs are able to trigger the effect when aimed at the head however, as they are able to land headshots themselves.\n'Precision' refers to direct hit headshots (not AoE).\n\nTips\nCan be used on weapons which normally have a 1.0x multiplier to headshots (such as the  Catchmoon (Primary)) to give them a 1.3x headshot multiplier and actually provide a benefit.\nSince Electricity and Gas procs are able to independently land headshots, they benefit twice from the headshot multiplier bonus. Both of these procs will have 1.69x headshot damage from the bonus.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.595Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

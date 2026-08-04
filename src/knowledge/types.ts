@@ -20,6 +20,7 @@ export interface KnowledgeManifest {
     modsIndexed: number;
     officialDigests?: number;
     mechanicsDigests?: number;
+    arcaneDigests?: number;
   };
   notes: string[];
   overframeStatus: "ok" | "blocked" | "partial" | "skipped";
@@ -125,6 +126,33 @@ export interface MechanicsDigest {
   pageUrl: string;
   extract: string;
   sections?: Record<string, string>;
+  fetchedAt: string;
+  source: "wiki";
+  fetchMethod?: "extract" | "parse";
+}
+
+/** Slot family for Arcane Enhancement digests. */
+export type ArcaneSlot =
+  | "overview"
+  | "warframe"
+  | "primary"
+  | "secondary"
+  | "melee"
+  | "operator"
+  | "amp"
+  | "kitgun"
+  | "zaw"
+  | "other";
+
+/** Individual Arcane Enhancement digests for local chatbot recall. */
+export interface ArcaneDigest {
+  id: string;
+  title: string;
+  slot: ArcaneSlot;
+  aliases: string[];
+  summary: string;
+  pageUrl: string;
+  extract: string;
   fetchedAt: string;
   source: "wiki";
   fetchMethod?: "extract" | "parse";

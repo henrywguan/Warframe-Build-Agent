@@ -1,0 +1,15 @@
+{
+  "id": "melee-fortification",
+  "title": "Melee Fortification",
+  "slot": "melee",
+  "aliases": [
+    "Melee Fortification",
+    "melee arcane"
+  ],
+  "summary": "Melee Fortification is a Melee Arcane Enhancement that causes melee kills to temporarily increase  Armor for 10 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Fortification",
+  "extract": "Melee Fortification is a Melee Arcane Enhancement that causes melee kills to temporarily increase  Armor for 10 seconds.\n\nEffect\n\nAcquisition\nAwarded for killing The Fragmented on Effervo, Deimos.\nAwarded for killing Whispers in Albrecht's Laboratories missions.\nAwarded for killing Gruzzlings in non-Disruption Albrecht's Laboratories mission.\nCan be bought from Bird 3 of  Cavia for  5,000, requiring Rank 3 - Colleague.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\n Armor bonus can stack with multiple kills with each stack having its own duration.\n Melee Fortification can be stacked up to 255 times. However, due to its 10-second duration, one must constantly keep killing to benefit effectively from the Armor buff. For the same reason, it is unlikely for this Arcane to be stacked beyond ~30x for +6300 Armor.\n\nTips\nThis arcane's effects can trigger, enhance, or maintain certain Arcane Enhancements or Incarnon perks that require Warframe armor to be at a certain value.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.858Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

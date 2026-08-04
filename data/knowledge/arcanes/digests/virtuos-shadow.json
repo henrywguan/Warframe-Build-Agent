@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-shadow",
+  "title": "Virtuos Shadow",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Shadow",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Shadow is an Arcane Enhancement for Operator Amps that grants a 40% chance to increase Critical Chance for 12 seconds on headshots.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Shadow",
+  "extract": "Virtuos Shadow is an Arcane Enhancement for Operator Amps that grants a 40% chance to increase Critical Chance for 12 seconds on headshots.\n\nStats\n\nAcquisition\nCan be bought from The Quills for  10000 upon reaching the rank of Architect.\n\nNotes\nThe increase in critical hit chance is multiplicative. As an example, using a Raplak Prism with a Lohrin Brace and Rank 3  Virtuos Shadow will result in:\nCritChance = (38% + 12%) × (1 + 0.6) = 80%\nEffect can be triggered by Void Slinging into an Eidolon's head.\nWorks well with  Magus Cloud\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Virtuos Shadow was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:16.404Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

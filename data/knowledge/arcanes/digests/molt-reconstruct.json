@@ -1,0 +1,14 @@
+{
+  "id": "molt-reconstruct",
+  "title": "Molt Reconstruct",
+  "slot": "other",
+  "aliases": [
+    "Molt Reconstruct"
+  ],
+  "summary": "Molt Reconstruct is an Arcane Enhancement for the Warframe that heals the user and nearby allies within Affinity Range for every point of Energy spent on the initial casting of Warframe Abilities.",
+  "pageUrl": "https://wiki.warframe.com/w/Molt_Reconstruct",
+  "extract": "Molt Reconstruct is an Arcane Enhancement for the Warframe that heals the user and nearby allies within Affinity Range for every point of Energy spent on the initial casting of Warframe Abilities. \n\nEffect\n\nAcquisition\nMolt Reconstruct can be purchased from Cavalero for  8,500, requiring Rank 4 - Seraph with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nEnergy converted to Health only translates on initial cast of a Warframe ability. It does not convert consumed Energy per second by toggled abilities such as  Peacemaker and  Gloom.\n Lavos and  Hildryn cannot trigger this Arcane due to not spending Energy.\nAlly heal also applies to self, effectively doubling the base self-heal amount.\nDoes not affect allied NPCs.\nDoes not trigger  Archon Intensify's secondary effect.\n\nTips\nWarframes using  Blind Rage can benefit from this Arcane, as the increased Energy spent using lower Efficiency abilities also translates to a larger Health gained by self and allies.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.403Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

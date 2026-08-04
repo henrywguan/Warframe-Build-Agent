@@ -1,0 +1,15 @@
+{
+  "id": "exodia-brave",
+  "title": "Exodia Brave",
+  "slot": "zaw",
+  "aliases": [
+    "Exodia Brave",
+    "zaw arcane"
+  ],
+  "summary": "Exodia Brave is an Arcane Enhancement for Zaws that grants a 4-second energy regeneration on heavy attack kills.",
+  "pageUrl": "https://wiki.warframe.com/w/Exodia_Brave",
+  "extract": "Exodia Brave is an Arcane Enhancement for Zaws that grants a 4-second energy regeneration on heavy attack kills.\n\nEffect\n\nAcquisition\nCan be bought from Hok for  10,000 per arcane upon reaching the rank of Kin with the Ostrons.\n\nNotes\nGrants a buff that regenerates energy over time\nThe killing blow must be from the weapon's direct damage; status kills will not trigger the buff.\nCasting an ability will stop the energy generation for 1 second.\nChanneled Abilities that drain energy over time, such as  Immolation,  Sound Quake, and  Renewal will completely prevent energy generation for as long as they are active.\nStacks up to three times for 15 energy/sec, for a total of 60 energy over 4 sec.\n(bug?) Obtaining the 2nd and 3rd stacks refreshes the buff, but killing an enemy while the buff is active at max stacks (x3) does not refresh the timer.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Exodia Brave was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.307Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

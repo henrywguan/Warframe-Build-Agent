@@ -1,0 +1,15 @@
+{
+  "id": "magus-melt",
+  "title": "Magus Melt",
+  "slot": "operator",
+  "aliases": [
+    "Magus Melt",
+    "operator arcane"
+  ],
+  "summary": "Magus Melt is an Arcane Enhancement for the Operator. Performing a Void Sling adds +30%  Heat damage to the Operator attacks for 15 seconds. This effect is stackable.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Melt",
+  "extract": "Magus Melt is an Arcane Enhancement for the Operator. Performing a Void Sling adds +30%  Heat damage to the Operator attacks for 15 seconds. This effect is stackable.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris (Syndicate) for  10,000 upon reaching the rank of Shadow.\n\nNotes\nStacks are additive to each other. E.g. 4 stacks of a rank 5 Magus Melt will give 4 * 30 = 120% bonus  Heat damage.\nAll stacks will be consumed at once when Magus Melt's duration expires.\nVoid Slinging will refresh Magus Melt's duration even when at the maximum number of stacks.\nThe  Heat damage from Magus Melt can combine with other elements such as  Electricity from  Virtuos Surge to deal  Radiation damage.\nHas no effect against the spectral form of Thrax Centurion or Thrax Legatus.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:10.460Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

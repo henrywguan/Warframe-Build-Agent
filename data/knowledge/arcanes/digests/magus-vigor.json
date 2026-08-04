@@ -1,0 +1,15 @@
+{
+  "id": "magus-vigor",
+  "title": "Magus Vigor",
+  "slot": "operator",
+  "aliases": [
+    "Magus Vigor",
+    "operator arcane"
+  ],
+  "summary": "Magus Vigor is an Arcane Enhancement for the Operator that grants them increased maximum health.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Vigor",
+  "extract": "Magus Vigor is an Arcane Enhancement for the Operator that grants them increased maximum health.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  2,500 each upon reaching the rank of Mote.\n\nNotes\nMagus Vigor is added to the health pool after  Vazarin's  Enduring Tides multiplies base health. At max rank, a single Magus Vigor combined with Enduring Tides will increase the Operator's health to 1,650 for 2,887.5 effective health.\nWhen using Magus Vigor with  Magus Husk and Enduring Tides, the Operator has 4,537.5 effective health total.\n\nTips\n Magus Vigor and  Magus Husk both increase operator effective health to 2,887.5, meaning they have identical value of ~1.57x more EHP. Only when receiving additional armor from Unairu's Stone Skin does Magus Vigor have ~11% more value.\nCan be traded for Arcane Collection Loot Boxes by Loid, 1x Cost ~17 (16.67x) Magus Vigor and   50,000 to purchase, Cost only  ~208.33 each  Vosfor\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Magus Vigor was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:10.990Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

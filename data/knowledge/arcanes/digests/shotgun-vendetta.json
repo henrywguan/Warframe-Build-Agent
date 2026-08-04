@@ -1,0 +1,14 @@
+{
+  "id": "shotgun-vendetta",
+  "title": "Shotgun Vendetta",
+  "slot": "other",
+  "aliases": [
+    "Shotgun Vendetta"
+  ],
+  "summary": "Shotgun Vendetta is a Primary Arcane that, when killing an enemy within 5 meters with a shotgun, increases Multishot and Reload Speed for 15 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Shotgun_Vendetta",
+  "extract": "Shotgun Vendetta is a Primary Arcane that, when killing an enemy within 5 meters with a shotgun, increases Multishot and Reload Speed for 15 seconds.\n\nEffect\n\nAcquisition\nMay appear in The Circuit's progress tree on The Steel Path as Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nMay drop from Undercroft portals in the Duviri Experience while on Steel Path.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.613Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

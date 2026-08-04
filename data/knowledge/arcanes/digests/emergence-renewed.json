@@ -1,0 +1,15 @@
+{
+  "id": "emergence-renewed",
+  "title": "Emergence Renewed",
+  "slot": "operator",
+  "aliases": [
+    "Emergence Renewed",
+    "operator arcane"
+  ],
+  "summary": "Emergence Renewed is an Arcane Enhancement for the Operator that increases Energy regeneration for 5 seconds after depleting energy with a 30 second cooldown.",
+  "pageUrl": "https://wiki.warframe.com/w/Emergence_Renewed",
+  "extract": "Emergence Renewed is an Arcane Enhancement for the Operator that increases Energy regeneration for 5 seconds after depleting energy with a 30 second cooldown.\n\nEffect\n\nAcquisition\nEmergence Renewed can be purchased from Cavalero for  7,500, requiring Rank 3 - Guardian with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nActivates when energy depletes to ~10%.\nEnergy refers to the Operator's energy, not the Amp's.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:07.774Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

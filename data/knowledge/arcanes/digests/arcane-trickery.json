@@ -1,0 +1,16 @@
+{
+  "id": "arcane-trickery",
+  "title": "Arcane Trickery",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Trickery",
+    "Trickery",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Trickery is an Arcane Enhancement that provides a 15% chance to turn the Warframe invisible for a short time upon performing a Finisher kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Trickery",
+  "extract": "Arcane Trickery is an Arcane Enhancement that provides a 15% chance to turn the Warframe invisible for a short time upon performing a Finisher kill.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Hydrolyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Trickery was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Trickery from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Trickery from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Trickery from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Trickery from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Trickery from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nParazon Mercy kills will activate the effect.\nCan be refreshed.\nWill not work for  Mercy's Kiss on regular units, i.e. enemies who don't have parazon finishers.\n\nTips\nThe following Warframe abilities can trigger finishers\n Ash's  Blade Storm\n Oraxia's  Mercy's Kiss* See Notes\nThe following Warframe abilities can open enemies up to finishers\n Banshee's  Savage Silence\n Baruuk's  Lull\n Equinox's  Rest & Rage in Night Form\n Excalibur's  Radial Blind\n Gara's Passive\n Inaros'  Desiccation and  Sandstorm\n Ivara's  Quiver\n Lavos'  Ophidian Bite\n Valkyr's  Paralysis\nThe following Companions can trigger finishers:\n Medjay Predasite's  Infectious Bite and  Paralytic Spores\n Sunika Kubrow's  Savagery\n Sahasa Kubrow's  Ferocity\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.694Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

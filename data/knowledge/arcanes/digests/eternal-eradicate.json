@@ -1,0 +1,14 @@
+{
+  "id": "eternal-eradicate",
+  "title": "Eternal Eradicate",
+  "slot": "other",
+  "aliases": [
+    "Eternal Eradicate"
+  ],
+  "summary": "Eternal Eradicate is an Arcane Enhancement for Operator Amps that increases Amp damage upon using an Operator ability.",
+  "pageUrl": "https://wiki.warframe.com/w/Eternal_Eradicate",
+  "extract": "Eternal Eradicate is an Arcane Enhancement for Operator Amps that increases Amp damage upon using an Operator ability.\n\nEffect\n\nAcquisition\nEternal Eradicate can be purchased from Cavalero for  5,000, requiring Rank 1 - Fallen with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nDamage bonus is additive to other Operator and Amp damage bonuses, such as  Madurai's  Void Strike and  Phoenix Talons,  Unairu's  Unairu Wisp, and  Virtuos Fury.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.041Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

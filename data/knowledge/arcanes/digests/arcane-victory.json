@@ -1,0 +1,16 @@
+{
+  "id": "arcane-victory",
+  "title": "Arcane Victory",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Victory",
+    "Victory",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Victory is an Arcane Enhancement that provides a 75% chance to gain health regeneration for 9 seconds upon achieving a headshot kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Victory",
+  "extract": "Arcane Victory is an Arcane Enhancement that provides a 75% chance to gain health regeneration for 9 seconds upon achieving a headshot kill.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Teralyst.\nDropped in Rotation C of Orphix Venus Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Victory was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Victory from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Victory from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Victory from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Victory from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Victory from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nBoth Kavat/Kubrows and Sentinels can trigger the arcane's effect.\n\nTips\nUsing a Sentinel's  Sweeper modded with high Multishot, Fire Rate, Reload Speed and minimum Accuracy to increase spread is one of the best way to passively trigger the arcane, effectively functioning like a secondary  Medi-Ray.\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:07.237Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

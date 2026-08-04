@@ -1,0 +1,15 @@
+{
+  "id": "primary-debilitate",
+  "title": "Primary Debilitate",
+  "slot": "primary",
+  "aliases": [
+    "Primary Debilitate",
+    "primary arcane"
+  ],
+  "summary": "Primary Debilitate is an Primary Arcane that applies additional status effects when a Combined Element status is at 10 stacks or more.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Debilitate",
+  "extract": "Primary Debilitate is an Primary Arcane that applies additional status effects when a Combined Element status is at 10 stacks or more.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nThe extra Status Effect created by this arcane is applied as a separate damage instance, causing Faction Damage Bonuses to multiply the Damage over Time effect of  Heat,  Electricity, and  Toxin status three separate times.\nThis arcane will only activate once per damage instance, making it less effective than it \"should\" be when used on a Beam weapon, due to how Multishot affects such weapons.\nWill apply status effects from any source of combined elemental damage buffs, such as  Smite Infusion.\nThis can add Cold and Heat procs from a full stack of  Blast status effects, but it triggers very rarely, likely because the stack almost immediately detonates.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.443Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

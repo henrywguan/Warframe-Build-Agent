@@ -1,0 +1,15 @@
+{
+  "id": "primary-crux",
+  "title": "Primary Crux",
+  "slot": "primary",
+  "aliases": [
+    "Primary Crux",
+    "primary arcane"
+  ],
+  "summary": "Primary Crux is an Arcane Enhancement for Primary Weapons that increases Status Chance and Ammo Efficiency for 10 seconds upon hitting an enemy's weak point, stacking up to 10 times.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Crux",
+  "extract": "Primary Crux is an Arcane Enhancement for Primary Weapons that increases Status Chance and Ammo Efficiency for 10 seconds upon hitting an enemy's weak point, stacking up to 10 times.\n\nEffect\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 2 - Fresh Slice.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\nHöllvania Arcane Collection from Arcane Dissolution\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nWeakspots created by  Banshee's  Sonar do not count as weak points.\nAll stacks are lost when the buff's duration expires.\nStatus Chance bonus is additive to mods like  Rifle Aptitude or  Shotgun Savvy.\nMultiple individual pellets from a single shot(either innate to the weapon or generated via Multishot) can build stacks (See #Bugs).\nCan build stacks when manning Railjack turrets and hitting the weakpoints of enemy crewships.\nOutside of  Energized Munitions, this arcane is additive with other sources of Ammo Efficiency. This allows certain primary weapons to have infinite ammo, mainly via Incarnon perks or weapon passives. These include:\n Void Fuel (+40% Ammo Efficiency at full rank)\n AX-52 hip-fired shots (+60% Ammo Efficiency)\n Felarx with either Ruptured Plentitude (+70% Ammo Efficiency) or Agile Executor (+50% Ammo Efficiency)\n Braton Incarnon Genesis with Daring Reverie (+50% Ammo Efficiency)\n Boltor Incarnon Genesis with Crimson Overture (+80% or +60% Ammo Efficiency depending on the variant)\n Dera Incarnon Genesis with Crimson Overture (+80% Ammo Efficiency)\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.215Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "melee-exposure",
+  "title": "Melee Exposure",
+  "slot": "melee",
+  "aliases": [
+    "Melee Exposure",
+    "melee arcane"
+  ],
+  "summary": "Melee Exposure is a Melee Arcane Enhancement.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Exposure",
+  "extract": "Melee Exposure is a Melee Arcane Enhancement.\nWhen you cast an ability, you will apply  Corrosive Damage to melee strikes.\n\nEffect\n\nAcquisition\nAwarded for killing The Fragmented on Effervo, Deimos.\nAwarded for killing Whispers in Albrecht's Laboratories missions.\nAwarded for killing Gruzzlings in non-Disruption Albrecht's Laboratories mission.\nCan be bought from Bird 3 of  Cavia for  7,500, requiring Rank 4 - Scholar.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nTransference nor Operator abilities count as an Ability Cast for triggering this Arcane as Update 37.0 (2024-10-02) undocumented change/fix.\nBonus stacks share the same duration, which refresh upon each trigger, and all will expire at once when the duration ends.\nAffects Exalted and Pseudo-Exalted weapons when equipped on them such as:\n Ash's  Shadow Clones\n Atlas's  Landslide Fists\n Baruuk's  Desert Wind\n Excalibur's  Exalted Blade\n Excalibur's  Slash Dash\n Gara's  Shattered Lash\n Garuda's  Garuda Talons\n Khora's  Whipclaw\n Sevagoth's  Shadow Claws\n Titania's  Diwata\n Valkyr's  Valkyr Talons\n Wukong's  Iron Staff\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.808Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

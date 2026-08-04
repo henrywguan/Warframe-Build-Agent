@@ -1,0 +1,16 @@
+{
+  "id": "arcane-rage",
+  "title": "Arcane Rage",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Rage",
+    "Rage",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Rage is an Arcane Enhancement that provides a 15% chance to increase the damage of primary weapons for 24 seconds upon achieving a headshot.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Rage",
+  "extract": "Arcane Rage is an Arcane Enhancement that provides a 15% chance to increase the damage of primary weapons for 24 seconds upon achieving a headshot.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Hydrolyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Rage was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Rage from Little Duck for 2,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Rage from Father for 400  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Rage from the Vigile Jahu Gargoyle for 6  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Rage from Ordis for 5  Volatile Motes in the first run of the event, and 6 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Rage from Dominus Thrax in bundles of 7, costing 4  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe increase in damage stacks additively with mods that increase base damage e.g.  Serration.\nFurther headshots have a chance to activate the arcane again, which refreshes the duration of the effect, similarly to  Arcane Consequence.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.878Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

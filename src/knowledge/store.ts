@@ -3,6 +3,7 @@ import path from "node:path";
 import { writeFileDurable } from "./fs-write.js";
 import { knowledgePaths } from "./paths.js";
 import type {
+  ArcaneDigest,
   CatalogItem,
   ItemBuilds,
   KnowledgeManifest,
@@ -33,6 +34,7 @@ export async function saveKnowledgePack(options: {
   mods: ModDigest[];
   official?: OfficialDigest[];
   mechanics?: MechanicsDigest[];
+  arcanes?: ArcaneDigest[];
   overframeStatus: KnowledgeManifest["overframeStatus"];
   notes: string[];
   /** When false (default), skip re-writing per-item wiki digests already flushed by pull. */
@@ -47,6 +49,9 @@ export async function saveKnowledgePack(options: {
   }
   if (options.mechanics?.length) {
     await mkdir(paths.mechanicsDir, { recursive: true });
+  }
+  if (options.arcanes?.length) {
+    await mkdir(paths.arcanesDir, { recursive: true });
   }
 
   await writeJson(paths.catalog, options.catalog);
@@ -94,6 +99,21 @@ export async function saveKnowledgePack(options: {
       ),
     });
   }
+  if (options.arcanes?.length) {
+    for (const digest of options.arcanes) {
+      await writeJson(path.join(paths.arcanesDir, `${digest.id}.json`), digest);
+    }
+    await writeJson(paths.arcanesIndex, {
+      count: options.arcanes.length,
+      ids: options.arcanes.map((d) => d.id),
+      slots: Object.fromEntries(
+        [...new Set(options.arcanes.map((d) => d.slot))].map((slot) => [
+          slot,
+          options.arcanes!.filter((d) => d.slot === slot).length,
+        ]),
+      ),
+    });
+  }
 
   const manifest: KnowledgeManifest = {
     version: 1,
@@ -111,6 +131,7 @@ export async function saveKnowledgePack(options: {
       modsIndexed: options.mods.length,
       officialDigests: options.official?.length ?? 0,
       mechanicsDigests: options.mechanics?.length ?? 0,
+      arcaneDigests: options.arcanes?.length ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,
@@ -171,6 +192,18 @@ export async function loadMechanicsDigests(repoRoot?: string): Promise<Mechanics
   return out;
 }
 
+export async function loadArcaneDigests(repoRoot?: string): Promise<ArcaneDigest[]> {
+  const paths = knowledgePaths(repoRoot);
+  const index = await readJson<{ ids?: string[] }>(paths.arcanesIndex);
+  if (!index?.ids?.length) return [];
+  const out: ArcaneDigest[] = [];
+  for (const id of index.ids) {
+    const digest = await readJson<ArcaneDigest>(path.join(paths.arcanesDir, `${id}.json`));
+    if (digest) out.push(digest);
+  }
+  return out;
+}
+
 /** Update mechanics digests without rewriting catalog/wiki/builds. */
 export async function saveMechanicsCrawl(options: {
   repoRoot?: string;
@@ -213,6 +246,58 @@ export async function saveMechanicsCrawl(options: {
       modsIndexed: previous?.counts.modsIndexed ?? 0,
       officialDigests: previous?.counts.officialDigests ?? 0,
       mechanicsDigests: options.mechanics.length,
+      arcaneDigests: previous?.counts.arcaneDigests ?? 0,
+    },
+    notes: [...(previous?.notes ?? []).slice(-8), ...options.notes],
+    overframeStatus: previous?.overframeStatus ?? "skipped",
+  };
+  await writeJson(paths.manifest, manifest);
+  return manifest;
+}
+
+/** Update arcane digests without rewriting catalog/wiki/builds. */
+export async function saveArcanesCrawl(options: {
+  repoRoot?: string;
+  arcanes: ArcaneDigest[];
+  notes: string[];
+  previous?: KnowledgeManifest | null;
+}): Promise<KnowledgeManifest> {
+  const paths = knowledgePaths(options.repoRoot);
+  await mkdir(paths.root, { recursive: true });
+  await mkdir(paths.arcanesDir, { recursive: true });
+
+  for (const digest of options.arcanes) {
+    await writeJson(path.join(paths.arcanesDir, `${digest.id}.json`), digest);
+  }
+  await writeJson(paths.arcanesIndex, {
+    count: options.arcanes.length,
+    ids: options.arcanes.map((d) => d.id),
+    slots: Object.fromEntries(
+      [...new Set(options.arcanes.map((d) => d.slot))].map((slot) => [
+        slot,
+        options.arcanes.filter((d) => d.slot === slot).length,
+      ]),
+    ),
+  });
+
+  const previous = options.previous;
+  const manifest: KnowledgeManifest = {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    sources: {
+      wfcd: previous?.sources.wfcd ?? "https://api.warframestat.us",
+      wiki: previous?.sources.wiki ?? "https://wiki.warframe.com",
+      overframe: previous?.sources.overframe ?? "https://overframe.gg",
+      official: previous?.sources.official ?? "https://www.warframe.com",
+    },
+    counts: {
+      catalogItems: previous?.counts.catalogItems ?? 0,
+      wikiDigests: previous?.counts.wikiDigests ?? 0,
+      buildEntries: previous?.counts.buildEntries ?? 0,
+      modsIndexed: previous?.counts.modsIndexed ?? 0,
+      officialDigests: previous?.counts.officialDigests ?? 0,
+      mechanicsDigests: previous?.counts.mechanicsDigests ?? 0,
+      arcaneDigests: options.arcanes.length,
     },
     notes: [...(previous?.notes ?? []).slice(-8), ...options.notes],
     overframeStatus: previous?.overframeStatus ?? "skipped",
@@ -263,6 +348,7 @@ export async function saveBuildCrawl(options: {
       modsIndexed: options.mods.length,
       officialDigests: options.previous?.counts.officialDigests ?? 0,
       mechanicsDigests: options.previous?.counts.mechanicsDigests ?? 0,
+      arcaneDigests: options.previous?.counts.arcaneDigests ?? 0,
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,

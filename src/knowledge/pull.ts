@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { pullArcaneDigests } from "./arcanes.js";
 import { pullCatalog } from "./catalog.js";
 import type { OverframeBuildRank } from "./constants.js";
 import { pullMechanicsDigests } from "./mechanics.js";
@@ -9,8 +10,14 @@ import {
   indexModsFromBuilds,
 } from "./overframe.js";
 import { resolveRepoRoot } from "./repo-root.js";
-import { loadManifest, saveKnowledgePack, saveMechanicsCrawl } from "./store.js";
+import {
+  loadManifest,
+  saveArcanesCrawl,
+  saveKnowledgePack,
+  saveMechanicsCrawl,
+} from "./store.js";
 import type {
+  ArcaneDigest,
   ItemBuilds,
   KnowledgeManifest,
   MechanicsDigest,
@@ -27,6 +34,7 @@ export type PullOptions = {
   skipOverframe?: boolean;
   skipOfficial?: boolean;
   skipMechanics?: boolean;
+  skipArcanes?: boolean;
   importBuildsPath?: string;
   concurrency?: number;
   onLog?: (line: string) => void;
@@ -189,6 +197,35 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
     notes.push("Mechanics digests skipped.");
   }
 
+  let arcaneDigests: ArcaneDigest[] = [];
+  if (!options.skipArcanes) {
+    log("Pulling Arcane Enhancement digests from Warframe Wiki...");
+    try {
+      const arcanes = await pullArcaneDigests({
+        repoRoot,
+        limit: options.limit && options.limit > 0 ? Math.min(40, options.limit * 2) : undefined,
+        concurrency: Math.min(3, options.concurrency ?? 3),
+        onLog: log,
+        onProgress: (done, total, name) => {
+          if (done % 20 === 0 || done === total) {
+            log(`  arcanes ${done}/${total} (last: ${name})`);
+          }
+        },
+      });
+      arcaneDigests = arcanes.digests;
+      notes.push(arcanes.note);
+      if (arcanes.failed.length) {
+        notes.push(`Arcane digests failed for ${arcanes.failed.length} titles.`);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      notes.push(`Arcane digests failed: ${message}`);
+      log(`Arcane digests failed: ${message}`);
+    }
+  } else {
+    notes.push("Arcane digests skipped.");
+  }
+
   const mods = indexModsFromBuilds(buildEntries);
   const manifest = await saveKnowledgePack({
     repoRoot,
@@ -198,12 +235,13 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
     mods,
     official: officialDigests,
     mechanics: mechanicsDigests,
+    arcanes: arcaneDigests,
     overframeStatus,
     notes,
   });
 
   log(
-    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
+    `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.arcaneDigests ?? 0} arcane digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
   );
   return manifest;
 }
@@ -234,6 +272,38 @@ export async function pullMechanicsOnly(options: {
   });
   log(
     `Mechanics pack updated: ${manifest.counts.mechanicsDigests ?? 0} digests (catalog ${manifest.counts.catalogItems}, wiki ${manifest.counts.wikiDigests} unchanged)`,
+  );
+  return manifest;
+}
+
+/** Pull/refresh only Arcane Enhancement digests. */
+export async function pullArcanesOnly(options: {
+  repoRoot?: string;
+  limit?: number;
+  concurrency?: number;
+  onLog?: (line: string) => void;
+} = {}): Promise<KnowledgeManifest> {
+  const repoRoot = options.repoRoot ?? resolveRepoRoot();
+  const log = options.onLog ?? ((line: string) => console.log(line));
+  log("Pulling Arcane Enhancement digests...");
+  const result = await pullArcaneDigests({
+    repoRoot,
+    limit: options.limit,
+    concurrency: options.concurrency ?? 3,
+    onLog: log,
+    onProgress: (done, total, name) => {
+      if (done % 20 === 0 || done === total) log(`  arcanes ${done}/${total} (last: ${name})`);
+    },
+  });
+  const previous = await loadManifest(repoRoot);
+  const manifest = await saveArcanesCrawl({
+    repoRoot,
+    arcanes: result.digests,
+    notes: [result.note],
+    previous,
+  });
+  log(
+    `Arcane pack updated: ${manifest.counts.arcaneDigests ?? 0} digests (catalog ${manifest.counts.catalogItems}, mechanics ${manifest.counts.mechanicsDigests ?? 0} unchanged)`,
   );
   return manifest;
 }

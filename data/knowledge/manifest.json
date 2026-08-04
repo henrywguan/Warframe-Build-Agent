@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-03T23:48:00.773Z",
+  "generatedAt": "2026-08-04T00:12:17.475Z",
   "sources": {
     "wfcd": "https://api.warframestat.us",
     "wiki": "https://wiki.warframe.com",
@@ -13,18 +13,19 @@
     "buildEntries": 2,
     "modsIndexed": 24,
     "officialDigests": 0,
-    "mechanicsDigests": 41
+    "mechanicsDigests": 41,
+    "arcaneDigests": 168
   },
   "notes": [
-    "Cloudflare bot challenge blocked overframe.gg from this network. Re-run on a residential network or pass --import-builds <file>.",
-    "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
     "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
     "Crawl limited to first 3 catalog items.",
     "Cloudflare bot challenge blocked overframe.gg from this network. Re-run crawl-overframe on a residential network, or pass --import-builds <file>.",
     "Imported 0 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
     "Overframe crawl: top 2 builds per item with mods + arcanes scanned into local knowledge pack.",
     "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
-    "Mechanics/resource digests: 41/41 (failed 0)"
+    "Mechanics/resource digests: 41/41 (failed 0)",
+    "Arcane digests: 169/170 (failed 1)",
+    "Arcane digests: 168/168 (failed 0)"
   ],
   "overframeStatus": "partial"
 }

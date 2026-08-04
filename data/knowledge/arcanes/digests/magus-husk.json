@@ -1,0 +1,15 @@
+{
+  "id": "magus-husk",
+  "title": "Magus Husk",
+  "slot": "operator",
+  "aliases": [
+    "Magus Husk",
+    "operator arcane"
+  ],
+  "summary": "Magus Husk is an Arcane Enhancement for the Operator that grants them additional Armor upon transferring out of the Warframe.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Husk",
+  "extract": "Magus Husk is an Arcane Enhancement for the Operator that grants them additional Armor upon transferring out of the Warframe.\n\nEffect\n\nAcquisition\nThe Magus Husk can be purchased from The Quills for  5,000 provided the player is at Observer rank or higher.\n\nNotes\nWhen used in conjunction with  Unairu's  Stone Skin and  Vazarin's  Enduring Tides, combining Magus Husk with  Magus Vigor yields 5,637.5 Operator Effective Health total.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Magus Husk was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:10.305Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

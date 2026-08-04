@@ -12,6 +12,7 @@ Local recall pack for builds and item facts — **text/structured data only** (n
 | `mods/index.json` | Aggregated from crawled builds | Unique mods/arcanes seen on top builds |
 | `official/digests/*.json` | [warframe.com](https://www.warframe.com) | Patch hub + news digests for local chatbot recall |
 | `mechanics/digests/*.json` | [Warframe Wiki](https://wiki.warframe.com) | Curated mechanics/resource pages (Damage, Status, Armor, factions, Forma, relics, …) |
+| `arcanes/digests/*.json` | [Warframe Wiki](https://wiki.warframe.com) | Arcane Enhancement digests (Warframe/Primary/Secondary/Melee/Magus/Virtuos/…) |
 | `manifest.json` | Generator metadata | Counts + Overframe status |
 
 ## Pull
@@ -27,6 +28,9 @@ npm run knowledge -- crawl-overframe --limit 10
 # Mechanics + resource digests only (Damage/Status/Armor/factions/… — fast)
 npm run knowledge -- pull-mechanics
 
+# Arcane Enhancement digests (Warframe Wiki category)
+npm run knowledge -- pull-arcanes
+
 # Dev sample
 npm run knowledge -- pull --limit 25
 
@@ -37,9 +41,10 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-exp
 # Or import a hand-written / sample JSON:
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 
-# Lookup (items + mechanics)
+# Lookup (items + mechanics + arcanes)
 npm run knowledge -- lookup "Coda Hema"
 npm run knowledge -- lookup "rad viral or corrosive magnetic"
+npm run knowledge -- lookup "Arcane Energize"
 
 # Offline modded DPS calculator (arsenal-style estimate)
 npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
@@ -56,6 +61,16 @@ npm run knowledge -- status
 - Factions, Steel Path, Archon Hunt, mods/arcanes/Forma, Kuva/Endo/relics
 
 These are what let a local chatbot answer elemental stacking questions without OpenAI.
+
+### Arcane digests
+
+`pull-arcanes` fetches every page under Wiki `Category:Arcane Enhancements` (plus the overview), tagged by slot family (`warframe`, `primary`, `secondary`, `melee`, `operator`, `amp`, `kitgun`, `zaw`).
+
+```bash
+npm run knowledge -- pull-arcanes
+npm run knowledge -- lookup "Arcane Energize"
+npm run knowledge -- lookup "Primary Merciless"
+```
 
 ### Modded DPS calculator
 

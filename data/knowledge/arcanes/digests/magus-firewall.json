@@ -1,0 +1,15 @@
+{
+  "id": "magus-firewall",
+  "title": "Magus Firewall",
+  "slot": "operator",
+  "aliases": [
+    "Magus Firewall",
+    "operator arcane"
+  ],
+  "summary": "Magus Firewall is an Arcane Enhancement for the Operator that allows Void Mode to create particles that provide Damage Reduction.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Firewall",
+  "extract": "Magus Firewall is an Arcane Enhancement for the Operator that allows Void Mode to create particles that provide Damage Reduction.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris for  10,000 per blueprint upon reaching the Rank 4: Instrument.\n\nMechanics\nWhile in Void Mode, the Operator generates Void particles per second that each provide 12.5% damage reduction, up to 75% damage reduction after 6 particles.\nEach particle lasts for a single hit regardless of the Arcane's duration.\nDamage reduction stacks with each particle present.\nParticles do not affect Warframes.\nThere is no cooldown between hits, meaning that all particles can be gone under multiple enemy fire.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.929Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

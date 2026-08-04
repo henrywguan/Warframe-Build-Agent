@@ -1,0 +1,16 @@
+{
+  "id": "arcane-tempo",
+  "title": "Arcane Tempo",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Tempo",
+    "Tempo",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Tempo is an Arcane Enhancement that provides a 15% chance to increase Fire Rate on primary shotguns for 12 seconds whenever the player achieves a Critical Hit.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Tempo",
+  "extract": "Arcane Tempo is an Arcane Enhancement that provides a 15% chance to increase Fire Rate on primary shotguns for 12 seconds whenever the player achieves a Critical Hit.\nIt can be sold for  200.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Teralyst.\nDropped in Rotation C of Orphix Venus Proxima, Neptune Proxima, and Veil Proxima missions.\nAwarded at Tier 3 of The Circuit on Normal Mode for Week 2.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Tempo was first introduced in the Trial mission The Jordas Verdict, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Tempo from Little Duck for 1,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Tempo from Father for 200  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Tempo from the Vigile Jahu Gargoyle for 3  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Tempo from Ordis for 1  Volatile Motes in the first run of the event, and 2 Motes in the second, with a purchase limit of 42.\n\nNotes\nStacks additively with fire rate from mods such as  Shotgun Barrage.\nCan be triggered by critical hits from almost any source, including all weapon types, beast and sentinel attacks, and even Warframe abilities (such as  Wisp's  Breach Surge sparks and all of  Gyre's damaging abilities).\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.689Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

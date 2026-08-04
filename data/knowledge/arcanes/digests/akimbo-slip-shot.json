@@ -1,0 +1,15 @@
+{
+  "id": "akimbo-slip-shot",
+  "title": "Akimbo Slip Shot",
+  "slot": "secondary",
+  "aliases": [
+    "Akimbo Slip Shot",
+    "secondary arcane"
+  ],
+  "summary": "Akimbo Slip Shot is a Secondary Arcane that increases Ammo Efficiency while sliding or aim gliding with Dual Pistols.",
+  "pageUrl": "https://wiki.warframe.com/w/Akimbo_Slip_Shot",
+  "extract": "Akimbo Slip Shot is a Secondary Arcane that increases Ammo Efficiency while sliding or aim gliding with Dual Pistols.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 3, 4, 6, or 7 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the Arcanes to appear in her shop.\nMay drop from side Undercroft portals in The Duviri Experience while on The Steel Path.\n\nNotes\nCannot be equipped on Exalted Weapons like  Dex Pixia.\nCan be equipped on the ( Prisma)  Dual Decurion.\nAdditive with  Zazvat-Kar for maximum Ammo Efficiency on the  Akstiletto Prime.\nCan be equipped on Dual Shotguns.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.080Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

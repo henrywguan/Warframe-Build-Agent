@@ -1,0 +1,15 @@
+{
+  "id": "primary-exhilarate",
+  "title": "Primary Exhilarate",
+  "slot": "primary",
+  "aliases": [
+    "Primary Exhilarate",
+    "primary arcane"
+  ],
+  "summary": "Primary Exhilarate is a Primary Arcane that on inflicting a weapon  Impact status effect adds Energy regeneration over time for 10 seconds and stacks up to 3 times.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Exhilarate",
+  "extract": "Primary Exhilarate is a Primary Arcane that on inflicting a weapon  Impact status effect adds Energy regeneration over time for 10 seconds and stacks up to 3 times.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamps on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nMay drop from undercroft portals in the Duviri experience while on steel path\n\nNotes\nWhen the buff times out, one stack is lost and the buff duration resets.\nCasting an ability will stop the energy generation for 1 second.\nArcane only triggers on  Impact status procs inflicted via primary weapons.\n\nTips\nUseful on primary weapons that can consistently proc  Impact on direct hit. For example directly hitting an enemy with  Bubonico alt-fire can trigger  Impact procs or using high  Impact rifles with low fire-rate to effectively use  Internal Bleeding like the  Kuva Chakkhurr.\n\nBugs\n Dex Pixia and  Diwata can trigger this arcane.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.665Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

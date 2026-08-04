@@ -1,0 +1,15 @@
+{
+  "id": "emergence-savior",
+  "title": "Emergence Savior",
+  "slot": "operator",
+  "aliases": [
+    "Emergence Savior",
+    "operator arcane"
+  ],
+  "summary": "Emergence Savior is an Arcane Enhancement for the Operator that prevents the Operator from taking lethal damage, granting 5 seconds of invulnerability while regenerating health, with a 90 second cooldown.",
+  "pageUrl": "https://wiki.warframe.com/w/Emergence_Savior",
+  "extract": "Emergence Savior is an Arcane Enhancement for the Operator that prevents the Operator from taking lethal damage, granting 5 seconds of invulnerability while regenerating health, with a 90 second cooldown.\n\nEffect\n\nAcquisition\nEmergence Savior can be purchased from Cavalero for  5,000, requiring Rank 1 - Fallen with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.041Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

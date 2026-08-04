@@ -1,0 +1,15 @@
+{
+  "id": "magus-lockdown",
+  "title": "Magus Lockdown",
+  "slot": "operator",
+  "aliases": [
+    "Magus Lockdown",
+    "operator arcane"
+  ],
+  "summary": "Magus Lockdown is an Arcane Enhancement for the Operator. Whenever the Operator performs a Void Sling, they will drop a Tether Mine at their destination that tethers up to 10 enemies in place for 4 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Lockdown",
+  "extract": "Magus Lockdown is an Arcane Enhancement for the Operator. Whenever the Operator performs a Void Sling, they will drop a Tether Mine at their destination that tethers up to 10 enemies in place for 4 seconds.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris (Syndicate) for  10,000 upon reaching the rank of Instrument.\n\nNotes\nTethered enemies are completely incapacitated: they cannot move nor attack.\nUnaware enemies that become tethered remain unaware until the effect wears off, similarly to  Rhino Stomp.\nUp to 2 tether mines can be active at once. If attempting to create more than 2 mines, the oldest mine created will be removed.\nCan be used with  Magus Revert once every 3 seconds to drop tether mines without consuming energy from Void Dashing.\nElite targets of subsequent tethers (like Demolishers or Acolytes) will \"adapt\" to the effects, lowering the tether duration from 4 seconds to 1 second, making the Arcane much weaker when used on the same target several times.\n\nTips\nThis Arcane is invaluable in Disruptions as it can hold Demolishers in place without being dispelled, provided they aren't surrounded by too many enemies. Some Demolishers can build an immunity against the lockdown if it is used often enough.\n\nTrivia\nThe inscription is Solaris Language, making the sound \"LAWKDUHAWWN\", or \"lockdown\".\n\nBugs\nStatus procs that displace enemies will allow enemies to shoot at players while still tethered.\nClients are sometimes unable to place mines.\n\nPatch History\n\nLast updated: Hotfix 33.0.5 (2023-05-03)",
+  "fetchedAt": "2026-08-04T00:12:10.393Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

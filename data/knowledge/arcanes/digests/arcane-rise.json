@@ -1,0 +1,16 @@
+{
+  "id": "arcane-rise",
+  "title": "Arcane Rise",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Rise",
+    "Rise",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Rise is an Arcane Enhancement for Warframes that provides a 60% chance on reloading any weapon to increase the damage of primary weapons for 24 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Rise",
+  "extract": "Arcane Rise is an Arcane Enhancement for Warframes that provides a 60% chance on reloading any weapon to increase the damage of primary weapons for 24 seconds.\n\nEffect\n\nAcquisition\nArcane Rise can be obtained from Conjunction Survival Circulus on Lua as a Rotation B reward. Alternatively it can be purchased from Archimedean Yonta for 15  Lua Thrax Plasm each, with a total of 315 for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNote\nThe increase in damage stacks additively with mods that increase base damage e.g.  Serration.\nTriggers at the end of the reload.\nWeapons that cannot reload, such as Bows,  Epitaph, and Battery Weapons, cannot activate the buff.\nWeapons that reload one round at a time like the  Zarr,  Felarx, or  Corinth can proc this with each reload cycle, making it nearly guaranteed to proc on those types of weapons.\nAlso triggers upon engaging Incarnon mode.\n\nTips\nParticularly effective for primary weapons with very low magazine size - most notably the  Vectis and the  Exergis, as these guns will always have to be reloaded per shot.\nAlso effective for primaries with alt-fire that unload their magazines in a single burst, such as the  Kuva Hek, the  Nagantaka, and the  Grakata with  Wild Frenzy.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.150Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

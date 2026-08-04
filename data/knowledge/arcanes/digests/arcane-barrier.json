@@ -1,0 +1,16 @@
+{
+  "id": "arcane-barrier",
+  "title": "Arcane Barrier",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Barrier",
+    "Barrier",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Barrier is an Arcane Enhancement that provides a chance to instantly restore Warframe Shields whenever the player receives damage to their Warframe Shields.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Barrier",
+  "extract": "Arcane Barrier is an Arcane Enhancement that provides a chance to instantly restore Warframe Shields whenever the player receives damage to their Warframe Shields.\nCan be sold for  3,000.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Hydrolyst.\nDropped in Rotation C of Orphix Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Barrier was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Barrier from Little Duck for 4,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Barrier from Father for 800  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Barrier from Jahu Gargoyle for 12  Grotesque Splinter\nThe Operation: Belly of the Beast event sold Arcane Barrier from Ordis for 46  Volatile Motes in the first run of the event, and 30 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Barrier from Dominus Thrax in bundles of 3, costing 22  Dominus Aureus, with a purchase limit of 7 (21 Arcanes in total).\n\nNotes\nCan proc even while channeling abilities that drain shields over time (such as  Hildryn's  Haven or  Aegis Storm), although the drain itself will not trigger it\nTrading Arcane Barrier requires the trader to be Mastery Rank 11 or higher.\n\nTips\nStrong synergy with high shield frames, such as  Caliban,  Harrow,  Hildryn,  Mag, or  Styanax, and  Adaptation, allowing shields to resist high amounts of damage and continually be restored to full.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.627Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

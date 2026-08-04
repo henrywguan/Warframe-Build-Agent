@@ -1,0 +1,15 @@
+{
+  "id": "exodia-triumph",
+  "title": "Exodia Triumph",
+  "slot": "zaw",
+  "aliases": [
+    "Exodia Triumph",
+    "zaw arcane"
+  ],
+  "summary": "Exodia Triumph is an Arcane Enhancement for Zaws that grants a chance to gain additional Combo Count from melee attacks.",
+  "pageUrl": "https://wiki.warframe.com/w/Exodia_Triumph",
+  "extract": "Exodia Triumph is an Arcane Enhancement for Zaws that grants a chance to gain additional Combo Count from melee attacks.\n\nEffect\n\nAcquisition\nCan be bought from Hok for  10,000 \nper arcane upon reaching the rank of Kin with the Ostrons.\n\nNotes\nMelee-based warframe abilities, such as Atlas's Landslide, can generate extra combo through the use of this arcane.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Exodia Triumph was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.837Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

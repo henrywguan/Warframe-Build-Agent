@@ -1,0 +1,15 @@
+{
+  "id": "secondary-shiver",
+  "title": "Secondary Shiver",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Shiver",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Shiver is a Secondary Arcane that inflicts bonus damage per active  Cold status effect on the target.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Shiver",
+  "extract": "Secondary Shiver is a Secondary Arcane that inflicts bonus damage per active  Cold status effect on the target.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, or 8 reward on a weekly rotational basis.\nMay be sold by Acrithis for 20  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the Arcanes to appear in her shop.\nMay drop from Undercroft portals in the Duviri Experience while on The Steel Path (2.78%).\n\nNotes\nTrading Secondary Shiver requires the trader to be Mastery Rank 11 or higher.\nDoes not apply to radial damage.\nDespite the wording being specific to an enemy target, only the Shiver-equipped weapon receives benefit.\nAdditive to  Hornet Strike on most weapons, has reduced effect on some ( Ballistica series charge attacks, Incarnon-modified secondaries) and is multiplicative to  Hornet Strike on others ( Cyanex,  Catchmoon,  Epitaph,  Seer series,  Sepulcrum,  Tenet Spirex), consistent with other GunCO sources such as  Galvanized Shot.\nBonus is additive to damage per status type from  Galvanized Shot.\n\nTips\nEffects that rapidly apply a number of  Cold stacks include:\n Frost:\n Freeze's direct hit (10  Cold stacks)\nIce Wave (Helminth subsumable), (6  Cold stacks)\nAugment mod  Ice Wave Impedance adds a lingering effect to the ability, which applies an additional  Cold  stack per second.\n Snow Globe's activation while within its range  (10  Cold stacks)\n Avalanche  (10  Cold stacks)\n Gauss'  Thermal Sunder double cast (Helminth subsumable) or with  Redline active  (10  Cold stacks)\n Lavos's  Vial Rush (Helminth subsumable)  (3  Cold stacks on hit, plus pools that inflict 1  Cold  per second)\n Melee Careen at Rank 5 (10  Cold stacks)\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.409Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

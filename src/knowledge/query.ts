@@ -1,5 +1,6 @@
 import { resolveRepoRoot } from "./repo-root.js";
 import {
+  loadArcaneDigests,
   loadCatalog,
   loadItemBuilds,
   loadManifest,
@@ -8,7 +9,7 @@ import {
   loadOfficialDigests,
   loadWikiDigest,
 } from "./store.js";
-import type { CatalogItem, MechanicsDigest } from "./types.js";
+import type { ArcaneDigest, CatalogItem, MechanicsDigest } from "./types.js";
 
 const ONLINE_SEARCH_CONFIRMATION_REQUIRED = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
 const LOCAL_BUILDS_AVAILABLE = "LOCAL_BUILDS_AVAILABLE";
@@ -124,6 +125,42 @@ export function findMechanicsMatches(
     .map((row) => row.digest);
 }
 
+/** Score an arcane digest against a free-text query. */
+export function scoreArcaneDigest(query: string, digest: ArcaneDigest): number {
+  return scoreMechanicsDigest(query, {
+    id: digest.id,
+    title: digest.title,
+    kind: "modding",
+    aliases: [...digest.aliases, digest.slot, `${digest.slot} arcane`, "arcane"],
+    summary: digest.summary,
+    pageUrl: digest.pageUrl,
+    extract: digest.extract,
+    fetchedAt: digest.fetchedAt,
+    source: "wiki",
+  });
+}
+
+export function findArcaneMatches(
+  digests: ArcaneDigest[],
+  query: string,
+  limit = 8,
+): ArcaneDigest[] {
+  const q = normalize(query);
+  // Broad "arcanes" / "primary arcanes" list queries.
+  const listMode = /^(arcane|arcanes)s?$/.test(q) || /\barcanes?\b/.test(q);
+  return digests
+    .map((digest) => {
+      let score = scoreArcaneDigest(query, digest);
+      if (listMode && q.includes(digest.slot) && digest.slot !== "other") score = Math.max(score, 70);
+      if (listMode && (q === "arcane" || q === "arcanes")) score = Math.max(score, 50);
+      return { digest, score };
+    })
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, limit)
+    .map((row) => row.digest);
+}
+
 export function findCatalogMatches(
   catalog: CatalogItem[],
   query: string,
@@ -165,7 +202,7 @@ export async function lookupLocalKnowledge(
     return [
       "Local knowledge pack not found.",
       "Run: npm run knowledge -- pull",
-      "Or for mechanics only: npm run knowledge -- pull-mechanics",
+      "Or: npm run knowledge -- pull-mechanics | pull-arcanes",
       "Optional: npm run knowledge -- pull --import-builds ./builds.json",
     ].join("\n");
   }
@@ -174,20 +211,37 @@ export async function lookupLocalKnowledge(
   const matches = findCatalogMatches(catalog, query, options?.limit ?? 5);
   const mechanics = await loadMechanicsDigests(repoRoot);
   const mechanicsHits = findMechanicsMatches(mechanics, query, 8);
+  const arcanes = await loadArcaneDigests(repoRoot);
+  const arcaneHits = findArcaneMatches(arcanes, query, 8);
 
-  if (!matches.length && !mechanicsHits.length) {
+  if (!matches.length && !mechanicsHits.length && !arcaneHits.length) {
     return [
-      `No local catalog or mechanics match for “${query}”.`,
-      `Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests (generated ${manifest.generatedAt}).`,
-      "Try: npm run knowledge -- pull-mechanics",
+      `No local catalog, mechanics, or arcane match for “${query}”.`,
+      `Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.arcaneDigests ?? 0} arcane digests (generated ${manifest.generatedAt}).`,
+      "Try: npm run knowledge -- pull-mechanics && npm run knowledge -- pull-arcanes",
     ].join("\n");
   }
 
   const chunks: string[] = [
     `Local knowledge pack (${manifest.generatedAt})`,
-    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
+    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · arcanes: ${manifest.counts.arcaneDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
     "",
   ];
+
+  if (arcaneHits.length) {
+    chunks.push("# Arcane digests", "");
+    for (const digest of arcaneHits) {
+      chunks.push(
+        `## ${digest.title} (${digest.slot})`,
+        digest.summary,
+        digest.pageUrl,
+        "",
+        "### Arcane digest",
+        digest.extract.slice(0, 5000),
+        "",
+      );
+    }
+  }
 
   if (mechanicsHits.length) {
     chunks.push("# Mechanics / resource digests", "");

@@ -14,6 +14,7 @@ interface Manifest {
     wikiDigests: number;
     buildEntries: number;
     mechanicsDigests?: number;
+    arcaneDigests?: number;
   };
 }
 
@@ -26,6 +27,16 @@ interface MechanicsDigest {
   pageUrl?: string;
   extract: string;
   sections?: Record<string, string>;
+}
+
+interface ArcaneDigest {
+  id: string;
+  title: string;
+  slot: string;
+  aliases?: string[];
+  summary?: string;
+  pageUrl?: string;
+  extract: string;
 }
 
 interface CatalogItem {
@@ -224,10 +235,37 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
     .slice(0, 8)
     .map((row) => row.digest);
 
-  if (!matches.length && !mechanicsHits.length) {
+  const arcanesIndex = await readJson<{ ids?: string[] }>(
+    path.join(root, "arcanes", "index.json"),
+  );
+  const arcanes: ArcaneDigest[] = [];
+  for (const id of arcanesIndex?.ids ?? []) {
+    const digest = await readJson<ArcaneDigest>(
+      path.join(root, "arcanes", "digests", `${id}.json`),
+    );
+    if (digest) arcanes.push(digest);
+  }
+  const arcaneHits = arcanes
+    .map((digest) => ({
+      digest,
+      score: scoreMechanics(query, {
+        id: digest.id,
+        title: digest.title,
+        kind: "modding",
+        aliases: [...(digest.aliases || []), digest.slot, "arcane"],
+        summary: digest.summary,
+        extract: digest.extract,
+      }),
+    }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, 8)
+    .map((row) => row.digest);
+
+  if (!matches.length && !mechanicsHits.length && !arcaneHits.length) {
     return [
-      `No local catalog or mechanics match for “${query}”. Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests.`,
-      "Run: npm run knowledge -- pull-mechanics",
+      `No local catalog, mechanics, or arcane match for “${query}”. Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.arcaneDigests ?? 0} arcane digests.`,
+      "Run: npm run knowledge -- pull-mechanics && npm run knowledge -- pull-arcanes",
       "",
       formatOnlineSearchConfirmation([query]),
     ].join("\n");
@@ -235,9 +273,19 @@ export async function lookupLocalKnowledge(query: string): Promise<string> {
 
   const chunks: string[] = [
     `Local knowledge pack (${manifest.generatedAt})`,
-    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
+    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · arcanes: ${manifest.counts.arcaneDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
     "",
   ];
+
+  if (arcaneHits.length) {
+    chunks.push("# Arcane digests", "");
+    for (const digest of arcaneHits) {
+      chunks.push(`## ${digest.title} (${digest.slot})`);
+      if (digest.summary) chunks.push(digest.summary);
+      if (digest.pageUrl) chunks.push(digest.pageUrl);
+      chunks.push("", "### Arcane digest", digest.extract.slice(0, 5000), "");
+    }
+  }
 
   if (mechanicsHits.length) {
     chunks.push("# Mechanics / resource digests", "");

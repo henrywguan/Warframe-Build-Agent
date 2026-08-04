@@ -1,0 +1,15 @@
+{
+  "id": "magus-accelerant",
+  "title": "Magus Accelerant",
+  "slot": "operator",
+  "aliases": [
+    "Magus Accelerant",
+    "operator arcane"
+  ],
+  "summary": "Magus Accelerant is an Arcane Enhancement for the Operator. Whenever the Operator performs Void Sling on an enemy, they will become more vulnerable to  Heat damage.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Accelerant",
+  "extract": "Magus Accelerant is an Arcane Enhancement for the Operator. Whenever the Operator performs Void Sling on an enemy, they will become more vulnerable to  Heat damage.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris (Syndicate) for  10,000 upon reaching the rank of Shadow.\n\nNotes\nThe effect will apply a permanent stacking Damage Vulnerability debuff for all  Heat damage done to an enemy.\nCan be applied multiple times with no limit, with each application stacking additively with each other.\nFor example, using an  Ignis Wraith modded with  Serration and  Hellfire against an enemy affected with 3 stacks of a max rank Magus Accelerant will deal:\n35 * (1 +  165%) * (1 +  90%) * (1 + 3 *  65%) = 519.8637 damage before any damage reduction or resistances.\nHas no effect on Eidolons.\n\nTips\nSynergizes with  Virtuos Forge,  Magus Melt,  Magus Cloud and many Madurai nodes.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.311Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

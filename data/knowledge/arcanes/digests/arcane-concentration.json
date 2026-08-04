@@ -1,0 +1,16 @@
+{
+  "id": "arcane-concentration",
+  "title": "Arcane Concentration",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Concentration",
+    "Concentration",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Concentration is an Arcane Enhancement for Warframes that grants additional Ability Duration for 3 seconds after casting an Ability.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Concentration",
+  "extract": "Arcane Concentration is an Arcane Enhancement for Warframes that grants additional Ability Duration for 3 seconds after casting an Ability.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nEffect does not stack with itself, Duration of effect refreshes upon recast.\nEffect does not apply to the ability that granted the buff.\nIf Casting Speed is high enough, some abilities may be affected by the extra Duration regardless.\nLike other temporary duration buffs it does not snapshot for Channeling abilities and only applies for the time the duration buff is active.\n\nTips\nUsed on  Loki's  Invisibility, Arcane Concetration will benefit from the duration without need to trigger with another ability first.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.434Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

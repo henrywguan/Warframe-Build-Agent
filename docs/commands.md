@@ -99,6 +99,7 @@ npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run knowledge -- pull
 npm run knowledge -- pull-mechanics
+npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
 npm run knowledge:export-overframe -- --limit 5
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json

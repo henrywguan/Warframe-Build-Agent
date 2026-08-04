@@ -15,6 +15,16 @@ npm run knowledge -- lookup "rad viral or corrosive magnetic"
 
 Pulls curated Wiki pages (Damage types, Status Effect, Armor/Shields, factions, Forma, relics, …) for local chatbot recall.
 
+## Refresh Arcane digests
+
+```bash
+npm run knowledge -- pull-arcanes
+npm run knowledge -- lookup "Arcane Energize"
+npm run knowledge -- lookup "Primary Merciless"
+```
+
+Pulls Wiki `Category:Arcane Enhancements` into `data/knowledge/arcanes/`.
+
 ## Crawl Overframe → local DB (top 3 builds + mods/arcanes)
 
 ```bash

@@ -1,0 +1,15 @@
+{
+  "id": "pax-soar",
+  "title": "Pax Soar",
+  "slot": "kitgun",
+  "aliases": [
+    "Pax Soar",
+    "kitgun arcane"
+  ],
+  "summary": "Pax Soar is an Arcane Enhancement for a Kitgun that, while airborne, increases accuracy, reduces recoil, and increases the player's aim glide and wall latch time.",
+  "pageUrl": "https://wiki.warframe.com/w/Pax_Soar",
+  "extract": "Pax Soar is an Arcane Enhancement for a Kitgun that, while airborne, increases accuracy, reduces recoil, and increases the player's aim glide and wall latch time.\n\nEffect\n\nAcquisition\nCan be bought from Rude Zuud for  10,000 per arcane upon reaching the rank of Old Mate.\n\nNotes\nAim Glide duration bonus is applied after mods like  Patagium.\n\nFor example: 3s x ( 1 + 90% ) + 5s = 10.7 seconds of gliding.\nHas an unlisted effect which will make the player automatically start hovering in the air like  Zephyr when firing the kitgun while in the air in the sense that you will still slowly fall to the ground even when you are not aim gliding. This will cause the player to slowly float up a bit then slowly drift down which can be inconvenient.\n\nTrivia\nInscription on Pax Soar is Solaris Language, reading \"SKNG\" forming the sound \"Soar\".",
+  "fetchedAt": "2026-08-04T00:12:12.890Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

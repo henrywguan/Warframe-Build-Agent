@@ -174,8 +174,9 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
 | `npm run knowledge -- crawl-overframe` | Crawl Overframe top-3 builds + mods/arcanes into local DB |
-| `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics) |
+| `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics + arcanes) |
 | `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
+| `npm run knowledge -- pull-arcanes` | Refresh Arcane Enhancement digests from Warframe Wiki |
 | `npm run knowledge -- dps <weapon> --preset …` | Offline modded DPS estimate |
 | `npm run knowledge -- compare-dps <A> <B>` | Offline modded DPS A vs B compare |
 | `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |

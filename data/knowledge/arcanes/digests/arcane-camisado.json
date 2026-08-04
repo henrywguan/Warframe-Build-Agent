@@ -1,0 +1,16 @@
+{
+  "id": "arcane-camisado",
+  "title": "Arcane Camisado",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Camisado",
+    "Camisado",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Camisado is an Arcane Enhancement for Warframes that increases the  Ability Strength of the next ability cast based on attacks from summoned minions. When fully ranked, the Arcane also gives minions 20% more movement speed.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Camisado",
+  "extract": "Arcane Camisado is an Arcane Enhancement for Warframes that increases the  Ability Strength of the next ability cast based on attacks from summoned minions. When fully ranked, the Arcane also gives minions 20% more movement speed.\n\nEffect\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 3: 2-For-1.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania Hell-Scrub and Legacyte Harvest missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe following are counted as summons:\n Atlas'  Rumblers\n Caliban's  Lethal Progeny\nThis includes Choralysts summoned by the Summulyst\nConculysts damaging enemies with  Fusion Strike will also provide stacks\n Chroma's  Effigy\n Dante's Paragrimms from  Pageflight\n Equinox's  Duality\n Inaros' Swarm Kavats created by  Desiccation's Curse and  Scarab Swarm\n Khora's  Venari\n Loki's  Decoy\nDamage dealt by  Damage Decoy does not increase Arcane Camisado's stacks\nThe Decoy seems to only give stacks against enemies at melee range\n Nekros'  Shadows of the Dead\n Nidus' Maggots from  Ravenous\n Oraxia's Scuttlers from  Widow's Brood\n Titania's Razorflies from  Razorwing\n Uriel's Demons\nThe movement speed bonus has minimal to no effect on any of his demons however.\n Wukong's  Celestial Twin\n Yareli's  Loyal Merulina\nThe following do not count as summons:\nEnemies affected by  Radiation\n Ash's Shadow Clones from  Blade Storm\n Citrine's  Prismatic Gem\n Dagath's  Rakhali's Cavalry\n Dante's Noctua from  Wordwarden\n Excalibur Umbra's Passive\n Hydroid's  Tentacle Swarm\n Mirage's  Hall of Mirrors\n Nokko's  Stinkbrain and  Sporespring\n Nyx's  Mind Control\n Octavia's  Mallet and  Resonator\n Protea's  Blaze Artillery\n Revenant's  Enthrall\n Sevagoth's  Reap's shadows, including from  Shadow Haze, and  Exalted Shadow\n Sirius & Orion's uncontrolled Warframe\n Styanax's specters from  Axios Javelineers\n Vauban's  Tesla Nervos and  Minelayer\n Xaku's  The Lost: Accuse\nCompanion's  Duplex Bond\nHound's  Diversified Denial\n Helminth Charger's Cyst maggots from the Strain Mod Set\n Smeeta Kavat's  Mischief\n Ballistica Prime's ghosts from its on-kill effect\n Synoid Heliocor's specters from its heavy attack kill effect\nOn Call Crew\nSpecters\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.175Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

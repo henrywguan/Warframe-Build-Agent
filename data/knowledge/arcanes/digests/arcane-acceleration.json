@@ -1,0 +1,16 @@
+{
+  "id": "arcane-acceleration",
+  "title": "Arcane Acceleration",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Acceleration",
+    "Acceleration",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Acceleration is an Arcane Enhancement that provides a 30% chance on each Critical Hit to increase the fire rate of non-shotgun primary weapons for 9 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Acceleration",
+  "extract": "Arcane Acceleration is an Arcane Enhancement that provides a 30% chance on each Critical Hit to increase the fire rate of non-shotgun primary weapons for 9 seconds.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Venus Proxima or Veil Proxima missions.\nAwarded at Tier 9 in The Duviri Paradox Circuit for Week 1.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Acceleration was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Acceleration from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Acceleration from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Acceleration from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Acceleration from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Acceleration from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nAdditively stacks with mods that increase fire rate (e.g.  Speed Trigger).\nDoes not double its bonus for bows\nBonus applies to most primary weapons, including snipers & launchers, but not shotguns.\nCan be triggered by critical hits from almost any source, including all weapon types, beast and sentinel attacks, and even Warframe abilities (such as  Wisp's  Breach Surge sparks and all of  Gyre's damaging abilities)\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.070Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

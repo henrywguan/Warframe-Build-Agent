@@ -1,0 +1,15 @@
+{
+  "id": "melee-animosity",
+  "title": "Melee Animosity",
+  "slot": "melee",
+  "aliases": [
+    "Melee Animosity",
+    "melee arcane"
+  ],
+  "summary": "Melee Animosity is a Melee Arcane Enhancement that causes normal melee hits to increase the Critical Chance of the next Heavy Attack up to a certain amount.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Animosity",
+  "extract": "Melee Animosity is a Melee Arcane Enhancement that causes normal melee hits to increase the Critical Chance of the next Heavy Attack up to a certain amount. \n\nEffect\n\nAcquisition\nAwarded for killing The Fragmented on Effervo, Deimos.\nAwarded for killing Whispers in Albrecht's Laboratories missions.\nAwarded for killing Gruzzlings in non-Disruption Albrecht's Laboratories mission.\nCan be bought from Bird 3 of  Cavia for  7,500, requiring Rank 4 - Scholar.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nCritical Chance bonus is additive to mods like  True Steel.\nOnly provides 1 stack per melee input, regardless of how many enemies are hit.\nAt all ranks, it requires 10 hits to reach the maximum critical chance bonus listed.\nOnly consumes stacks if the heavy attack connects with an enemy. Whiffing a heavy attack will preserve the critical chance bonus.\nThe bonus only procs on normal melee attacks. Slams and heavy attacks do not.\n\nBugs\nGlaive (Weapon Type) throws count as heavy attacks, ground throws will benefit from the bonus but will not consume stacks.\nSame applies to explosions that do not use the heavy attack input (e.g.  Volatile Rebound).\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.262Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

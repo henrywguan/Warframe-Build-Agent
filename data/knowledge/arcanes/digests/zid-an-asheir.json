@@ -1,0 +1,14 @@
+{
+  "id": "zid-an-asheir",
+  "title": "Zid-An Asheir",
+  "slot": "other",
+  "aliases": [
+    "Zid-An Asheir"
+  ],
+  "summary": "Zid-An Asheir is an Arcane Enhancement for Tektolyst Artifacts that increases Status Chance for all Warframe weapons on Tauron Strike hit.",
+  "pageUrl": "https://wiki.warframe.com/w/Zid-An_Asheir",
+  "extract": "Zid-An Asheir is an Arcane Enhancement for Tektolyst Artifacts that increases Status Chance for all Warframe weapons on Tauron Strike hit.\n\nEffect\n\nAcquisition\nCan be bought from Marie for a randomly determined amount of Perita resources in her rotating shop.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\n\nTrivia\n\nBugs\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:17.028Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

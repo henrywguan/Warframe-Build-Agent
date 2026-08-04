@@ -1,0 +1,16 @@
+{
+  "id": "arcane-agility",
+  "title": "Arcane Agility",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Agility",
+    "Agility",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Agility is an Arcane Enhancement that provides a 60% chance whenever the player receives damage to increase Warframe parkour velocity for 18 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Agility",
+  "extract": "Arcane Agility is an Arcane Enhancement that provides a 60% chance whenever the player receives damage to increase Warframe parkour velocity for 18 seconds.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Pluto Proxima or Veil Proxima missions.\nAwarded at Tier 9 of The Circuit on Normal Mode for Week 2.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Agility was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Agility from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Agility from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Agility from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Agility from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Agility from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.342Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}
