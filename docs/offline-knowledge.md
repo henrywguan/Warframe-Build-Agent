@@ -93,10 +93,12 @@ Full crawl process: [`docs/overframe-crawl.md`](overframe-crawl.md).
 
 ## Agent use
 
-- Web chat tools: `lookup_local_knowledge`, `compare_loadout_to_overframe`
-- Web slash: `/knowledge <query>`, `/compare <item> | mods…`, screenshot Attach
-- Local chatbot (no OpenAI): set `CHAT_MODE=local` in `web/.env.local`
-- CLI: `npm run knowledge -- lookup …`
+- Web chat tools: `lookup_local_knowledge`, `compare_loadout_to_overframe`, `estimate_modded_dps`
+- Web slash: `/knowledge <query>`, `/compare <item> | mods…`, `/dps …`, screenshot Attach
+- Local LLM (Qwen/Ollama): set `OPENAI_BASE_URL` + `OPENAI_MODEL` in `web/.env.local` — still uses the tools above
+- Deterministic no-LLM chatbot: `CHAT_MODE=local` in `web/.env.local`
+- CLI: `lookup`, `compare-loadout`, `dps`, `compare-dps`, `pull-mechanics`, `pull-arcanes`
+- Hermes: profile v0.3.0 + [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md); pack with `./scripts/pack-hermes-profile.sh`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 
-Prefer local knowledge for **item/mechanic facts** and **build comparisons** first. If Overframe builds are missing from the pack, ask the player for confirmation before searching Overframe / YouTube / online sources — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.
+Prefer local knowledge for **item/mechanic/arcane facts**, **loadout compares**, and **DPS estimates** first. If Overframe builds are missing from the pack, ask the player for confirmation before searching Overframe / YouTube / online sources — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.

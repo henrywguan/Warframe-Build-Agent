@@ -39,13 +39,18 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/b
 
 See `docs/overframe-crawl.md`.
 
-## Status / lookup
+## Status / lookup / compare / DPS
 
 ```bash
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- lookup "Arcane Energize"
+npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 ```
 
-Prefer `lookup_local_knowledge` for **offline item facts**. For **builds**, use Overframe cache / YouTube / agent-calculated per `docs/source-policy.md`. Use live tools for worldstate, market, and patch hubs.
+Prefer `lookup_local_knowledge` for **offline item / mechanics / arcane facts**. For **builds**, use Overframe cache / YouTube / agent-calculated per `docs/source-policy.md`. Use live tools for worldstate, market, and patch hubs.
+
+Hermes + local LLM: `docs/hermes-export.md`, `hermes/LOCAL_LLM.md`.
 
 See `docs/offline-knowledge.md` and `docs/source-policy.md`.

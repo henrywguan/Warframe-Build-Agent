@@ -2,11 +2,19 @@
 # Installers can change model/provider locally; updates preserve config.yaml unless --force-config.
 
 # Leave provider/model unset so Hermes uses the user's existing setup.
-# Optional: pin a cheaper model for fast live-status Q&A.
+# For a local LLM (Qwen via Ollama / LM Studio / vLLM), configure an OpenAI-compatible
+# provider pointing at your local server — see LOCAL_LLM.md. Example:
+#
 # model:
 #   provider: openai
-#   name: gpt-4o-mini
+#   name: qwen3.6
+#   # base_url: http://127.0.0.1:11434/v1
+#
+# And in the profile .env:
+#   OPENAI_API_KEY=ollama
+#   OPENAI_BASE_URL=http://127.0.0.1:11434/v1
 
 terminal:
-  # If you clone Warframe-Build-Agent locally, point cwd there so wf/market CLIs are handy.
+  # Point cwd at a Warframe-Build-Agent checkout so Ordis can run knowledge/wf/market/patches CLIs
+  # against data/knowledge/ (mechanics, arcanes, Overframe builds, DPS calculator).
   cwd: "."

@@ -13,11 +13,16 @@ Cursor Cloud / desktop chat is great while coding. This UI is for **on-the-go** 
 ```bash
 cd web
 cp .env.example .env.local
-# Option A: OPENAI_API_KEY (+ optional OPENAI_BASE_URL for Ollama/LM Studio)
+# Option A: OPENAI_API_KEY (+ optional OPENAI_BASE_URL for Ollama/LM Studio/Qwen)
+#   OPENAI_BASE_URL=http://127.0.0.1:11434/v1
+#   OPENAI_API_KEY=ollama
+#   OPENAI_MODEL=qwen3.6
 # Option B: CHAT_MODE=local  (offline knowledge + OCR, no cloud LLM)
 npm install
 npm run dev
 ```
+
+For Hermes Desktop with the same local model + pack, see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
 
 Open http://localhost:3000
 

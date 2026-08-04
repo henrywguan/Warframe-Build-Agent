@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+import {
+  compareLoadoutToTopBuilds,
+  formatCompareResult,
+} from "./compare.js";
 import { runOverframeCrawl } from "./crawl-overframe.js";
 import {
   compareWeaponsDps,
@@ -21,6 +25,7 @@ Usage:
   npm run knowledge -- lookup <query>
   npm run knowledge -- dps <weapon> [--preset name|--mods a,b,c]
   npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset name|--mods a,b,c]
+  npm run knowledge -- compare-loadout <item> --mods a,b,c [--arcanes x,y]
   npm run knowledge -- status
 
 pull options:
@@ -49,6 +54,11 @@ dps / compare-dps options:
   --mods <a,b,c>           Explicit max-rank mod list
   --faction <name>         Optional note only (use primed bane mods for multiplier)
   --viral-amp <n>          Override Viral health amp (default ~2.5 when viral mods present)
+
+compare-loadout options:
+  Compare a pasted loadout to top local Overframe builds (Hermes / CLI)
+  --mods <a,b,c>           Required comma-separated mod names
+  --arcanes <x,y>          Optional comma-separated arcane names
 
 crawl-overframe options:
   Crawl https://overframe.gg for every catalog warframe/weapon:
@@ -159,6 +169,34 @@ async function main() {
     }
     console.log(result.text);
     return;
+  }
+
+  if (command === "compare-loadout") {
+    const modsRaw = getFlag(rest, "--mods");
+    const arcanesRaw = getFlag(rest, "--arcanes");
+    const item = rest
+      .filter((arg, idx, arr) => {
+        if (arg.startsWith("--")) return false;
+        const prev = arr[idx - 1];
+        return !prev || !["--mods", "--arcanes"].includes(prev);
+      })
+      .join(" ")
+      .trim();
+    if (!item || !modsRaw) {
+      console.error(
+        'Usage: npm run knowledge -- compare-loadout "<item>" --mods "Mod A,Mod B" [--arcanes "Arcane X"]',
+      );
+      process.exit(1);
+    }
+    const result = await compareLoadoutToTopBuilds({
+      itemName: item,
+      mods: modsRaw.split(",").map((m) => m.trim()).filter(Boolean),
+      arcanes: arcanesRaw
+        ? arcanesRaw.split(",").map((m) => m.trim()).filter(Boolean)
+        : [],
+    });
+    console.log(formatCompareResult(result));
+    process.exit(result.ok ? 0 : 2);
   }
 
   if (command === "pull") {
