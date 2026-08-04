@@ -1,3 +1,10 @@
+import {
+  compareLoadoutToTopBuilds,
+  formatLoadoutCompare,
+} from "@/lib/loadout-compare";
+import { parseLoadoutFromOcrText } from "@/lib/loadout-parse";
+import { lookupLocalKnowledge } from "@/lib/local-knowledge";
+import { runOfflineDps } from "@/lib/offline-dps";
 import { runChatTool } from "./tools";
 
 export interface ChatCommand {
@@ -20,6 +27,24 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     usage: "/help",
     description: "Alias for /list",
     kind: "meta",
+  },
+  {
+    name: "knowledge",
+    usage: "/knowledge <query>",
+    description: "Offline knowledge pack lookup (no LLM)",
+    kind: "tool",
+  },
+  {
+    name: "compare",
+    usage: "/compare <item> | mods…",
+    description: "Compare a pasted loadout to top 3 local Overframe builds",
+    kind: "tool",
+  },
+  {
+    name: "dps",
+    usage: "/dps <weapon> [vs <weaponB>] [--preset name]",
+    description: "Offline modded DPS estimate / A vs B compare",
+    kind: "tool",
   },
   {
     name: "summary",
@@ -105,12 +130,13 @@ export function formatCommandList(): string {
     "• npm run wf -- summary | fissures --steel-path | cycles",
     "• npm run market -- price <slug> | changes",
     "• npm run patches -- latest | changes",
-    "• npm run knowledge -- status | lookup \"Coda Hema\" | crawl-overframe",
+    "• npm run knowledge -- status | lookup \"…\" | pull-mechanics | pull-arcanes",
+    "• npm run knowledge -- dps|compare-dps|compare-loadout … | crawl-overframe",
     "• npm run cleanup:verify | cleanup:verify:all",
     "",
     "You can also ask in plain language, for example:",
     "• Budget Steel Path build for Coda Hema",
-    "• Laetum vs Felarx for EDA",
+    "• Torid vs Ignis Wraith damage?",
     "• What’s up for Cetus night right now?",
     "",
     "Daily scrapes refresh around 4pm Pacific (market + patch notes).",
@@ -245,6 +271,95 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
         content: await runChatTool("get_patch_notes_daily_changes", "{}"),
         toolsUsed: ["get_patch_notes_daily_changes"],
       };
+    case "knowledge":
+    case "lookup": {
+      const query = args.join(" ").trim();
+      if (!query) {
+        return {
+          handled: true,
+          content: "Usage: /knowledge <query>\nExample: /knowledge Coda Hema",
+          toolsUsed: [],
+        };
+      }
+      return {
+        handled: true,
+        content: await lookupLocalKnowledge(query),
+        toolsUsed: ["lookup_local_knowledge"],
+      };
+    }
+    case "dps":
+    case "compare-dps": {
+      const raw = args.join(" ").trim();
+      if (!raw) {
+        return {
+          handled: true,
+          content: [
+            "Usage: /dps <weapon> [vs <weaponB>] [--preset rifle-viral-heat|typical]",
+            "Examples:",
+            "• /dps Coda Hema --preset rifle-viral-heat",
+            "• /dps Torid vs Ignis Wraith --preset typical",
+          ].join("\n"),
+          toolsUsed: [],
+        };
+      }
+      const presetMatch = raw.match(/--preset\s+(\S+)/i);
+      const preset = presetMatch?.[1];
+      const withoutPreset = raw.replace(/--preset\s+\S+/i, "").trim();
+      const parts = withoutPreset.split(/\s+vs\s+/i);
+      const weapon = parts[0]?.trim() || "";
+      const weaponB = parts[1]?.trim();
+      if (!weapon) {
+        return { handled: true, content: "Missing weapon name.", toolsUsed: [] };
+      }
+      return {
+        handled: true,
+        content: await runOfflineDps({
+          weapon,
+          weaponB: weaponB || undefined,
+          preset: preset || "typical",
+        }),
+        toolsUsed: ["estimate_modded_dps"],
+      };
+    }
+    case "compare": {
+      const raw = args.join(" ").trim();
+      if (!raw) {
+        return {
+          handled: true,
+          content: [
+            "Usage: /compare <item name> | <mod1, mod2, …>",
+            "Example: /compare Coda Hema | Serration, Vital Sense, Point Strike, Primary Merciless",
+            "Or attach a loadout screenshot in the composer.",
+          ].join("\n"),
+          toolsUsed: [],
+        };
+      }
+      const [itemPart, modsPart] = raw.split("|").map((part) => part.trim());
+      let loadout = await parseLoadoutFromOcrText(
+        modsPart ? `${itemPart}\n${modsPart.replace(/,/g, "\n")}` : raw,
+        itemPart || undefined,
+      );
+      if (itemPart) loadout = { ...loadout, itemName: itemPart };
+      if (modsPart) {
+        const names = modsPart
+          .split(/[,;\n]/)
+          .map((n) => n.trim())
+          .filter(Boolean);
+        const arcanes = names.filter((n) => /arcane|merciless|deadhead|acceleration|blessing|moeaze/i.test(n));
+        const mods = names.filter((n) => !arcanes.includes(n));
+        loadout = {
+          ...loadout,
+          mods: mods.length ? mods : loadout.mods,
+          arcanes: arcanes.length ? arcanes : loadout.arcanes,
+        };
+      }
+      const result = await compareLoadoutToTopBuilds(loadout, 3);
+      return {
+        handled: true,
+        content: formatLoadoutCompare(result),
+        toolsUsed: ["compare_loadout_to_overframe"],
+      };
+    }
     default:
       return {
         handled: true,

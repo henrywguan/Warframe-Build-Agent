@@ -1,0 +1,18 @@
+{
+  "id": "health",
+  "title": "Health",
+  "kind": "defense",
+  "aliases": [
+    "hp",
+    "hit points",
+    "cloned flesh",
+    "flesh",
+    "fossilized"
+  ],
+  "summary": "Health types and viral interactions.",
+  "pageUrl": "https://wiki.warframe.com/w/Health",
+  "extract": "Health (Hull for Railjacks) is a value that represents how much damage an entity can sustain; if the value is reduced to zero, the entity will be incapacitated in some manner. Warframes, Railjacks, Companions, Rescue targets, and certain enemies will enter \"bleedout\" when their health values are reduced to zero, while all other entities will instead be killed.\nA Warframe's health is indicated as a red number at the top right of the screen. The health of other entities can be displayed over their heads, should the player aim directly at them. While a Warframe is losing health, the screen's edges will begin to flash red at a pulse. Once the Warframe reaches 10% health or below, a loud, heartbeat-like sound will play, and a slight ringing can be heard. This sound also plays when bleeding out and when dead.\n\nEffects\nHealth determines the amount of damage the user can sustain and is the last line of defense for all entities. Once the value is depleted, most enemies will die, while Warframes and certain characters will enter a weakened state called bleedout in which they must be revived within a few seconds or be killed.\nHealth receives damage mitigation from armor.\nMost attacks will only damage health after the entity's shields have been fully drained, but there are a few exceptions.  Toxin damage will bypass shields and strike the target's health directly.  Viral Status Effect also increases damage dealt towards health.\n\nModifying Maximum Health\n\nMods\n\nAbilities",
+  "fetchedAt": "2026-08-03T23:47:57.818Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

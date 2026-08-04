@@ -1,0 +1,16 @@
+{
+  "id": "arcane-universal-fallout",
+  "title": "Arcane Universal Fallout",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Universal Fallout",
+    "Universal Fallout",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Universal Fallout is an Arcane Enhancement for the Warframe that gives enemies a chance to drop a large Universal Orb per  Radiation Status Effect on death.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Universal_Fallout",
+  "extract": "Arcane Universal Fallout is an Arcane Enhancement for the Warframe that gives enemies a chance to drop a large Universal Orb per  Radiation Status Effect on death.\n\nEffect\n\nAcquisition\nA single copy can be bought each week from Kaya Velasco in Höllvania Central Mall for 5  Pix Chip.\nAs a random reward from Temporal Archimedea.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nApplying a  Radiation status effect on an enemy permanently increases the chance for an enemy to drop a Universal Orb when killed.\nChance is capped at 60% for all ranks of the arcane.\nDrop chance increase persists after  Radiation status effect wears off; No  Radiation status effect need be present when an affected enemy is killed.\nUniversal orbs created from this Arcane give 50 health and 50 energy.\nThe following abilities can apply the  Radiation status effects:\n\nTrading Arcane Universal Fallout requires the trader to be Mastery Rank 11 or higher.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.971Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -122,7 +122,8 @@ class SourcePolicyTests(unittest.TestCase):
     def test_repo_source_policy_doc_exists(self) -> None:
         text = (ROOT / "docs" / "source-policy.md").read_text(encoding="utf-8")
         self.assertIn("ONLINE_SEARCH_CONFIRMATION_REQUIRED", text)
-        self.assertIn("Local database first", text)
+        self.assertIn("Local knowledge pack first", text)
+        self.assertIn("estimate_modded_dps", text)
 
 
 if __name__ == "__main__":

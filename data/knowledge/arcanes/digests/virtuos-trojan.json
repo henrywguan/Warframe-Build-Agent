@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-trojan",
+  "title": "Virtuos Trojan",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Trojan",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Trojan is an Arcane Enhancement for Operator Amps that converts  Void damage to  Viral.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Trojan",
+  "extract": "Virtuos Trojan is an Arcane Enhancement for Operator Amps that converts  Void damage to  Viral.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris for  7,500 upon reaching the rank of Hand.\n\nNotes\nAmps can still destroy Kuva clouds.\nRank 3 conversion percent is actually 96%, not 98% as shown in-game.\nThrax enemies are immune to non-Void damage, making this arcane a very poor choice for use in any mission where they appear.\nWhen using multiple conversion arcanes, the damage is determined by base damage of the amp multiplied by the conversion percent of the arcane divided by the sum of all the conversion percent. This value is then multiplied by the lesser of the following two values: the sum of the conversion % or 98%.Base Damage⋅Conversion%∑Conversion%⋅min(∑Conversion%,98%)\nFor example, using a max rank  Virtuos Trojan (96% conversion) with a rank 2  Virtuos Surge (72% conversion) on a  Rahn Prism will result in\n1000 * 96% / (96% + 72%) * 98% = 560  Viral damage and\n1000 * 72% / (96% + 72%) * 98% = 420  Electricity damage.\n\nTrivia\nThe name of this Arcane Enhancement is most likely derived from the term Trojan or Trojan Virus, a form of computer virus or malware which is disguised as legitimate software. This is appropriate with this Arcane providing Viral Damage.\n\nBugs\nSelf-damage from certain Amp parts (e.g. Shraksun or Propa Scaffold) for the converted damage portion will not be mitigated and completely dealt to the Operator (or Warframe when quickly switching back).\n\nPatch History\n\nLast updated: Update 28.3 (2020-08-12)",
+  "fetchedAt": "2026-08-04T00:12:16.896Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

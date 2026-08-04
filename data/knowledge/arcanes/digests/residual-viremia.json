@@ -1,0 +1,14 @@
+{
+  "id": "residual-viremia",
+  "title": "Residual Viremia",
+  "slot": "other",
+  "aliases": [
+    "Residual Viremia"
+  ],
+  "summary": "Residual Viremia is an Arcane Enhancement for Kitguns that grants them the ability to create a pool of  Toxin on kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Residual_Viremia",
+  "extract": "Residual Viremia is an Arcane Enhancement for Kitguns that grants them the ability to create a pool of  Toxin on kill.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nResidual Viremia can be acquired from Rotation B of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nResidual Arcanes can only have two active puddles at a time. For example; creating two puddles with a primary kitgun will prevent both your primary and secondary kitgun from creating any until the first two expire.\n\nTrivia\nViremia refers to the entry of viruses into the bloodstream.\nThe Orokin Writing on the Residual Viremia's image roughly translates to \"Viremia\".\n\nBugs\nIs supposed to have a 20% status chance, but it appears to be bugged and has no status chance at all.\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.499Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

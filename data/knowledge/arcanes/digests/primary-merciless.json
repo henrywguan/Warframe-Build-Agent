@@ -1,0 +1,15 @@
+{
+  "id": "primary-merciless",
+  "title": "Primary Merciless",
+  "slot": "primary",
+  "aliases": [
+    "Primary Merciless",
+    "primary arcane"
+  ],
+  "summary": "Primary Merciless is a Primary Arcane that on kill increases primary weapon damage for 4 seconds and stacks up to 12 times. At max rank, it also passively increases reload speed.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Merciless",
+  "extract": "Primary Merciless is a Primary Arcane that on kill increases primary weapon damage for 4 seconds and stacks up to 12 times. At max rank, it also passively increases reload speed.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for defeating Acolytes in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe damage bonus stacks additively with other damage mods like  Serration.\nWhen the buff times out, one stack is lost and the buff duration resets.\n\nTips\nUseful on weapons that can already kill groups of enemies quickly, such as most explosive weapons or weapons that chain between targets. Less useful on slow firing weapons that rely on status effects to kill their targets like single shot rifles.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.784Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

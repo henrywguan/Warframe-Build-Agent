@@ -6,7 +6,26 @@ Pull or query the local offline Warframe knowledge pack (WFCD catalog, Warframe 
 npm run knowledge -- pull
 ```
 
-## Crawl Overframe → local DB (top 2 builds + mods/arcanes)
+## Refresh mechanics / resource digests
+
+```bash
+npm run knowledge -- pull-mechanics
+npm run knowledge -- lookup "rad viral or corrosive magnetic"
+```
+
+Pulls curated Wiki pages (Damage types, Status Effect, Armor/Shields, factions, Forma, relics, …) for local chatbot recall.
+
+## Refresh Arcane digests
+
+```bash
+npm run knowledge -- pull-arcanes
+npm run knowledge -- lookup "Arcane Energize"
+npm run knowledge -- lookup "Primary Merciless"
+```
+
+Pulls Wiki `Category:Arcane Enhancements` into `data/knowledge/arcanes/`.
+
+## Crawl Overframe → local DB (top 3 builds + mods/arcanes)
 
 ```bash
 npm run knowledge -- crawl-overframe
@@ -20,13 +39,18 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/b
 
 See `docs/overframe-crawl.md`.
 
-## Status / lookup
+## Status / lookup / compare / DPS
 
 ```bash
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- lookup "Arcane Energize"
+npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 ```
 
-Prefer `lookup_local_knowledge` for **offline item facts**. For **builds**, use Overframe cache / YouTube / agent-calculated per `docs/source-policy.md`. Use live tools for worldstate, market, and patch hubs.
+Prefer `lookup_local_knowledge` for **offline item / mechanics / arcane facts**. For **builds**, use Overframe cache / YouTube / agent-calculated per `docs/source-policy.md`. Use live tools for worldstate, market, and patch hubs.
+
+Hermes + local LLM: `docs/hermes-export.md`, `hermes/LOCAL_LLM.md`.
 
 See `docs/offline-knowledge.md` and `docs/source-policy.md`.

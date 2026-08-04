@@ -1,3 +1,4 @@
+import { OVERFRAME_TOP_BUILDS, type OverframeBuildRank } from "./constants.js";
 import { fetchText, mapPool, sleep } from "./http.js";
 import {
   isCloudflareChallenge,
@@ -9,7 +10,7 @@ import type { CatalogItem, ItemBuilds, OverframeBuild } from "./types.js";
 
 /**
  * Overframe is Cloudflare-protected from many datacenter IPs.
- * Crawl item pages for top-2 builds, then each build page for mods + arcanes.
+ * Crawl item pages for top-N builds, then each build page for mods + arcanes.
  * Use --import-builds when this network is blocked.
  */
 
@@ -100,7 +101,7 @@ export type CrawlOverframeOptions = {
   onLog?: (line: string) => void;
 };
 
-/** Full crawl: top 2 builds per catalog item, with mods + arcanes from build pages. */
+/** Full crawl: top N builds per catalog item, with mods + arcanes from build pages. */
 export async function crawlOverframeTopBuilds(
   items: CatalogItem[],
   options: CrawlOverframeOptions = {},
@@ -146,7 +147,7 @@ export async function crawlOverframeTopBuilds(
 
     if (builds.length && !options.skipBuildPages) {
       const enriched: OverframeBuild[] = [];
-      for (const build of builds.slice(0, 2)) {
+      for (const build of builds.slice(0, OVERFRAME_TOP_BUILDS)) {
         try {
           enriched.push(await enrichBuildFromPage(build, delayMs));
         } catch (err) {
@@ -168,7 +169,10 @@ export async function crawlOverframeTopBuilds(
       itemName: item.name,
       source: builds.length ? ("overframe" as const) : ("unavailable" as const),
       fetchedAt: new Date().toISOString(),
-      builds: builds.slice(0, 2).map((b, i) => ({ ...b, rank: (i + 1) as 1 | 2 })),
+      builds: builds.slice(0, OVERFRAME_TOP_BUILDS).map((b, i) => ({
+        ...b,
+        rank: (i + 1) as OverframeBuildRank,
+      })),
       error,
     } satisfies ItemBuilds;
   });
@@ -206,7 +210,7 @@ export function buildsFromImport(
   items: CatalogItem[],
   imported: Array<{
     itemName: string;
-    builds: Array<Omit<OverframeBuild, "rank"> & { rank?: 1 | 2 }>;
+    builds: Array<Omit<OverframeBuild, "rank"> & { rank?: OverframeBuildRank }>;
   }>,
 ): ItemBuilds[] {
   const byName = new Map(imported.map((row) => [row.itemName.toLowerCase(), row]));
@@ -220,12 +224,12 @@ export function buildsFromImport(
       itemName: item.name,
       source: "import",
       fetchedAt,
-      builds: hit.builds.slice(0, 2).map((build, index) => {
+      builds: hit.builds.slice(0, OVERFRAME_TOP_BUILDS).map((build, index) => {
         const mods = build.mods ?? [];
         const arcanes = build.arcanes ?? [];
         return {
           ...build,
-          rank: (build.rank ?? ((index + 1) as 1 | 2)),
+          rank: (build.rank ?? ((index + 1) as OverframeBuildRank)),
           mods: mods.length ? mods : undefined,
           arcanes: arcanes.length ? arcanes : undefined,
           summary:

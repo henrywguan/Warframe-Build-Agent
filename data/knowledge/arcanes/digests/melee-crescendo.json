@@ -1,0 +1,15 @@
+{
+  "id": "melee-crescendo",
+  "title": "Melee Crescendo",
+  "slot": "melee",
+  "aliases": [
+    "Melee Crescendo",
+    "melee arcane"
+  ],
+  "summary": "Melee Crescendo is a Melee Arcane Enhancement that has Finisher Kills generate Initial Melee Combo for the rest of the mission. The player loses all accumulated initial combo on death.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Crescendo",
+  "extract": "Melee Crescendo is a Melee Arcane Enhancement that has Finisher Kills generate Initial Melee Combo for the rest of the mission. The player loses all accumulated initial combo on death.\n\nEffect\n\nAcquisition\nAwarded from Netracells.\nAwarded from Deep Archimedea.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nMelee Crescendo can be triggered by any Finisher be it Melee, Exalted Weapons, Parazon,  Ash's  Teleport or  Blade Storm.\nOn channeled Exalted Weapons (e.g.  Excalibur's  Exalted Blade), Melee Crescendo will only gain stacks while the ability is active. Stacks will persist while deactivated.\nTrading Melee Crescendo requires the trader to be Mastery Rank 11 or higher.\nAt max rank, it takes 37 kills for permanent 12x combo (220 / 6 = 36.67).\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.535Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

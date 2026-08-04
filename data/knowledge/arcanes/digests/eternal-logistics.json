@@ -1,0 +1,14 @@
+{
+  "id": "eternal-logistics",
+  "title": "Eternal Logistics",
+  "slot": "other",
+  "aliases": [
+    "Eternal Logistics"
+  ],
+  "summary": "Eternal Logistics is an Arcane Enhancement for Operator Amps that grants Amp Ammo Efficiency for 8 seconds upon performing a Void Sling.",
+  "pageUrl": "https://wiki.warframe.com/w/Eternal_Logistics",
+  "extract": "Eternal Logistics is an Arcane Enhancement for Operator Amps that grants Amp Ammo Efficiency for 8 seconds upon performing a Void Sling.\n\nEffect\n\nAcquisition\nEternal Logistics can be purchased from Cavalero for  8,500, requiring Rank 4 - Seraph with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nAmmo Efficiency bonus stacks additively with  Vikla-Safor,  Void Fuel, and  Astral Bond, causing infinite amp ammo while any one of them is active at the same time as Eternal Logistics.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.041Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

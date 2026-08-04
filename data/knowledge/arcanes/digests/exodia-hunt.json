@@ -1,0 +1,15 @@
+{
+  "id": "exodia-hunt",
+  "title": "Exodia Hunt",
+  "slot": "zaw",
+  "aliases": [
+    "Exodia Hunt",
+    "zaw arcane"
+  ],
+  "summary": "Exodia Hunt is an Arcane Enhancement for Zaws that grants a 50% chance to pull in nearby enemies on slam attacks.",
+  "pageUrl": "https://wiki.warframe.com/w/Exodia_Hunt",
+  "extract": "Exodia Hunt is an Arcane Enhancement for Zaws that grants a 50% chance to pull in nearby enemies on slam attacks.\n\nEffect\n\nAcquisition\nCan be bought from Hok for  10,000 per arcane upon reaching the rank of Kin with the Ostrons.\n\nNotes\nEnemies pulled in by the effect, assuming they are not already under some kind of animation lock, are staggered and will be opened up to finishers.\nRather than the slam itself being the trigger for pulling in enemies, the slam appears to activate an invisible buff which will, in turn, pull in and stagger enemies that enter into range, even as the player moves. The buff appears to last for roughly 1-2 seconds from testing.\nThe effect is treated as an ability, which means that it will bypass  Limbo's Rift Plane mechanic and will not affect targets affected by a nullification effect.\nCombos which include slam attacks can trigger Exodia Hunt.\nApplies an implosion graphical effect in bright orange and green on targets affected by the pull.\nImplosion effect colors might be modifiable, however this seems buggy.\n\nTips\nSynergizes well with the Flailing Branch staff stance, which features multiple quick slams in the Autumn Leaf combo.\nSynergizes well with the Iron Phoenix sword stance, which features a slam attack at the end of its Taking Flight combo.\nSynergizes well with the Twirling Spire polearm stance, which features slams at the end of multiple combos.\nSynergizes well with the Tempo Royale heavy blade stance, which features a slam attack at the end of its August Mesto combo.\nSynergizes very well with the Rending Crane heavy blade stance, which can trigger the effect with both hits of the Skull Splitter combo (potentially a bug). Additionally, Rampaging Boar features a slam at the end of its combo.\nSynergizes well with Hammers using the Crushing Ruin stance which features slam attacks at the end of multiple combos.\nIn addition to this, Hammers have very high finisher damage multipliers.\nIt is advisable to use caution when in large groups of enemies, as it is possible to become trapped within a mass of bodies.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Exodia Hunt was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.581Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

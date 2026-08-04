@@ -1,0 +1,16 @@
+{
+  "id": "arcane-blade-charger",
+  "title": "Arcane Blade Charger",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Blade Charger",
+    "Blade Charger",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Blade Charger is an Arcane Enhancement that provides a 30% chance on killing an enemy with a primary weapon to increase the damage of melee for 12 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Blade_Charger",
+  "extract": "Arcane Blade Charger is an Arcane Enhancement that provides a 30% chance on killing an enemy with a primary weapon to increase the damage of melee for 12 seconds.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nAwarded from Arbitrations missions.\nCan be purchased from the Arbitrations vendor in the  Arbiters of Hexis room in Relays for 10  Vitus Essence.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe buff is additive to damage mods.\nFor example,  Skana with max  Pressure Point and 200% bonus from  Arcane Blade Charger will have: 120.0 × (1 + 120% + 200%) = 504 damage\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.900Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

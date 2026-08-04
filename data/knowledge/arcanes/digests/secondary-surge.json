@@ -1,0 +1,15 @@
+{
+  "id": "secondary-surge",
+  "title": "Secondary Surge",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Surge",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Surge is a Secondary Arcane that on ability cast increases the next shot's damage for every 200 current energy, up to 8x damage.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Surge",
+  "extract": "Secondary Surge is a Secondary Arcane that on ability cast increases the next shot's damage for every 200 current energy, up to 8x damage.\n\nEffect\n\nAcquisition\nSecondary Surge can be obtained from Ascension's optional Sister of Parvos, summoned by acquiring 3 Sister Beacons during the elevator ride. Alternatively it can be purchased from Ordis in the Drifter's Camp for 10  Vestigial Motes, for a total of 210 for max rank.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nGives +0.5% damage per point of energy that remains after casting an ability, up to +700% damage at max rank.\nRepeated casts will stack damage bonus up to the cap.\nDamage bonus is multiplicative to  Hornet Strike and similar bonuses.\nDamage bonus applies to all additional pellets from multishot.\nBonus is consumed on firing the weapon, even if it does not hit an enemy.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.584Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

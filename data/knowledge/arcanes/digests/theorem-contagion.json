@@ -1,0 +1,14 @@
+{
+  "id": "theorem-contagion",
+  "title": "Theorem Contagion",
+  "slot": "other",
+  "aliases": [
+    "Theorem Contagion"
+  ],
+  "summary": "Theorem Contagion is an Arcane Enhancement for Warframes that grants them the ability to spawn orbiting globes upon contact with the area of effect caused by  Residual Boils,  Residual Malodor,  Residual Shock, or  Residual Viremia. These g",
+  "pageUrl": "https://wiki.warframe.com/w/Theorem_Contagion",
+  "extract": "Theorem Contagion is an Arcane Enhancement for Warframes that grants them the ability to spawn orbiting globes upon contact with the area of effect caused by  Residual Boils,  Residual Malodor,  Residual Shock, or  Residual Viremia. These globes will target the closest enemy within 15 meters, dealing damage and increasing their vulnerability to the globe's damage type.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nTheorem Contagion can be acquired from Rotation A of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nActivates using Residual Arcanes.\nStacks are gained on time with the area's damage ticks, and multiple areas increase the rate of stacking.\nDifferent elemental Residual areas will result in separate stacks.\nOrbiting globes resemble  Nova's  Null Star particles with trail colors matching the Residual's element.\nMultiple globe stack additively.\nGlobe damage is considered ability damage, triggering Arcane Impetus and the respective Archon Mods.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.678Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

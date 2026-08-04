@@ -1,0 +1,14 @@
+{
+  "id": "molt-efficiency",
+  "title": "Molt Efficiency",
+  "slot": "other",
+  "aliases": [
+    "Molt Efficiency"
+  ],
+  "summary": "Molt Efficiency is an Arcane Enhancement for Warframes that grants additional Ability Duration over a period of time while Shields are active.",
+  "pageUrl": "https://wiki.warframe.com/w/Molt_Efficiency",
+  "extract": "Molt Efficiency is an Arcane Enhancement for Warframes that grants additional Ability Duration over a period of time while Shields are active.\n\nEffect\n\nAcquisition\nMolt Efficiency can be purchased from Cavalero for  7,500, requiring Rank 3 - Guardian with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nDuration bonus is additive to Ability Duration mods.\nWhen all shields are lost, any accumulated bonus is lost.\nOnce shields begin replenishing, the duration bonus starts accumulating again.\nNaturally,  Nidus,   Inaros, and  Kullervo do not benefit from this Arcane as they do not deploy Shields.\n\nTips\nAn ability with refreshable/extendable duration, such as  Splinter Storm and  Lasting Covenant, highly benefits from Molt Efficiency as the duration bonus upon cast will always be retained, even when the Arcane buff is temporarily disabled by losing Shields.\nThe duration bonus accumulates during the mission entrance cinematic when loading into a mission from the Orbiter. Not skipping this cinematic will guarantee the maximum duration bonus at the start of the mission.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.339Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

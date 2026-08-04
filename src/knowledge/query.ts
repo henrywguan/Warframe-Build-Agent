@@ -1,12 +1,15 @@
 import { resolveRepoRoot } from "./repo-root.js";
 import {
+  loadArcaneDigests,
   loadCatalog,
   loadItemBuilds,
   loadManifest,
+  loadMechanicsDigests,
   loadMods,
+  loadOfficialDigests,
   loadWikiDigest,
 } from "./store.js";
-import type { CatalogItem } from "./types.js";
+import type { ArcaneDigest, CatalogItem, MechanicsDigest } from "./types.js";
 
 const ONLINE_SEARCH_CONFIRMATION_REQUIRED = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
 const LOCAL_BUILDS_AVAILABLE = "LOCAL_BUILDS_AVAILABLE";
@@ -43,6 +46,134 @@ function scoreName(query: string, name: string): number {
   return overlap * 15;
 }
 
+/** Score a mechanics digest against a free-text query (title + aliases; summary is weak only). */
+export function scoreMechanicsDigest(query: string, digest: MechanicsDigest): number {
+  // Title/aliases/id only for primary ranking — summaries often say "status effect"
+  // and would otherwise bury the Status Effect page under every damage type.
+  const labels = [
+    digest.title,
+    digest.id.replace(/-/g, " "),
+    ...digest.aliases,
+  ];
+  let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
+
+  // Also score each query token against short aliases ("viral", "rad", "sp").
+  const qTokens = normalize(query)
+    .split(" ")
+    .filter((t) => t.length >= 2);
+  const stop = new Set([
+    "the",
+    "and",
+    "or",
+    "vs",
+    "for",
+    "with",
+    "into",
+    "from",
+    "that",
+    "this",
+    "what",
+    "when",
+    "how",
+    "best",
+    "better",
+    "stack",
+    "should",
+    "would",
+    "does",
+    "is",
+    "it",
+    "to",
+    "a",
+    "an",
+    "of",
+    "on",
+    "in",
+  ]);
+
+  let tokenScore = 0;
+  for (const token of qTokens) {
+    if (stop.has(token)) continue;
+    for (const label of labels) {
+      const n = normalize(label);
+      if (!n) continue;
+      if (n === token || n.split(" ").includes(token)) {
+        tokenScore += token.length <= 3 ? 55 : 70;
+        break;
+      }
+      // "radiation".startsWith("rad") for short player shorthand
+      if (token.length >= 3 && n.split(" ").some((part) => part.startsWith(token))) {
+        tokenScore += 45;
+        break;
+      }
+    }
+  }
+
+  best = Math.max(best, Math.min(100, tokenScore));
+
+  // Weak summary hint only when title/aliases did not already match.
+  if (best < 50 && digest.summary) {
+    const summaryHit = scoreName(query, digest.summary);
+    if (summaryHit >= 60) best = Math.max(best, 40);
+  }
+  return best;
+}
+
+export function findMechanicsMatches(
+  digests: MechanicsDigest[],
+  query: string,
+  limit = 6,
+): MechanicsDigest[] {
+  return digests
+    .map((digest) => ({ digest, score: scoreMechanicsDigest(query, digest) }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, limit)
+    .map((row) => row.digest);
+}
+
+/**
+ * Score an arcane digest against a free-text query.
+ * Title + aliases only — never summary/extract (those mention damage types and
+ * bury mechanics digests under unrelated arcanes for queries like "viral").
+ */
+export function scoreArcaneDigest(query: string, digest: ArcaneDigest): number {
+  return scoreMechanicsDigest(query, {
+    id: digest.id,
+    title: digest.title,
+    kind: "modding",
+    aliases: [...digest.aliases, digest.slot, `${digest.slot} arcane`, "arcane"],
+    summary: "",
+    pageUrl: digest.pageUrl,
+    extract: "",
+    fetchedAt: digest.fetchedAt,
+    source: "wiki",
+  });
+}
+
+export function findArcaneMatches(
+  digests: ArcaneDigest[],
+  query: string,
+  limit = 8,
+): ArcaneDigest[] {
+  const q = normalize(query);
+  // Broad "arcanes" / "primary arcanes" list queries.
+  const listMode = /^(arcane|arcanes)s?$/.test(q) || /\barcanes?\b/.test(q);
+  // Without an explicit arcane cue, require a strong title/alias hit.
+  const minScore = listMode ? 45 : 70;
+  return digests
+    .map((digest) => {
+      let score = scoreArcaneDigest(query, digest);
+      if (listMode && q.includes(digest.slot) && digest.slot !== "other") score = Math.max(score, 70);
+      if (listMode && (q === "arcane" || q === "arcanes")) score = Math.max(score, 50);
+      return { digest, score };
+    })
+    .filter((row) => row.score >= minScore)
+    .sort((a, b) => b.score - a.score || a.digest.title.localeCompare(b.digest.title))
+    .slice(0, limit)
+    .map((row) => row.digest);
+}
+
 export function findCatalogMatches(
   catalog: CatalogItem[],
   query: string,
@@ -56,6 +187,24 @@ export function findCatalogMatches(
     .map((row) => row.item);
 }
 
+function formatMechanicsChunk(digest: MechanicsDigest, extractLimit = 6000): string[] {
+  const lines = [
+    `## ${digest.title} (${digest.kind})`,
+    digest.summary,
+    digest.pageUrl,
+    "",
+    "### Mechanics digest",
+    digest.extract.slice(0, extractLimit),
+  ];
+  if (digest.sections) {
+    for (const [name, body] of Object.entries(digest.sections).slice(0, 4)) {
+      lines.push("", `### ${name}`, body.slice(0, 2500));
+    }
+  }
+  lines.push("");
+  return lines;
+}
+
 export async function lookupLocalKnowledge(
   query: string,
   options?: { repoRoot?: string; limit?: number },
@@ -66,24 +215,61 @@ export async function lookupLocalKnowledge(
     return [
       "Local knowledge pack not found.",
       "Run: npm run knowledge -- pull",
+      "Or: npm run knowledge -- pull-mechanics | pull-arcanes",
       "Optional: npm run knowledge -- pull --import-builds ./builds.json",
     ].join("\n");
   }
 
   const catalog = await loadCatalog(repoRoot);
   const matches = findCatalogMatches(catalog, query, options?.limit ?? 5);
-  if (!matches.length) {
-    return `No local catalog match for “${query}”. Pack has ${manifest.counts.catalogItems} items (generated ${manifest.generatedAt}).`;
+  const mechanics = await loadMechanicsDigests(repoRoot);
+  const mechanicsHits = findMechanicsMatches(mechanics, query, 8);
+  const arcanes = await loadArcaneDigests(repoRoot);
+  const arcaneHits = findArcaneMatches(arcanes, query, 8);
+
+  if (!matches.length && !mechanicsHits.length && !arcaneHits.length) {
+    return [
+      `No local catalog, mechanics, or arcane match for “${query}”.`,
+      `Pack has ${manifest.counts.catalogItems} items, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.arcaneDigests ?? 0} arcane digests (generated ${manifest.generatedAt}).`,
+      "Try: npm run knowledge -- pull-mechanics && npm run knowledge -- pull-arcanes",
+    ].join("\n");
   }
 
   const chunks: string[] = [
     `Local knowledge pack (${manifest.generatedAt})`,
-    `Overframe builds: ${manifest.overframeStatus} · wiki digests: ${manifest.counts.wikiDigests} · catalog: ${manifest.counts.catalogItems}`,
+    `Overframe: ${manifest.overframeStatus} · wiki: ${manifest.counts.wikiDigests} · mechanics: ${manifest.counts.mechanicsDigests ?? 0} · arcanes: ${manifest.counts.arcaneDigests ?? 0} · catalog: ${manifest.counts.catalogItems}`,
     "",
   ];
 
+  // Mechanics first — player elemental/status questions should not be buried under arcanes.
+  if (mechanicsHits.length) {
+    chunks.push("# Mechanics / resource digests", "");
+    for (const digest of mechanicsHits) {
+      chunks.push(...formatMechanicsChunk(digest));
+    }
+  }
+
+  if (arcaneHits.length) {
+    chunks.push("# Arcane digests", "");
+    for (const digest of arcaneHits) {
+      chunks.push(
+        `## ${digest.title} (${digest.slot})`,
+        digest.summary,
+        digest.pageUrl,
+        "",
+        "### Arcane digest",
+        digest.extract.slice(0, 5000),
+        "",
+      );
+    }
+  }
+
   const withBuilds: string[] = [];
   const withoutBuilds: string[] = [];
+
+  if (matches.length) {
+    chunks.push("# Item digests", "");
+  }
 
   for (const item of matches) {
     chunks.push(`## ${item.name} (${item.kind})`);
@@ -148,6 +334,27 @@ export async function lookupLocalKnowledge(
     chunks.push("## Mod digests");
     for (const { mod } of modHits) {
       chunks.push(`### ${mod.name}`, mod.extract || "(no extract)", "");
+    }
+  }
+
+  const official = await loadOfficialDigests(repoRoot);
+  const officialHits = official
+    .map((digest) => ({
+      digest,
+      score: Math.max(scoreName(query, digest.title), scoreName(query, digest.extract.slice(0, 200))),
+    }))
+    .filter((row) => row.score >= 45)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+  if (officialHits.length) {
+    chunks.push("## Official warframe.com digests");
+    for (const { digest } of officialHits) {
+      chunks.push(
+        `### ${digest.title} (${digest.kind})`,
+        digest.pageUrl,
+        digest.extract.slice(0, 2500),
+        "",
+      );
     }
   }
 

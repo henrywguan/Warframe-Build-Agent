@@ -1,0 +1,16 @@
+{
+  "id": "arcane-intention",
+  "title": "Arcane Intention",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Intention",
+    "Intention",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Intention is an Arcane Enhancement that increases maximum health for every active channeled ability.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Intention",
+  "extract": "Arcane Intention is an Arcane Enhancement that increases maximum health for every active channeled ability.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nOne of possible rewards from completing the optional Undercroft Portals in Duviri while on the Steel Path.\n\nNotes\nThe bonus stacks for every channeled ability simultaneously active, up to a maximum of 4 stacks (+1000 Health at max rank).\nBesides increasing maximum health, activating this Arcane also heals the Warframe by the same amount of hitpoints.\nAfter the ability that sustained this Arcane's effect ends, there is a 1 second delay during which said ability cannot be reactivated.\n\nEligible Abilities\nOnly the following abilities can trigger this effect:\n\nTips\nMany Warframes lack channeled abilities altogether, making it impossible to use this Arcane with them. Certain abilities can be transferred via Helminth to circumvent this:\n Gloom can be infused onto any Warframe in order to give them a channeled ability and enable the use of this Arcane.\n Mind Control and  Parasitic Armor are abilities with high base duration that can maintain this Arcane's effect without constant energy drain.\n Pillage,  Coil Horizon and  Quiver are also Helminth-compatible and can make use of this Arcane's secondary effect of instant healing upon ability activation.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.037Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

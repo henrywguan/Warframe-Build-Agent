@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-tempo",
+  "title": "Virtuos Tempo",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Tempo",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Tempo is an Arcane Enhancement for Operator Amps that grants a 60% chance to increase Fire Rate for 8 seconds on kills.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Tempo",
+  "extract": "Virtuos Tempo is an Arcane Enhancement for Operator Amps that grants a 60% chance to increase Fire Rate for 8 seconds on kills.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  5,000 upon reaching the rank of Observer.\n\nTips\nIt is advised that one specs into Amp energy regeneration or Amp energy capacity when using this Arcane, especially if the Amp already has a very high fire rate.\nThis can decrease the charge time of the Pencha Scaffold.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Virtuos Tempo was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:16.759Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

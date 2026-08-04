@@ -1,0 +1,15 @@
+{
+  "id": "melee-vortex",
+  "title": "Melee Vortex",
+  "slot": "melee",
+  "aliases": [
+    "Melee Vortex",
+    "melee arcane"
+  ],
+  "summary": "Melee Vortex is a Melee Arcane Enhancement that causes kills to an enemy with  Magnetic Status to have a chance to pull in nearby enemies.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Vortex",
+  "extract": "Melee Vortex is a Melee Arcane Enhancement that causes kills to an enemy with  Magnetic Status to have a chance to pull in nearby enemies.\n\nEffect\n\nAcquisition\nAwarded for killing The Fragmented on Effervo, Deimos.\nAwarded for killing Whispers in Albrecht's Laboratories missions.\nAwarded for killing Gruzzlings in non-Disruption Albrecht's Laboratories mission.\nCan be bought from Bird 3 of  Cavia for  7,500, requiring Rank 4 - Scholar.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe  Magnetic Status does not need to be inflicted by the weapon this Arcane is equipped on.\nFor example, a Robotic Companion equipped with  Manifold Bond, a compatible precept ( Arc Coil,  Synergized Prospectus etc.), and its weapon modded for  Magnetic will reliably inflict enemies with the Status.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.122Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

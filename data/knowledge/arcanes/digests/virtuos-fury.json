@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-fury",
+  "title": "Virtuos Fury",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Fury",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Fury is an Arcane Enhancement for Operator Amps that grants a 20% chance at increased damage for 4 seconds after inflicting a Status Effect. The increased damage is additive before any multipliers.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Fury",
+  "extract": "Virtuos Fury is an Arcane Enhancement for Operator Amps that grants a 20% chance at increased damage for 4 seconds after inflicting a Status Effect. The increased damage is additive before any multipliers.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  7,500 upon reaching the rank of Adherent.\n\nTips\nThe damage bonus is additive to  Unairu Wisp.\nVirtuos Fury synergizes well with  Shwaak Prism and  Shraksun Scaffold, as these Amps deal a guaranteed  Impact proc per hit.\nAgainst Eidolons, both the Prism and the Scaffold can score multi-hits, and in turn, multiple procs per shot, potentially allowing for the bonus to be kept up indefinitely.\nVirtuos Fury can also proc from the damage dealt by Void Slinging through enemies.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Virtuos Fury was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:16.122Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

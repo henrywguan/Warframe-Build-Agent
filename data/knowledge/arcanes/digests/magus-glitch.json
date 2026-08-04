@@ -1,0 +1,15 @@
+{
+  "id": "magus-glitch",
+  "title": "Magus Glitch",
+  "slot": "operator",
+  "aliases": [
+    "Magus Glitch",
+    "operator arcane"
+  ],
+  "summary": "Magus Glitch is an Arcane Enhancement for the Operator that has a chance to negate the Transference Static debuff. At Max Rank, this will render the user entirely immune to Transference Static, allowing them to immediately and indefinitely ",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Glitch",
+  "extract": "Magus Glitch is an Arcane Enhancement for the Operator that has a chance to negate the Transference Static debuff. At Max Rank, this will render the user entirely immune to Transference Static, allowing them to immediately and indefinitely re-enter Operator Mode after being forced back into their Warframe (when their Operator is reduced to 0 hp) without penalty.\n\nEffect\n\nAcquisition\nCan be bought from Vox Solaris (Syndicate) for  10,000 upon reaching the rank of Shadow.\n\nTrivia\nThe writing on the arcane is in the Solaris Language, and reads \"GLIHCH\", making the sound \"Glitch\".\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:10.195Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

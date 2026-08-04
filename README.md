@@ -131,10 +131,12 @@ In the chat UI (and this agent chat), type **`/list`** for the full command cata
 
 ## Hermes Desktop import
 
-Profile **v0.2.0** includes offline knowledge, patch notes, and local-first build source policy.
+Profile **v0.3.0** is local-LLM friendly (Qwen / Ollama / OpenAI-compatible) and wired for the full offline pack: mechanics, arcanes, loadout compare, and modded DPS.
 
 ```bash
 ./scripts/pack-hermes-profile.sh
+# optional knowledge sidecar:
+./scripts/pack-hermes-profile.sh --with-knowledge
 hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
 ```
 
@@ -144,7 +146,7 @@ Or install the folder directly:
 hermes profile install ./hermes --name warframe-build-agent --alias
 ```
 
-Point Hermes `terminal.cwd` at this repo checkout for `npm run knowledge` / `wf` / `market` / `patches`. Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
+Point Hermes `terminal.cwd` at this repo checkout, then configure a local model (see [`hermes/LOCAL_LLM.md`](hermes/LOCAL_LLM.md)). Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
 
 ## Agent usage (Cursor)
 
@@ -173,8 +175,15 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
-| `npm run knowledge -- crawl-overframe` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
-| `npm run knowledge -- lookup <q>` | Query local knowledge pack |
+| `npm run knowledge -- crawl-overframe` | Crawl/import Overframe top-3 builds + mods/arcanes into local DB |
+| `npm run knowledge -- parse-overframe-html <file\|dir>` | Cloudflare-safe: parse saved Overframe HTML / browser extract JSON |
+| `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics + arcanes) |
+| `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
+| `npm run knowledge -- pull-arcanes` | Refresh Arcane Enhancement digests from Warframe Wiki |
+| `npm run knowledge -- dps <weapon> --preset …` | Offline modded DPS estimate |
+| `npm run knowledge -- compare-dps <A> <B>` | Offline modded DPS A vs B compare |
+| `npm run knowledge -- compare-loadout <item> --mods …` | Compare pasted loadout vs top Overframe builds |
+| `./scripts/pack-hermes-profile.sh` | Pack Hermes profile (optional `--with-knowledge`) |
 | `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 | `/cleanup-simplify -all` (Cursor) | Tidy + full overlay/web integrity suite |
 | `/knowledge` (Cursor) | Offline knowledge pack pull/lookup |

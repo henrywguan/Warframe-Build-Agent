@@ -7,7 +7,8 @@
   "bin": {
     "wf-status": "./dist/cli.js",
     "wf-market": "./dist/market/cli.js",
-    "wf-patches": "./dist/patches/cli.js"
+    "wf-patches": "./dist/patches/cli.js",
+    "wf-knowledge": "./dist/knowledge/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -16,8 +17,12 @@
     "patches": "tsx src/patches/cli.ts",
     "knowledge": "tsx src/knowledge/cli.ts",
     "knowledge:export-overframe": "tsx scripts/export-overframe-builds.ts",
+    "knowledge:parse-overframe-html": "tsx src/knowledge/cli.ts parse-overframe-html",
+    "hermes:pack": "./scripts/pack-hermes-profile.sh",
+    "hermes:pack:with-knowledge": "./scripts/pack-hermes-profile.sh --with-knowledge",
+    "knowledge:pack": "./scripts/pack-knowledge-sidecar.sh",
     "start": "tsx src/cli.ts",
-    "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts src/knowledge/*.test.ts",
+    "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts src/knowledge/*.test.ts src/knowledge/dps/*.test.ts",
     "typecheck": "tsc --noEmit",
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build",

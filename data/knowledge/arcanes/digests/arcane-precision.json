@@ -1,0 +1,16 @@
+{
+  "id": "arcane-precision",
+  "title": "Arcane Precision",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Precision",
+    "Precision",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Precision is an Arcane Enhancement that increases Damage for secondaries for 18 seconds upon achieving a headshot.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Precision",
+  "extract": "Arcane Precision is an Arcane Enhancement that increases Damage for secondaries for 18 seconds upon achieving a headshot. \nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Venus Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Precision was first introduced in the Trial mission The Jordas Verdict, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Precision from Little Duck for 2,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Precision from Father for 400  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Precision from the Vigile Jahu Gargoyle for 6  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Precision from Ordis for 5  Volatile Motes in the first run of the event, and 6 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Precision from Dominus Thrax in bundles of 7, costing 4  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe increase in damage stacks additively with mods that increase base damage e.g.  Hornet Strike.\nWorks with  Mesa's  Peacemaker but practically requires activation beforehand, as  Regulators almost always do body shots.\nWorks with  Titania's  Dex Pixia, can be activated while in  Razorwing mode. While in that mode, Titania's Razorfly Drones have a ?% chance to land a headshot on enemies, triggering the Arcane. This allows her to have near 100% uptime passively (except in very early content where enemy density is very low and enemies die in one hit from the Razorflies alone).\nWorks with  Dante's  Noctua.\nOnly works with  Hildryn's  Balefire Charger or  Jade's  Glory if it procs a status effect that can headshot, like  Electricity or  Gas, or by activation beforehand.\nHeadshots from any weapon can activate the buff. This includes primary, secondary, and melee weapons, also Archguns, and gear tools such as the  Tranq Rifle and  Nosam Cutter, including companion attacks (including those summoned from Duplex Bond)  by direct hit or status effect that can headshot.\nFurther headshots will not refresh the duration of the buff, unlike other headshot-based arcanes, such as  Arcane Consequence and  Arcane Rage.\n\nBugs\nBase  Regulators has an additional +30%/60%/90%/120%/180% damage bonus on top of the secondary damage bonus.  Regulators Prime works as normal.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.616Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

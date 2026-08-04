@@ -39,4 +39,26 @@ describe("resolveChatTurn", () => {
     assert.match(result.message.content, /viral/i);
     assert.deepEqual(result.toolsUsed, ["get_worldstate_summary"]);
   });
+
+  it("uses the local chatbot when preferLocal is set", async () => {
+    let modelCalls = 0;
+    const result = await resolveChatTurn(
+      [{ role: "user", content: "Tell me about Coda Hema" }],
+      {
+        preferLocal: true,
+        runLocal: async () => ({
+          content: "Local pack says Coda Hema is a primary.",
+          toolsUsed: ["lookup_local_knowledge"],
+          model: "local-knowledge",
+        }),
+        runModel: async () => {
+          modelCalls += 1;
+          return { content: "model", toolsUsed: [], model: "gpt" };
+        },
+      },
+    );
+    assert.equal(result.model, "local-knowledge");
+    assert.match(result.message.content, /Coda Hema/);
+    assert.equal(modelCalls, 0);
+  });
 });

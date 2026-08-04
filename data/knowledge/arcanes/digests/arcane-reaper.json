@@ -1,0 +1,16 @@
+{
+  "id": "arcane-reaper",
+  "title": "Arcane Reaper",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Reaper",
+    "Reaper",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Reaper is an Arcane Enhancement that, on melee kill, provides health regeneration over time and armor for 10 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Reaper",
+  "extract": "Arcane Reaper is an Arcane Enhancement that, on melee kill, provides health regeneration over time and armor for 10 seconds.\nIt can be sold for  3,000.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 2, 6, 7 or 8 reward on a weekly rotational basis.\nMay be sold by Acrithis for 20  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nMay drop from undercroft portals in the Duviri experience while on Steel Path.\n\nNotes\nTrading Arcane Reaper requires the trader to be Mastery Rank 11 or higher.\nCan activate from Exalted Weapon melees.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.888Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "theorem-demulcent",
+  "title": "Theorem Demulcent",
+  "slot": "other",
+  "aliases": [
+    "Theorem Demulcent"
+  ],
+  "summary": "Theorem Demulcent is an Arcane Enhancement for Warframes that increases weapon damage for 20 seconds upon contact with the area of effect caused by  Residual Boils,  Residual Malodor,  Residual Shock, or  Residual Viremia. This effect stack",
+  "pageUrl": "https://wiki.warframe.com/w/Theorem_Demulcent",
+  "extract": "Theorem Demulcent is an Arcane Enhancement for Warframes that increases weapon damage for 20 seconds upon contact with the area of effect caused by  Residual Boils,  Residual Malodor,  Residual Shock, or  Residual Viremia. This effect stacks up to 15 times.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nTheorem Demulcent can be acquired from Rotation C of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nActivates using Residual Arcanes.\nStacks are gained on time with the area's damage ticks, and multiple areas increase the rate of stacking.\nDifferent elemental Residual areas will result in separate stacks.\nFull damage bonuses at ranks 0 / 1 / 2 / 3 / 4 / 5 are 30% / 60% / 90% / 120% / 150% / 180% respectively.\nDamage bonus is additive with elemental mods with the element of the paired Residual Arcane, and combines with modded elements.\nFor example, a  Battacor with fully ranked  Serration,  Cryo Rounds and fully ranked Theorem Demulcent with full stacks from a  Residual Viremia deals:\n66 × (1 +  165%) × (1 +  90% +  180%) = 647.13\n Cryo Rounds  Cold combines with  Residual Viremia's  Toxin to make  Viral.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.855Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

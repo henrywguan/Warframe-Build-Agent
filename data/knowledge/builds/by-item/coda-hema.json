@@ -9,7 +9,7 @@
       "name": "Sample SP Viral Heat (import stub)",
       "forma": 3,
       "url": "https://overframe.gg/build/0/sample-coda-hema-sp",
-      "summary": "Steel Path sample — viral + heat status primary with comfortable ammo. Replace with a real Overframe crawl export when available.",
+      "summary": "Steel Path sample \u2014 viral + heat status primary with comfortable ammo. Replace with a real Overframe crawl export when available.",
       "mods": [
         "Serration",
         "High Voltage",
@@ -42,6 +42,25 @@
       ],
       "arcanes": [
         "Primary Deadhead"
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "Sample Multishot Status (import stub)",
+      "forma": 2,
+      "summary": "Comfortable multishot status sample for general Star Chart / SP soft content.",
+      "mods": [
+        "Serration",
+        "Galvanized Chamber",
+        "Rime Rounds",
+        "High Voltage",
+        "Vital Sense",
+        "Point Strike",
+        "Reload Speed",
+        "Sinister Reach"
+      ],
+      "arcanes": [
+        "Primary Merciless"
       ]
     }
   ]

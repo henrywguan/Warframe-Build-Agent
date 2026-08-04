@@ -1,0 +1,16 @@
+{
+  "id": "arcane-sculptor",
+  "title": "Arcane Sculptor",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Sculptor",
+    "Sculptor",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Sculptor is an Arcane Enhancement for Warframes that locks a Warframe's Ability Efficiency at up to 175% when creating an object using a Warframe ability.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Sculptor",
+  "extract": "Arcane Sculptor is an Arcane Enhancement for Warframes that locks a Warframe's Ability Efficiency at up to 175% when creating an object using a Warframe ability.\n\nEffect\n\nAcquisition\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\nCan be bought from Hunhow at Pontis Tower for 10  Emerald Talent and 10  Crimson Talent\n\nNotes\nAbility Efficiency is locked at (not increased by) the stated value when the Arcane activates.\nIt will provide no benefit if the default efficiency is equal to the Arcane's effect.\nIt will reduce efficiency if the default efficiency is higher than the Arcane's effect.\nThis is only true if the arcane is not at max rank. Otherwise, Arcane Sculptor provides the max amount of Ability Efficiency possible (outside of Lohk Surge buffs).\n\nValid Objects\n\nInvalid Objects\nAny Exalted Weapon (including  Sevagoth's  Exalted Shadow)\n Ash's  Shuriken &  Blade Storm shadows\n Atlas's  Rumblers\n Baruuk's  Desolate Hands\n Caliban's  Lethal Progeny\n Chroma's  Effigy\n Dante's  Final Verse (Wordwarden & Pageflight)\n Dagath's  Wyrd Scythes and  Rakhali's Cavalry\n Ember's  Fireball and  Inferno\n Gara's  Spectrorage &  Splinter Storm\n Garuda's  Blood Altar impaled enemies\n Hydroid's  Tempest Barrage &  Tentacle Swarm\n Inaros's  Scarab Swarm kavats\n Kullervo's  Recompense &  Storm of Ukko\n Limbo's  Cataclysm & passive rift portal\n Mag's  Magnetize &  Polarize's shards\n Nekros's  Shadows of the Dead\n Nezha's  Fire Walker,  Blazing Chakram,  Warding Halo, &  Divine Spears\n Nidus's  Larva &  Ravenous\n Nova's  Null Star &  Antimatter Drop\n Nyx's  Psychic Bolts\n Oberon's  Hallowed Ground\n Oraxia's  Webbed Embrace &  Widow's Brood\n Orion's  Event Horizon\n Qorvex's  Containment Wall\n Revenant's  Enthrall pillars\n Sevagoth's  Reap shadows & passive tombstone\n Sirius's  Coronal Ejection,  Jade Stars &  Light's Sanctuary\n Styanax's  Axios Javelin,  Tharros Strike, &  Final Stand\n Titania's  Tribute\n Uriel's  Demonium souls,  Brimstone, and anything created by his demons (Catenach's chains, Gulphagor's Circles of Pain/orbs, or Vythelas's runes)\n Valkyr's  Rip Line\n Vauban's  Vector-Overdriver Pad\n Wisp's  Cataclysmic Gate\n Wukong's  Celestial Twin\n Xaku's  Grasp of Lohk &  The Lost\n Zephyr's  Tornado\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.160Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

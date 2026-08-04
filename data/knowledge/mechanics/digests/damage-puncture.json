@@ -1,0 +1,19 @@
+{
+  "id": "damage-puncture",
+  "title": "Damage/Puncture Damage",
+  "kind": "damage",
+  "aliases": [
+    "puncture",
+    "puncture proc",
+    "weakened"
+  ],
+  "summary": "Puncture physical damage and damage vulnerability.",
+  "pageUrl": "https://wiki.warframe.com/w/Damage%2FPuncture_Damage",
+  "extract": "Puncture Damage is one of the three physical damage types. Deals increased damage to Corpus and Orokin. Its Status Effect reduces enemy's damage output and increases Critical Chance received.\n\nStatus Effects\n\nGeneral\nThe status effect of  Puncture damage is Weakened. It lasts 10 seconds and stacks to a maximum of 5 times. Any stacks applied after the 5th will replace the oldest stack, even if the oldest stack has a longer remaining duration. Affected enemies will have a yellow aura.\n\nThe victim's attacks deal 40% less damage. Subsequent procs add 10% reduced damage, up to 80% at max stacks.\nWeapon damage that the victim receives has 5% increased Critical Chance per proc up to 25% at max stacks. This is a flat critical chance buff(like  Arcane Avenger), but does not apply to Area of Effect damage or Warframe abilities.\nEnemies killed by an attack that procs  Puncture may have a large bloody hole on where they were hit by the killing blow.\n\nRailjack\n\nThe status effect of  Puncture damage against Railjack space enemies is Decompress, reducing the target ship's shields by 8.5% and armor by 9% for 20 seconds, with subsequent procs stacking multiplicatively.\n\nPuncture Sources\nMain article: Category:Puncture Damage\n\nWeapons\nThese weapons deal more than a majority of their physical damage as  Puncture. The damage ratio is important for physical damage status effects because the game weights the likelihood of which proc occurs according to physical damage ratio. Hence, these weapons proc Weakened more than Stagger or Bleed.\n\nWeapons with guaranteed Puncture proc\n\nMods\n\nAbilities\n\nAdditional Effects\nSome mods and arcanes add additional effects when a  Puncture occurs or dealing  Puncture damage.\n\nMedia\n\nPatch History",
+  "sections": {
+    "status_effects": "General\nThe status effect of  Puncture damage is Weakened. It lasts 10 seconds and stacks to a maximum of 5 times. Any stacks applied after the 5th will replace the oldest stack, even if the oldest stack has a longer remaining duration. Affected enemies will have a yellow aura.\n\nThe victim's attacks deal 40% less damage. Subsequent procs add 10% reduced damage, up to 80% at max stacks.\nWeapon damage that the victim receives has 5% increased Critical Chance per proc up to 25% at max stacks. This is a flat critical chance buff(like  Arcane Avenger), but does not apply to Area of Effect damage or Warframe abilities.\nEnemies killed by an attack that procs  Puncture may have a large bloody hole on where they were hit by the killing blow.\n\nRailjack\n\nThe status effect of  Puncture damage against Railjack space enemies is Decompress, reducing the target ship's shields by 8.5% and armor by 9% for 20 seconds, with subsequent procs stacking multiplicatively.\n\nPuncture Sources\nMain article: Category:Puncture Damage\n\nWeapons\nThese weapons deal more than a majority of their physical damage as  Puncture. The damage ratio is important for physical damage status effects because the game weights the likelihood of which proc occurs according to physical damage ratio. Hence, these weapons proc Weakened more than Stagger or Bleed.\n\nWeapons with guaranteed Puncture proc\n\nMods\n\nAbilities\n\nAdditional Effects\nSome mods and arcanes add additional effects when a  Puncture occurs or dealing  Puncture damage.\n\nMedia\n\nPatch History"
+  },
+  "fetchedAt": "2026-08-03T23:47:57.085Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

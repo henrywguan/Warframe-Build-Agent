@@ -1,0 +1,14 @@
+{
+  "id": "longbow-sharpshot",
+  "title": "Longbow Sharpshot",
+  "slot": "other",
+  "aliases": [
+    "Longbow Sharpshot"
+  ],
+  "summary": "Longbow Sharpshot is a Primary Arcane for bows that, on landing a headshot, increases the damage of the next shot.",
+  "pageUrl": "https://wiki.warframe.com/w/Longbow_Sharpshot",
+  "extract": "Longbow Sharpshot is a Primary Arcane for bows that, on landing a headshot, increases the damage of the next shot.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, or 8 reward on a weekly rotational basis.\nMay be sold by Acrithis for 20  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nMay drop from Undercroft portals in the Duviri Experience while on The Steel Path (2.78%).\n\nNotes\nTrading Longbow Sharpshot requires the trader to be Mastery Rank 11 or higher.\nDamage bonus is multiplicative to mods like  Serration.\nCannot be equipped on crossbows such as  Attica,  Nagantaka ( Prime), and  Zhuge ( Prime).\nAs long as every consecutive shot is a headshot, the buff is always active.\nIf the buff is not active, the first headshot does not benefit from it, even if the bow has multishot.\nWhere  Galvanized Aptitude adds with damage mods, Longbow Sharpshot will not multiply GunCO's bonus portion.\nExplanation:  Galvanized Aptitude does not always add with damage mods like  Serration, but with weapon cases where it does add such as  Daikyu, Galvanized Aptitude's entire contribution to damage is a recalculation of all bonuses minus +damage, thus making it mathematically additive to that particular bonus. However, this recalculation is outdated and does not include many damage bonuses, one of which is Longbow Sharpshot's multiplying effect. Its additive formula regarding Longbow Sharpshot is as follows:\nDamage bonus% = [(1 + Serration) × (1 + Longbow Sharpshot)] + Galvanized Aptitude\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.112Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "arcane-grace",
+  "title": "Arcane Grace",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Grace",
+    "Grace",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Grace is an Arcane Enhancement that provides a 9% chance whenever the player receives health damage to regenerate a percentage of health per second for 9 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Grace",
+  "extract": "Arcane Grace is an Arcane Enhancement that provides a 9% chance whenever the player receives health damage to regenerate a percentage of health per second for 9 seconds.\nCan be sold for  3,000.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Hydrolyst.\nDropped in Rotation C of Orphix Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Grace was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Grace from Little Duck for 4,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Grace from Father for 800  Phasic Cells.\nNightwave's Series 2: The Emissary & Intermission III awarded one Arcane Grace at Rank 27.\nThe Operation: Gargoyle's Cry event sold Arcane Grace from Jahu Gargoyle for 12  Grotesque Splinter\nThe Operation: Belly of the Beast event sold Arcane Grace from Ordis for 46  Volatile Motes in the first run of the event, and 30 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Grace from Dominus Thrax in bundles of 3, costing 22  Dominus Aureus, with a purchase limit of 7 (21 Arcanes in total).\n\nNotes\nTrading Arcane Grace requires the trader to be Mastery Rank 11 or higher.\nCan be triggered with  Combat Discipline.\nThe amount of health restored refers to health per second, not the total of the duration.\nWorks best on Warframes with high base Health and Armor, such as  Nidus,  Grendel or  Inaros.\nFlat health regeneration like that from  Arcane Reaper may be ideal for Warframes with less maximum Health.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.264Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

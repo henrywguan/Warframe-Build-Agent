@@ -1,0 +1,15 @@
+{
+  "id": "magus-elevate",
+  "title": "Magus Elevate",
+  "slot": "operator",
+  "aliases": [
+    "Magus Elevate",
+    "operator arcane"
+  ],
+  "summary": "Magus Elevate is an Arcane Enhancement for the Operator that grants a 95% chance to restore health to a Warframe after transferring into it.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Elevate",
+  "extract": "Magus Elevate is an Arcane Enhancement for the Operator that grants a 95% chance to restore health to a Warframe after transferring into it.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  10,000 each upon reaching the rank of Architect.\n\nNotes\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Magus Elevate was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:10.123Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

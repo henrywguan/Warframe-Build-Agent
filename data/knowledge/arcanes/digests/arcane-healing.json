@@ -1,0 +1,16 @@
+{
+  "id": "arcane-healing",
+  "title": "Arcane Healing",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Healing",
+    "Healing",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Healing is an Arcane Enhancement that provides a chance to resist a  Radiation status effect entirely.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Healing",
+  "extract": "Arcane Healing is an Arcane Enhancement that provides a chance to resist a  Radiation status effect entirely.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Teralyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Healing was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Healing from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Healing from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Healing from the Vigile Jahu Gargoyle for 3  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Healing from Ordis for 1  Volatile Motes in the first run of the event, and 2 Motes in the second, with a purchase limit of 42.\n\nNotes\nA Rank 5 Arcane Healing provides total immunity  Radiation proc.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.520Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

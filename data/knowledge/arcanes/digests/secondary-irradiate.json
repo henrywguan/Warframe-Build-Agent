@@ -1,0 +1,15 @@
+{
+  "id": "secondary-irradiate",
+  "title": "Secondary Irradiate",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Irradiate",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Irradiate is a Secondary Arcane that, upon hitting an enemy with 10  Radiation stacks, deals a percentage of the hit damage to other enemies within a certain distance.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Irradiate",
+  "extract": "Secondary Irradiate is a Secondary Arcane that, upon hitting an enemy with 10  Radiation stacks, deals a percentage of the hit damage to other enemies within a certain distance.\n\nEffects\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nOnly direct hits spread to nearby enemies.\nIncludes secondary hits, such as split beams from  Tenet Cycron and bullet ricochet from  Sicarus Incarnon Genesis.\nAdditional shots from Multishot will trigger Spread hits, except from beam weapons.\nSpread hits require line of sight to damage enemies.\nSpread hits apply the same Status Effects as the hit that proc'd them, and benefit from Status Damage.\nSpread hits count as regular body hits and calculate damage separately from the original hit.\nCannot benefit from headshot or weakpoint multipliers, even if the original hit did.\nWill not deal spread hit damage to enemies which require hitting specific parts of their bodies, such as  The Severed Warden, but can still apply status effects to them.\nWill roll a separate critical hit chance per enemy\nSpread hits can proc various weapons' unique on-hit effects:\n Arca Scisco's Target Analysis (only sometimes procs)\n Magnus Prime and  Akmagnus Prime's Chamber Cascade.\n\nTips\nDue to the nature of how the area damage effect is calculated, weapons with high fire rates and status are significantly more useful than slow firing weapons with low status chance.\nSeveral abilities are able to afflict enemies with  Radiation quickly, such as  Nyx's  Chaos and  Oberon's  Smite (10 stacks immediately), or Oberon's  Hallowed Ground (2 stacks per second, up to 6 stacks per second if multiple casts are stacked), allowing the arcane to function without needing to mod the damage type into your weapons.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.074Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

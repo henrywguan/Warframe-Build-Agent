@@ -1,0 +1,15 @@
+{
+  "id": "magus-replenish",
+  "title": "Magus Replenish",
+  "slot": "operator",
+  "aliases": [
+    "Magus Replenish",
+    "operator arcane"
+  ],
+  "summary": "Magus Replenish is an Arcane Enhancement for the Operator that restores health to the Operator after performing a Void Sling.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Replenish",
+  "extract": "Magus Replenish is an Arcane Enhancement for the Operator that restores health to the Operator after performing a Void Sling.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  10,000 each at Instrument rank.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Magus Replenish was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.044Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

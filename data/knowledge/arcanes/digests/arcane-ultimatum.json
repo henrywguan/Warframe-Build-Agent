@@ -1,0 +1,16 @@
+{
+  "id": "arcane-ultimatum",
+  "title": "Arcane Ultimatum",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Ultimatum",
+    "Ultimatum",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Ultimatum is an Arcane Enhancement that, upon performing a Finisher kill, increases the Warframe's Armor for 45 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Ultimatum",
+  "extract": "Arcane Ultimatum is an Arcane Enhancement that, upon performing a Finisher kill, increases the Warframe's Armor for 45 seconds.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Ultimatum was first introduced in the Trial mission The Jordas Verdict, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Ultimatum from Little Duck for 2,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Ultimatum from Father for 400  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Ultimatum from the Vigile Jahu Gargoyle for 6  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Ultimatum from Ordis for 5  Volatile Motes in the first run of the event, and 6 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Ultimatum from Dominus Thrax in bundles of 7, costing 4  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe additional armor is unaffected by mods. For example, a  Chroma with a max rank  Steel Fiber, and an active rank-5  Arcane Ultimatum will have an armor rating of:\nArmor = Base Armor × (1 + Armor Mod) + Arcane Ultimatum\nArmor = 350 × (1 + 1.1) + 1200\nArmor = 1935\nParazon Mercy kills will activate the effect.\nDuration can be refreshed.\nWill not work for  Mercy's Kiss on regular units, i.e. enemies who don't have parazon finishers.\n\nTips\nThe following Warframe abilities can trigger finishers\n Ash's  Blade Storm\n Oraxia's  Mercy's Kiss* See Notes\nThe following Warframe abilities can open enemies up to finishers\n Banshee's  Savage Silence\n Baruuk's  Lull\n Equinox's  Rest & Rage in Night Form\n Excalibur's  Radial Blind\n Gara's Passive\n Inaros'  Desiccation and  Sandstorm\n Ivara's  Quiver\n Lavos'  Ophidian Bite\n Valkyr's  Paralysis\nThe following Companions can trigger finishers:\n Medjay Predasite's  Infectious Bite and  Paralytic Spores\n Sunika Kubrow's  Savagery\n Sahasa Kubrow's  Ferocity\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.955Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

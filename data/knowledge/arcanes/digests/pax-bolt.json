@@ -1,0 +1,15 @@
+{
+  "id": "pax-bolt",
+  "title": "Pax Bolt",
+  "slot": "kitgun",
+  "aliases": [
+    "Pax Bolt",
+    "kitgun arcane"
+  ],
+  "summary": "Pax Bolt is an Arcane Enhancement for a Kitgun that increases Ability Strength and Ability Efficiency for the next ability after a headshot kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Pax_Bolt",
+  "extract": "Pax Bolt is an Arcane Enhancement for a Kitgun that increases Ability Strength and Ability Efficiency for the next ability after a headshot kill.\n\nEffect\n\nAcquisition\nCan be bought from Rude Zuud for  10,000 per arcane upon reaching the rank of Old Mate.\n\nNotes\nChanneled Abilities (e.g.,  Exalted Blade,  Renewal) that are activated during the Pax Bolt buff will keep the Ability Strength bonus on them for as long as they are kept active, even after Pax Bolt has expired.\nThis does not apply to the Ability Efficiency part of the buff. The bonus Ability Efficiency will be removed and updated the moment that Pax Bolt expires.\nSubsequent Pax Bolt buffs will temporarily reduce the energy drain for any currently active channeled abilities for the duration of Pax Bolt. Whether this is intentional or not is unknown.\nSimilar to other headshot kill conditions, the enemy must be killed by a headshot through weapon damage, and not any damage-over-time status effect such as  Slash.\nThe Ability Strength and Ability Efficiency gained are additive with other mods. For example, a Warframe equipped with maxed  Intensify and receives a Rank 3 Pax Bolt buff would have +60% Ability Strength.\nNote that Ability Efficiency still caps out at 175% even with Pax Bolt equipped, though channeled abilities use uncapped values.\nWorks oddly with Wisp's Reservoirs; the bonus strength will apply, but if the player already has a weaker mote active, touching the new buffed mote will simply refresh it rather than change its strength. In order to take full advantage of Pax Bolt, you must wait for your current buffs to expire.\n\nTrivia\nInscription on Pax Bolt is Solaris Language, reading \"BAWLT\" forming the sound \"Bolt\".\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.608Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

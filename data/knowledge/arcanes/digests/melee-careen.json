@@ -1,0 +1,15 @@
+{
+  "id": "melee-careen",
+  "title": "Melee Careen",
+  "slot": "melee",
+  "aliases": [
+    "Melee Careen",
+    "melee arcane"
+  ],
+  "summary": "Melee Careen is a Melee Arcane Enhancement that grants a damage multiplier against frozen targets (enemies afflicted with 10  Cold stacks) and passively allows Rolling to pass through and apply  Cold stacks to nearby enemies with a short co",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Careen",
+  "extract": "Melee Careen is a Melee Arcane Enhancement that grants a damage multiplier against frozen targets (enemies afflicted with 10  Cold stacks) and passively allows Rolling to pass through and apply  Cold stacks to nearby enemies with a short cooldown.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nThe damage multiplier only affects enemies that are fully frozen, i.e. 10  Cold stacks.\n Cold stacks are applied to nearby enemies during the entire rolling animation.\n Cold status applied by rolling lasts for 6 seconds.\nStatus duration is affected by universal bonuses, such as  Harmony's passive and  Lavos' passive.\nHowever, it is not affected by mods, such as Lasting Sting.\nRolling only ignores enemy collision when it applies  Cold from rolling every 2s.\n Shivering Contagion affects the rolling  Cold passive, regardless if the modded weapon is currently equipped.\nThis also applies if the mod is equipped on a Robotic weapon.\nSynergizes well with  Arcane Ice Storm,  Primary Frostbite, and  Secondary Shiver.\nFreezing enemies does not alert them.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.487Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

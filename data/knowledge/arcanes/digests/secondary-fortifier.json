@@ -1,0 +1,15 @@
+{
+  "id": "secondary-fortifier",
+  "title": "Secondary Fortifier",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Fortifier",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Fortifier is a Secondary Arcane that steals 1 point of  Overguard per 100 damage and deals increased damage to  Overguard.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Fortifier",
+  "extract": "Secondary Fortifier is a Secondary Arcane that steals 1 point of  Overguard per 100 damage and deals increased damage to  Overguard.\n\nEffect\n\nAcquisition\nSecondary Fortifier can be obtained from Ascension's optional Sister of Parvos, summoned by acquiring 3 Sister Beacons during the elevator ride.\nPurchaseable from Ordis in the Drifter's Camp for 10  Vestigial Motes, for a total of 210 for max rank.\nPossible reward from Deepmines Bounties from Nightcap.\nPurchaseable from Nightcap in Fortuna at Rank 3: Seeker, for 10  Fergolyte each, with a total of 210 for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\n Overguard cap is 15,000 at all ranks.\nDoTs will also steal  Overguard, AoE DoTs (e.g.  Electricity,  Gas) and weapons (e.g.  Aegrit) are great at improving crowd control over Eximus.\nThe  Overguard steal effect can be \"inherited\" if the first source of  Heat status applied to an enemy was from a secondary with this Arcane active.\nExtra damage to  Overguard is not inheritable and is dynamically applied, so the effect is lost entirely after depleting the  Overguard from an enemy.\nSince  Overguard's immunity period is 0.5 seconds, any secondary with a firing rate >2.0 can maintain functional immortality as long as you can keep firing and there's overguard to steal.\nThis can be accomplished with  Grimoire and  Lethal Torrent by providing a 2.4 Fire Rate with its infinite ammo.\n\nBugs\nDamage dealt during  Hildryn's  Aegis Storm can steal  Overguard at the end of the ability.\n Mirage's  Hall of Mirrors ability doesn't activate Secondary Fortifier, but seems to take priority making you receive zero  Overguard whilst the ability is active.\nDamage dealt by Aim Glide and Bullet Jump can steal  Overguard.\nDamage dealt by dying  Arbitration Shield Drones can steal  Overguard.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:15.040Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

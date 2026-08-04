@@ -1,0 +1,15 @@
+{
+  "id": "melee-duplicate",
+  "title": "Melee Duplicate",
+  "slot": "melee",
+  "aliases": [
+    "Melee Duplicate",
+    "melee arcane"
+  ],
+  "summary": "Melee Duplicate is a Melee Arcane Enhancement that causes base (yellow) Critical Hits to inflict a second instance of damage.",
+  "pageUrl": "https://wiki.warframe.com/w/Melee_Duplicate",
+  "extract": "Melee Duplicate is a Melee Arcane Enhancement that causes base (yellow) Critical Hits to inflict a second instance of damage.\n\nEffect\n\nAcquisition\nPotential award from Netracells.\nPotential award from Deep Archimedea.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nCreates a separate damage instance that will reroll the chance to apply status and also the critical tier.\nIt is possible to create a duplicated hit that is either non critical, tier 1 (yellow) or tier 2 (orange).\nThe effect can proc on  Exodia Contagion, unless the first burst of damage kills the enemy (or one shot it).\nForced status procs will apply to the duplicated hit if they originate from the melee weapon.\nDuplicated hit will not apply a forced status from  Seeking Talons.\nWith rank 5 Melee Duplicate the formula for the most optimal Critical Chance is following:\nCritical Chance = (3 × Critical Damage Multiplier − 4) ÷ (2 × Critical Damage Multiplier − 2)\nWith a low Critical Damage multiplier, other Arcanes such as  Melee Exposure will likely provide more damage than Melee Duplicate.\nThis formula isn't entirely accurate for weapons with low total crit damage multipliers (shouldn't ever be relevant but should at least be noted).\nTrading Melee Duplicate requires the trader to be Mastery Rank 11 or higher.\n\nBugs\nIf used with  Toxic Lash or  Xata's Whisper, this arcane will duplicate the extra damage instance coming from these abilities rather than the original melee hit.\nIf  Toxic Lash and  Xata's Whisper are active simultaneously, the arcane prioritizes the ability occupying the earlier ability slot.\nFor example, on a  Saryn with  Spores replaced with  Xata's Whisper through the Helminth's Ability Replacement System, if both  Xata's Whisper and  Toxic Lash is active, Melee Duplicate would duplicate the extra hit from  Xata's Whisper. Conversely, if  Miasma is instead the ability replaced with  Xata's Whisper, Melee Duplicate would duplicate the Extra Hit from  Toxic Lash instead.\nThe separate damage instance generated from area of effect damage such Melee Slam Attacks or  Exodia Contagion's explosion does not bypass enemy Shield Gating despite abilities such as  Toxic Lash  or  Xata's Whisper bypassing them properly in the same scenario.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:11.755Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

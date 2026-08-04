@@ -1,0 +1,16 @@
+{
+  "id": "arcane-fury",
+  "title": "Arcane Fury",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Fury",
+    "Fury",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Fury is an Arcane Enhancement that provides a 60% chance upon delivering a critical hit to increase Melee Damage for 18 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Fury",
+  "extract": "Arcane Fury is an Arcane Enhancement that provides a 60% chance upon delivering a critical hit to increase Melee Damage for 18 seconds.    \nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Hydrolyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\nSometimes offered as weekly rewards for completing Infernums in The Descendia.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Fury was first introduced in the Trial mission The Jordas Verdict, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Fury from Little Duck for 2,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Fury from Father for 400  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Fury from the Vigile Jahu Gargoyle for 6  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Fury from Ordis for 5  Volatile Motes in the first run of the event, and 6 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Fury from Dominus Thrax in bundles of 7, costing 4  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe increase in damage stacks additively with mods that increase base damage e.g.  Pressure Point.\nCan be triggered by critical hits from almost any source, including all weapon types, beast and sentinel attacks, and even Warframe abilities (such as  Wisp's  Breach Surge sparks and all of  Gyre's damaging abilities)\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.249Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

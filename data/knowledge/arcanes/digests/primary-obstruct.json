@@ -1,0 +1,15 @@
+{
+  "id": "primary-obstruct",
+  "title": "Primary Obstruct",
+  "slot": "primary",
+  "aliases": [
+    "Primary Obstruct",
+    "primary arcane"
+  ],
+  "summary": "Primary Obstruct is a Primary Arcane that on inflicting a weapon  Magnetic status effect causes enemy weapons to jam within 15 meters of target.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Obstruct",
+  "extract": "Primary Obstruct is a Primary Arcane that on inflicting a weapon  Magnetic status effect causes enemy weapons to jam within 15 meters of target.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nOne of possible rewards from completing the optional Undercroft Portals in Duviri while on the Steel Path.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nNotes\nCauses enemies with weapons to perform a brief weapon jam animation identical to  Shooting Gallery for about 4 seconds, slightly shorter or longer depending on the actual animation enemies will play.\nThis animation thus can be \"extended\" through application of  Cold procs or  Gloom, enough that by the time the animation ends they can potentially be stunned again.\nEffectively creates a 30 meter diameter zone around the effected enemy where enemies will be stunned.\n\nTips\nSynergizes well with the thrown tether mode of the normal and Tenet Ferrox allowing the weapon to act as an additional crowd control option.\nKuva and Tenet weapons can obtain  Magnetic elemental bonuses, allowing these weapons to utilize this arcane without needing to mod for Magnetic damage.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.941Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

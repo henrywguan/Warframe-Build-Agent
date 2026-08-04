@@ -1,7 +1,7 @@
 ---
 name: patch-notes
 description: Check Warframe game updates, hotfixes, and patch notes from the official hub and saved daily snapshots.
-version: 0.2.0
+version: 0.3.0
 metadata:
   hermes:
     tags: [Warframe, Patches, Hotfix]

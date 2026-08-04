@@ -1,0 +1,15 @@
+{
+  "id": "primary-bulwark",
+  "title": "Primary Bulwark",
+  "slot": "primary",
+  "aliases": [
+    "Primary Bulwark",
+    "primary arcane"
+  ],
+  "summary": "Primary Bulwark is an Primary Arcane that grants weapon damage based on the Warframe's Armor.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Bulwark",
+  "extract": "Primary Bulwark is an Primary Arcane that grants weapon damage based on the Warframe's Armor.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nDamage bonus is additive to other base damage buffs like  Serration.\nDamage bonus is given by the following: Damage Bonus=min⁡(max⁡(Armor−1000,0),500)×(Damage Bonus Per Armor over 1000)\nDamage bonus reaches its cap at 1500 armor for all ranks of the arcane.\n\nBugs\nDamage bonus per rank is rounded to the nearest percent in the UI, giving the appearance of a higher rank arcane only increasing the damage buff cap, not the damage bonus per unit of armor as well.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.118Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -15,5 +15,11 @@ export function knowledgePaths(repoRoot = process.cwd()) {
     buildsIndex: path.join(root, "builds", "index.json"),
     buildsDir: path.join(root, "builds", "by-item"),
     mods: path.join(root, "mods", "index.json"),
+    officialIndex: path.join(root, "official", "index.json"),
+    officialDir: path.join(root, "official", "digests"),
+    mechanicsIndex: path.join(root, "mechanics", "index.json"),
+    mechanicsDir: path.join(root, "mechanics", "digests"),
+    arcanesIndex: path.join(root, "arcanes", "index.json"),
+    arcanesDir: path.join(root, "arcanes", "digests"),
   };
 }

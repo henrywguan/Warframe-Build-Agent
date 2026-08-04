@@ -1,0 +1,14 @@
+{
+  "id": "residual-shock",
+  "title": "Residual Shock",
+  "slot": "other",
+  "aliases": [
+    "Residual Shock"
+  ],
+  "summary": "Residual Shock is an Arcane Enhancement for Kitguns that grants them the ability to create spikes of  Electricity on kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Residual_Shock",
+  "extract": "Residual Shock is an Arcane Enhancement for Kitguns that grants them the ability to create spikes of  Electricity on kill.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nResidual Shock can be acquired from Rotation A of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nElectrified spikes have a 20% chance to proc  Electricity status.\nResidual Arcanes can only have two active puddles at a time. For example; creating two puddles with a primary kitgun will prevent both your primary and secondary kitgun from creating any until the first two expire.\nWill deal electric zaps that do not add or combine with weapon elemental effects, retaining the electric damage on zaps.\n\nTrivia\nThe Orokin Writing on the Residual Shock's image directly translates to \"Shock\".\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.330Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

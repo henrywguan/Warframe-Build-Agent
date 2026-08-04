@@ -1,0 +1,16 @@
+{
+  "id": "arcane-truculence",
+  "title": "Arcane Truculence",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Truculence",
+    "Truculence",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Truculence is an Arcane Enhancement for Warframes that releases a radial attack applying 10 stacks of  Viral damage for every 3,000 Overguard they obtain.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Truculence",
+  "extract": "Arcane Truculence is an Arcane Enhancement for Warframes that releases a radial attack applying 10 stacks of  Viral damage for every 3,000 Overguard they obtain.\n\nEffect\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 4 - Hot & Fresh.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe viral wave is created every time you achieve a multiple of 3,000 Overguard (including 6,000, 9,000, and so on), whether you had no Overguard before or if you already had an existing amount applied to you.\nIn the top-right side of your screen the arcane's icon will appear with a percentage counter indicating your progress towards the next overguard threshold, and thus the next viral wave.\nThe viral wave respects the line-of-sight requirement and does not bypass walls and obstacles.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.700Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

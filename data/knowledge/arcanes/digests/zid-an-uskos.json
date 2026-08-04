@@ -1,0 +1,14 @@
+{
+  "id": "zid-an-uskos",
+  "title": "Zid-An Uskos",
+  "slot": "other",
+  "aliases": [
+    "Zid-An Uskos"
+  ],
+  "summary": "Zid-An Uskos is an Arcane Enhancement for Tektolyst Artifacts that grants bonus  Heat Damage for Secondary Weapons on Operator and/or Tauron Strike kill, to a max of 250%.",
+  "pageUrl": "https://wiki.warframe.com/w/Zid-An_Uskos",
+  "extract": "Zid-An Uskos is an Arcane Enhancement for Tektolyst Artifacts that grants bonus  Heat Damage for Secondary Weapons on Operator and/or Tauron Strike kill, to a max of 250%.\n\nEffect\n\nAcquisition\nCan be bought from Marie for a randomly determined amount of Perita resources in her rotating shop.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nAdded  Heat damage does NOT combine with other elements on secondary weapons.\n\nTrivia\n\nBugs\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:17.437Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

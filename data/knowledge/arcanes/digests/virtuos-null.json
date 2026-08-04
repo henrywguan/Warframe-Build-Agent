@@ -1,0 +1,15 @@
+{
+  "id": "virtuos-null",
+  "title": "Virtuos Null",
+  "slot": "amp",
+  "aliases": [
+    "Virtuos Null",
+    "amp arcane"
+  ],
+  "summary": "Virtuos Null is an Arcane Enhancement for Operator Amps that increases Amp and Void Beam energy regeneration for 4 seconds on kills.",
+  "pageUrl": "https://wiki.warframe.com/w/Virtuos_Null",
+  "extract": "Virtuos Null is an Arcane Enhancement for Operator Amps that increases Amp and Void Beam energy regeneration for 4 seconds on kills.\n\nEffect\n\nAcquisition\nCan be bought from The Quills for  2,500  upon reaching the rank of Mote.\n\nNotes\nThe Amp will still need to go through it's recharge delay before the enhanced recharging will have an effect.\nThe standard recharge delay for Amps 2 seconds. As such, Virtuos Null has to be at least rank 2 to provide a substantial effect.\nJuttni and Plaga Braces reduce recharge delay, allowing more mileage from this arcane.\n\nTips\nOne Arcane Collection can be obtained through Arcane Dissolution at the cost of  Vosfor 200, which can be converted from ~17x (16.67x)  Virtuos Null, and  50,000\nThe conversion efficiency is  Vosfor 1: ~208.33\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Virtuos Null was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:16.225Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

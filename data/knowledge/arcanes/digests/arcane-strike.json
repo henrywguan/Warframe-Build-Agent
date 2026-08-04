@@ -1,0 +1,16 @@
+{
+  "id": "arcane-strike",
+  "title": "Arcane Strike",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Strike",
+    "Strike",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Strike is an Arcane Enhancement that provides a 15% chance on each hit with any weapon to increase the speed of melee attacks for 18 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Strike",
+  "extract": "Arcane Strike is an Arcane Enhancement that provides a 15% chance on each hit with any weapon to increase the speed of melee attacks for 18 seconds.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Venus Proxima or Veil Proxima missions.\nMay appear as a Circuit Tier 1, 3, 4, 6, 7, or 9 reward on a weekly rotational basis.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Strike was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Strike from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Strike from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Strike from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Strike from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Strike from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe increase in attack speed is additive to mods like  Fury.\nAlso triggers on hits by ranged weapons, Warframe powers, or sentinels.\nArcane Strike also affects the attack speed of  Exalted Blade,  Hysteria,  Primal Fury, and  Blade Storm.\nAffects Archmelee in Archwing missions.\n\nTips\nParticularly effective with area effects that hit many times.\n Vauban's  Bastille\n Gauss'  Thermal Sunder, which can be subsumed to Helminth\n Saryn's  Spores\n Equinox's  Mend & Maim while she is in day form\n Titania's  Razorwing\n Torid\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.414Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

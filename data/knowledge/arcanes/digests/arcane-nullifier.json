@@ -1,0 +1,16 @@
+{
+  "id": "arcane-nullifier",
+  "title": "Arcane Nullifier",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Nullifier",
+    "Nullifier",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Nullifier is an Arcane Enhancement that provides a chance to resist a  Magnetic status effect entirely.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Nullifier",
+  "extract": "Arcane Nullifier is an Arcane Enhancement that provides a chance to resist a  Magnetic status effect entirely.\nCan be sold for  200.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Teralyst.\nDropped in Rotation C of Orphix Venus Proxima, Neptune Proxima, and Pluto Proxima missions.\nMay appear as a Tier 1, 3 or 9 reward in The Circuit on a weekly rotational basis.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Nullifier was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Nullifier from Little Duck for 1,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Nullifier from Father for 200  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Nullifier from the Vigile Jahu Gargoyle for 3  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Nullifier from Ordis for 1  Volatile Motes in the first run of the event, and 2 Motes in the second, with a purchase limit of 42.\n\nNotes\nA Rank 5 Arcane Nullifier provides total immunity to  Magnetic proc.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.085Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

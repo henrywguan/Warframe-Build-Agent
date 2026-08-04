@@ -31,11 +31,21 @@ describe("web source policy (local first + online confirmation)", () => {
 
   it("tool description mentions confirmation gate", () => {
     assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
+    assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /mechanics|Arcane/i);
     const tool = chatTools.find(
       (entry) => entry.type === "function" && entry.function.name === "lookup_local_knowledge",
     );
     assert.ok(tool && tool.type === "function");
     assert.equal(tool.function.description, LOCAL_KNOWLEDGE_TOOL_DESCRIPTION);
+  });
+
+  it("registers offline compare and dps tools", () => {
+    const names = chatTools
+      .filter((entry) => entry.type === "function")
+      .map((entry) => entry.function.name);
+    assert.ok(names.includes("compare_loadout_to_overframe"));
+    assert.ok(names.includes("estimate_modded_dps"));
+    assert.ok(names.includes("lookup_local_knowledge"));
   });
 
   it("formats a yes/no online search confirmation", () => {
@@ -72,10 +82,12 @@ describe("web source policy (local first + online confirmation)", () => {
 
   it("documents the confirmation policy", () => {
     const doc = readFileSync(join(repoRoot, "docs/source-policy.md"), "utf8");
-    assert.match(doc, /Local database first/);
+    assert.match(doc, /Local knowledge pack first/);
     assert.match(doc, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
     assert.match(doc, /explicit yes/i);
     assert.match(doc, /Web chat/);
     assert.match(doc, /Overlay/);
+    assert.match(doc, /estimate_modded_dps/);
+    assert.match(doc, /mechanics|arcanes/i);
   });
 });

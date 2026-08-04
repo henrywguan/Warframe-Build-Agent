@@ -1,0 +1,14 @@
+{
+  "id": "residual-malodor",
+  "title": "Residual Malodor",
+  "slot": "other",
+  "aliases": [
+    "Residual Malodor"
+  ],
+  "summary": "Residual Malodor is an Arcane Enhancement for Kitguns that grants them the ability to create  Cold mist on kill.",
+  "pageUrl": "https://wiki.warframe.com/w/Residual_Malodor",
+  "extract": "Residual Malodor is an Arcane Enhancement for Kitguns that grants them the ability to create  Cold mist on kill.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nResidual Malodor can be acquired from Rotation B of Isolation Vault Bounties (normal and Arcana).\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nMist has a 20% chance to proc  Cold status.\nCold damage will add and combine with elemental effects on the weapon. For example a corrosive heat build will create clouds that deal corrosive and blast.\nResidual Arcanes can only have two active puddles at a time. For example; creating two puddles with a primary kitgun will prevent both your primary and secondary kitgun from creating any until the first two expire.\n\nTrivia\nThe Orokin Writing on the Residual Malodor's image translates to \"Miasma\", an inconsistency shared with  Residual Boils. It is possible that Miasma was an earlier name of the Enhancement used during development.\n\nMedia\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.260Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

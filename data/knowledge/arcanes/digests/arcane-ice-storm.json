@@ -1,0 +1,16 @@
+{
+  "id": "arcane-ice-storm",
+  "title": "Arcane Ice Storm",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Ice Storm",
+    "Ice Storm",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Ice Storm is an Arcane Enhancement for Warframes that grants  Ability Strength and  Ability Duration when an enemy is frozen from 10  Cold stacks, stacking up to 20x.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Ice_Storm",
+  "extract": "Arcane Ice Storm is an Arcane Enhancement for Warframes that grants  Ability Strength and  Ability Duration when an enemy is frozen from 10  Cold stacks, stacking up to 20x.\n\nEffect\n\nAcquisition\nArcane Ice Storm can be obtained from Ascension's optional Sister of Parvos, summoned by acquiring 3 Sister Beacons during the elevator ride. Alternatively it can be purchased from Ordis in the Drifter's Camp for 10  Vestigial Motes, for a total of 210 for max rank.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nCompanion weapons do not trigger this arcane.\nThis includes companions modded with  Manifold Bond.\nAll stacks are removed when the duration runs out. All stacks are refreshed upon freezing an enemy.\nDoesn't appear to activate on shielded enemies in the Simulacrum.\n\nTips\nEffects that rapidly apply 10  Cold stacks include:\n Frost:\n Freeze's direct hit\n Ice Wave double cast (Helminth subsumable), as each applies 6  Cold stacks\n Snow Globe's activation while within its range\n Avalanche\n Gauss'  Thermal Sunder double cast (Helminth subsumable) or with  Redline active\n Voruna's  Fangs of Raksh (applies 5 random status effects which may include  Cold)\n Lavos's  Vial Rush (Helminth subsumable)\n Follie's  Shadowgraph (Corralizer Armament)\n Itzal's  Cosmic Crush with  Cold Snap augment\n Melee Careen at Rank 5\n Secondary Cryogenic\n Okina's spectral daggers from its incarnon\nEnemies are not \"frozen\" by:\n Atlas's  Petrify\n Harrow's  Condemn, however, the ability can grant Arcane Ice Storm stacks when an affected enemy is damaged by the player. This is most likely an unintended interaction.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:04.796Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

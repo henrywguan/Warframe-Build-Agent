@@ -1,0 +1,16 @@
+{
+  "id": "arcane-power-ramp",
+  "title": "Arcane Power Ramp",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Power Ramp",
+    "Power Ramp",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Power Ramp is an Arcane Enhancement that grants additional Ability Strength for every Ability cast.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Power_Ramp",
+  "extract": "Arcane Power Ramp is an Arcane Enhancement that grants additional Ability Strength for every Ability cast.\n\nEffect\n\nAcquisition\nMay appear as a Steel Path Circuit Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nOne of possible rewards from completing the optional Undercroft Portals in Duviri while on the Steel Path.\nDropped by Captain Vor in Tolstoj (Mercury) in The Steel Path.\n\nNotes\nThe bonus resets after casting the same ability consecutively.\nToggle abilities like  Peacemaker and  Pulverize seem to be counted on activation only, and not on deactivation. The bonus will still be active after exiting the toggled ability state, but activating the ability again will cause a reset.\nCycle abilities like  Reservoirs do not reset on cycling, but do reset if the same ability is used twice, even with a different sub-ability selected. For example, after placing a Vitality mote, cycling to an Agility mote is fine, but placing the Agility mote will cause a reset.\nAbilities with differing tap and hold behaviors, like  Eclipse and  Molecular Prime are treated as the same ability regardless of the tap or hold modifier.\n\nTips\n Garuda with sufficient healing can use  Bloodletting to maintain the bonus.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.589Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "magus-aggress",
+  "title": "Magus Aggress",
+  "slot": "operator",
+  "aliases": [
+    "Magus Aggress",
+    "operator arcane"
+  ],
+  "summary": "Magus Aggress is an Arcane Enhancement for the Operator that, on Warframe Melee Transfer, causes Heavy Blades and Hammers to deal bonus Critical Damage for the next 4 attacks, with a 20 second cooldown.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Aggress",
+  "extract": "Magus Aggress is an Arcane Enhancement for the Operator that, on Warframe Melee Transfer, causes Heavy Blades and Hammers to deal bonus Critical Damage for the next 4 attacks, with a 20 second cooldown.\n\nEffect\n\nAcquisition\nMay appear as a The Circuit's The Steel Path Tier 1, 2, 3, 4, 6, 7, 8, or +11 reward on a weekly rotational basis.\nMay be sold by Acrithis for 10  Pathos Clamp on a daily rotational basis, requiring Drifter Intrinsics Opportunity Rank 9 for the arcanes to appear in her shop.\nMay drop from Undercroft portals in The Duviri Experience while on Steel Path.\n\nNotes\nBonus is additive to mods such as  Organ Shatter.\nExalted Weapons don't benefit from the increased Critical Damage but also don't consume charges.\nPseudo Exalted Weapons don't benefit from the increased Critical Damage but still consume charges after 5 seconds.\n\nBugs\nWorks on Hammers despite specifying Heavy Blades.  Does not work on Ghoulsaw or Heavy Scythes, the other weapons classified as \"heavy\" by DE.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.383Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

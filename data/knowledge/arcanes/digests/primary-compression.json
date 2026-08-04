@@ -1,0 +1,15 @@
+{
+  "id": "primary-compression",
+  "title": "Primary Compression",
+  "slot": "primary",
+  "aliases": [
+    "Primary Compression",
+    "primary arcane"
+  ],
+  "summary": "Primary Compression  is an Arcane Enhancement for Primaries that reduces the explosive range of the weapon by 80% while aiming and increases the weapon's damage by 100% and Ammo Efficiency by 5.5% for every meter of explosion radius lost.",
+  "pageUrl": "https://wiki.warframe.com/w/Primary_Compression",
+  "extract": "Primary Compression  is an Arcane Enhancement for Primaries that reduces the explosive range of the weapon by 80% while aiming and increases the weapon's damage by 100% and Ammo Efficiency by 5.5% for every meter of explosion radius lost.\n\nEffect\n\nAcquisition\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\nCan be bought from Hunhow at Pontis Tower for 15  Emerald Talent and 15  Crimson Talent\n\nNotes\nDespite the description stating \"per meter lost,\" the bonuses smoothly scale between whole number radius values. For example (assuming a fully-ranked Arcane), a loss of 6.5 meters of radius gives +650% Damage and +35.75% Ammo Efficiency as expected.\nOn projectile weapons, the damage bonus is multiplicative to other damage bonus sources.\nDoes not work on Continuous Weapons or beam attacks with an AoE component. For example,  Ignis or  Torid Incarnon Genesis.\n\nPrimary Compression Table\nLegend:\n\nCompression Effectiveness:\nShows how much bigger/smaller the radius Compression considers compared to how much it should be considering.\n100% means \"intended\" radius/damage calculation.\n>100% means better than expected\n<100% means worse than expected\nRadius Calculation:\nOn weapons with multiple firing modes that have AoEs attached to them, Compression has determine which radius to use on aiming:\nSnapshot = Uses the ads state when fired, not when AoE occurs.\nStolen = Uses another firing mode's radius for the Compression bonus.\nDoesn't Work = Compression doesn't apply to this AoE.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:13.170Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

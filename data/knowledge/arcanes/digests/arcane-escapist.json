@@ -1,0 +1,16 @@
+{
+  "id": "arcane-escapist",
+  "title": "Arcane Escapist",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Escapist",
+    "Escapist",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Escapist is an Arcane Enhancement for the Warframe that provides the Escapist buff on Mercy Kills, stacking this buff provides a revive and Invulnerability on fatal damage.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Escapist",
+  "extract": "Arcane Escapist is an Arcane Enhancement for the Warframe that provides the Escapist buff on Mercy Kills, stacking this buff provides a revive and Invulnerability on fatal damage.\n\nEffect\n\nAcquisition\nA single copy can be bought each week from Kaya Velasco in Höllvania Central Mall for 5  Pix Chip.\nAs a random reward from Temporal Archimedea.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nStacks last indefinitely.\nTrading Arcane Escapist requires the trader to be Mastery Rank 11 or higher.\n\nTips\nProc  Impact status to increase health threshold to perform a Mercy Kill.\n Swift Mercy increases speed of Mercy Kill.\nPressing and holding Mercy Kill button allows to perform it at the very moment it becomes available on an enemy, which may be helpful when using high damage weapons to not accidentally kill them before seeing the prompt.\n Coda Bassocyst allows to perform Mercy Kill from distance using alt fire.\nThere are special interactions with abilities that similarly save from death:\n Dagath's  Grave Spirit,  Nidus' Passive,  Khora's  Venari Bodyguard augment,  Voruna's  Ulfrun's Descent passive,  Valkyr's passive, and Vulpaphyla's   Martyr Symbiosis precept will be triggered first and won't consume Arcane Escapist's charge.\nIt will still trigger when  Revenant's  Mesmer Skin or  Garuda's  Dread Ward augment are active, though those technically can't receive fatal damage.\n\nBugs\n Well of Life stops saving after getting at least one stack.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.992Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

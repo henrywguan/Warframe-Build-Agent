@@ -1,0 +1,15 @@
+{
+  "id": "secondary-cryogenic",
+  "title": "Secondary Cryogenic",
+  "slot": "secondary",
+  "aliases": [
+    "Secondary Cryogenic",
+    "secondary arcane"
+  ],
+  "summary": "Secondary Cryogenic   is a Secondary Arcane that adds  Cold status on nearby enemies when inflicting  Puncture status.",
+  "pageUrl": "https://wiki.warframe.com/w/Secondary_Cryogenic",
+  "extract": "Secondary Cryogenic   is a Secondary Arcane that adds  Cold status on nearby enemies when inflicting  Puncture status.\n\nEffects\n\nAcquisition\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\nCan be bought from Hunhow at Pontis Tower for 10  Emerald Talent and 10  Crimson Talent\n\nNotes\nCold status is applied to all enemies within the radius of the target inflicted with Puncture, i.e., not the radius around the player.\nAlso applies cold status to the main target.\nDoes not require line of sight between the main target and surounding enemies.\nCold status effect does not combine with other elements modded on the secondary weapon.\nCold status is affected by Status Duration mods on the secondary weapon.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:14.535Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

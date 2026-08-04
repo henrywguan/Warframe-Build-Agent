@@ -1,0 +1,16 @@
+{
+  "id": "arcane-awakening",
+  "title": "Arcane Awakening",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Awakening",
+    "Awakening",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Awakening is an Arcane Enhancement that provides a 60% chance on reloading any weapon to increase the damage of secondary weapons for 24 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Awakening",
+  "extract": "Arcane Awakening is an Arcane Enhancement that provides a 60% chance on reloading any weapon to increase the damage of secondary weapons for 24 seconds.\nCan be sold for  500.\n\nEffect\n\nAcquisition\nAwarded for killing or capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Neptune Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Awakening was first introduced in the Trial mission The Law of Retribution, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Awakening from Little Duck for 1,500  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Awakening from Father for 300  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Awakening from the Vigile Jahu Gargoyle for 5  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Awakening from Ordis for 3  Volatile Motes in the first run of the event, and 4 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Awakening from Dominus Thrax in bundles of 7, costing 2  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThe increase in damage stacks additively with mods that increase base damage e.g.  Hornet Strike.\nTriggers at the end of the reload.\nWeapons that cannot reload, such as Bows,  Epitaph, and Battery Weapons, cannot activate the buff. However, they can benefit from it once it has been activated by reloading a different weapon.\nThis also applies to  Mesa's  Regulators/ Regulators Prime.\nWeapons that reload per shell have a chance of activating Awakening each time a shell is loaded.\nThe passive reload from mods like  Eject Magazine or the Synth Set will activate Awakening.\n\nBugs\nBase  Regulators receive double the base damage bonus.  Regulators Prime work normally however.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.615Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

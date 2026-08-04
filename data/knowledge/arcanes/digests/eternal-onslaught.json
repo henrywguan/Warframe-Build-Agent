@@ -1,0 +1,14 @@
+{
+  "id": "eternal-onslaught",
+  "title": "Eternal Onslaught",
+  "slot": "other",
+  "aliases": [
+    "Eternal Onslaught"
+  ],
+  "summary": "Eternal Onslaught is an Arcane Enhancement for Operator Amps that grants additional Amp Critical Chance for 8 seconds after depleting Operator energy.",
+  "pageUrl": "https://wiki.warframe.com/w/Eternal_Onslaught",
+  "extract": "Eternal Onslaught is an Arcane Enhancement for Operator Amps that grants additional Amp Critical Chance for 8 seconds after depleting Operator energy.\n\nEffect\n\nAcquisition\nEternal Onslaught can be purchased from Cavalero for  5,500, requiring Rank 2 - Watcher with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\n\"Energy depletion\" is when Operator energy is at 25 energy or lower.\nActivation is maintained as long as energy remains below 25.\nAt max rank, your Amp needs a minimum of 36% Critical Chance to reach 100%.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.305Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

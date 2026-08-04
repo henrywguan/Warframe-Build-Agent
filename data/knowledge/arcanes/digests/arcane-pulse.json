@@ -1,0 +1,16 @@
+{
+  "id": "arcane-pulse",
+  "title": "Arcane Pulse",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Pulse",
+    "Pulse",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Pulse is an Arcane Enhancement that provides a 60% chance to replenish additional health for you and nearby allies within 25m whenever a Health Orb is picked up. This effect has a 15 second cooldown.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Pulse",
+  "extract": "Arcane Pulse is an Arcane Enhancement that provides a 60% chance to replenish additional health for you and nearby allies within 25m whenever a Health Orb is picked up. This effect has a 15 second cooldown.\nCan be sold for  1,000.\n\nEffect\n\nAcquisition\nAwarded for capturing the Eidolon Gantulyst.\nDropped in Rotation C of Orphix Venus Proxima or Veil Proxima missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nHistory\nArcane Pulse was first introduced in the Trial mission The Jordas Verdict, which was retired in Update 22.14 (2018-03-01).\nThe Operation: Scarlet Spear event sold Arcane Pulse from Little Duck for 2,000  Scarlet Credits.\nThe Operation: Orphix Venom event sold Arcane Pulse from Father for 400  Phasic Cells.\nThe Operation: Gargoyle's Cry event sold Arcane Pulse from the Vigile Jahu Gargoyle for 6  Grotesque Splinter.\nThe Operation: Belly of the Beast event sold Arcane Pulse from Ordis for 5  Volatile Motes in the first run of the event, and 6 Motes in the second, with a purchase limit of 42.\nThe Operation: Eight Claw event sold Arcane Pulse from Dominus Thrax in bundles of 7, costing 4  Dominus Aureus, with a purchase limit of 3 (21 Arcanes in total).\n\nNotes\nThis enhancement synergizes with  Nekros'  Despoil Augment, as it makes  Desecrate use Nekros' health to cast instead of his energy. Coupled with the health orbs generated with Desecrate this allows Nekros to heal nearby allies as he replenishes his own health.\nThe extra health from Arcane Pulse is not considered as being from a health orb, and thus will not affect  Equinox's passive or  Equilibrium.\nAffected allies includes all Warframes, Companions, Eidolon Lures, summoned allied units such as Specters, allied Invasion units, Hostages, Kavor Defectors, Sortie and Arbitrations Defense Operatives, and Defense Objects.\nThis enhancement can also use  Synth Fiber, which allows health orbs to be picked up with any health value, to reliably proc the radial without needing to take damage.\nUniversal Orbs created by  Lavos's  Transmutation Probe can trigger this arcane.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.865Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

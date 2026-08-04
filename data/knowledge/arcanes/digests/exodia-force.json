@@ -1,0 +1,15 @@
+{
+  "id": "exodia-force",
+  "title": "Exodia Force",
+  "slot": "zaw",
+  "aliases": [
+    "Exodia Force",
+    "zaw arcane"
+  ],
+  "summary": "Exodia Force is an Arcane Enhancement for Zaws that grants a 50% chance when inflicting a Status Effect to cause a radial blast around the player, inflicting a percentage of weapon damage to targets within a 6m range. The damage scales with",
+  "pageUrl": "https://wiki.warframe.com/w/Exodia_Force",
+  "extract": "Exodia Force is an Arcane Enhancement for Zaws that grants a 50% chance when inflicting a Status Effect to cause a radial blast around the player, inflicting a percentage of weapon damage to targets within a 6m range. The damage scales with melee mods and combo multipliers.\n\nEffect\n\nAcquisition\nCan be bought from Hok for  10,000 per arcane upon reaching the rank of Kin with the Ostrons.\n\nNotes\nThe radius appears from your warframe, not your weapon.\nDamage has a 100% falloff scaling across 6m.\nThe area of effect damage has 1.0 follow through.\nAffected by the combo counter, Stance damage multipliers, base damage, elemental damage and faction damage mods.\nFollows the same scaling from combo counter as pseudo-exalted abilities like Blade Storm,  Landslide,  Shattered Lash,  Slash Dash and  Whipclaw: 1 + (combo level - 1) / 4\nNot affected by most other melee mods such as  Condition Overload, and  Reach.\nNot affected by the melee stealth multiplier.\nScoring a critical hit with a weapon will not affect Exodia Force's damage.\nUnable to produce critical hits or status effects, even with flat bonuses such as those from  Arcane Avenger,  Cat's Eye or  Covenant.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Exodia Force was purchasable as a blueprint with the following requirements to build:\n\nBugs\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.570Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

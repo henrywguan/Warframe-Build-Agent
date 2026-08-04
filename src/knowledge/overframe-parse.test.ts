@@ -13,12 +13,13 @@ import { indexModsFromBuilds } from "./overframe.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 describe("overframe parsers", () => {
-  it("extracts top 2 build links from an item page", () => {
+  it("extracts top 3 build links from an item page", () => {
     const html = readFileSync(path.join(here, "fixtures/overframe-item.html"), "utf8");
     const builds = parseTopBuildLinks("Excalibur", html);
-    assert.equal(builds.length, 2);
+    assert.equal(builds.length, 3);
     assert.equal(builds[0]?.url, "https://overframe.gg/build/111/excalibur-sp-umbra");
     assert.equal(builds[1]?.url, "https://overframe.gg/build/222/excalibur-budget");
+    assert.equal(builds[2]?.url, "https://overframe.gg/build/333/excalibur-roam");
     assert.match(builds[0]?.name || "", /SP Umbra/);
   });
 

@@ -1,0 +1,16 @@
+{
+  "id": "arcane-bellicose",
+  "title": "Arcane Bellicose",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Bellicose",
+    "Bellicose",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Bellicose is an Arcane Enhancement for Warframes that increases  Ability Strength for every 250 maximum Health, up to a cap.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Bellicose",
+  "extract": "Arcane Bellicose is an Arcane Enhancement for Warframes that increases  Ability Strength for every 250 maximum Health, up to a cap.\n\nEffect\n\nAcquisition\nCan be bought from Eleanor of  The Hex for  7,500 at Rank 4 - Hot & Fresh.\nRewarded from the 1999 Calendar.\nRewarded from Techrot Safes in Höllvania missions.\nRewarded from Scaldra Caches in Höllvania Exterminate missions.\nDropped by the  H-09 Efervon Tank in Höllvania Assassination missions.\nRewarded from Höllvania Faceoff missions.\nDropped by the  Scaldra Screamer in Höllvania Stage Defense missions.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nAbility Strength bonus does not scale per every 250 maximum health, and instead uses the following: round(Max Health÷250×Strength Increase)\nThis means the required maximum health is 2,980 instead of 3,000.\nCompared to  Molt Augmented, this Arcane's Ability Strength bonus is constantly active even if the player uses a Revive, but is highly dependent on the given Warframe's maximum health.\nAssuming both Arcanes are at max rank, Arcane Bellicose will require 2,480 maximum health to match Molt Augmented's Ability Strength bonus at 250 kills.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:02.889Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -2,7 +2,12 @@
  * Tolerant Overframe HTML / __NEXT_DATA__ parsers.
  * Class hashes on overframe.gg change; prefer JSON payload + loose text patterns.
  */
+import { OVERFRAME_TOP_BUILDS, type OverframeBuildRank } from "./constants.js";
 import type { BuildModEntry, OverframeBuild } from "./types.js";
+
+function asRank(index: number): OverframeBuildRank {
+  return (index + 1) as OverframeBuildRank;
+}
 
 export function stripTags(html: string): string {
   return html
@@ -110,7 +115,7 @@ function buildUrlFromRow(row: Record<string, unknown>): string | undefined {
   return undefined;
 }
 
-/** Extract up to two top build cards/links from an item or search page. */
+/** Extract up to OVERFRAME_TOP_BUILDS top build cards/links from an item or search page. */
 export function parseTopBuildLinks(itemName: string, html: string): OverframeBuild[] {
   const nextMatch = html.match(
     /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
@@ -118,7 +123,7 @@ export function parseTopBuildLinks(itemName: string, html: string): OverframeBui
   if (nextMatch?.[1]) {
     try {
       const data = JSON.parse(nextMatch[1]) as unknown;
-      const found = collectBuildCards(data).slice(0, 2);
+      const found = collectBuildCards(data).slice(0, OVERFRAME_TOP_BUILDS);
       if (found.length) return found;
     } catch {
       /* fall through */
@@ -130,14 +135,14 @@ export function parseTopBuildLinks(itemName: string, html: string): OverframeBui
     /href="((?:https:\/\/overframe\.gg)?\/build\/\d+\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
   const seen = new Set<string>();
   let match: RegExpExecArray | null;
-  while ((match = linkRe.exec(html)) && builds.length < 2) {
+  while ((match = linkRe.exec(html)) && builds.length < OVERFRAME_TOP_BUILDS) {
     let url = match[1]!;
     if (url.startsWith("/")) url = `https://overframe.gg${url}`;
     if (seen.has(url)) continue;
     seen.add(url);
     const label = stripTags(match[2] || "").slice(0, 160);
     builds.push({
-      rank: (builds.length + 1) as 1 | 2,
+      rank: asRank(builds.length),
       name: label || `${itemName} build #${builds.length + 1}`,
       url,
       summary: label || `Top community build for ${itemName} on Overframe.`,
@@ -147,7 +152,7 @@ export function parseTopBuildLinks(itemName: string, html: string): OverframeBui
 }
 
 function collectBuildCards(value: unknown, out: OverframeBuild[] = []): OverframeBuild[] {
-  if (out.length >= 2) return out;
+  if (out.length >= OVERFRAME_TOP_BUILDS) return out;
   if (Array.isArray(value)) {
     for (const entry of value) collectBuildCards(entry, out);
     return out;
@@ -161,7 +166,7 @@ function collectBuildCards(value: unknown, out: OverframeBuild[] = []): Overfram
     const mods = entries.filter((e) => e.kind === "mod").map((e) => e.name);
     const arcanes = entries.filter((e) => e.kind === "arcane").map((e) => e.name);
     out.push({
-      rank: (out.length + 1) as 1 | 2,
+      rank: asRank(out.length),
       name,
       url,
       author:
@@ -179,10 +184,10 @@ function collectBuildCards(value: unknown, out: OverframeBuild[] = []): Overfram
     });
   }
   for (const nested of Object.values(row)) {
-    if (out.length >= 2) break;
+    if (out.length >= OVERFRAME_TOP_BUILDS) break;
     collectBuildCards(nested, out);
   }
-  return out.slice(0, 2);
+  return out.slice(0, OVERFRAME_TOP_BUILDS);
 }
 
 export function summarizeBuild(name: string, mods: string[], arcanes: string[]): string {

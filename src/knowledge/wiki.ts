@@ -72,6 +72,23 @@ async function fetchExtract(title: string): Promise<{ title: string; extract: st
   return { title: page.title, extract };
 }
 
+/** Pull plain-text section slices (Abilities / Acquisition / Tips) for richer local recall. */
+function extractNamedSections(extract: string): Record<string, string> {
+  const sections: Record<string, string> = {};
+  const names = ["Abilities", "Acquisition", "Tips", "Notes", "Trivia"];
+  for (const name of names) {
+    const re = new RegExp(
+      `(?:^|\\n)${name}\\n([\\s\\S]*?)(?=\\n(?:${names.join("|")})\\n|$)`,
+      "i",
+    );
+    const match = extract.match(re);
+    if (match?.[1]?.trim()) {
+      sections[name.toLowerCase()] = match[1].trim().slice(0, 8000);
+    }
+  }
+  return sections;
+}
+
 /** Prefer a substantial article; many frames put gameplay text under Name/Main. */
 async function resolveWikiArticle(
   item: CatalogItem,
@@ -119,11 +136,13 @@ export async function pullWikiDigests(
           failed += 1;
           return null;
         }
+        const sections = extractNamedSections(page.extract);
         const digest: WikiDigest = {
           id: item.id,
           title: page.title,
           pageUrl: page.pageUrl,
           extract: page.extract.slice(0, 120_000),
+          sections: Object.keys(sections).length ? sections : undefined,
           fetchedAt: new Date().toISOString(),
         };
         // Write incrementally so long pulls survive interruption.

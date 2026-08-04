@@ -1,0 +1,15 @@
+{
+  "id": "emergence-dissipate",
+  "title": "Emergence Dissipate",
+  "slot": "operator",
+  "aliases": [
+    "Emergence Dissipate",
+    "operator arcane"
+  ],
+  "summary": "Emergence Dissipate is an Arcane Enhancement for the Operator that allows Void Sling to be cancelled via the fire button (default Mouse 1 ), causing the end point to dissipate within 10 meters. Enemies hit by the dissipation spawn Energy Mo",
+  "pageUrl": "https://wiki.warframe.com/w/Emergence_Dissipate",
+  "extract": "Emergence Dissipate is an Arcane Enhancement for the Operator that allows Void Sling to be cancelled via the fire button (default Mouse 1 ), causing the end point to dissipate within 10 meters. Enemies hit by the dissipation spawn Energy Mote pickups.\n\nEffect\n\nAcquisition\nEmergence Dissipate can be purchased from Cavalero for  10,000, requiring Rank 5 - Angel with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nThere is a 1.5 second delay before the same enemy can generate additional Motes.\nRegenerates energy for Operators, Warframes, and Necramechs.\nRegenerates energy during channeling abilities such as  Danse Macabre.\nMotes will float in the air and drift off into a random direction upon spawning. They will despawn after 10 seconds if not picked up.\nMotes are attracted by  Vacuum and  Fetch.\nMotes are not attracted by vortex abilities, such as  Void Snare.\nMotes do not trigger  Arcane Energize or  Arcane Eruption.\nMotes are not affected by   Amber Archon Shard's energy orb effectiveness.\n\nBugs\nWhile under the effects of Nourish, the amount of energy in the pickup text at the bottom of the screen is unchanged from the original amount.\nThis is purely a visual bug, and energy is correctly increased.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:07.774Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "cascadia-overcharge",
+  "title": "Cascadia Overcharge",
+  "slot": "secondary",
+  "aliases": [
+    "Cascadia Overcharge",
+    "secondary arcane"
+  ],
+  "summary": "Cascadia Overcharge is a Secondary Arcane that grants additional Critical Chance to the secondary weapon while Overshields are active.",
+  "pageUrl": "https://wiki.warframe.com/w/Cascadia_Overcharge",
+  "extract": "Cascadia Overcharge is a Secondary Arcane that grants additional Critical Chance to the secondary weapon while Overshields are active.\n\nEffect\n\nAcquisition\nCascadia Overcharge can be purchased from Cavalero for  10,000, requiring Rank 5 - Angel with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nCascadia Overcharge stacks additively with mods like  Pistol Gambit and  Creeping Bullseye. For example, a  Lex Prime with a max rank  Pistol Gambit and Cascadia Overcharge would have a 25% × (1 + 120% + 300%) = 130% critical chance on attacks.\nThe bonus to critical chance only applies to the secondary or exalted weapon on which it is equipped, not to other weapons or Warframe abilities.\n\nTips\n Shield Charger can be used to gain overshields.\nThe Augur Mods set bonus can consistently generate Overshields for many Warframes as long as they use energy and have shields.\nWarframes with abilities that generate Overshields can efficiently make use of this Arcane, such as  Harrow's  Condemn,  Hildryn's  Pillage, and  Protea's long-press  Grenade Fan. Condemn and Pillage can also be used by any Warframe via the Helminth.\nWarframes with abilities that can prevent their shields from taking damage, such as  Dante,  Revenant, and  Rhino, can keep this Arcane's benefits active potentially indefinitely. Revenant in particular, while  Mesmer Skin is active, has functional invincibility to enemy damage and  Magnetic status effects and can sometimes generate shields for himself with  Reave, but can still take damage from environmental hazards.\nCertain Warframe Augment Mods can be used to generate overshields or Overguard to protect any overshields you may have, such as  Volt's  Capacitance,  Trinity's  Vampire Leech, or  Frost's  Icy Avalanche.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:07.513Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

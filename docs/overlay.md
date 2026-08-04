@@ -69,10 +69,11 @@ python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# Optional in-game chat (OpenAI-compatible)
+# Optional in-game chat — prefer CHAT_API_URL → web /api/chat (offline pack tools)
 mkdir -p ~/.config/warframe-build-agent
 cp overlay.env.example ~/.config/warframe-build-agent/overlay.env
-# edit overlay.env and set OPENAI_API_KEY
+# edit overlay.env: CHAT_API_URL=http://127.0.0.1:3000/api/chat
+# (start web with CHAT_MODE=local or OPENAI_BASE_URL for Qwen/Ollama)
 
 python3 -m wf_overlay
 ```
@@ -111,12 +112,11 @@ Toggle **Enable global hotkeys (Windows)** to keep those chords working while Wa
 
 The overlay includes a **minimizable chat box** tied to the Warframe Build Agent:
 
-1. Set `OPENAI_API_KEY` in env or `~/.config/warframe-build-agent/overlay.env`
-2. Click **Chat panel** (or `Ctrl+Shift+T`) to expand/minimize
-3. Ask build / comparison / Steel Path questions while arsenal is open
-4. Loadout fields (weapon, slot, goal, notes) are sent as context with each message
-
-Optional: set `CHAT_API_URL=http://127.0.0.1:3000/api/chat` to use a running `web/` backend instead of calling the model provider directly (works best when the web app has no `CHAT_PASSWORD`, or you handle auth separately).
+1. **Recommended:** set `CHAT_API_URL=http://127.0.0.1:3000/api/chat` in `~/.config/warframe-build-agent/overlay.env` and run `npm run web:dev` (with `CHAT_MODE=local` or a local LLM). This path uses the full offline knowledge pack tools.
+2. Alternative: `OPENAI_API_KEY` (+ optional `OPENAI_BASE_URL`) for direct model chat — **no pack tools**; the model may invent wiki/DPS facts.
+3. Click **Chat panel** (or `Ctrl+Shift+T`) to expand/minimize
+4. Ask build / comparison / Steel Path questions while arsenal is open
+5. Loadout fields (weapon, slot, goal, notes) are sent as context with each message
 
 ## Config locations
 

@@ -1,15 +1,22 @@
 name: warframe-build-agent
-version: 0.2.0
-description: "Warframe advisor (Ordis) for builds, comparisons, mechanics, offline knowledge, live world-state, market, and patch notes"
+version: 0.3.0
+description: "Warframe advisor (Ordis) for builds, loadout compare, modded DPS, mechanics/arcanes, offline knowledge, live world-state, market, and patch notes — works with local LLMs (Qwen/Ollama)"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"
 env_requires:
   - name: OPENAI_API_KEY
-    description: "Model API key if you use an OpenAI-compatible provider in Hermes"
+    description: "API key for Hermes model provider (use any string like 'ollama' for local OpenAI-compatible servers)"
+    required: false
+  - name: OPENAI_BASE_URL
+    description: "Optional OpenAI-compatible base URL for a local LLM (e.g. http://127.0.0.1:11434/v1 for Ollama/Qwen)"
+    required: false
+  - name: OPENAI_MODEL
+    description: "Optional model id (e.g. qwen3.6) when using OPENAI_BASE_URL"
     required: false
 distribution_owned:
   - SOUL.md
+  - LOCAL_LLM.md
   - config.yaml
   - skills/
   - distribution.yaml

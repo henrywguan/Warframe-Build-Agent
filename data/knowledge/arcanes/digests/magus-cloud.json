@@ -1,0 +1,15 @@
+{
+  "id": "magus-cloud",
+  "title": "Magus Cloud",
+  "slot": "operator",
+  "aliases": [
+    "Magus Cloud",
+    "operator arcane"
+  ],
+  "summary": "Magus Cloud is an Arcane Enhancement for the operator that temporarily increases Void Sling radius for 6 seconds after using Void Mode.",
+  "pageUrl": "https://wiki.warframe.com/w/Magus_Cloud",
+  "extract": "Magus Cloud is an Arcane Enhancement for the operator that temporarily increases Void Sling radius for 6 seconds after using Void Mode.\n\nEffect\n\nAcquisition\nMagus Cloud can be purchased from Onkko for  10,000, requiring Rank 4 - Instrument with The Quills.\n\nNotes\nThe operator's Void Mode ability triggers a buff that increases Void Sling radius.\nIt affects hitbox radius, not dashing distance.\nIncreases hitbox radius from 2 meters to 8 meters.\nThe width increase stacks additively with other increases.\nDuration can be triggered again with no cooldown.\nThe maximum possible radius of Void Sling is 12 meters, achievable by combining Magus Cloud with  Sling Stun.\nSee Void Sling#Enhancements for related upgrades.\n\nTips\nPairing Magus Cloud with Vazarin‘s  Protective Sling allows for much easier application of the ability.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Magus Cloud was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:09.653Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

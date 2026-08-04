@@ -1,0 +1,16 @@
+{
+  "id": "arcane-circumvent",
+  "title": "Arcane Circumvent",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Circumvent",
+    "Circumvent",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Circumvent is an Arcane Enhancement for Warframes that allows Rolling to pass through enemies, stealing a percentage of enemy Armor, Shields, and Overguard from each one.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Circumvent",
+  "extract": "Arcane Circumvent is an Arcane Enhancement for Warframes that allows Rolling to pass through enemies, stealing a percentage of enemy Armor, Shields, and Overguard from each one.\n\nEffect\n\nAcquisition\nCan be bought from Roathe at La Cathédrale in the Sanctum Anatomica for 5  Maphica.\nMay appear as a Steel Path The Descendia reward on a weekly rotational basis.\nInfernum 6 and 13 awards 1.\nInfernum 20 awards 3.\n\nNotes\nHas an effect radius of 4 meters.\nRolling into enemies not only grants defenses to the user, but also strips enemies of their defenses. If the target has multiple types of defenses, they will all be stolen simultaneously.\nAgainst Armor, the buff is capped at 1,000 and lasts for 15s.\nThe amount stolen is based on the highest target's Armor. Rolling into multiple enemies will not add Armor to the buff.\nThis will refresh the armor buff duration regardless of if the enemy has or had armor.\nAgainst Shields, excess can overflow into Overshields.\n Magnetic status has no effect other than applying  Electricity if the target's Shields are fully stripped.\nIf using  Arcane Persistence or a Warframe that lacks Shields, Shields will not be granted to the user, but the enemy's shields will still be stripped.\nAgainst Overguard, the cap is 10,000.\nLike with Shields,  Magnetic status has no effect other than applying  Electricity if the target's Overguard is fully stripped.\nRolling into any enemy, regardless of it having or not shields and/or armor, will refresh the duration of the buff and maintain its highest value.\nEffects can be applied repeatedly against the same target. Rolling twice can completely strip enemy defenses at max rank.\nWill trigger from special dodge maneuvers that are not conventional rolls, including  Hildryn's aerial dodge during  Aegis Storm.\nCan steal defenses of  Arbitration Shield Drone and tethered enemies.\n\nTips\n Secondary Fortifier has a similar effect for Overguard and has a higher cap of 15,000, but a significantly lower conversion ratio of 1%. However, it is a Pistol Arcane Enhancement, which can potentially free up a Warframe Arcane slot if the amount provided is sufficient for the user.\nThe temporary armor generated from this Arcane can be utilized to activate, enhance, or maintain certain effects such as  Arcane Battery or  Primary Bulwark.\nOn The Steel Path, defenses stolen will almost always be at their maximum values.\nIs an equally capable offensive tool on any close quarter Warframe like  Excalibur with an ability like  Slash Dash, which can be interrupted with a roll.\nFully functions with  Yareli while riding  Merulina and utilizing its unique K-Drive dodge. Particularly useful when used in tandem with the grouping mechanic of  Riptide.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.418Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

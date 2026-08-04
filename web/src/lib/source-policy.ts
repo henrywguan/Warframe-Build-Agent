@@ -3,7 +3,9 @@
  * Keep in sync with overlay `chat_prompt.py` and `docs/source-policy.md`.
  */
 export const SOURCE_POLICY = `## Source policy
-- **Default (facts / digests / mechanics context):** use offline local knowledge via \`lookup_local_knowledge\` (WFCD catalog + Warframe Wiki digests). Do not browse the live web for these when the pack can answer.
+- **Default (facts / digests / mechanics / arcanes):** use offline local knowledge via \`lookup_local_knowledge\` (WFCD catalog + Wiki digests + mechanics digests + Arcane Enhancement digests). Do not browse the live web for these when the pack can answer.
+- **DPS / damage estimates:** use \`estimate_modded_dps\` (offline calculator). Do not invent modded DPS numbers.
+- **Screenshot / pasted loadouts:** use \`compare_loadout_to_overframe\` against top local Overframe builds.
 - **Live timers / prices / patches only:** use the matching live tools. Do not invent those values.
 - **Build-related requests** (mod setups, “best build”, Steel Path config, loadout advice, comparisons):
   1. Always call \`lookup_local_knowledge\` first and compare using **local pack** data (catalog/wiki + cached Overframe builds when present).
@@ -14,7 +16,7 @@ export const SOURCE_POLICY = `## Source policy
 - Do not browse online for builds proactively. A wiki/catalog digest alone is not a full community build comparison.`;
 
 export const LOCAL_KNOWLEDGE_TOOL_DESCRIPTION =
-  "Recall offline Warframe facts from the local knowledge pack (WFCD catalog + Warframe Wiki digests) and any cached Overframe builds. For build questions, call this first. When Overframe builds are missing it returns ONLINE_SEARCH_CONFIRMATION_REQUIRED — ask the player before any online Overframe/YouTube/public search.";
+  "Recall offline Warframe facts from the local knowledge pack: WFCD catalog, Wiki digests, mechanics digests (damage/status/armor/factions), Arcane Enhancement digests, and cached Overframe builds. For build questions, call this first. When Overframe builds are missing it returns ONLINE_SEARCH_CONFIRMATION_REQUIRED — ask the player before any online Overframe/YouTube/public search.";
 
 export const ONLINE_SEARCH_CONFIRMATION_MARKER = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
 export const LOCAL_BUILDS_AVAILABLE_MARKER = "LOCAL_BUILDS_AVAILABLE";

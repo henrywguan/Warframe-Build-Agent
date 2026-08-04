@@ -1,0 +1,15 @@
+{
+  "id": "exodia-might",
+  "title": "Exodia Might",
+  "slot": "zaw",
+  "aliases": [
+    "Exodia Might",
+    "zaw arcane"
+  ],
+  "summary": "Exodia Might is an Arcane Enhancement for Zaws that has a 50% chance to grant Life Steal on Finishers for 8 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Exodia_Might",
+  "extract": "Exodia Might is an Arcane Enhancement for Zaws that has a 50% chance to grant Life Steal on Finishers for 8 seconds.\n\nEffect\n\nAcquisition\nCan be bought from Hok for  10,000 per arcane upon reaching the rank of Kin with the Ostrons.\n\nNotes\nWhile the buff is active, only melee damage will siphon health. This includes damage over time status effects such as  Slash,  Toxin,  Gas, and  Heat status effects.\nGround finishers will not grant life steal buff.\nThe initial finisher that triggers the buff will only grant healing if the player is the host.\nSynergizes well with  Dizzying Rounds as close range finishers will be guaranteed after hitting an enemy with the augment-modded  Bronco/ Bronco Prime.\n\nTrivia\nPrior to Update 24.6 (2019-04-04), Exodia Might was purchasable as a blueprint with the following requirements to build:\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:08.848Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "arcane-pistoleer",
+  "title": "Arcane Pistoleer",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Pistoleer",
+    "Pistoleer",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Pistoleer is an Arcane Enhancement that provides a 60% chance on killing an enemy with a headshot from a secondary weapon to increase Ammo Efficiency by 102% for 12 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Pistoleer",
+  "extract": "Arcane Pistoleer is an Arcane Enhancement that provides a 60% chance on killing an enemy with a headshot from a secondary weapon to increase Ammo Efficiency by 102% for 12 seconds.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nAwarded from Arbitrations missions.\nCan be purchased from the Arbitrations vendor in the  Arbiters of Hexis room in Relays for 10  Vitus Essence.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nDirectly reduces ammo cost by a percentage, while active. At rank 5 no ammo will be consumed.\nAfter being activated by the secondary, the buff also works on primary weapons.\nThe buff doesn't affect special weapons, like the Thermian RPG.\nGetting another proc does not refresh the timer. The current instance of Arcane Pistoleer must run out before another can be started.\nIn order for the arcane to activate enemy must be killed with direct damage, Gas or Electric status effects. Other damage over time effects will not trigger the buff.\nAlt-fire modes that shoot all remaining bullets in an automatic burst ( Cyanex,  Nagantaka, or  Pandero) shoot the current number of bullets left in the magazine while conserving them, allowing for an ammo-efficient, repeated use of these modes.\n Azima alt-fire still consumes the entire magazine as normal, but the turrets themselves benefit from partial ammo efficiency, expending their ammo more slowly and therefore lasting much longer. However, 100% ammo efficiency does not benefit turrets in any way and they will last their normal duration.\nIs also capable of being toggled by pistol Exalted Weapons like the  Dex Pixia.\n\nTips\nCan greatly improve the performance of weapons that otherwise have low magazine size like  Akbronco ( Prime) or  Twin Rogga.\nThe same applies to primaries like ( Sancti)  Tigris ( Prime), ( Kuva) Tonkor, and  Vectis ( Prime).\nSynergizes well with  Pyrana Prime's passive, allowing the wielder to make more use of the fire rate/akimbo buff without sacrificing the buff's duration to reloads.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:05.352Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

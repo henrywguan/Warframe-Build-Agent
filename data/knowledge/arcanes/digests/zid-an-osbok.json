@@ -1,0 +1,14 @@
+{
+  "id": "zid-an-osbok",
+  "title": "Zid-An Osbok",
+  "slot": "other",
+  "aliases": [
+    "Zid-An Osbok"
+  ],
+  "summary": "Zid-An Osbok is an Arcane Enhancement for Tektolyst Artifacts that strips enemies of their  Overguard when hit with a Void Sling, and temporarily increases Amp Critical Damage when stripping Overguard with Void Sling.",
+  "pageUrl": "https://wiki.warframe.com/w/Zid-An_Osbok",
+  "extract": "Zid-An Osbok is an Arcane Enhancement for Tektolyst Artifacts that strips enemies of their  Overguard when hit with a Void Sling, and temporarily increases Amp Critical Damage when stripping Overguard with Void Sling. \n\nEffect\n\nAcquisition\nCan be bought from Marie for a randomly determined amount of Perita resources in her rotating shop.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nAmount of  Overguard stripped is based on the enemies current Overguard, not maximum.\nMakes completely removing Overguard from enemies with just this arcane effectively impossible.\nAmp Critical Damage bonus triggers when stripping any amount of Overguard with Void Sling.\nAmp Critical Damage bonus can only be triggered by removing Overguard with Void Sling; any other form of removing Overguard will not trigger it.\nAmp Critical Damage bonus is a flat amount, applied after all other sources of Critical Damage bonuses.\n\nTrivia\n\nBugs\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:17.226Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

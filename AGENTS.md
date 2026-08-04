@@ -23,7 +23,7 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `data/patches/` | Saved daily patch-note snapshots / new-entry diffs |
 | `data/knowledge/` | Offline agent-usable wiki digests + Overframe top builds |
 | `docs/offline-knowledge.md` | How to pull/query the local knowledge pack |
-| `docs/overframe-crawl.md` | Crawl Overframe top-2 builds + mods/arcanes into local DB |
+| `docs/overframe-crawl.md` | Crawl Overframe top-3 builds + mods/arcanes into local DB |
 | `docs/source-policy.md` | Offline facts vs Overframe / YouTube / agent-calculated builds |
 | `src/` | Status, Market, and Patch Notes clients + CLIs |
 | `web/` | Mobile-friendly chat UI (OpenAI-compatible backend + live tools) |
@@ -59,21 +59,26 @@ npm run patches -- pull --force
 npm run patches -- changes
 npm run web:dev
 ./scripts/pack-hermes-profile.sh
+./scripts/pack-hermes-profile.sh --with-knowledge
 npm test
 cd overlay && python3 -m wf_overlay
 ./scripts/cleanup-verify.sh
 ./scripts/cleanup-verify-all.sh
 npm run knowledge -- pull
+npm run knowledge -- pull-mechanics
+npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 ```
 
 After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. For overlay + web integrity, use `/cleanup-simplify -all` (`./scripts/cleanup-verify-all.sh`). Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
 
 ## How to answer players
 
-1. Identify the goal (compare, build, mechanic, progression, trade, live status).
-2. Ground claims in repo sources first (`docs/`), then Status CLI/API, then current public web info.
+1. Identify the goal (compare, build, mechanic, arcane, DPS, loadout, progression, trade, live status).
+2. Ground claims in the **offline knowledge pack** first (`npm run knowledge -- lookup|dps|compare-dps|compare-loadout`), then `docs/` / Status / Market / Patches. Ask yes/no before online build search when local Overframe builds are missing.
 3. Lead with a clear recommendation, then tradeoffs.
 4. End with one short next-step suggestion.
 
@@ -84,7 +89,7 @@ Full behavior rules live in `.cursor/rules/warframe-advisor.mdc`. Use the matchi
 Dependency install (root npm, `web/` npm, and overlay pip) is handled by the startup update script; standard commands live in the `## Commands` section above and in `package.json`. Notes below are the non-obvious caveats for running things here.
 
 - **Three services, one long-running server.** The only local server is the Next.js web chat on port `3000` (`npm run web:dev`). The `src/` clients (`wf`/`market`/`patches`/`knowledge`) and the `overlay/` are invoked on demand; there is no database or other backing service to start.
-- **Web chat works without an API key for slash commands.** `/api/health` and slash commands (`/cycles`, `/market <slug>`, `/patches`, `/fissures`, etc.) are handled server-side without the LLM, so they run with no `OPENAI_API_KEY`. Only plain-language (non-slash) questions need `OPENAI_API_KEY` (and optional `OPENAI_MODEL`/`OPENAI_BASE_URL`) in `web/.env.local` — see [`docs/web-chat.md`](docs/web-chat.md). `web/.env.local` is not required for the server to boot.
+- **Web chat works without an API key for slash commands.** `/api/health` and slash commands (`/cycles`, `/market <slug>`, `/patches`, `/fissures`, etc.) are handled server-side without the LLM, so they run with no `OPENAI_API_KEY`. Plain-language questions need either `OPENAI_API_KEY` (+ optional `OPENAI_BASE_URL`/`OPENAI_MODEL` for local Qwen/Ollama) or `CHAT_MODE=local` for the deterministic pack chatbot — see [`docs/web-chat.md`](docs/web-chat.md) and Hermes local setup in [`hermes/LOCAL_LLM.md`](hermes/LOCAL_LLM.md). `web/.env.local` is not required for the server to boot.
 - **Live data needs outbound network.** CLIs and web tools call `api.warframestat.us`, `api.warframe.market`, and `www.warframe.com`. These reach the internet from the cloud VM.
 - **`knowledge crawl-overframe` is blocked from datacenter IPs.** overframe.gg returns a Cloudflare bot challenge from this network, so `npm run knowledge -- crawl-overframe`/`status` report `overframeStatus: partial` and fall back to the sample import — this is expected here, not a setup failure. Wiki-digest and other pulls also depend on outbound access.
 - **Overlay is a desktop GUI that cannot display in the cloud VM.** Do not try to open the window. Run its tests headless with `QT_QPA_PLATFORM=offscreen` (e.g. `cd overlay && QT_QPA_PLATFORM=offscreen python3 -m unittest discover -s tests`), and use `python3 -m wf_overlay --verify-external` for the external-only/anti-cheat policy check.

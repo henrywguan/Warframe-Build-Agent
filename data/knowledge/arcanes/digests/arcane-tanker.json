@@ -1,0 +1,16 @@
+{
+  "id": "arcane-tanker",
+  "title": "Arcane Tanker",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Tanker",
+    "Tanker",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Tanker is an Arcane Enhancement that provides additional Armor for 60 seconds upon equipping an Archgun.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Tanker",
+  "extract": "Arcane Tanker is an Arcane Enhancement that provides additional Armor for 60 seconds upon equipping an Archgun.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nAwarded from Arbitrations missions.\nCan be purchased from the Arbitrations vendor in the  Arbiters of Hexis room in Relays for 10  Vitus Essence.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\nThe additional armor is not affected by mods and is additive to total armor. For example, a  Chroma with a max rank  Steel Fiber, and active Rank 5  Arcane Tanker will have an armor rating of:Base Armor × (1 + Armor Mods) + Arcane Tanker = 350 × (1 + 1.0) + 1200 = 1,900 armor\n\nTips\nAs Arcane Tanker increases total armor, it can significantly boost any ability that relies on total armor, when casting while under its effect. These include:\n Rhino's  Iron Skin, which can be further amplified with  Ironclad Charge.\n Atlas'  Tectonics and  Rumblers\n Frost's  Snow Globe\n Gara's  Mass Vitrify\n Nezha's  Warding Halo\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:06.428Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

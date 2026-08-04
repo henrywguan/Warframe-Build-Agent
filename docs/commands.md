@@ -25,8 +25,13 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/patches [n]` | Latest official updates/hotfixes |
 | `/hotfix` | Alias for `/patches` |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
+| `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
+| `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
+| `/dps <weapon> [vs <weaponB>] [--preset …]` | Offline modded DPS estimate / A vs B compare |
 
-Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, the agent asks yes/no before online Overframe/YouTube search — see [`docs/source-policy.md`](source-policy.md).
+Attach a loadout screenshot in the web UI to OCR/vision-read the Warframe/weapon + mods/arcanes and compare against top-3 cached Overframe builds.
+
+Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, the agent asks yes/no before online Overframe/YouTube search — see [`docs/source-policy.md`](source-policy.md). For a no-OpenAI chatbot, set `CHAT_MODE=local` (see [`docs/web-chat.md`](web-chat.md)).
 
 ---
 
@@ -53,13 +58,15 @@ Details:
 | --- | --- |
 | `cleanup-simplify` | After edits; optional `-all` integrity |
 | `offline-knowledge` | Local pack lookup / pull / crawl |
+| `loadout-compare` | Pasted loadout vs top Overframe builds |
+| `modded-dps` | Offline modded DPS / A vs B |
 | `recommend-build` | Mod setups / budget / Steel Path builds |
 | `compare-gear` | Weapon/frame comparisons |
-| `explain-mechanics` | Game systems explanations |
+| `explain-mechanics` | Game systems (pack digests first) |
 | `world-state` | Live fissures/cycles/alerts guidance |
 | `patch-notes` | Updates/hotfixes workflow |
 
-Hermes Desktop import ships the matching player-facing skills (v0.2.0) under `hermes/skills/warframe/` — see [`docs/hermes-export.md`](hermes-export.md).
+Hermes Desktop import ships the matching player-facing skills (v0.3.0) under `hermes/skills/warframe/` (including loadout-compare + modded-dps) — see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) for Qwen/Ollama.
 
 ---
 
@@ -89,11 +96,19 @@ npm run patches -- changes
 # Offline knowledge pack / Overframe crawl
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- lookup "rad viral or corrosive magnetic"
+npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 npm run knowledge -- pull
+npm run knowledge -- pull-mechanics
+npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
 npm run knowledge:export-overframe -- --limit 5
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
+./scripts/pack-hermes-profile.sh
+./scripts/pack-hermes-profile.sh --with-knowledge
 
 # Web + overlay
 npm run web:dev

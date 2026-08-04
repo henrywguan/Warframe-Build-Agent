@@ -1,0 +1,14 @@
+{
+  "id": "molt-vigor",
+  "title": "Molt Vigor",
+  "slot": "other",
+  "aliases": [
+    "Molt Vigor"
+  ],
+  "summary": "Molt Vigor is an Arcane Enhancement for the Warframe that increases Ability Strength of the next Warframe ability after using an Operator ability.",
+  "pageUrl": "https://wiki.warframe.com/w/Molt_Vigor",
+  "extract": "Molt Vigor is an Arcane Enhancement for the Warframe that increases Ability Strength of the next Warframe ability after using an Operator ability.\n\nEffect\n\nAcquisition\nMolt Vigor can be purchased from Cavalero for  5,000, requiring Rank 1 - Fallen with The Holdfasts. It can also be dropped by Thrax Centurion, Thrax Legatus, and Void Angels on the Zariman Ten Zero.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nFarming Tips\nThrax enemies are abundant in Mobile Defense and Void Cascade missions.\nThe Zariman Arcane drop is considered as a mod drop, and is thus affected by The Steel Path and Mod Drop Chance Booster.\n\nNotes\nOperator abilities include:\n Madurai:  Void Strike and  Contamination Wave\n Naramon:  Void Levitation and  Sling Stun\n Unairu:  Magnetic Flare and  Caustic Strike\n Vazarin:  Guardian Shell and  Void Snare\n Zenurik:  Wellspring and  Temporal Drag\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:12.568Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

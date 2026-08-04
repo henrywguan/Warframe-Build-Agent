@@ -1,0 +1,16 @@
+{
+  "id": "arcane-bodyguard",
+  "title": "Arcane Bodyguard",
+  "slot": "warframe",
+  "aliases": [
+    "Arcane Bodyguard",
+    "Bodyguard",
+    "warframe arcane"
+  ],
+  "summary": "Arcane Bodyguard is an Arcane Enhancement that provides healing for Companion upon killing 6 enemies with melee within 30 seconds.",
+  "pageUrl": "https://wiki.warframe.com/w/Arcane_Bodyguard",
+  "extract": "Arcane Bodyguard is an Arcane Enhancement that provides healing for Companion upon killing 6 enemies with melee within 30 seconds.\nCan be sold for  ‍1,000.\n\nEffect\n\nAcquisition\nAwarded from Arbitrations missions.\nCan be purchased from the Arbitrations vendor in the  Arbiters of Hexis room in Relays for 10  Vitus Essence.\n\nAll drop rates data is obtained from DE's official drop tables stored on Module:DropTables/data.\nSee Mission Rewards#Standard Missions for definitions on reward table rotations.\nFor more detailed definitions and information,\nvisit here.\n\nNotes\n Arcane Bodyguard can heal any active Companion, including Sentinels and MOAs.\nDoes not revive the companion if they are incapacitated.\n\nPatch History",
+  "fetchedAt": "2026-08-04T00:12:03.160Z",
+  "source": "wiki",
+  "fetchMethod": "extract"
+}

@@ -1,0 +1,388 @@
+{
+  "version": 1,
+  "notes": [
+    "Curated max-rank mod effects for offline modded DPS estimates.",
+    "Values approximate Warframe Wiki / arsenal behavior; not a full simulator.",
+    "Weapon-class tags: rifle, pistol, shotgun, melee, any."
+  ],
+  "mods": [
+    {
+      "name": "Serration",
+      "classes": ["rifle"],
+      "effects": { "baseDamage": 1.65 }
+    },
+    {
+      "name": "Heavy Caliber",
+      "classes": ["rifle"],
+      "effects": { "baseDamage": 1.65, "accuracy": -0.55 }
+    },
+    {
+      "name": "Hornet Strike",
+      "classes": ["pistol"],
+      "effects": { "baseDamage": 2.2 }
+    },
+    {
+      "name": "Point Blank",
+      "classes": ["shotgun"],
+      "effects": { "baseDamage": 0.9 }
+    },
+    {
+      "name": "Primed Point Blank",
+      "classes": ["shotgun"],
+      "effects": { "baseDamage": 1.65 }
+    },
+    {
+      "name": "Pressure Point",
+      "classes": ["melee"],
+      "effects": { "baseDamage": 1.2 }
+    },
+    {
+      "name": "Primed Pressure Point",
+      "classes": ["melee"],
+      "effects": { "baseDamage": 1.65 }
+    },
+    {
+      "name": "Split Chamber",
+      "classes": ["rifle"],
+      "effects": { "multishot": 0.9 }
+    },
+    {
+      "name": "Galvanized Chamber",
+      "classes": ["rifle"],
+      "effects": { "multishot": 0.8, "notes": "passive only; conditional stacks not modeled" }
+    },
+    {
+      "name": "Barrel Diffusion",
+      "classes": ["pistol"],
+      "effects": { "multishot": 1.2 }
+    },
+    {
+      "name": "Galvanized Diffusion",
+      "classes": ["pistol"],
+      "effects": { "multishot": 1.1, "notes": "passive only" }
+    },
+    {
+      "name": "Hell's Chamber",
+      "classes": ["shotgun"],
+      "effects": { "multishot": 1.2 }
+    },
+    {
+      "name": "Galvanized Hell",
+      "classes": ["shotgun"],
+      "effects": { "multishot": 1.1, "notes": "passive only" }
+    },
+    {
+      "name": "Point Strike",
+      "classes": ["rifle"],
+      "effects": { "critChance": 1.5 }
+    },
+    {
+      "name": "Vital Sense",
+      "classes": ["rifle"],
+      "effects": { "critDamage": 1.2 }
+    },
+    {
+      "name": "Critical Delay",
+      "classes": ["rifle"],
+      "effects": { "critChance": 2.0, "fireRate": -0.2 }
+    },
+    {
+      "name": "Pistol Gambit",
+      "classes": ["pistol"],
+      "effects": { "critChance": 1.2 }
+    },
+    {
+      "name": "Primed Pistol Gambit",
+      "classes": ["pistol"],
+      "effects": { "critChance": 1.87 }
+    },
+    {
+      "name": "Target Cracker",
+      "classes": ["pistol"],
+      "effects": { "critDamage": 0.6 }
+    },
+    {
+      "name": "Primed Target Cracker",
+      "classes": ["pistol"],
+      "effects": { "critDamage": 1.1 }
+    },
+    {
+      "name": "Blunderbuss",
+      "classes": ["shotgun"],
+      "effects": { "critChance": 0.9 }
+    },
+    {
+      "name": "Primed Ravage",
+      "classes": ["shotgun"],
+      "effects": { "critDamage": 1.1 }
+    },
+    {
+      "name": "True Steel",
+      "classes": ["melee"],
+      "effects": { "critChance": 1.2 }
+    },
+    {
+      "name": "Organ Shatter",
+      "classes": ["melee"],
+      "effects": { "critDamage": 0.9 }
+    },
+    {
+      "name": "Blood Rush",
+      "classes": ["melee"],
+      "effects": { "critChance": 0.4, "notes": "per combo multiplier; modeled as modest average" }
+    },
+    {
+      "name": "Speed Trigger",
+      "classes": ["rifle"],
+      "effects": { "fireRate": 0.6 }
+    },
+    {
+      "name": "Gunslinger",
+      "classes": ["pistol"],
+      "effects": { "fireRate": 0.72 }
+    },
+    {
+      "name": "Shotgun Spazz",
+      "classes": ["shotgun"],
+      "effects": { "fireRate": 0.9 }
+    },
+    {
+      "name": "Fury",
+      "classes": ["melee"],
+      "effects": { "fireRate": 0.3 }
+    },
+    {
+      "name": "Primed Fury",
+      "classes": ["melee"],
+      "effects": { "fireRate": 0.55 }
+    },
+    {
+      "name": "Primed Fast Hands",
+      "classes": ["rifle"],
+      "effects": { "reload": 0.55 }
+    },
+    {
+      "name": "Fast Hands",
+      "classes": ["rifle"],
+      "effects": { "reload": 0.3 }
+    },
+    {
+      "name": "Hellfire",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "heat": 0.9 } }
+    },
+    {
+      "name": "Stormbringer",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "electricity": 0.9 } }
+    },
+    {
+      "name": "Cryo Rounds",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "cold": 0.9 } }
+    },
+    {
+      "name": "Infected Clip",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "toxin": 0.9 } }
+    },
+    {
+      "name": "High Voltage",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "electricity": 0.6 }, "statusChance": 0.6 }
+    },
+    {
+      "name": "Rime Rounds",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "cold": 0.6 }, "statusChance": 0.6 }
+    },
+    {
+      "name": "Thermite Rounds",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "heat": 0.6 }, "statusChance": 0.6 }
+    },
+    {
+      "name": "Malignant Force",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "toxin": 0.6 }, "statusChance": 0.6 }
+    },
+    {
+      "name": "Hammer Shot",
+      "classes": ["rifle"],
+      "effects": { "critDamage": 0.6, "statusChance": 0.4 }
+    },
+    {
+      "name": "Rifle Aptitude",
+      "classes": ["rifle"],
+      "effects": { "statusChance": 0.9 }
+    },
+    {
+      "name": "Heated Charge",
+      "classes": ["pistol"],
+      "effects": { "elemental": { "heat": 0.9 } }
+    },
+    {
+      "name": "Pathogen Rounds",
+      "classes": ["pistol"],
+      "effects": { "elemental": { "toxin": 0.9 } }
+    },
+    {
+      "name": "Deep Freeze",
+      "classes": ["pistol"],
+      "effects": { "elemental": { "cold": 0.9 } }
+    },
+    {
+      "name": "Convulsion",
+      "classes": ["pistol"],
+      "effects": { "elemental": { "electricity": 0.9 } }
+    },
+    {
+      "name": "Incendiary Coat",
+      "classes": ["shotgun"],
+      "effects": { "elemental": { "heat": 0.9 } }
+    },
+    {
+      "name": "Contagious Spread",
+      "classes": ["shotgun"],
+      "effects": { "elemental": { "toxin": 0.9 } }
+    },
+    {
+      "name": "Chilling Grasp",
+      "classes": ["shotgun"],
+      "effects": { "elemental": { "cold": 0.9 } }
+    },
+    {
+      "name": "Charged Shell",
+      "classes": ["shotgun"],
+      "effects": { "elemental": { "electricity": 0.9 } }
+    },
+    {
+      "name": "Molten Impact",
+      "classes": ["melee"],
+      "effects": { "elemental": { "heat": 0.9 } }
+    },
+    {
+      "name": "Fever Strike",
+      "classes": ["melee"],
+      "effects": { "elemental": { "toxin": 0.9 } }
+    },
+    {
+      "name": "North Wind",
+      "classes": ["melee"],
+      "effects": { "elemental": { "cold": 0.9 } }
+    },
+    {
+      "name": "Shocking Touch",
+      "classes": ["melee"],
+      "effects": { "elemental": { "electricity": 0.9 } }
+    },
+    {
+      "name": "Primed Bane of Grineer",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.55 },
+      "faction": "grineer"
+    },
+    {
+      "name": "Bane of Grineer",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.3 },
+      "faction": "grineer"
+    },
+    {
+      "name": "Primed Bane of Corpus",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.55 },
+      "faction": "corpus"
+    },
+    {
+      "name": "Bane of Corpus",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.3 },
+      "faction": "corpus"
+    },
+    {
+      "name": "Primed Bane of Infested",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.55 },
+      "faction": "infested"
+    },
+    {
+      "name": "Bane of Infested",
+      "classes": ["rifle", "pistol", "shotgun"],
+      "effects": { "faction": 0.3 },
+      "faction": "infested"
+    },
+    {
+      "name": "Carbide Deposit",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "puncture": 0.9 }, "notes": "physical; treated as base-adjacent puncture bonus approx via elemental bucket" }
+    }
+  ],
+  "presets": {
+    "rifle-viral-heat": {
+      "description": "Common rifle status DPS shell (max-rank approximations)",
+      "mods": [
+        "Serration",
+        "Split Chamber",
+        "Point Strike",
+        "Vital Sense",
+        "Rime Rounds",
+        "Malignant Force",
+        "Hellfire",
+        "Primed Fast Hands"
+      ]
+    },
+    "rifle-corrosive-heat": {
+      "description": "Common rifle armor-strip shell",
+      "mods": [
+        "Serration",
+        "Split Chamber",
+        "Point Strike",
+        "Vital Sense",
+        "High Voltage",
+        "Malignant Force",
+        "Hellfire",
+        "Primed Fast Hands"
+      ]
+    },
+    "rifle-raw-crit": {
+      "description": "Crit-focused rifle shell",
+      "mods": [
+        "Serration",
+        "Split Chamber",
+        "Critical Delay",
+        "Vital Sense",
+        "Hammer Shot",
+        "Hellfire",
+        "Stormbringer",
+        "Primed Fast Hands"
+      ]
+    },
+    "pistol-viral-heat": {
+      "description": "Common secondary status shell",
+      "mods": [
+        "Hornet Strike",
+        "Barrel Diffusion",
+        "Primed Pistol Gambit",
+        "Primed Target Cracker",
+        "Pathogen Rounds",
+        "Deep Freeze",
+        "Heated Charge",
+        "Gunslinger"
+      ]
+    },
+    "shotgun-viral-heat": {
+      "description": "Common shotgun status shell",
+      "mods": [
+        "Primed Point Blank",
+        "Hell's Chamber",
+        "Blunderbuss",
+        "Primed Ravage",
+        "Contagious Spread",
+        "Chilling Grasp",
+        "Incendiary Coat",
+        "Shotgun Spazz"
+      ]
+    }
+  }
+}
