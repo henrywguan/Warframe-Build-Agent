@@ -15,6 +15,8 @@ import {
 import { resolveChatTurn } from "@/lib/chat-turn";
 import { preferLocalChat, runLocalChat } from "@/lib/local-chat";
 import {
+  formatLlmConnectionError,
+  isLlmConnectionError,
   parseClientLlm,
   resolveApiKey,
   resolveBaseUrl,
@@ -22,11 +24,17 @@ import {
   type ClientLlmConfig,
 } from "@/lib/model-config";
 import {
-  conversationAllowsOnlineBuildSearch,
+  annotateToolResultForOnlineConsent,
   looksLikeBuildRequest,
+  resolveOnlineBuildSearchAllowed,
 } from "@/lib/source-policy";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
-import { chatTools, runChatTool } from "@/lib/tools";
+import {
+  MAX_TOOL_ROUNDS,
+  TOOL_BUDGET_EXHAUSTED_PROMPT,
+  dedupeToolCall,
+} from "@/lib/tool-loop";
+import { getChatTools, runChatTool } from "@/lib/tools";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -66,6 +74,8 @@ async function runModelCompletion(
   incoming: IncomingChatMessage[],
   model: string,
   clientLlm?: Partial<ClientLlmConfig>,
+  onlineSearchToggle?: boolean,
+  aiChat?: boolean,
 ): Promise<{ content: string; toolsUsed: string[]; model: string }> {
   const client = getClient(clientLlm);
   const history: ChatCompletionMessageParam[] = incoming
@@ -86,31 +96,46 @@ async function runModelCompletion(
     role: m.role,
     content: messageText(m.content),
   }));
-  const onlineAllowed = conversationAllowsOnlineBuildSearch(consentMessages);
+  const onlineAllowed = resolveOnlineBuildSearchAllowed({
+    messages: consentMessages,
+    uiToggle: onlineSearchToggle,
+  });
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
   const buildAsk = latestUser
     ? looksLikeBuildRequest(messageText(latestUser.content))
     : false;
-  const consentNote = buildAsk
-    ? onlineAllowed
-      ? "\n\n## Runtime consent\nPlayer has allowed online build search in this conversation. You may use public Overframe/YouTube sources when local builds are insufficient. Still prefer the local pack first."
-      : "\n\n## Runtime consent\nPlayer has NOT consented to online build search. Stay on local pack + agent-calculated only. If Overframe builds are missing, ask yes/no — do not invent community builds."
-    : "";
+  const consentNote = [
+    aiChat
+      ? "\n\n## Runtime mode\n**AI chat is ON.** Give smart, player-friendly answers. Prefer local live tools and `lookup_local_knowledge` first. When you need public corroboration (patch-sensitive tips, guides, general Warframe questions missing from the pack), call `search_web` and cite returned URLs only."
+      : "",
+    onlineSearchToggle
+      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. Treat this as standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` (live Overframe + DuckDuckGo web/YouTube + Wiki). Do NOT ask yes/no. Cite only URLs returned by tools."
+      : buildAsk
+        ? onlineAllowed
+          ? "\n\n## Runtime consent\nPlayer has allowed online build search in this conversation. After local lookup, you may call `search_community_builds` when builds are missing. Still prefer the local pack first."
+          : "\n\n## Runtime consent\nPlayer has NOT consented to online build search. Stay on local pack + agent-calculated only. Do not call `search_community_builds`. If Overframe builds are missing, ask yes/no — do not invent community builds."
+        : "",
+  ].join("");
 
   const messages: ChatCompletionMessageParam[] = [
     { role: "system", content: `${SYSTEM_PROMPT}${consentNote}` },
     ...history,
   ];
 
+  const tools = getChatTools({
+    onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+    aiChat: Boolean(aiChat),
+  });
   const toolsUsed: string[] = [];
+  const seenToolCalls = new Set<string>();
   let guard = 0;
 
-  while (guard < 4) {
+  while (guard < MAX_TOOL_ROUNDS) {
     guard += 1;
     const completion = await client.chat.completions.create({
       model,
       messages,
-      tools: chatTools,
+      tools,
       tool_choice: "auto",
       temperature: 0.4,
     });
@@ -134,23 +159,50 @@ async function runModelCompletion(
     for (const call of toolCalls) {
       if (call.type !== "function") continue;
       toolsUsed.push(call.function.name);
-      const result = await runChatTool(
-        call.function.name,
-        call.function.arguments ?? "{}",
-      );
+      const args = call.function.arguments ?? "{}";
+      const dedupe = dedupeToolCall(seenToolCalls, call.function.name, args);
+      const raw = dedupe.duplicate
+        ? dedupe.stub!
+        : await runChatTool(call.function.name, args, {
+            onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+            aiChat: Boolean(aiChat),
+          });
       const toolMessage: ChatCompletionToolMessageParam = {
         role: "tool",
         tool_call_id: call.id,
-        content: result,
+        content: annotateToolResultForOnlineConsent(
+          raw,
+          Boolean(onlineSearchToggle || onlineAllowed),
+        ),
       };
       messages.push(toolMessage);
     }
   }
 
-  throw new Error("Too many tool rounds. Try a narrower question.");
+  // Local models (Ollama/Qwen) often keep requesting tools; force a text answer.
+  messages.push({ role: "user", content: TOOL_BUDGET_EXHAUSTED_PROMPT });
+  const finalCompletion = await client.chat.completions.create({
+    model,
+    messages,
+    temperature: 0.4,
+  });
+  const finalChoice = finalCompletion.choices[0]?.message;
+  const content = finalChoice?.content?.trim();
+  if (!content) {
+    throw new Error(
+      "Model kept calling tools without answering. Try a narrower question, or Clear LLM settings to use the offline chatbot.",
+    );
+  }
+  return { content, toolsUsed, model };
 }
 
-function shouldPreferLocal(clientLlm?: Partial<ClientLlmConfig>): boolean {
+function shouldPreferLocal(
+  clientLlm?: Partial<ClientLlmConfig>,
+  aiChat?: boolean | null,
+): boolean {
+  // Explicit AI toggle wins over env CHAT_MODE / browser LLM heuristics.
+  if (aiChat === true) return false;
+  if (aiChat === false) return true;
   // Browser LLM settings override env CHAT_MODE=local so Ollama can be plugged in from the UI.
   if (resolveApiKey(clientLlm)) return false;
   return preferLocalChat();
@@ -164,9 +216,19 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { messages?: IncomingChatMessage[]; llm?: unknown };
+  let body: {
+    messages?: IncomingChatMessage[];
+    llm?: unknown;
+    onlineSearch?: unknown;
+    aiChat?: unknown;
+  };
   try {
-    body = (await request.json()) as { messages?: IncomingChatMessage[]; llm?: unknown };
+    body = (await request.json()) as {
+      messages?: IncomingChatMessage[];
+      llm?: unknown;
+      onlineSearch?: unknown;
+      aiChat?: unknown;
+    };
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
@@ -177,36 +239,73 @@ export async function POST(request: Request) {
   }
 
   const clientLlm = parseClientLlm(body.llm);
-  const useLocal = shouldPreferLocal(clientLlm);
+  const onlineSearchToggle = body.onlineSearch === true;
+  const aiChat =
+    body.aiChat === true ? true : body.aiChat === false ? false : null;
+  const useLocal = shouldPreferLocal(clientLlm, aiChat);
   const model = resolveModel(clientLlm, hasImages(incoming));
+
+  if (aiChat === true && !resolveApiKey(clientLlm)) {
+    return NextResponse.json(
+      {
+        error:
+          "AI chat is on but no LLM is configured. Tap LLM / Ollama to add a key or Ollama URL, or turn AI off for the offline chatbot.",
+      },
+      { status: 400 },
+    );
+  }
 
   try {
     const result = await resolveChatTurn(incoming, {
       preferLocal: useLocal,
       runLocal: (messages) => runLocalChat(messages),
-      runModel: (messages) => runModelCompletion(messages, model, clientLlm),
+      runModel: (messages) =>
+        runModelCompletion(
+          messages,
+          model,
+          clientLlm,
+          onlineSearchToggle,
+          aiChat === true,
+        ),
     });
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (message.includes("Too many tool rounds")) {
+    if (message.includes("kept calling tools") || message.includes("Too many tool rounds")) {
       return NextResponse.json({ error: message }, { status: 502 });
     }
     if (message.includes("empty response")) {
       return NextResponse.json({ error: message }, { status: 502 });
     }
-    // If model path fails for missing key, fall back to local chatbot.
-    if (message.includes("OPENAI_API_KEY")) {
+
+    const shouldFallbackLocal =
+      message.includes("OPENAI_API_KEY") || isLlmConnectionError(error);
+
+    // Missing key or unreachable Ollama/proxy → offline knowledge chatbot.
+    if (shouldFallbackLocal) {
       try {
         const local = await runLocalChat(incoming);
+        const prefix = isLlmConnectionError(error)
+          ? `${formatLlmConnectionError(error, clientLlm)}\n\nFalling back to local chatbot:\n\n`
+          : "";
         return NextResponse.json({
-          message: { role: "assistant", content: local.content },
+          message: {
+            role: "assistant",
+            content: `${prefix}${local.content}`,
+          },
           toolsUsed: local.toolsUsed,
           model: local.model,
+          fallback: isLlmConnectionError(error) ? "local-after-llm-unreachable" : "local-after-missing-key",
         });
       } catch (localError) {
         const localMessage =
           localError instanceof Error ? localError.message : String(localError);
+        if (isLlmConnectionError(error)) {
+          return NextResponse.json(
+            { error: formatLlmConnectionError(error, clientLlm) },
+            { status: 503 },
+          );
+        }
         return NextResponse.json({ error: localMessage }, { status: 503 });
       }
     }

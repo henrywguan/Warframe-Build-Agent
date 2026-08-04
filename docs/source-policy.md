@@ -18,19 +18,21 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 
 1. **Local first** — call/read the knowledge pack. Use catalog + wiki facts and any cached Overframe/import builds under `builds/by-item/` for the comparison.
 2. **If local Overframe builds exist** (`LOCAL_BUILDS_AVAILABLE`) — compare from that local data. Optionally refine with agent-calculated notes for goal/budget. Do **not** search online unless the player asks to widen the comparison.
-3. **If local Overframe builds are missing** (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`) — **stop and ask for confirmation** before any online search:
+3. **If local Overframe builds are missing** (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`) — **stop and ask for confirmation** before any online search, **unless** the WebUI **Online search** toggle is on (standing consent):
 
    > Search online (Overframe, YouTube, and other public build sources) for community comparisons?  
    > Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.
 
-4. **Only after explicit yes** may the agent search or reason from online Overframe, YouTube, or other public build sources. Never invent fake video URLs.
-5. **If the player says no** — stay offline: local facts + agent-calculated best build only.
+4. **Only after explicit yes**, clear chat consent, **or the Online search toggle** may the agent call **`search_community_builds`** (live Overframe.gg crawl + DuckDuckGo web/YouTube + Warframe Wiki) and reason from those tool results. Never invent fake video URLs.
+5. **If the player says no** (and the toggle is off) — stay offline: local facts + agent-calculated best build only.
+
+When the toggle is on, the chat API registers `search_community_builds` and the model is instructed to use it after local lookup. Overframe may still be Cloudflare-blocked on some networks; DuckDuckGo/Wiki results still return when possible.
 
 ## Surfaces
 
 | Surface | Facts | Builds |
 | --- | --- | --- |
-| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | Local pack first → ask yes/no before online search |
+| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** LLM + `search_web`. **Online search on:** `search_community_builds`. AI off: offline chatbot |
 | **Web DPS** | `estimate_modded_dps` | Offline calculator presets |
 | **Web loadout** | `compare_loadout_to_overframe` / Attach OCR | Top-3 local Overframe diffs |
 | **Overlay action cards** | Local-pack gate card | Agent-calculated cards + confirmation card |
@@ -44,6 +46,8 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 | --- | --- |
 | `LOCAL_BUILDS_AVAILABLE` | Cached Overframe/import builds present — compare locally |
 | `ONLINE_SEARCH_CONFIRMATION_REQUIRED` | No local community builds — ask yes/no before online search |
+| `ONLINE_COMMUNITY_SEARCH_RESULTS` | Live `search_community_builds` tool returned Overframe/web/YouTube/Wiki hits |
+| `WEB_SEARCH_RESULTS` | Live `search_web` tool returned DuckDuckGo/Wiki hits (AI chat on) |
 
 ## Related
 

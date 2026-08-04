@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  formatLlmConnectionError,
+  isLlmConnectionError,
   llmConfigReady,
   parseClientLlm,
   resolveApiKey,
@@ -35,5 +37,30 @@ describe("model-config", () => {
     assert.equal(resolveBaseUrl({ baseUrl: "http://127.0.0.1:11434/v1" }), "http://127.0.0.1:11434/v1");
     assert.equal(resolveModel({ model: "qwen2.5" }, false), "qwen2.5");
     assert.equal(resolveModel({ visionModel: "llava", model: "qwen2.5" }, true), "llava");
+  });
+
+  it("detects LLM connection failures", () => {
+    assert.equal(isLlmConnectionError(new Error("Connection error.")), true);
+    assert.equal(
+      isLlmConnectionError(
+        Object.assign(new Error("request failed"), {
+          cause: new Error("connect ECONNREFUSED 127.0.0.1:11434"),
+        }),
+      ),
+      true,
+    );
+    assert.equal(isLlmConnectionError(new Error("invalid api key")), false);
+    assert.match(
+      formatLlmConnectionError(new Error("Connection error."), {
+        baseUrl: "http://127.0.0.1:11434/v1",
+      }),
+      /127\.0\.0\.1:11434/,
+    );
+    assert.match(
+      formatLlmConnectionError(new Error("Connection error."), {
+        baseUrl: "http://127.0.0.1:11434/v1",
+      }),
+      /Clear/,
+    );
   });
 });

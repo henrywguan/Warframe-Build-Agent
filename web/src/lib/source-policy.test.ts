@@ -7,10 +7,12 @@ import {
   LOCAL_KNOWLEDGE_TOOL_DESCRIPTION,
   ONLINE_SEARCH_CONFIRMATION_MARKER,
   SOURCE_POLICY,
+  annotateToolResultForOnlineConsent,
   conversationAllowsOnlineBuildSearch,
   formatOnlineSearchConfirmation,
   looksLikeBuildRequest,
   parseOnlineSearchConsent,
+  resolveOnlineBuildSearchAllowed,
 } from "./source-policy.ts";
 import { SYSTEM_PROMPT } from "./system-prompt.ts";
 import { chatTools } from "./tools.ts";
@@ -46,6 +48,42 @@ describe("web source policy (local first + online confirmation)", () => {
     assert.ok(names.includes("compare_loadout_to_overframe"));
     assert.ok(names.includes("estimate_modded_dps"));
     assert.ok(names.includes("lookup_local_knowledge"));
+    assert.ok(!names.includes("search_community_builds"));
+  });
+
+  it("adds search_community_builds when online search is enabled", async () => {
+    const { getChatTools, runChatTool } = await import("./tools.ts");
+    const names = getChatTools({ onlineSearch: true })
+      .filter((entry) => entry.type === "function")
+      .map((entry) => entry.function.name);
+    assert.ok(names.includes("search_community_builds"));
+    assert.ok(!names.includes("search_web"));
+    const disabled = await runChatTool(
+      "search_community_builds",
+      JSON.stringify({ query: "Coda Hema" }),
+      { onlineSearch: false },
+    );
+    assert.match(disabled, /ONLINE_SEARCH_DISABLED/);
+  });
+
+  it("adds search_web when AI chat is enabled", async () => {
+    const { getChatTools, runChatTool } = await import("./tools.ts");
+    const names = getChatTools({ aiChat: true })
+      .filter((entry) => entry.type === "function")
+      .map((entry) => entry.function.name);
+    assert.ok(names.includes("search_web"));
+    assert.ok(!names.includes("search_community_builds"));
+    const disabled = await runChatTool(
+      "search_web",
+      JSON.stringify({ query: "Excalibur steel path" }),
+      { aiChat: false },
+    );
+    assert.match(disabled, /AI_CHAT_DISABLED/);
+    const both = getChatTools({ aiChat: true, onlineSearch: true }).map(
+      (entry) => (entry.type === "function" ? entry.function.name : ""),
+    );
+    assert.ok(both.includes("search_web"));
+    assert.ok(both.includes("search_community_builds"));
   });
 
   it("formats a yes/no online search confirmation", () => {
@@ -78,6 +116,44 @@ describe("web source policy (local first + online confirmation)", () => {
       ]),
       false,
     );
+    assert.equal(
+      resolveOnlineBuildSearchAllowed({
+        messages: [{ role: "user", content: "best build for X?" }],
+        uiToggle: true,
+      }),
+      true,
+    );
+    assert.equal(
+      resolveOnlineBuildSearchAllowed({
+        messages: [{ role: "user", content: "best build for X?" }],
+        uiToggle: false,
+      }),
+      false,
+    );
+    assert.equal(
+      resolveOnlineBuildSearchAllowed({
+        messages: [
+          { role: "assistant", content: formatOnlineSearchConfirmation(["X"]) },
+          { role: "user", content: "yes" },
+        ],
+        uiToggle: false,
+      }),
+      true,
+    );
+    const annotated = annotateToolResultForOnlineConsent(
+      formatOnlineSearchConfirmation(["Coda Hema"]),
+      true,
+    );
+    assert.match(annotated, /ONLINE_SEARCH_ALLOWED/);
+    assert.match(annotated, /search_community_builds/);
+    assert.match(annotated, /Do NOT ask yes\/no/);
+    assert.equal(
+      annotateToolResultForOnlineConsent(
+        formatOnlineSearchConfirmation(["Coda Hema"]),
+        false,
+      ),
+      formatOnlineSearchConfirmation(["Coda Hema"]),
+    );
   });
 
   it("documents the confirmation policy", () => {
@@ -85,6 +161,7 @@ describe("web source policy (local first + online confirmation)", () => {
     assert.match(doc, /Local knowledge pack first/);
     assert.match(doc, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
     assert.match(doc, /explicit yes/i);
+    assert.match(doc, /search_community_builds/);
     assert.match(doc, /Web chat/);
     assert.match(doc, /Overlay/);
     assert.match(doc, /estimate_modded_dps/);
