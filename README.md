@@ -175,7 +175,8 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
 | `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
 | `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
-| `npm run knowledge -- crawl-overframe` | Crawl Overframe top-3 builds + mods/arcanes into local DB |
+| `npm run knowledge -- crawl-overframe` | Crawl/import Overframe top-3 builds + mods/arcanes into local DB |
+| `npm run knowledge -- parse-overframe-html <file\|dir>` | Cloudflare-safe: parse saved Overframe HTML / browser extract JSON |
 | `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics + arcanes) |
 | `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
 | `npm run knowledge -- pull-arcanes` | Refresh Arcane Enhancement digests from Warframe Wiki |
