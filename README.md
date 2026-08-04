@@ -1,193 +1,153 @@
 # Warframe Build Agent
 
-A Warframe guide agent that compares weapons, recommends builds, explains game mechanics, and grounds answers in the Warframe Wiki, Warframe Market, Overframe, and [Warframe Status](https://docs.warframestat.us/) documentation — plus thin clients for live world-state and market prices.
+**Ordis** — a Warframe advisor for builds, gear compares, mechanics, live world-state, market prices, and patch notes.
 
-## What’s in this repo
+Works in **Hermes Desktop**, a **mobile web chat**, Cursor, and simple **terminal commands**. Answers prefer a local offline knowledge pack (Wiki digests, arcanes, mechanics, Overframe builds) instead of inventing stats.
 
-| Piece | Role |
+---
+
+## New here? Start with these
+
+| Goal | Guide |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | Repo contract for coding agents |
-| [`.cursor/rules/warframe-advisor.mdc`](.cursor/rules/warframe-advisor.mdc) | Always-on player-advice behavior |
-| [`.cursor/skills/`](.cursor/skills/) | Playbooks: compare gear, builds, mechanics, world-state |
-| [`docs/sources.md`](docs/sources.md) | Source priority and conflict handling |
-| [`docs/warframe-status.md`](docs/warframe-status.md) | Status field meanings + CLI map |
-| [`docs/warframe-market.md`](docs/warframe-market.md) | Market v2 pricing + daily 4pm Pacific pull |
-| [`docs/warframe-patch-notes.md`](docs/warframe-patch-notes.md) | Official updates/hotfixes + daily 4pm Pacific check |
-| [`config/market-watchlist.json`](config/market-watchlist.json) | Items tracked for daily price snapshots |
-| [`src/`](src/) | Status, Market, and Patch Notes clients + CLIs |
-| [`web/`](web/) | Mobile-friendly chat UI for on-the-go use |
-| [`hermes/`](hermes/) | Hermes Desktop/CLI importable profile distribution |
-| [`docs/web-chat.md`](docs/web-chat.md) | Run/deploy the chat UI |
-| [`docs/hermes-export.md`](docs/hermes-export.md) | Import this agent into Hermes Desktop |
-| [`docs/commands.md`](docs/commands.md) | Full `/list` catalog (web slashes, Cursor commands, CLI) |
-| [`overlay/`](overlay/) | Desktop arsenal overlay (regions + action UI) |
-| [`docs/overlay.md`](docs/overlay.md) | Run the interactive overlay |
-| [`.cursor/commands/`](.cursor/commands/) | Cursor slash commands (`/cleanup-simplify`, `/knowledge`) |
-| [`.cursor/agents/`](.cursor/agents/) | Cursor subagents (cleanup-simplify) |
-| [`docs/cleanup-agent.md`](docs/cleanup-agent.md) | `/cleanup-simplify` + `-all` integrity docs |
+| **First-time setup** | [`docs/getting-started.md`](docs/getting-started.md) |
+| **Import into Hermes Desktop** (step-by-step for everyone) | [`docs/hermes-export.md`](docs/hermes-export.md) |
+| **All documentation** | [`docs/README.md`](docs/README.md) |
 
-## Defaults
+---
 
-- **Platform:** `pc` — Warframe is cross-play; this agent treats **PC and mobile** as the same default worldstate path.
-- World-state: `https://api.warframestat.us`
-- Market prices: `https://api.warframe.market/v2/`
-- Daily market + patch-notes checks target **4:00 PM America/Los_Angeles** (PST/PDT)
+## What you can do
 
-## Setup
+- Compare weapons / Warframes and recommend budget → Steel Path builds  
+- Explain damage types, status, armor, arcanes, and other systems  
+- Compare a pasted or screenshotted loadout to cached Overframe builds  
+- Estimate offline modded DPS (including A vs B)  
+- Check fissures, cycles, sortie, market prices, and official hotfixes  
+
+Default platform: **PC** (cross-play worldstate; same path used for mobile).
+
+---
+
+## Quick install
+
+**Need:** [Node.js 20+](https://nodejs.org)
 
 ```bash
+git clone https://github.com/henrywguan/Warframe-Build-Agent.git
+cd Warframe-Build-Agent
 npm install
+npm run knowledge -- status
 ```
 
-Requires Node 20+.
+---
 
-## Live world-state CLI
+## Three ways to use it
+
+### 1) Hermes Desktop (recommended for desktop chat)
+
+Full beginner walkthrough → **[`docs/hermes-export.md`](docs/hermes-export.md)**
+
+Short version:
+
+```bash
+./scripts/pack-hermes-profile.sh
+hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
+```
+
+Then in Hermes:
+
+1. Activate profile **warframe-build-agent**  
+2. Set the profile working folder to this repo  
+3. Connect **Ollama** (`http://127.0.0.1:11434/v1`, key `ollama`) or OpenAI  
+
+Local model notes: [`hermes/LOCAL_LLM.md`](hermes/LOCAL_LLM.md)
+
+### 2) Web / phone chat
+
+```bash
+npm run web:dev
+```
+
+Open http://localhost:3000  
+
+Tap **LLM / Ollama** to set Base URL and API key in the browser (no `.env` editing required).  
+Details: [`docs/web-chat.md`](docs/web-chat.md)
+
+### 3) Terminal
 
 ```bash
 npm run wf -- summary
-npm run wf -- fissures --steel-path
-npm run wf -- fissures --tier Neo
-npm run wf -- sortie
-npm run wf -- archon-hunt
-npm run wf -- cycles
-npm run wf -- invasions
-npm run wf -- void-trader
-npm run wf -- get arbitration
-```
-
-Common flags: `--platform pc` (default), `--language en`, `--json`.
-
-## Warframe.market CLI
-
-```bash
-npm run market -- status
 npm run market -- price mirage_prime_set
-npm run market -- snapshot
-npm run market -- pull --force
-npm run market -- changes
-```
-
-Daily automation: [`.github/workflows/market-daily-prices.yml`](.github/workflows/market-daily-prices.yml) runs near 4pm Pacific, writes `data/market/`, and commits when there are updates. Edit [`config/market-watchlist.json`](config/market-watchlist.json) to change tracked items.
-
-## Patch notes CLI (updates / hotfixes)
-
-```bash
-npm run patches -- status
 npm run patches -- latest
-npm run patches -- pull --force
-npm run patches -- changes
+npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 ```
 
-Source: [warframe.com/en/patch-notes](https://www.warframe.com/en/patch-notes). Daily automation: [`.github/workflows/patch-notes-daily.yml`](.github/workflows/patch-notes-daily.yml) writes `data/patches/` near 4pm Pacific.
+Type **`/list`** in any chat UI for the full command catalog → [`docs/commands.md`](docs/commands.md)
 
-## Library usage
+---
 
-```ts
-import {
-  WarframeStatusClient,
-  WarframeMarketClient,
-  PatchNotesClient,
-} from "./src/index.ts";
+## Offline knowledge pack
 
-const status = new WarframeStatusClient(); // platform: pc
-const summary = await status.getSummary();
+| Content | Refresh |
+| --- | --- |
+| Catalog + wiki | `npm run knowledge -- pull --skip-overframe` |
+| Mechanics | `npm run knowledge -- pull-mechanics` |
+| Arcanes | `npm run knowledge -- pull-arcanes` |
+| Overframe top builds | `npm run knowledge -- crawl-overframe` (or browser export — [`docs/overframe-crawl.md`](docs/overframe-crawl.md)) |
 
-const market = new WarframeMarketClient();
-const top = await market.getTopOrders("mirage_prime_set");
+Policy: local builds first; ask before online search → [`docs/source-policy.md`](docs/source-policy.md)
 
-const patches = new PatchNotesClient();
-const notes = await patches.listEntries();
-```
+---
 
-## Desktop overlay (arsenal coaching)
+## Desktop arsenal overlay (optional)
 
-Interactive always-on-top overlay for Warframe arsenal/mod screens: set a snip region, capture on hotkey, get prioritized Steel Path / endgame actions, and chat with the Build Agent in a minimizable panel while in-game. **Fully external** — separate window + desktop screenshots + HTTPS chat; no Warframe process touch. Set `OPENAI_API_KEY` in `~/.config/warframe-build-agent/overlay.env`. Verify with `python3 -m wf_overlay --verify-external`.
+External always-on-top coaching window (no reading/writing Warframe memory).  
+Guide: [`docs/overlay.md`](docs/overlay.md)
 
 ```bash
 cd overlay
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python3 -m wf_overlay
 ```
 
-Details: [`docs/overlay.md`](docs/overlay.md).
+---
 
-## Mobile web chat (on the go)
+## Daily scrapes
 
-```bash
-cd web
-cp .env.example .env.local   # add OPENAI_API_KEY
-npm install
-npm run dev
-```
+Market and patch-note snapshots refresh around **4:00 PM Pacific** via GitHub Actions into `data/market/` and `data/patches/`.
 
-Or from repo root: `npm run web:dev`
+---
 
-Optional `CHAT_PASSWORD` locks the UI for personal phone use. Deploy `web/` to Vercel (or similar) and open it on your phone — details in [`docs/web-chat.md`](docs/web-chat.md).
+## Project map
 
-For deployed daily scrapes, set `MARKET_CHANGES_URL` / `PATCH_CHANGES_URL` to the raw `latest-changes.json` files committed by the 4pm Pacific Actions.
-
-In the chat UI (and this agent chat), type **`/list`** for the full command catalog — web slashes, Cursor commands (`/cleanup-simplify`, `/cleanup-simplify -all`, `/knowledge`), and CLI — see [`docs/commands.md`](docs/commands.md). Cleanup modes: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).
-
-## Hermes Desktop import
-
-Profile **v0.3.0** is local-LLM friendly (Qwen / Ollama / OpenAI-compatible) and wired for the full offline pack: mechanics, arcanes, loadout compare, and modded DPS.
-
-```bash
-./scripts/pack-hermes-profile.sh
-# optional knowledge sidecar:
-./scripts/pack-hermes-profile.sh --with-knowledge
-hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
-```
-
-Or install the folder directly:
-
-```bash
-hermes profile install ./hermes --name warframe-build-agent --alias
-```
-
-Point Hermes `terminal.cwd` at this repo checkout, then configure a local model (see [`hermes/LOCAL_LLM.md`](hermes/LOCAL_LLM.md)). Full notes: [`docs/hermes-export.md`](docs/hermes-export.md).
-
-## Agent usage (Cursor)
-
-Open this repo in Cursor and ask player-facing questions, for example:
-
-- “Budget Steel Path build for Coda Hema”
-- “Laetum vs Felarx for EDA”
-- “What’s up for fissures / Cetus night right now?”
-- “How did Mirage Prime Set move vs yesterday’s market snapshot?”
-
-For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run patches -- …`.
-
-## Scripts
-
-| Script | Purpose |
+| Path | Role |
 | --- | --- |
-| `npm run wf -- <cmd>` | World-state CLI |
-| `npm run market -- <cmd>` | Warframe.market v2 CLI |
-| `npm run patches -- <cmd>` | Official patch notes / hotfix checks |
-| `npm run web:dev` | Mobile chat UI (local) |
-| `npm run web:build` | Build chat UI |
-| `python3 -m wf_overlay` (from `overlay/`) | Desktop arsenal overlay |
-| `npm test` | Unit tests (mocked fetch + formatters) |
-| `npm run typecheck` | TypeScript check |
-| `npm run build` | Emit `dist/` |
-| `./scripts/cleanup-verify.sh` | Post-change typecheck/tests gate |
-| `./scripts/cleanup-verify-all.sh` / `npm run cleanup:verify:all` | Full `/cleanup-simplify -all` integrity (overlay + web) |
-| `npm run knowledge -- pull` | Build local offline wiki/Overframe knowledge pack |
-| `npm run knowledge -- crawl-overframe` | Crawl/import Overframe top-3 builds + mods/arcanes into local DB |
-| `npm run knowledge -- parse-overframe-html <file\|dir>` | Cloudflare-safe: parse saved Overframe HTML / browser extract JSON |
-| `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics + arcanes) |
-| `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
-| `npm run knowledge -- pull-arcanes` | Refresh Arcane Enhancement digests from Warframe Wiki |
-| `npm run knowledge -- dps <weapon> --preset …` | Offline modded DPS estimate |
-| `npm run knowledge -- compare-dps <A> <B>` | Offline modded DPS A vs B compare |
-| `npm run knowledge -- compare-loadout <item> --mods …` | Compare pasted loadout vs top Overframe builds |
-| `./scripts/pack-hermes-profile.sh` | Pack Hermes profile (optional `--with-knowledge`) |
-| `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
-| `/cleanup-simplify -all` (Cursor) | Tidy + full overlay/web integrity suite |
-| `/knowledge` (Cursor) | Offline knowledge pack pull/lookup |
+| [`docs/`](docs/) | Human guides (start at [`docs/README.md`](docs/README.md)) |
+| [`hermes/`](hermes/) | Hermes profile (SOUL + skills) |
+| [`web/`](web/) | Mobile-friendly chat UI |
+| [`overlay/`](overlay/) | Desktop arsenal overlay |
+| [`src/`](src/) | Status / Market / Patches / Knowledge CLIs |
+| [`data/knowledge/`](data/knowledge/) | Offline pack |
+| [`AGENTS.md`](AGENTS.md) | Notes for coding agents |
+
+---
+
+## Scripts (common)
+
+| Command | Purpose |
+| --- | --- |
+| `npm run wf -- <cmd>` | Live world-state |
+| `npm run market -- <cmd>` | Warframe.market |
+| `npm run patches -- <cmd>` | Official updates / hotfixes |
+| `npm run knowledge -- …` | Offline pack pull / lookup / DPS / loadout compare |
+| `npm run web:dev` | Web chat |
+| `./scripts/pack-hermes-profile.sh` | Pack Hermes `.tar.gz` for Desktop import |
+| `npm test` | Unit tests |
+
+---
 
 ## Source notes
 
-Market prices, patch rankings, and live timers change. When sources disagree, see [`docs/sources.md`](docs/sources.md).
+Market prices, patch listings, and live timers change. When sources disagree, see [`docs/sources.md`](docs/sources.md).

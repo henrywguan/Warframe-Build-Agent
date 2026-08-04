@@ -8,12 +8,21 @@ import {
   useState,
 } from "react";
 import { OrdisStage } from "../components/OrdisStage";
+import { MessageBody } from "../components/MessageBody";
+import { LlmSettingsPanel } from "../components/LlmSettingsPanel";
 import {
   SPEAKING_MS,
   deriveOrdisMood,
   ordisCaption,
   shouldTriggerSpeaking,
 } from "../lib/ordis";
+import {
+  type ClientLlmConfig,
+  emptyLlmConfig,
+  llmConfigReady,
+  loadLlmConfig,
+  saveLlmConfig,
+} from "../lib/model-config";
 import styles from "./page.module.css";
 
 type Role = "user" | "assistant";
@@ -30,18 +39,13 @@ interface ChatMessage {
   toolsUsed?: string[];
 }
 
-const SUGGESTIONS = [
-  "/list",
-  "/knowledge Coda Hema",
-  "/fissures sp",
-  "/patches",
-];
+const SUGGESTIONS = ["/list", "/fissures sp", "/patches"];
 
 const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Local knowledge mode works without OpenAI.",
+    "Operator? Ordis is online. Attach a loadout screenshot to compare against top Overframe builds, ask in plain language, or type /list. Tap LLM / Ollama to connect a local model without editing .env.",
 };
 
 const MAX_IMAGE_BYTES = 1_600_000;
@@ -88,6 +92,25 @@ function BrandHeader({ tagline }: { tagline: string }) {
   );
 }
 
+function TopZone({
+  tagline,
+  mood,
+  caption,
+}: {
+  tagline: string;
+  mood: ReturnType<typeof deriveOrdisMood>;
+  caption: string;
+}) {
+  return (
+    <div className={styles.topZone}>
+      <BrandHeader tagline={tagline} />
+      <div className={styles.centerStage}>
+        <OrdisStage mood={mood} caption={caption} />
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
@@ -100,6 +123,8 @@ export default function HomePage() {
   const [pending, setPending] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [localMode, setLocalMode] = useState(false);
+  const [llmConfig, setLlmConfig] = useState<ClientLlmConfig>(emptyLlmConfig);
+  const [showLlmSettings, setShowLlmSettings] = useState(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -148,6 +173,8 @@ export default function HomePage() {
   }, [messages, pending]);
 
   useEffect(() => {
+    const saved = loadLlmConfig();
+    setLlmConfig(saved);
     let cancelled = false;
     (async () => {
       try {
@@ -164,10 +191,11 @@ export default function HomePage() {
         if (cancelled) return;
         setPasswordRequired(Boolean(authJson.passwordRequired));
         setAuthorized(!authJson.passwordRequired);
-        setLocalMode(Boolean(healthJson.localMode));
-        if (!healthJson.chatReady) {
+        const browserLlm = llmConfigReady(saved);
+        setLocalMode(Boolean(healthJson.localMode) && !browserLlm);
+        if (!healthJson.chatReady && !browserLlm) {
           setError(
-            "Chat needs OPENAI_API_KEY, a local OPENAI_BASE_URL model, or CHAT_MODE=local with the knowledge pack.",
+            "Chat needs an LLM — tap LLM / Ollama to add a key or Ollama URL, or use CHAT_MODE=local with the knowledge pack.",
           );
         }
       } catch {
@@ -248,7 +276,10 @@ export default function HomePage() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: payloadMessages }),
+        body: JSON.stringify({
+          messages: payloadMessages,
+          llm: llmConfigReady(llmConfig) ? llmConfig : undefined,
+        }),
       });
       const data = (await response.json()) as {
         message?: ChatMessage;
@@ -318,10 +349,9 @@ export default function HomePage() {
   if (!ready) {
     return (
       <main className={styles.shell}>
-        <BrandHeader tagline="Awakening cephalon…" />
-        <div className={styles.centerStage}>
-          <OrdisStage mood="thinking" caption="Initializing…" />
-        </div>
+        <TopZone tagline="Awakening cephalon…" mood="thinking" caption="Initializing…" />
+        <div className={styles.chatPanel} aria-hidden="true" />
+        <p className={styles.statusLine}>Booting…</p>
       </main>
     );
   }
@@ -329,10 +359,11 @@ export default function HomePage() {
   if (passwordRequired && !authorized) {
     return (
       <main className={styles.shell}>
-        <BrandHeader tagline="Cephalon lock engaged. Enter your access password, Operator." />
-        <div className={styles.centerStage}>
-          <OrdisStage mood="idle" caption="Awaiting clearance…" />
-        </div>
+        <TopZone
+          tagline="Cephalon lock engaged. Enter your access password, Operator."
+          mood="idle"
+          caption="Awaiting clearance…"
+        />
         <form className={styles.lock} onSubmit={unlock}>
           <h2>Access</h2>
           <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
@@ -351,17 +382,18 @@ export default function HomePage() {
           </div>
           {error ? <p className={`${styles.statusLine} ${styles.error}`}>{error}</p> : null}
         </form>
+        <p className={styles.statusLine} />
       </main>
     );
   }
 
   return (
     <main className={styles.shell}>
-      <BrandHeader tagline="Builds, screenshot compares, live world-state, market, and patch notes — Ordis on the line." />
-
-      <div className={styles.centerStage}>
-        <OrdisStage mood={mood} caption={ordisCaption(mood)} />
-      </div>
+      <TopZone
+        tagline="Builds, screenshot compares, live world-state, market, and patch notes — Ordis on the line."
+        mood={mood}
+        caption={ordisCaption(mood)}
+      />
 
       <section className={styles.chatPanel} aria-label="Chat">
         <div className={styles.panelHeader}>
@@ -392,7 +424,11 @@ export default function HomePage() {
                   alt="Attached loadout screenshot"
                 />
               ) : null}
-              {message.content}
+              {message.role === "assistant" ? (
+                <MessageBody content={message.content} toolsUsed={message.toolsUsed} />
+              ) : (
+                message.content
+              )}
               {message.toolsUsed?.length ? (
                 <div className={styles.meta}>Used: {message.toolsUsed.join(", ")}</div>
               ) : null}
@@ -406,6 +442,14 @@ export default function HomePage() {
         </div>
 
         <div className={styles.suggestions}>
+          <button
+            type="button"
+            className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
+            disabled={pending}
+            onClick={() => setShowLlmSettings((open) => !open)}
+          >
+            LLM / Ollama
+          </button>
           {SUGGESTIONS.map((suggestion) => (
             <button
               key={suggestion}
@@ -418,6 +462,20 @@ export default function HomePage() {
             </button>
           ))}
         </div>
+
+        {showLlmSettings ? (
+          <LlmSettingsPanel
+            initial={llmConfig}
+            onClose={() => setShowLlmSettings(false)}
+            onSave={(config) => {
+              saveLlmConfig(config);
+              setLlmConfig(config);
+              const ready = llmConfigReady(config);
+              setLocalMode(!ready);
+              if (ready) setError(null);
+            }}
+          />
+        ) : null}
 
         {attachment ? (
           <div className={styles.attachBar}>
@@ -452,15 +510,28 @@ export default function HomePage() {
             className={styles.attachBtn}
             disabled={pending}
             aria-label="Attach loadout screenshot"
+            title="Attach loadout screenshot"
             onClick={() => fileRef.current?.click()}
           >
-            Attach
+            <svg
+              className={styles.attachIcon}
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                fill="currentColor"
+                d="M16.5 6.75v8.25a4.5 4.5 0 1 1-9 0V6a3 3 0 1 1 6 0v8.25a1.5 1.5 0 1 1-3 0V7.5h-1.5v6.75a3 3 0 1 0 6 0V6a4.5 4.5 0 1 0-9 0v9a6 6 0 1 0 12 0V6.75H16.5z"
+              />
+            </svg>
           </button>
           <textarea
             ref={inputRef}
             className={styles.input}
             rows={2}
-            placeholder="Ask in plain language, /knowledge Coda Hema, or attach a loadout screenshot…"
+            placeholder="Ask in plain language, /list, or attach a loadout screenshot…"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={onKeyDown}
@@ -479,9 +550,11 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : localMode
-            ? "Local mode: offline knowledge + OCR compare (no OpenAI key). Tip: /list"
-            : "Tip: attach a loadout screenshot to compare vs top 3 Overframe builds. /list for commands."}
+          : llmConfigReady(llmConfig)
+            ? `LLM: ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}`
+            : localMode
+              ? "Local mode: offline knowledge + OCR compare (no OpenAI key). Tip: LLM / Ollama"
+              : "Tip: attach a loadout screenshot, or set LLM / Ollama. /list for commands."}
       </p>
     </main>
   );

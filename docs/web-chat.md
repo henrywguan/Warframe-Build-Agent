@@ -26,6 +26,8 @@ For Hermes Desktop with the same local model + pack, see [`docs/hermes-export.md
 
 Open http://localhost:3000
 
+From the chat UI you can tap **LLM / Ollama** to set Base URL / API key / model in the browser (saved to localStorage) — no need to edit `.env.local` for a local Ollama endpoint. Example preset: `http://127.0.0.1:11434/v1`, key `ollama`, model `qwen2.5`.
+
 From repo root you can also run:
 
 ```bash

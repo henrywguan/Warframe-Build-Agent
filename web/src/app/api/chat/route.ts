@@ -15,6 +15,13 @@ import {
 import { resolveChatTurn } from "@/lib/chat-turn";
 import { preferLocalChat, runLocalChat } from "@/lib/local-chat";
 import {
+  parseClientLlm,
+  resolveApiKey,
+  resolveBaseUrl,
+  resolveModel,
+  type ClientLlmConfig,
+} from "@/lib/model-config";
+import {
   conversationAllowsOnlineBuildSearch,
   looksLikeBuildRequest,
 } from "@/lib/source-policy";
@@ -24,16 +31,16 @@ import { chatTools, runChatTool } from "@/lib/tools";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-function getClient(): OpenAI {
-  const apiKey = process.env.OPENAI_API_KEY;
+function getClient(clientLlm?: Partial<ClientLlmConfig>): OpenAI {
+  const apiKey = resolveApiKey(clientLlm);
   if (!apiKey) {
     throw new Error(
-      "OPENAI_API_KEY is not set. Add it in web/.env.local, point OPENAI_BASE_URL at a local model, or set CHAT_MODE=local for the offline knowledge chatbot.",
+      "OPENAI_API_KEY is not set. Use the LLM / Ollama chip in the chat UI, or set OPENAI_API_KEY / OPENAI_BASE_URL in web/.env.local (or CHAT_MODE=local).",
     );
   }
   return new OpenAI({
     apiKey,
-    baseURL: process.env.OPENAI_BASE_URL || undefined,
+    baseURL: resolveBaseUrl(clientLlm),
   });
 }
 
@@ -58,8 +65,9 @@ function toModelContent(
 async function runModelCompletion(
   incoming: IncomingChatMessage[],
   model: string,
+  clientLlm?: Partial<ClientLlmConfig>,
 ): Promise<{ content: string; toolsUsed: string[]; model: string }> {
-  const client = getClient();
+  const client = getClient(clientLlm);
   const history: ChatCompletionMessageParam[] = incoming
     .filter((m) => messageText(m.content) || hasImages([m]))
     .slice(-20)
@@ -142,12 +150,10 @@ async function runModelCompletion(
   throw new Error("Too many tool rounds. Try a narrower question.");
 }
 
-function pickModel(incoming: IncomingChatMessage[]): string {
-  const defaultModel = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
-  if (hasImages(incoming)) {
-    return process.env.OPENAI_VISION_MODEL?.trim() || defaultModel;
-  }
-  return defaultModel;
+function shouldPreferLocal(clientLlm?: Partial<ClientLlmConfig>): boolean {
+  // Browser LLM settings override env CHAT_MODE=local so Ollama can be plugged in from the UI.
+  if (resolveApiKey(clientLlm)) return false;
+  return preferLocalChat();
 }
 
 export async function POST(request: Request) {
@@ -158,9 +164,9 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { messages?: IncomingChatMessage[] };
+  let body: { messages?: IncomingChatMessage[]; llm?: unknown };
   try {
-    body = (await request.json()) as { messages?: IncomingChatMessage[] };
+    body = (await request.json()) as { messages?: IncomingChatMessage[]; llm?: unknown };
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
@@ -170,14 +176,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "messages is required" }, { status: 400 });
   }
 
-  const useLocal = preferLocalChat();
-  const model = pickModel(incoming);
+  const clientLlm = parseClientLlm(body.llm);
+  const useLocal = shouldPreferLocal(clientLlm);
+  const model = resolveModel(clientLlm, hasImages(incoming));
 
   try {
     const result = await resolveChatTurn(incoming, {
       preferLocal: useLocal,
       runLocal: (messages) => runLocalChat(messages),
-      runModel: (messages) => runModelCompletion(messages, model),
+      runModel: (messages) => runModelCompletion(messages, model, clientLlm),
     });
     return NextResponse.json(result);
   } catch (error) {

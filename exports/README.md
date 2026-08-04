@@ -1,6 +1,12 @@
 # Hermes / knowledge exports
 
-## Hermes profile
+Packed files for sharing the Hermes profile (and optionally the knowledge pack).
+
+## Hermes profile archive
+
+**End-user import guide (recommended):** [`../docs/hermes-export.md`](../docs/hermes-export.md)
+
+From the repo root:
 
 ```bash
 ./scripts/pack-hermes-profile.sh
@@ -8,13 +14,17 @@
 ./scripts/pack-hermes-profile.sh --with-knowledge
 ```
 
-Import:
+Creates:
+
+`exports/warframe-build-agent-hermes-profile.tar.gz`
+
+Import in Hermes Desktop (**Profiles → Import**) or:
 
 ```bash
 hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --name warframe-build-agent
 ```
 
-Local LLM (Qwen/Ollama): see [`../hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
+Local LLM (Ollama / Qwen): [`../hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
 
 ## Knowledge sidecar
 
@@ -23,3 +33,5 @@ Local LLM (Qwen/Ollama): see [`../hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
 # → exports/warframe-build-agent-knowledge.tar.gz
 tar -xzf ./exports/warframe-build-agent-knowledge.tar.gz -C /path/to/Warframe-Build-Agent/data
 ```
+
+Most people should just keep a normal checkout of this repo instead of juggling sidecars.
