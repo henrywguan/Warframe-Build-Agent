@@ -22,8 +22,11 @@ const COMMANDS = [
   "invasions",
   "sortie",
   "archon-hunt",
+  "archon",
+  "weekly",
   "nightwave",
   "void-trader",
+  "baro",
   "steel-path",
   "cycles",
   "events",
@@ -55,9 +58,9 @@ Commands:
   fissures        Void fissures
   invasions       Active invasions
   sortie          Daily sortie
-  archon-hunt     Weekly Archon Hunt
+  archon-hunt     Weekly Archon Hunt (aliases: archon, weekly)
   nightwave       Nightwave challenges
-  void-trader     Baro Ki'Teer
+  void-trader     Baro Ki'Teer (alias: baro)
   steel-path      Steel Path honor reward
   cycles          Open-world cycles
   events          Active events
@@ -189,7 +192,9 @@ async function main(): Promise<void> {
       print(data, formatSortie(data));
       break;
     }
-    case "archon-hunt": {
+    case "archon-hunt":
+    case "archon":
+    case "weekly": {
       const data = await client.getArchonHunt();
       print(data, formatArchonHunt(data));
       break;
@@ -199,7 +204,8 @@ async function main(): Promise<void> {
       print(data, formatNightwave(data));
       break;
     }
-    case "void-trader": {
+    case "void-trader":
+    case "baro": {
       const data = await client.getVoidTrader();
       print(data, formatVoidTrader(data));
       break;

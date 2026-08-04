@@ -49,6 +49,7 @@ export type DpsPresetMap = Record<
 
 export type CommonModsFile = {
   version: number;
+  asOf?: string;
   notes?: string[];
   mods: CuratedMod[];
   presets: DpsPresetMap;

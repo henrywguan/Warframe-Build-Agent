@@ -1,56 +1,11 @@
 [
   {
-    "name": "Adaptation",
+    "name": "Galvanized Aptitude",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Adaptation",
+    "pageUrl": "https://wiki.warframe.com/w/Galvanized_Aptitude",
     "seenOnItems": [
-      "Revenant Prime"
-    ]
-  },
-  {
-    "name": "Arcane Acceleration",
-    "kind": "arcane",
-    "extract": "arcane seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Arcane_Acceleration",
-    "seenOnItems": [
-      "Coda Hema"
-    ]
-  },
-  {
-    "name": "Arcane Blessing",
-    "kind": "arcane",
-    "extract": "arcane seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Arcane_Blessing",
-    "seenOnItems": [
-      "Revenant Prime"
-    ]
-  },
-  {
-    "name": "Blind Rage",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Blind_Rage",
-    "seenOnItems": [
-      "Revenant Prime"
-    ]
-  },
-  {
-    "name": "Carbide Deposit",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Carbide_Deposit",
-    "seenOnItems": [
-      "Coda Hema"
-    ]
-  },
-  {
-    "name": "Critical Delay",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Critical_Delay",
-    "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
@@ -59,25 +14,7 @@
     "extract": "mod seen on Overframe top builds",
     "pageUrl": "https://wiki.warframe.com/w/Galvanized_Chamber",
     "seenOnItems": [
-      "Coda Hema"
-    ]
-  },
-  {
-    "name": "Hammer Shot",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Hammer_Shot",
-    "seenOnItems": [
-      "Coda Hema"
-    ]
-  },
-  {
-    "name": "Hellfire",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Hellfire",
-    "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
@@ -86,34 +23,34 @@
     "extract": "mod seen on Overframe top builds",
     "pageUrl": "https://wiki.warframe.com/w/High_Voltage",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Moeaze",
-    "kind": "arcane",
-    "extract": "arcane seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Moeaze",
-    "seenOnItems": [
-      "Revenant Prime"
-    ]
-  },
-  {
-    "name": "Point Strike",
+    "name": "Magnetic Capacity",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Point_Strike",
+    "pageUrl": "https://wiki.warframe.com/w/Magnetic_Capacity",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Primary Deadhead",
+    "name": "Malignant Force",
+    "kind": "mod",
+    "extract": "mod seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Malignant_Force",
+    "seenOnItems": [
+      "Enkaus"
+    ]
+  },
+  {
+    "name": "Primary Debilitate",
     "kind": "arcane",
     "extract": "arcane seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Primary_Deadhead",
+    "pageUrl": "https://wiki.warframe.com/w/Primary_Debilitate",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
@@ -122,34 +59,34 @@
     "extract": "arcane seen on Overframe top builds",
     "pageUrl": "https://wiki.warframe.com/w/Primary_Merciless",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Primed Continuity",
-    "kind": "mod",
-    "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Primed_Continuity",
+    "name": "Primary Overcharge",
+    "kind": "arcane",
+    "extract": "arcane seen on Overframe top builds",
+    "pageUrl": "https://wiki.warframe.com/w/Primary_Overcharge",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
-    "name": "Primed Fast Hands",
+    "name": "Primed Shred",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Primed_Fast_Hands",
+    "pageUrl": "https://wiki.warframe.com/w/Primed_Shred",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Primed Flow",
+    "name": "Rifle Elementalist",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Primed_Flow",
+    "pageUrl": "https://wiki.warframe.com/w/Rifle_Elementalist",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
@@ -158,52 +95,52 @@
     "extract": "mod seen on Overframe top builds",
     "pageUrl": "https://wiki.warframe.com/w/Rime_Rounds",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Rolling Guard",
+    "name": "Sinister Reach",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Rolling_Guard",
+    "pageUrl": "https://wiki.warframe.com/w/Sinister_Reach",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
-    "name": "Serration",
+    "name": "Speed Trigger",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Serration",
+    "pageUrl": "https://wiki.warframe.com/w/Speed_Trigger",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   },
   {
-    "name": "Stretch",
+    "name": "Stormbringer",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Stretch",
+    "pageUrl": "https://wiki.warframe.com/w/Stormbringer",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
-    "name": "Transient Fortitude",
+    "name": "Thermite Rounds",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Transient_Fortitude",
+    "pageUrl": "https://wiki.warframe.com/w/Thermite_Rounds",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
-    "name": "Umbral Intensify",
+    "name": "Vile Acceleration",
     "kind": "mod",
     "extract": "mod seen on Overframe top builds",
-    "pageUrl": "https://wiki.warframe.com/w/Umbral_Intensify",
+    "pageUrl": "https://wiki.warframe.com/w/Vile_Acceleration",
     "seenOnItems": [
-      "Revenant Prime"
+      "Enkaus"
     ]
   },
   {
@@ -212,7 +149,7 @@
     "extract": "mod seen on Overframe top builds",
     "pageUrl": "https://wiki.warframe.com/w/Vital_Sense",
     "seenOnItems": [
-      "Coda Hema"
+      "Enkaus"
     ]
   }
 ]

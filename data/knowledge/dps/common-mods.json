@@ -1,20 +1,32 @@
 {
-  "version": 1,
+  "version": 2,
+  "asOf": "2026-08-03",
   "notes": [
-    "Curated max-rank mod effects for offline modded DPS estimates.",
-    "Values approximate Warframe Wiki / arsenal behavior; not a full simulator.",
+    "Curated max-rank mod effects for offline modded DPS estimates (updated 2026-08-03).",
+    "Steel Path / endgame presets prefer Galvanized Aptitude + Galvanized Chamber over Serration/Split Chamber.",
+    "Galvanized conditionals are approximated (passive/average stacks); not a full arsenal simulator.",
+    "Primary damage arcanes (Merciless/Deadhead/Crux/Debilitate/Overcharge) are not mod-slots — mention them in recommendations separately.",
     "Weapon-class tags: rifle, pistol, shotgun, melee, any."
   ],
   "mods": [
     {
       "name": "Serration",
       "classes": ["rifle"],
-      "effects": { "baseDamage": 1.65 }
+      "effects": { "baseDamage": 1.65, "notes": "Budget fallback; prefer Galvanized Aptitude + Primary arcane on SP" }
     },
     {
       "name": "Heavy Caliber",
       "classes": ["rifle"],
       "effects": { "baseDamage": 1.65, "accuracy": -0.55 }
+    },
+    {
+      "name": "Galvanized Aptitude",
+      "classes": ["rifle"],
+      "effects": {
+        "statusChance": 0.8,
+        "baseDamage": 0.8,
+        "notes": "Approx: +80% status + conditional damage/status stacks averaged"
+      }
     },
     {
       "name": "Hornet Strike",
@@ -44,12 +56,12 @@
     {
       "name": "Split Chamber",
       "classes": ["rifle"],
-      "effects": { "multishot": 0.9 }
+      "effects": { "multishot": 0.9, "notes": "Budget fallback; prefer Galvanized Chamber on SP" }
     },
     {
       "name": "Galvanized Chamber",
       "classes": ["rifle"],
-      "effects": { "multishot": 0.8, "notes": "passive only; conditional stacks not modeled" }
+      "effects": { "multishot": 0.8, "notes": "Passive MS; kill stacks not fully modeled" }
     },
     {
       "name": "Barrel Diffusion",
@@ -137,6 +149,29 @@
       "effects": { "fireRate": 0.6 }
     },
     {
+      "name": "Vile Acceleration",
+      "classes": ["rifle"],
+      "effects": { "fireRate": 0.9, "baseDamage": -0.15 }
+    },
+    {
+      "name": "Primed Shred",
+      "classes": ["rifle"],
+      "effects": { "fireRate": 0.55, "notes": "also punch through (not modeled in DPS)" }
+    },
+    {
+      "name": "Shred",
+      "classes": ["rifle"],
+      "effects": { "fireRate": 0.3, "notes": "also punch through (not modeled)" }
+    },
+    {
+      "name": "Rifle Elementalist",
+      "classes": ["rifle"],
+      "effects": {
+        "statusChance": 0.4,
+        "notes": "Primarily status-DoT / punch-through; modeled as modest status contribution only"
+      }
+    },
+    {
       "name": "Gunslinger",
       "classes": ["pistol"],
       "effects": { "fireRate": 0.72 }
@@ -182,6 +217,11 @@
       "effects": { "elemental": { "cold": 0.9 } }
     },
     {
+      "name": "Primed Cryo Rounds",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "cold": 1.65 } }
+    },
+    {
       "name": "Infected Clip",
       "classes": ["rifle"],
       "effects": { "elemental": { "toxin": 0.9 } }
@@ -215,6 +255,16 @@
       "name": "Rifle Aptitude",
       "classes": ["rifle"],
       "effects": { "statusChance": 0.9 }
+    },
+    {
+      "name": "Magnetic Capacity",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "magnetic": 0.6 }, "statusChance": 0.6 }
+    },
+    {
+      "name": "Radiated Reload",
+      "classes": ["rifle"],
+      "effects": { "elemental": { "radiation": 0.6 }, "reload": 0.3 }
     },
     {
       "name": "Heated Charge",
@@ -320,7 +370,59 @@
   ],
   "presets": {
     "rifle-viral-heat": {
-      "description": "Common rifle status DPS shell (max-rank approximations)",
+      "description": "Steel Path rifle status shell as of 2026-08-03 (Galvanized + Viral/Heat; Primary Debilitate/Merciless recommended separately)",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Vital Sense",
+        "Primed Shred",
+        "Rime Rounds",
+        "Malignant Force",
+        "Thermite Rounds",
+        "Rifle Elementalist"
+      ]
+    },
+    "rifle-corrosive-heat": {
+      "description": "Steel Path rifle armor-leaning shell as of 2026-08-03 (Galvanized + Corrosive/Heat)",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Vital Sense",
+        "Vile Acceleration",
+        "High Voltage",
+        "Malignant Force",
+        "Thermite Rounds",
+        "Rifle Elementalist"
+      ]
+    },
+    "rifle-viral-electric": {
+      "description": "Steel Path beam/status electric DPS shell as of 2026-08-03 (common Enkaus-style)",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Primed Shred",
+        "Rifle Elementalist",
+        "Rime Rounds",
+        "Malignant Force",
+        "High Voltage",
+        "Stormbringer"
+      ]
+    },
+    "rifle-raw-crit": {
+      "description": "Crit-leaning rifle shell as of 2026-08-03",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Critical Delay",
+        "Vital Sense",
+        "Hammer Shot",
+        "Hellfire",
+        "Stormbringer",
+        "Vile Acceleration"
+      ]
+    },
+    "rifle-budget": {
+      "description": "Accessible non-Galvanized rifle shell (early/midgame)",
       "mods": [
         "Serration",
         "Split Chamber",
@@ -329,40 +431,14 @@
         "Rime Rounds",
         "Malignant Force",
         "Hellfire",
-        "Primed Fast Hands"
-      ]
-    },
-    "rifle-corrosive-heat": {
-      "description": "Common rifle armor-strip shell",
-      "mods": [
-        "Serration",
-        "Split Chamber",
-        "Point Strike",
-        "Vital Sense",
-        "High Voltage",
-        "Malignant Force",
-        "Hellfire",
-        "Primed Fast Hands"
-      ]
-    },
-    "rifle-raw-crit": {
-      "description": "Crit-focused rifle shell",
-      "mods": [
-        "Serration",
-        "Split Chamber",
-        "Critical Delay",
-        "Vital Sense",
-        "Hammer Shot",
-        "Hellfire",
-        "Stormbringer",
-        "Primed Fast Hands"
+        "Speed Trigger"
       ]
     },
     "pistol-viral-heat": {
-      "description": "Common secondary status shell",
+      "description": "Secondary status shell as of 2026-08-03",
       "mods": [
         "Hornet Strike",
-        "Barrel Diffusion",
+        "Galvanized Diffusion",
         "Primed Pistol Gambit",
         "Primed Target Cracker",
         "Pathogen Rounds",
@@ -372,10 +448,10 @@
       ]
     },
     "shotgun-viral-heat": {
-      "description": "Common shotgun status shell",
+      "description": "Shotgun status shell as of 2026-08-03",
       "mods": [
         "Primed Point Blank",
-        "Hell's Chamber",
+        "Galvanized Hell",
         "Blunderbuss",
         "Primed Ravage",
         "Contagious Spread",

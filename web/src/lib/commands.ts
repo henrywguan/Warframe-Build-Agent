@@ -5,6 +5,13 @@ import {
 import { parseLoadoutFromOcrText } from "@/lib/loadout-parse";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { runOfflineDps } from "@/lib/offline-dps";
+import {
+  packPresetDps,
+  packPresetList,
+  stubDuviriCircuit,
+  stubFocusShards,
+  stubVendor,
+} from "@/lib/pack-commands";
 import { runChatTool } from "./tools";
 
 export interface ChatCommand {
@@ -83,6 +90,96 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     kind: "tool",
   },
   {
+    name: "baro",
+    usage: "/baro",
+    description: "Baro Ki'Teer location / inventory",
+    kind: "tool",
+  },
+  {
+    name: "nightwave",
+    usage: "/nightwave",
+    description: "Nightwave challenges",
+    kind: "tool",
+  },
+  {
+    name: "archon",
+    usage: "/archon",
+    description: "Weekly Archon Hunt",
+    kind: "tool",
+  },
+  {
+    name: "weekly",
+    usage: "/weekly",
+    description: "Alias for /archon",
+    kind: "tool",
+  },
+  {
+    name: "event",
+    usage: "/event",
+    description: "Active worldstate events",
+    kind: "tool",
+  },
+  {
+    name: "duviri",
+    usage: "/duviri",
+    description: "Duviri / Circuit guidance stub (+ /cycles tip)",
+    kind: "meta",
+  },
+  {
+    name: "circuit",
+    usage: "/circuit",
+    description: "Alias for /duviri",
+    kind: "meta",
+  },
+  {
+    name: "build",
+    usage: "/build <item>",
+    description: "Top local Overframe/import builds for an item",
+    kind: "tool",
+  },
+  {
+    name: "farm",
+    usage: "/farm <item>",
+    description: "Acquisition / farming notes from wiki digest",
+    kind: "tool",
+  },
+  {
+    name: "arcanes",
+    usage: "/arcanes <name|slot>",
+    description: "Local Arcane Enhancement digests",
+    kind: "tool",
+  },
+  {
+    name: "preset",
+    usage: "/preset list | /preset <name> <weapon>",
+    description: "List DPS presets or run one on a weapon",
+    kind: "tool",
+  },
+  {
+    name: "focus",
+    usage: "/focus [frame]",
+    description: "Archon shard / focus guidance stub",
+    kind: "meta",
+  },
+  {
+    name: "shards",
+    usage: "/shards [frame]",
+    description: "Alias for /focus",
+    kind: "meta",
+  },
+  {
+    name: "vendor",
+    usage: "/vendor <syndicate>",
+    description: "Standing gift priorities stub",
+    kind: "meta",
+  },
+  {
+    name: "slug",
+    usage: "/slug <item name>",
+    description: "Resolve Warframe.market slug",
+    kind: "tool",
+  },
+  {
     name: "market",
     usage: "/market <slug>",
     description: "Live Warframe.market price (e.g. mirage_prime_set)",
@@ -127,11 +224,11 @@ export function formatCommandList(): string {
     "• /knowledge — pull or query offline knowledge pack (WFCD/Wiki/Overframe)",
     "",
     "Useful CLI:",
-    "• npm run wf -- summary | fissures --steel-path | cycles",
-    "• npm run market -- price <slug> | changes",
+    "• npm run wf -- summary | fissures --steel-path | cycles | baro | nightwave | archon",
+    "• npm run market -- price <slug> | slug-search \"…\" | changes",
     "• npm run patches -- latest | changes",
-    "• npm run knowledge -- status | lookup \"…\" | pull-mechanics | pull-arcanes",
-    "• npm run knowledge -- dps|compare-dps|compare-loadout … | crawl-overframe",
+    "• npm run knowledge -- status | lookup \"…\" | farm|builds \"…\" | preset-list",
+    "• npm run knowledge -- dps|compare-dps|compare-loadout … | import-builds | crawl-overframe",
     "• npm run cleanup:verify | cleanup:verify:all",
     "",
     "You can also ask in plain language, for example:",
@@ -168,6 +265,21 @@ export type CommandResult =
   | { handled: true; content: string; toolsUsed: string[] }
   | { handled: false };
 
+function meta(content: string): CommandResult {
+  return { handled: true, content, toolsUsed: [] };
+}
+
+async function fromTool(
+  tool: string,
+  args: Record<string, unknown> = {},
+): Promise<CommandResult> {
+  return {
+    handled: true,
+    content: await runChatTool(tool, JSON.stringify(args)),
+    toolsUsed: [tool],
+  };
+}
+
 /** Run a slash command without the LLM when possible. */
 export async function runSlashCommand(text: string): Promise<CommandResult> {
   const parsed = parseSlash(text);
@@ -176,110 +288,136 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
   const { name, args } = parsed;
 
   if (name === "list" || name === "help" || name === "commands") {
-    return { handled: true, content: formatCommandList(), toolsUsed: [] };
+    return meta(formatCommandList());
   }
 
   switch (name) {
     case "summary":
-      return {
-        handled: true,
-        content: await runChatTool("get_worldstate_summary", "{}"),
-        toolsUsed: ["get_worldstate_summary"],
-      };
+      return fromTool("get_worldstate_summary");
     case "fissures": {
+      const steelFlags = ["sp", "steel", "steelpath", "steel-path"];
       const steelPathOnly = args.some((arg) =>
-        ["sp", "steel", "steelpath", "steel-path"].includes(arg.toLowerCase()),
+        steelFlags.includes(arg.toLowerCase()),
       );
       const tier = args.find(
-        (arg) =>
-          !["sp", "steel", "steelpath", "steel-path"].includes(arg.toLowerCase()),
+        (arg) => !steelFlags.includes(arg.toLowerCase()),
       );
-      return {
-        handled: true,
-        content: await runChatTool(
-          "get_fissures",
-          JSON.stringify({ steelPathOnly, tier }),
-        ),
-        toolsUsed: ["get_fissures"],
-      };
+      return fromTool("get_fissures", { steelPathOnly, tier });
     }
     case "cycles":
-      return {
-        handled: true,
-        content: await runChatTool("get_cycles", "{}"),
-        toolsUsed: ["get_cycles"],
-      };
+      return fromTool("get_cycles");
     case "sortie":
-      return {
-        handled: true,
-        content: await runChatTool("get_sortie", "{}"),
-        toolsUsed: ["get_sortie"],
-      };
+      return fromTool("get_sortie");
     case "invasions":
-      return {
-        handled: true,
-        content: await runChatTool("get_invasions", "{}"),
-        toolsUsed: ["get_invasions"],
-      };
+      return fromTool("get_invasions");
     case "alerts":
-      return {
-        handled: true,
-        content: await runChatTool("get_alerts", "{}"),
-        toolsUsed: ["get_alerts"],
-      };
-    case "market": {
-      const slug = args[0];
-      if (!slug) {
+      return fromTool("get_alerts");
+    case "baro":
+    case "void-trader":
+    case "voidtrader":
+      return fromTool("get_baro");
+    case "nightwave":
+    case "nw":
+      return fromTool("get_nightwave");
+    case "archon":
+    case "archon-hunt":
+    case "weekly":
+      return fromTool("get_archon_hunt");
+    case "event":
+    case "events":
+      return fromTool("get_events");
+    case "duviri":
+    case "circuit":
+      return meta(stubDuviriCircuit());
+    case "build":
+    case "builds": {
+      const query = args.join(" ").trim();
+      if (!query) {
+        return meta("Usage: /build <item>\nExample: /build Coda Hema");
+      }
+      return fromTool("lookup_local_builds", { query });
+    }
+    case "farm": {
+      const query = args.join(" ").trim();
+      if (!query) {
+        return meta("Usage: /farm <item>\nExample: /farm Enkaus");
+      }
+      return fromTool("lookup_farm_route", { query });
+    }
+    case "arcanes":
+    case "arcane":
+      return fromTool("lookup_arcanes", {
+        query: args.join(" ").trim() || "arcanes",
+      });
+    case "preset":
+    case "presets": {
+      const raw = args.join(" ").trim();
+      if (!raw || /^list$/i.test(raw)) {
         return {
           handled: true,
-          content: "Usage: /market <slug>\nExample: /market mirage_prime_set",
-          toolsUsed: [],
+          content: await packPresetList(),
+          toolsUsed: ["list_dps_presets"],
         };
+      }
+      const parts = raw.split(/\s+/);
+      const presetName = parts[0]!;
+      const weapon = parts.slice(1).join(" ").trim();
+      if (!weapon) {
+        return meta(
+          [
+            "Usage: /preset list",
+            "       /preset <name> <weapon>",
+            "Example: /preset rifle-viral-heat Coda Hema",
+          ].join("\n"),
+        );
       }
       return {
         handled: true,
-        content: await runChatTool("get_market_price", JSON.stringify({ slug })),
-        toolsUsed: ["get_market_price"],
+        content: await packPresetDps(presetName, weapon),
+        toolsUsed: ["estimate_modded_dps"],
       };
+    }
+    case "focus":
+    case "shards":
+    case "shard":
+      return meta(stubFocusShards(args.join(" ").trim() || undefined));
+    case "vendor":
+      return meta(stubVendor(args.join(" ").trim() || undefined));
+    case "slug": {
+      const query = args.join(" ").trim();
+      if (!query) {
+        return meta("Usage: /slug <item name>\nExample: /slug Mirage Prime set");
+      }
+      return fromTool("search_market_slug", { query });
+    }
+    case "market": {
+      const slug = args[0];
+      if (!slug) {
+        return meta(
+          "Usage: /market <slug>\nExample: /market mirage_prime_set\nTip: /slug <item name> to resolve a slug",
+        );
+      }
+      return fromTool("get_market_price", { slug });
     }
     case "market-changes":
     case "market_changes":
-      return {
-        handled: true,
-        content: await runChatTool("get_market_daily_changes", "{}"),
-        toolsUsed: ["get_market_daily_changes"],
-      };
+      return fromTool("get_market_daily_changes");
     case "patches":
     case "hotfix":
     case "patch":
     case "patchnotes":
     case "patch-notes": {
       const limit = args[0] && Number.isFinite(Number(args[0])) ? Number(args[0]) : 8;
-      return {
-        handled: true,
-        content: await runChatTool(
-          "get_patch_notes_latest",
-          JSON.stringify({ limit }),
-        ),
-        toolsUsed: ["get_patch_notes_latest"],
-      };
+      return fromTool("get_patch_notes_latest", { limit });
     }
     case "patch-changes":
     case "patch_changes":
-      return {
-        handled: true,
-        content: await runChatTool("get_patch_notes_daily_changes", "{}"),
-        toolsUsed: ["get_patch_notes_daily_changes"],
-      };
+      return fromTool("get_patch_notes_daily_changes");
     case "knowledge":
     case "lookup": {
       const query = args.join(" ").trim();
       if (!query) {
-        return {
-          handled: true,
-          content: "Usage: /knowledge <query>\nExample: /knowledge Coda Hema",
-          toolsUsed: [],
-        };
+        return meta("Usage: /knowledge <query>\nExample: /knowledge Coda Hema");
       }
       return {
         handled: true,
@@ -291,16 +429,14 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
     case "compare-dps": {
       const raw = args.join(" ").trim();
       if (!raw) {
-        return {
-          handled: true,
-          content: [
+        return meta(
+          [
             "Usage: /dps <weapon> [vs <weaponB>] [--preset rifle-viral-heat|typical]",
             "Examples:",
             "• /dps Coda Hema --preset rifle-viral-heat",
             "• /dps Torid vs Ignis Wraith --preset typical",
           ].join("\n"),
-          toolsUsed: [],
-        };
+        );
       }
       const presetMatch = raw.match(/--preset\s+(\S+)/i);
       const preset = presetMatch?.[1];
@@ -309,7 +445,7 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
       const weapon = parts[0]?.trim() || "";
       const weaponB = parts[1]?.trim();
       if (!weapon) {
-        return { handled: true, content: "Missing weapon name.", toolsUsed: [] };
+        return meta("Missing weapon name.");
       }
       return {
         handled: true,
@@ -324,15 +460,13 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
     case "compare": {
       const raw = args.join(" ").trim();
       if (!raw) {
-        return {
-          handled: true,
-          content: [
+        return meta(
+          [
             "Usage: /compare <item name> | <mod1, mod2, …>",
             "Example: /compare Coda Hema | Serration, Vital Sense, Point Strike, Primary Merciless",
             "Or attach a loadout screenshot in the composer.",
           ].join("\n"),
-          toolsUsed: [],
-        };
+        );
       }
       const [itemPart, modsPart] = raw.split("|").map((part) => part.trim());
       let loadout = await parseLoadoutFromOcrText(
@@ -345,7 +479,9 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
           .split(/[,;\n]/)
           .map((n) => n.trim())
           .filter(Boolean);
-        const arcanes = names.filter((n) => /arcane|merciless|deadhead|acceleration|blessing|moeaze/i.test(n));
+        const arcanes = names.filter((n) =>
+          /arcane|merciless|deadhead|acceleration|blessing|moeaze/i.test(n),
+        );
         const mods = names.filter((n) => !arcanes.includes(n));
         loadout = {
           ...loadout,
@@ -361,14 +497,6 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
       };
     }
     default:
-      return {
-        handled: true,
-        content: [
-          `Unknown command: /${name}`,
-          "",
-          formatCommandList(),
-        ].join("\n"),
-        toolsUsed: [],
-      };
+      return meta([`Unknown command: /${name}`, "", formatCommandList()].join("\n"));
   }
 }

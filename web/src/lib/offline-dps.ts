@@ -35,6 +35,8 @@ type CuratedMod = {
 };
 
 type CommonModsFile = {
+  asOf?: string;
+  notes?: string[];
   mods: CuratedMod[];
   presets: Record<string, { description: string; mods: string[] }>;
 };
@@ -194,12 +196,18 @@ function presetMods(file: CommonModsFile, preset: string | undefined, weaponClas
   const key = normalize(preset).replace(/\s+/g, "-");
   if (file.presets[preset]?.mods) return [...file.presets[preset].mods];
   if (file.presets[key]?.mods) return [...file.presets[key].mods];
-  if (/typical|standard|default|viral.?heat|status/.test(key)) {
+  if (/typical|standard|default|viral.?heat|status|max.?damage|maximum/.test(key)) {
     if (weaponClass === "pistol") return [...(file.presets["pistol-viral-heat"]?.mods ?? [])];
     if (weaponClass === "shotgun") return [...(file.presets["shotgun-viral-heat"]?.mods ?? [])];
     return [...(file.presets["rifle-viral-heat"]?.mods ?? [])];
   }
+  if (/viral.?electric|electric.?dps|beam/.test(key)) {
+    return [...(file.presets["rifle-viral-electric"]?.mods ?? file.presets["rifle-viral-heat"]?.mods ?? [])];
+  }
   if (/corrosive/.test(key)) return [...(file.presets["rifle-corrosive-heat"]?.mods ?? [])];
+  if (/budget|beginner|accessible/.test(key)) {
+    return [...(file.presets["rifle-budget"]?.mods ?? [])];
+  }
   if (/raw|crit/.test(key)) return [...(file.presets["rifle-raw-crit"]?.mods ?? [])];
   return null;
 }
@@ -265,9 +273,14 @@ function estimate(item: CatalogItem, requested: string[], common: CommonModsFile
   };
 }
 
-function formatOne(est: ReturnType<typeof estimate>, viralAmp: number): string {
+function formatOne(
+  est: ReturnType<typeof estimate>,
+  viralAmp: number,
+  asOf?: string,
+): string {
   return [
     `## ${est.name} (${est.weaponClass}) — modded DPS estimate`,
+    asOf ? `Curated mod DB as of ${asOf}` : "",
     `Mods applied (${est.applied.length}): ${est.applied.join(", ") || "(none)"}`,
     est.unknown.length ? `Unmodeled mods: ${est.unknown.join(", ")}` : "",
     "",
@@ -285,7 +298,8 @@ function formatOne(est: ReturnType<typeof estimate>, viralAmp: number): string {
     "",
     "Notes:",
     "• Arsenal-style estimate: direct damage only (no slash DoT ticks / full armor TTK).",
-    "• Galvanized stacks, rivens, arcanes, and incarnon transforms are not fully modeled.",
+    "• Galvanized kill stacks, rivens, and Primary arcanes (Merciless/Debilitate/Crux) are not fully modeled — recommend them separately for Steel Path.",
+    "• Prefer Galvanized Aptitude/Chamber over Serration/Split Chamber for endgame (as of 2026-08).",
   ]
     .filter(Boolean)
     .join("\n");
@@ -342,7 +356,7 @@ export async function runOfflineDps(options: {
       : 1);
 
   if (!options.weaponB) {
-    return formatOne(estimate(a, requested, common, viralAmp), viralAmp);
+    return formatOne(estimate(a, requested, common, viralAmp), viralAmp, common.asOf);
   }
 
   const b = findWeapon(catalog, options.weaponB);
@@ -375,9 +389,9 @@ export async function runOfflineDps(options: {
     `Burst winner: ${winnerBurst}${winnerBurst === "tie" ? "" : ` (${Math.abs(burstDelta).toFixed(1)}%)`}`,
     `Sustained winner: ${winnerSustained}${winnerSustained === "tie" ? "" : ` (${Math.abs(sustDelta).toFixed(1)}%)`}`,
     "",
-    formatOne(ea, viralAmp),
+    formatOne(ea, viralAmp, common.asOf),
     "",
-    formatOne(eb, viralAmp),
+    formatOne(eb, viralAmp, common.asOf),
     "",
     "Caveats: offline arsenal-style estimate only — not incarnon/riven/arcane/DoT/armor TTK simulation.",
   ].join("\n");

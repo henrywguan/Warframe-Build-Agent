@@ -1,0 +1,70 @@
+{
+  "id": "enkaus",
+  "itemName": "Enkaus",
+  "source": "import",
+  "fetchedAt": "2026-08-04T06:12:31.046Z",
+  "builds": [
+    {
+      "rank": 1,
+      "name": "Electric status DPS (community pattern, curated 2026-08-03)",
+      "forma": 4,
+      "url": "https://overframe.gg/build/1000871/enkaus/enkaus-electric-dps/",
+      "summary": "Galvanized status + Viral/Electric beam shell common for Steel Path Enkaus. Pair with Primary Debilitate or Primary Overcharge. Source pattern: ninjase Overframe (Aug 2026 community).",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Rifle Elementalist",
+        "Primed Shred",
+        "Rime Rounds",
+        "Malignant Force",
+        "High Voltage",
+        "Stormbringer"
+      ],
+      "arcanes": [
+        "Primary Debilitate",
+        "Primary Overcharge"
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Bombard / Eximus melter (community pattern, curated 2026-08-03)",
+      "forma": 4,
+      "url": "https://overframe.gg/build/1001317/enkaus/enkaus-bombard-eximus-melter/",
+      "summary": "High fire-rate status spray with Magnetic Capacity for Overguard and heat via reload/status tools. Source pattern: FionaRoseFox Overframe (Aug 2026 community).",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Vile Acceleration",
+        "Speed Trigger",
+        "Magnetic Capacity",
+        "Rime Rounds",
+        "Malignant Force",
+        "Sinister Reach"
+      ],
+      "arcanes": [
+        "Primary Debilitate"
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "Viral/Heat steel path shell (agent + community consensus, 2026-08-03)",
+      "forma": 3,
+      "url": "https://wiki.warframe.com/w/Enkaus",
+      "summary": "General-purpose Galvanized Viral/Heat for health-amp + heat strip, leaning on Enkaus dissolve execute. Prefer Primary Debilitate; Firestorm helps paint puddles.",
+      "mods": [
+        "Galvanized Aptitude",
+        "Galvanized Chamber",
+        "Vital Sense",
+        "Primed Shred",
+        "Rime Rounds",
+        "Malignant Force",
+        "Thermite Rounds",
+        "Rifle Elementalist"
+      ],
+      "arcanes": [
+        "Primary Debilitate",
+        "Primary Merciless"
+      ]
+    }
+  ]
+}

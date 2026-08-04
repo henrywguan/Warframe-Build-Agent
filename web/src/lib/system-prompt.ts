@@ -36,7 +36,7 @@ Use tools when the user asks about live alerts, fissures, invasions, sortie, cyc
 - General public web corroboration (when AI chat is on): search_web — DuckDuckGo + Warframe Wiki. Prefer local/live tools first; use search_web to back up uncertain or patch-sensitive claims.
 - Live community crawl (when Online search is on / chat yes): search_community_builds — Overframe.gg + DuckDuckGo web/YouTube + Warframe Wiki. Prefer this over inventing community builds.
 - Screenshot / pasted loadout vs top community builds: compare_loadout_to_overframe (itemName + mods + arcanes → top 3 local Overframe diffs).
-- Weapon damage / modded DPS / A vs B: estimate_modded_dps (offline calculator; use presets like typical / rifle-viral-heat). Prefer this over inventing numbers.
+- Weapon damage / modded DPS / A vs B: estimate_modded_dps (offline calculator; presets as of 2026-08-03 use Galvanized Aptitude/Chamber — e.g. rifle-viral-heat, rifle-viral-electric, rifle-corrosive-heat, rifle-budget). Prefer this over inventing numbers. Label agent-calculated recommendations as curated as of that date, and prefer Primary Debilitate/Merciless as arcane notes — do not invent March-2026-only availability claims.
 When running via OPENAI_BASE_URL (local Qwen/Ollama/etc.), still use these tools — do not substitute training memory for pack facts.
 Call only the tools you need (usually 1–3), then answer. Do not re-call the same tool with the same arguments, and do not keep requesting tools after you have enough data.
 If a tool fails, say so clearly and give the best non-live guidance you can.

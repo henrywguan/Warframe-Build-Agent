@@ -20,6 +20,19 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/sortie` | Today's Sortie |
 | `/invasions` | Active invasions + rewards |
 | `/alerts` | Active alerts + rewards |
+| `/baro` | Baro Ki'Teer location / inventory |
+| `/nightwave` | Nightwave challenges |
+| `/archon` / `/weekly` | Weekly Archon Hunt |
+| `/event` | Active worldstate events |
+| `/duviri` / `/circuit` | Duviri / Circuit guidance stub (+ cycles tip) |
+| `/build <item>` | Top local Overframe/import builds |
+| `/farm <item>` | Acquisition notes from wiki digest |
+| `/arcanes <name\|slot>` | Local Arcane digests |
+| `/preset list` | List curated DPS presets + `asOf` |
+| `/preset <name> <weapon>` | Run a DPS preset on a weapon |
+| `/focus` / `/shards [frame]` | Archon shard guidance stub |
+| `/vendor <syndicate>` | Standing gift priorities stub |
+| `/slug <item name>` | Resolve Warframe.market slug |
 | `/market <slug>` | Live Warframe.market price (e.g. `mirage_prime_set`) |
 | `/market-changes` | Daily 4pm Pacific market scrape changes |
 | `/patches [n]` | Latest official updates/hotfixes |
@@ -65,8 +78,23 @@ Details:
 | `explain-mechanics` | Game systems (pack digests first) |
 | `world-state` | Live fissures/cycles/alerts guidance |
 | `patch-notes` | Updates/hotfixes workflow |
+| `farming-route` | How to obtain items / resources / quests |
+| `budget-upgrade-path` | Midgame → Steel Path progression |
+| `steel-path-loadout` | Full SP loadout packages |
+| `faction-counter` | Damage types vs faction |
+| `arcane-picker` | Weapon / frame arcanes |
+| `riven-advisor` | Disposition + preferred stats |
+| `incarnon-evolver` | Evolve challenges + priorities |
+| `companion-setup` | Pets / primers for SP |
+| `trade-value` | Market pricing workflow |
+| `patch-impact` | Map patch notes to builds |
+| `source-hygiene` | Local pack → consent → live crawl |
+| `preset-curator` | Maintain `common-mods.json` asOf |
+| `overframe-import` | Playwright / CDP import path |
+| `screenshot-qa` | OCR loadout quality checks |
+| `new-player-onboarding` | First-week guidance |
 
-Hermes Desktop import ships the matching player-facing skills (v0.3.0) under `hermes/skills/warframe/` (including loadout-compare + modded-dps) — see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) for Qwen/Ollama.
+Hermes Desktop import ships the matching player-facing skills (v0.3.0) under `hermes/skills/warframe/` — see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) for Qwen/Ollama.
 
 ---
 
@@ -81,10 +109,15 @@ npm run wf -- cycles
 npm run wf -- sortie
 npm run wf -- invasions
 npm run wf -- alerts
+npm run wf -- baro
+npm run wf -- nightwave
+npm run wf -- archon
+npm run wf -- events
 
 # Market
 npm run market -- status
 npm run market -- price mirage_prime_set
+npm run market -- slug-search "Mirage Prime set"
 npm run market -- pull --force
 npm run market -- changes
 
@@ -96,6 +129,10 @@ npm run patches -- changes
 # Offline knowledge pack / Overframe crawl
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
+npm run knowledge -- farm "Enkaus"
+npm run knowledge -- builds "Coda Hema"
+npm run knowledge -- preset-list
+npm run knowledge -- sync-mods --asOf 2026-08-03
 npm run knowledge -- lookup "rad viral or corrosive magnetic"
 npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
@@ -104,8 +141,8 @@ npm run knowledge -- pull
 npm run knowledge -- pull-mechanics
 npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
+npm run knowledge -- import-builds ./data/knowledge/builds-export.json
 npm run knowledge:export-overframe -- --limit 5
-npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/builds-export.json
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 ./scripts/pack-hermes-profile.sh
 ./scripts/pack-hermes-profile.sh --with-knowledge
