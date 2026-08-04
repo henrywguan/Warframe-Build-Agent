@@ -25,8 +25,10 @@
     "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts src/knowledge/*.test.ts src/knowledge/dps/*.test.ts",
     "typecheck": "tsc --noEmit",
     "web:dev": "npm --prefix web run dev",
+    "web:dev:lan": "npm --prefix web run dev:lan",
     "web:build": "npm --prefix web run build",
     "web:start": "npm --prefix web run start",
+    "web:start:lan": "npm --prefix web run start:lan",
     "web:test": "npm --prefix web run test",
     "cleanup:verify": "./scripts/cleanup-verify.sh",
     "cleanup:verify:all": "./scripts/cleanup-verify-all.sh"

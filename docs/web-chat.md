@@ -42,6 +42,40 @@ npm run web:dev
 
 Locally, daily-scrape tools also try `../data/market/` and `../data/patches/` when env URLs are unset.
 
+## Use from another device on your home Wi‑Fi (LAN)
+
+`allowedDevOrigins` and “blocked cross-origin … `/_next/webpack-hmr`” are **development-only**. Production `next start` has no webpack HMR, so that whitelist does not apply there.
+
+### Option A — Dev server on the LAN (hot reload)
+
+1. Repo already allows private LAN origins in [`web/next.config.ts`](../web/next.config.ts) (`192.168.*.*`, `10.*.*.*`, `172.16–31.*.*`), so phones do not need a one-off IP entry like `192.168.1.58`.
+2. Bind all interfaces (not only localhost):
+
+```bash
+npm run web:dev:lan
+```
+
+3. On your PC, note the **Network** URL Next prints (e.g. `http://192.168.1.12:3000`). Open that on your phone (same Wi‑Fi).
+4. Restart the dev server after changing `next.config.ts`.
+5. Windows Firewall may ask to allow Node on private networks — allow it for port **3000**.
+
+Do **not** expose `next dev` to the public internet; the allowlist only softens the LAN HMR guard.
+
+### Option B — Production build on the LAN (no HMR, no origin whitelist)
+
+Better when you only need the chat to work from phones (no live code reload):
+
+```bash
+npm run web:build
+npm run web:start:lan
+```
+
+Then open `http://<your-pc-lan-ip>:3000` from any device. Same firewall note as above. Prefer setting `CHAT_PASSWORD` if untrusted people share the Wi‑Fi.
+
+### Why you saw `192.168.1.58` blocked
+
+The page can load (`GET / 200`), but Next blocked the phone’s origin from the **dev** Hot Module Replacement websocket (`/_next/webpack-hmr`). Adding that host (or the private ranges we ship) fixes HMR/hydration during `next dev`. It is not required for Option B.
+
 ## Environment
 
 | Variable | Required | Purpose |
