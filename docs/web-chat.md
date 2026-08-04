@@ -75,8 +75,11 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/patch-changes` | Daily 4pm Pacific newly listed notes |
 | `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
 | `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
+| `/dps <weapon> [vs <weaponB>] [--preset …]` | Offline modded DPS estimate / A vs B compare |
 
 **Screenshot compare:** use **Attach** in the composer, then Send. With a vision model configured, the agent reads item/mods/arcanes from the image and calls `compare_loadout_to_overframe`. In `CHAT_MODE=local`, tesseract OCR + the local pack do the same without OpenAI.
+
+**Modded DPS:** plain-language “Torid vs Ignis Wraith damage?” or `/dps Torid vs Ignis Wraith --preset typical` uses the offline calculator (no live search).
 
 Slash commands are handled without the LLM when possible (faster / cheaper). Plain-language questions use the model + tools when configured, otherwise the local chatbot.
 

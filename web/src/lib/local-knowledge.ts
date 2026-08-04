@@ -99,7 +99,7 @@ function scoreMechanics(query: string, digest: MechanicsDigest): number {
     digest.summary || "",
     ...(digest.aliases || []),
   ];
-  let best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
+  const best = Math.max(0, ...labels.map((label) => scoreName(query, label)));
   const stop = new Set([
     "the",
     "and",

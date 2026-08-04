@@ -16,6 +16,7 @@ import {
 } from "@/lib/loadout-compare";
 import { ocrImageDataUrl, parseLoadoutFromOcrText } from "@/lib/loadout-parse";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
+import { runOfflineDps } from "@/lib/offline-dps";
 import { looksLikeBuildRequest } from "@/lib/source-policy";
 import {
   liveCycles,
@@ -111,6 +112,39 @@ async function handleScreenshotCompare(
 async function handlePlainLocal(text: string): Promise<LocalChatResult> {
   const toolsUsed: string[] = [];
   const lower = text.toLowerCase();
+
+  const dpsCompare = text.match(
+    /^\s*(?:which\s+has\s+higher\s+(?:damage|dps)\s*[,:-]?\s*)?(.+?)\s+(?:vs|versus|or)\s+(.+?)(?:\?|$)/i,
+  );
+  if (
+    dpsCompare ||
+    (/\b(dps|damage)\b/i.test(text) && /\b(vs|versus|or)\b/i.test(text))
+  ) {
+    const left = (dpsCompare?.[1] || "").replace(/\b(dps|damage|higher|better|more)\b/gi, " ").trim();
+    const right = (dpsCompare?.[2] || "").replace(/\b(dps|damage|higher|better|more)\b/gi, " ").trim();
+    const vsSplit = text.split(/\b(?:vs|versus)\b/i);
+    const weapon = left || vsSplit[0]?.replace(/.*\b(?:compare|dps|damage)\b/i, "").trim() || "";
+    const weaponB =
+      right ||
+      vsSplit[1]?.replace(/\b(for|with|under|using).*/i, "").replace(/[?].*$/, "").trim() ||
+      "";
+    if (weapon && weaponB && weapon.length < 48 && weaponB.length < 48) {
+      toolsUsed.push("estimate_modded_dps");
+      return {
+        content: await runOfflineDps({
+          weapon,
+          weaponB,
+          preset: /corrosive/i.test(text)
+            ? "rifle-corrosive-heat"
+            : /raw|crit/i.test(text)
+              ? "rifle-raw-crit"
+              : "typical",
+        }),
+        toolsUsed,
+        model: "local-knowledge",
+      };
+    }
+  }
 
   if (/\b(fissure|relic|steel path fiss)/i.test(text)) {
     toolsUsed.push("get_fissures");

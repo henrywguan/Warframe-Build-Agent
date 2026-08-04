@@ -27,6 +27,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
 | `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
 | `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
+| `/dps <weapon> [vs <weaponB>] [--preset …]` | Offline modded DPS estimate / A vs B compare |
 
 Attach a loadout screenshot in the web UI to OCR/vision-read the Warframe/weapon + mods/arcanes and compare against top-3 cached Overframe builds.
 
@@ -94,6 +95,8 @@ npm run patches -- changes
 npm run knowledge -- status
 npm run knowledge -- lookup "Coda Hema"
 npm run knowledge -- lookup "rad viral or corrosive magnetic"
+npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run knowledge -- pull
 npm run knowledge -- pull-mechanics
 npm run knowledge -- crawl-overframe

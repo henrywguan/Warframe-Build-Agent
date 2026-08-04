@@ -40,6 +40,10 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/b
 # Lookup (items + mechanics)
 npm run knowledge -- lookup "Coda Hema"
 npm run knowledge -- lookup "rad viral or corrosive magnetic"
+
+# Offline modded DPS calculator (arsenal-style estimate)
+npm run knowledge -- dps "Coda Hema" --preset rifle-viral-heat
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run knowledge -- status
 ```
 
@@ -52,6 +56,16 @@ npm run knowledge -- status
 - Factions, Steel Path, Archon Hunt, mods/arcanes/Forma, Kuva/Endo/relics
 
 These are what let a local chatbot answer elemental stacking questions without OpenAI.
+
+### Modded DPS calculator
+
+`data/knowledge/dps/common-mods.json` holds curated max-rank mod multipliers. The calculator estimates **burst + sustained DPS** for one weapon or an A vs B compare under a shared mod list/preset (e.g. `rifle-viral-heat`, `typical`).
+
+```bash
+npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+```
+
+This is arsenal-style guidance (direct damage, crit, multishot, fire rate, reload, simple elemental combines, optional Viral amp). It is **not** a full simulator (no slash DoT ticks, full armor TTK, rivens, most arcanes, incarnon transforms, or galvanized stacks).
 
 ### Overframe note
 

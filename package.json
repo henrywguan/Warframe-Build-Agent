@@ -17,7 +17,7 @@
     "knowledge": "tsx src/knowledge/cli.ts",
     "knowledge:export-overframe": "tsx scripts/export-overframe-builds.ts",
     "start": "tsx src/cli.ts",
-    "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts src/knowledge/*.test.ts",
+    "test": "tsx --test src/*.test.ts src/market/*.test.ts src/patches/*.test.ts src/knowledge/*.test.ts src/knowledge/dps/*.test.ts",
     "typecheck": "tsc --noEmit",
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build",

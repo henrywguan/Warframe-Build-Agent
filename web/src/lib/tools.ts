@@ -5,6 +5,7 @@ import {
 } from "@/lib/loadout-compare";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
+import { runOfflineDps } from "@/lib/offline-dps";
 import {
   liveAlerts,
   liveCycles,
@@ -183,6 +184,41 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "estimate_modded_dps",
+      description:
+        "Offline arsenal-style modded DPS calculator using the local catalog + curated mod multipliers. Use for weapon damage/DPS questions and A vs B compares without live search. Presets: rifle-viral-heat, rifle-corrosive-heat, rifle-raw-crit, pistol-viral-heat, shotgun-viral-heat, typical.",
+      parameters: {
+        type: "object",
+        properties: {
+          weapon: {
+            type: "string",
+            description: "Weapon name for a single estimate (optional if weaponB set for compare)",
+          },
+          weaponB: {
+            type: "string",
+            description: "Second weapon name for an A vs B compare",
+          },
+          mods: {
+            type: "array",
+            items: { type: "string" },
+            description: "Explicit max-rank mod names to apply to both weapons",
+          },
+          preset: {
+            type: "string",
+            description: "Mod preset id (default typical / rifle-viral-heat by class)",
+          },
+          viralAmp: {
+            type: "number",
+            description: "Optional Viral health amp multiplier override (default ~2.5 when viral mods present)",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
 ];
 
 type ToolArgs = Record<string, unknown>;
@@ -256,6 +292,28 @@ export async function runChatTool(name: string, rawArgs: string): Promise<string
           3,
         );
         return formatLoadoutCompare(result);
+      }
+      case "estimate_modded_dps": {
+        const weapon = asString(args.weapon);
+        const weaponB = asString(args.weaponB);
+        const mods = Array.isArray(args.mods)
+          ? args.mods.map(String).filter(Boolean)
+          : undefined;
+        const preset = asString(args.preset);
+        const viralAmp =
+          typeof args.viralAmp === "number" && Number.isFinite(args.viralAmp)
+            ? args.viralAmp
+            : undefined;
+        if (!weapon && !weaponB) {
+          return "Provide weapon (and optional weaponB for compare).";
+        }
+        return await runOfflineDps({
+          weapon: weapon || weaponB || "",
+          weaponB: weapon && weaponB ? weaponB : undefined,
+          mods,
+          preset,
+          viralAmp,
+        });
       }
       default:
         return `Unknown tool: ${name}`;

@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 import { runOverframeCrawl } from "./crawl-overframe.js";
+import {
+  compareWeaponsDps,
+  estimateModdedDps,
+  formatPresetHelp,
+} from "./dps/compare.js";
+import { loadCommonMods } from "./dps/mods.js";
 import { lookupLocalKnowledge } from "./query.js";
 import { pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
 import { loadManifest } from "./store.js";
@@ -12,6 +18,8 @@ Usage:
   npm run knowledge -- pull-mechanics [options]
   npm run knowledge -- crawl-overframe [options]
   npm run knowledge -- lookup <query>
+  npm run knowledge -- dps <weapon> [--preset name|--mods a,b,c]
+  npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset name|--mods a,b,c]
   npm run knowledge -- status
 
 pull options:
@@ -27,6 +35,13 @@ pull options:
 pull-mechanics options:
   Refresh Damage/Status/Armor/faction/resource digests only (fast)
   --concurrency <n>        Parallel workers (default 3)
+
+dps / compare-dps options:
+  Offline arsenal-style modded DPS estimate (not a full simulator)
+  --preset <name>          e.g. rifle-viral-heat, rifle-corrosive-heat, typical
+  --mods <a,b,c>           Explicit max-rank mod list
+  --faction <name>         Optional note only (use primed bane mods for multiplier)
+  --viral-amp <n>          Override Viral health amp (default ~2.5 when viral mods present)
 
 crawl-overframe options:
   Crawl https://overframe.gg for every catalog warframe/weapon:
@@ -66,6 +81,76 @@ async function main() {
     const query = rest.join(" ").trim();
     if (!query) usage();
     console.log(await lookupLocalKnowledge(query));
+    return;
+  }
+
+  if (command === "dps") {
+    const preset = getFlag(rest, "--preset");
+    const modsRaw = getFlag(rest, "--mods");
+    const faction = getFlag(rest, "--faction");
+    const viralAmpRaw = getFlag(rest, "--viral-amp");
+    const weapon = rest
+      .filter((arg, idx, arr) => {
+        if (arg.startsWith("--")) return false;
+        const prev = arr[idx - 1];
+        return !prev || !["--preset", "--mods", "--faction", "--viral-amp"].includes(prev);
+      })
+      .join(" ")
+      .trim();
+    if (!weapon) {
+      const common = await loadCommonMods();
+      console.log(formatPresetHelp(common.presets));
+      process.exit(1);
+    }
+    const result = await estimateModdedDps(weapon, {
+      preset: preset ?? (modsRaw ? undefined : "typical"),
+      mods: modsRaw ? modsRaw.split(",").map((m) => m.trim()).filter(Boolean) : undefined,
+      faction,
+      viralAmp: viralAmpRaw ? Number(viralAmpRaw) : undefined,
+    });
+    if (!result.ok) {
+      console.error(result.message);
+      process.exit(2);
+    }
+    console.log(result.text);
+    return;
+  }
+
+  if (command === "compare-dps") {
+    const preset = getFlag(rest, "--preset");
+    const modsRaw = getFlag(rest, "--mods");
+    const faction = getFlag(rest, "--faction");
+    const viralAmpRaw = getFlag(rest, "--viral-amp");
+    const positional = [];
+    for (let i = 0; i < rest.length; i += 1) {
+      const arg = rest[i]!;
+      if (arg.startsWith("--")) {
+        if (["--preset", "--mods", "--faction", "--viral-amp"].includes(arg)) i += 1;
+        continue;
+      }
+      positional.push(arg);
+    }
+    // Support: compare-dps Torid "Ignis Wraith" OR compare-dps Torid vs Ignis Wraith
+    const cleaned = positional.filter((p) => !/^vs$/i.test(p));
+    const weaponA = cleaned[0];
+    const weaponB = cleaned.slice(1).join(" ").trim() || cleaned[1];
+    if (!weaponA || !weaponB) {
+      console.error(
+        'Usage: npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset typical|--mods ...]',
+      );
+      process.exit(1);
+    }
+    const result = await compareWeaponsDps(weaponA, weaponB, {
+      preset: preset ?? (modsRaw ? undefined : "typical"),
+      mods: modsRaw ? modsRaw.split(",").map((m) => m.trim()).filter(Boolean) : undefined,
+      faction,
+      viralAmp: viralAmpRaw ? Number(viralAmpRaw) : undefined,
+    });
+    if (!result.ok) {
+      console.error(result.message);
+      process.exit(2);
+    }
+    console.log(result.text);
     return;
   }
 

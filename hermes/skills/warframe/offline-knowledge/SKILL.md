@@ -28,6 +28,7 @@ Requires a Warframe-Build-Agent checkout with `data/knowledge/` populated (`term
 4. To refresh:
    - `npm run knowledge -- pull` (catalog + wiki + Overframe when reachable)
    - `npm run knowledge -- crawl-overframe` (top 3 builds + mods/arcanes; residential network recommended)
+   - `npm run knowledge -- pull-mechanics` (Damage/Status/Armor/faction/resource digests for local Q&A)
 
 ## Notes
 

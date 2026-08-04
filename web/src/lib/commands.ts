@@ -4,6 +4,7 @@ import {
 } from "@/lib/loadout-compare";
 import { parseLoadoutFromOcrText } from "@/lib/loadout-parse";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
+import { runOfflineDps } from "@/lib/offline-dps";
 import { runChatTool } from "./tools";
 
 export interface ChatCommand {
@@ -37,6 +38,12 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     name: "compare",
     usage: "/compare <item> | mods…",
     description: "Compare a pasted loadout to top 3 local Overframe builds",
+    kind: "tool",
+  },
+  {
+    name: "dps",
+    usage: "/dps <weapon> [vs <weaponB>] [--preset name]",
+    description: "Offline modded DPS estimate / A vs B compare",
     kind: "tool",
   },
   {
@@ -277,6 +284,40 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
         handled: true,
         content: await lookupLocalKnowledge(query),
         toolsUsed: ["lookup_local_knowledge"],
+      };
+    }
+    case "dps":
+    case "compare-dps": {
+      const raw = args.join(" ").trim();
+      if (!raw) {
+        return {
+          handled: true,
+          content: [
+            "Usage: /dps <weapon> [vs <weaponB>] [--preset rifle-viral-heat|typical]",
+            "Examples:",
+            "• /dps Coda Hema --preset rifle-viral-heat",
+            "• /dps Torid vs Ignis Wraith --preset typical",
+          ].join("\n"),
+          toolsUsed: [],
+        };
+      }
+      const presetMatch = raw.match(/--preset\s+(\S+)/i);
+      const preset = presetMatch?.[1];
+      const withoutPreset = raw.replace(/--preset\s+\S+/i, "").trim();
+      const parts = withoutPreset.split(/\s+vs\s+/i);
+      const weapon = parts[0]?.trim() || "";
+      const weaponB = parts[1]?.trim();
+      if (!weapon) {
+        return { handled: true, content: "Missing weapon name.", toolsUsed: [] };
+      }
+      return {
+        handled: true,
+        content: await runOfflineDps({
+          weapon,
+          weaponB: weaponB || undefined,
+          preset: preset || "typical",
+        }),
+        toolsUsed: ["estimate_modded_dps"],
       };
     }
     case "compare": {

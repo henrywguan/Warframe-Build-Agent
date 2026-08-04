@@ -176,6 +176,8 @@ For live data, prefer `npm run wf -- …`, `npm run market -- …`, and `npm run
 | `npm run knowledge -- crawl-overframe` | Crawl Overframe top-3 builds + mods/arcanes into local DB |
 | `npm run knowledge -- lookup <q>` | Query local knowledge pack (items + mechanics) |
 | `npm run knowledge -- pull-mechanics` | Refresh Damage/Status/Armor/faction/resource digests |
+| `npm run knowledge -- dps <weapon> --preset …` | Offline modded DPS estimate |
+| `npm run knowledge -- compare-dps <A> <B>` | Offline modded DPS A vs B compare |
 | `/cleanup-simplify` (Cursor) | Tidy recent diff + fast verify — [`docs/cleanup-agent.md`](docs/cleanup-agent.md) |
 | `/cleanup-simplify -all` (Cursor) | Tidy + full overlay/web integrity suite |
 | `/knowledge` (Cursor) | Offline knowledge pack pull/lookup |
