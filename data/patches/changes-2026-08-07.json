@@ -1,0 +1,17 @@
+{
+  "date": "2026-08-07",
+  "previousDate": "2026-08-02",
+  "timezone": "America/Los_Angeles",
+  "generatedAt": "2026-08-07T23:38:36.472Z",
+  "source": "https://www.warframe.com/en/patch-notes",
+  "newEntries": [],
+  "removedIds": [],
+  "latest": {
+    "id": "43-0-8",
+    "title": "Mesa Heirloom: Hotfix 43.0.8",
+    "url": "https://www.warframe.com/en/patch-notes/pc/43-0-8",
+    "type": "Hotfix",
+    "newest": true,
+    "version": "43.0.8"
+  }
+}
