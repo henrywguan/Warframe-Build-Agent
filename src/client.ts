@@ -4,8 +4,11 @@ import {
   DEFAULT_PLATFORM,
   type Alert,
   type ArchonHunt,
+  type Arbitration,
   type ClientOptions,
+  type ConstructionProgress,
   type CycleState,
+  type DailyDeal,
   type Fissure,
   type Invasion,
   type JsonValue,
@@ -126,6 +129,18 @@ export class WarframeStatusClient {
 
   getEvents(): Promise<WorldEvent[]> {
     return this.getField<WorldEvent[]>("events");
+  }
+
+  getArbitration(): Promise<Arbitration> {
+    return this.getField<Arbitration>("arbitration");
+  }
+
+  getDailyDeals(): Promise<DailyDeal[]> {
+    return this.getField<DailyDeal[]>("dailyDeals");
+  }
+
+  getConstructionProgress(): Promise<ConstructionProgress> {
+    return this.getField<ConstructionProgress>("constructionProgress");
   }
 
   async getCycles(): Promise<Record<string, CycleState>> {

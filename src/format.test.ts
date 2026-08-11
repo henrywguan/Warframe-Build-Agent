@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  formatArbitration,
+  formatDailyDeals,
   formatFissures,
   formatSummary,
   humanizeExpiry,
 } from "./format.js";
-import type { Fissure } from "./types.js";
+import type { DailyDeal, Fissure } from "./types.js";
 
 describe("humanizeExpiry", () => {
   it("formats minutes and hours from a fixed now", () => {
@@ -78,5 +80,62 @@ describe("formatSummary", () => {
     assert.match(text, /platform: pc/);
     assert.match(text, /api\.warframestat\.us/);
     assert.match(text, /Cetus \/ Plains: day/);
+  });
+});
+
+describe("formatArbitration", () => {
+  it("formats node, type, and timer", () => {
+    const text = formatArbitration({
+      node: "Hydron (Sedna)",
+      type: "Survival",
+      enemy: "Grineer",
+      expiry: "2099-01-01T00:00:00.000Z",
+      archwing: false,
+    });
+    assert.match(text, /Arbitration — Survival @ Hydron/);
+    assert.match(text, /Grineer/);
+    assert.match(text, /left/);
+  });
+
+  it("returns empty message when no data", () => {
+    assert.match(formatArbitration({}), /No active Arbitration/);
+  });
+
+  it("treats SolNode000 placeholder as inactive", () => {
+    assert.match(
+      formatArbitration({
+        node: "SolNode000",
+        nodeKey: "SolNode000",
+        type: "Unknown",
+        enemy: "Tenno",
+        expired: true,
+      }),
+      /No active Arbitration/,
+    );
+  });
+});
+
+describe("formatDailyDeals", () => {
+  it("formats deal price and stock", () => {
+    const deals: DailyDeal[] = [
+      {
+        item: "Orokin Catalyst",
+        originalPrice: 20,
+        salePrice: 10,
+        discount: 0.5,
+        sold: 3,
+        total: 10,
+        expiry: "2099-01-01T00:00:00.000Z",
+      },
+    ];
+    const text = formatDailyDeals(deals);
+    assert.match(text, /Darvo daily deals/);
+    assert.match(text, /Orokin Catalyst/);
+    assert.match(text, /10p/);
+    assert.match(text, /3\/10 sold/);
+  });
+
+  it("returns empty message when no deals", () => {
+    assert.equal(formatDailyDeals([]), "No Darvo daily deals listed.");
   });
 });

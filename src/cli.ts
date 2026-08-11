@@ -2,8 +2,11 @@
 import { WarframeStatusClient, WarframeStatusError } from "./client.js";
 import {
   formatAlerts,
+  formatArbitration,
   formatArchonHunt,
+  formatConstructionProgress,
   formatCycles,
+  formatDailyDeals,
   formatEvents,
   formatFissures,
   formatInvasions,
@@ -30,6 +33,10 @@ const COMMANDS = [
   "steel-path",
   "cycles",
   "events",
+  "arbitration",
+  "daily-deals",
+  "darvo",
+  "construction",
   "get",
   "help",
 ] as const;
@@ -64,7 +71,10 @@ Commands:
   steel-path      Steel Path honor reward
   cycles          Open-world cycles
   events          Active events
-  get <field>     Raw worldstate child field (e.g. arbitration, news)
+  arbitration     Current Arbitration mission
+  daily-deals     Darvo deals (alias: darvo)
+  construction    Fomorian / Razorback progress
+  get <field>     Raw worldstate child field (e.g. news)
 
 Options:
   --platform <pc|ps4|psn|xb1|swi|ns>   Default: pc
@@ -223,6 +233,22 @@ async function main(): Promise<void> {
     case "events": {
       const data = await client.getEvents();
       print(data, formatEvents(data));
+      break;
+    }
+    case "arbitration": {
+      const data = await client.getArbitration();
+      print(data, formatArbitration(data));
+      break;
+    }
+    case "daily-deals":
+    case "darvo": {
+      const data = await client.getDailyDeals();
+      print(data, formatDailyDeals(data));
+      break;
+    }
+    case "construction": {
+      const data = await client.getConstructionProgress();
+      print(data, formatConstructionProgress(data));
       break;
     }
     case "get": {

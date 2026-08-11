@@ -79,4 +79,44 @@ describe("slash commands", () => {
     assert.match(result.content, /Warframe Build Agent — commands/);
     assert.equal(result.content.includes(formatCommandList()), true);
   });
+
+  it("handles /arbitration via live tool", async () => {
+    const result = await runSlashCommand("/arbitration");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.deepEqual(result.toolsUsed, ["get_arbitration"]);
+  });
+
+  it("returns ehp usage when args missing", async () => {
+    const result = await runSlashCommand("/ehp");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Usage: \/ehp|--health/);
+    assert.deepEqual(result.toolsUsed, ["estimate_ehp"]);
+  });
+
+  it("returns relic usage when query missing", async () => {
+    const result = await runSlashCommand("/relic");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Usage: \/relic/);
+    assert.deepEqual(result.toolsUsed, []);
+  });
+
+  it("returns explain usage when topic missing", async () => {
+    const result = await runSlashCommand("/explain");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Usage: \/explain/);
+    assert.deepEqual(result.toolsUsed, []);
+  });
+
+  it("returns optimize stub for a mode", async () => {
+    const result = await runSlashCommand("/optimize sp");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Steel Path/i);
+    assert.match(result.content, /stub/i);
+    assert.deepEqual(result.toolsUsed, []);
+  });
 });

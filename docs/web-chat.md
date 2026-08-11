@@ -120,6 +120,16 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/market-changes` | Daily 4pm Pacific market scrape |
 | `/patches` / `/hotfix` | Latest official updates/hotfixes |
 | `/patch-changes` | Daily 4pm Pacific newly listed notes |
+| `/arbitration` | Live Arbitration mission + timer |
+| `/darvo` | Darvo daily deals |
+| `/construction` | Fomorian / Razorback progress |
+| `/relic <query>` | Relic refinement odds + tips |
+| `/ehp` / `/forma` | Offline EHP / Forma heuristics |
+| `/inventory <list>` | Parse owned gear (heuristic) |
+| `/farm-vs-buy <item>` | Farm route + market tips |
+| `/explain <topic>` | Mechanics stub → `/knowledge` |
+| `/optimize <mode>` | Mission loadout tips stub |
+| `/profile` | Player profile stub (CLI for now) |
 | `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
 | `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
 | `/dps <weapon> [vs <weaponB>] [--preset …]` | Offline modded DPS estimate / A vs B compare |
@@ -134,7 +144,7 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 
 ## What the chat can tool-call
 
-- Worldstate summary, fissures, cycles, sortie, invasions, alerts
+- Worldstate summary, fissures, cycles, sortie, invasions, alerts, **arbitration**, **Darvo deals**, **construction progress**
 - Warframe.market v2 price by slug
 - Latest saved daily market changes (4pm Pacific job)
 - Latest official updates/hotfixes (live hub scrape)
@@ -142,6 +152,7 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 - Offline knowledge lookup (`lookup_local_knowledge`) — items, mechanics digests, arcane digests, Overframe builds
 - Loadout vs top-3 Overframe compare (`compare_loadout_to_overframe`)
 - Offline modded DPS / A vs B (`estimate_modded_dps`)
+- **EHP estimate** (`estimate_ehp`), **Forma plan** (`plan_forma`), **relic odds** (`lookup_relic`), **inventory parse** (`parse_inventory`), **farm vs buy** (`farm_vs_buy`)
 
 ## Security notes
 

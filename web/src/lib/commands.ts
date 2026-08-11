@@ -13,6 +13,16 @@ import {
   stubVendor,
 } from "@/lib/pack-commands";
 import { runChatTool } from "./tools";
+import {
+  relicPositionalArgs,
+  runEhpSlash,
+  runExplainStub,
+  runFormaSlash,
+  runInventorySlash,
+  runOptimizeStub,
+  runRelicSlash,
+  runFarmVsBuySlash,
+} from "@/lib/tier-calcs";
 
 export interface ChatCommand {
   name: string;
@@ -209,6 +219,84 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     description: "Daily 4pm Pacific newly listed patch notes",
     kind: "tool",
   },
+  {
+    name: "arbitration",
+    usage: "/arbitration",
+    description: "Live Arbitration mission + timer",
+    kind: "tool",
+  },
+  {
+    name: "darvo",
+    usage: "/darvo",
+    description: "Darvo daily deals",
+    kind: "tool",
+  },
+  {
+    name: "daily-deals",
+    usage: "/daily-deals",
+    description: "Alias for /darvo",
+    kind: "tool",
+  },
+  {
+    name: "construction",
+    usage: "/construction",
+    description: "Fomorian / Razorback construction progress",
+    kind: "tool",
+  },
+  {
+    name: "relic",
+    usage: "/relic <query>",
+    description: "Void Relic refinement odds + radshare tips",
+    kind: "tool",
+  },
+  {
+    name: "explain",
+    usage: "/explain <topic>",
+    description: "Mechanics explain stub → /knowledge",
+    kind: "meta",
+  },
+  {
+    name: "optimize",
+    usage: "/optimize <mode>",
+    description: "Mission loadout tips stub (archon|sp|netracell|da|eidolon|pt|arb|circuit)",
+    kind: "meta",
+  },
+  {
+    name: "ehp",
+    usage: "/ehp --health N --shields N --armor N …",
+    description: "Effective HP estimate (offline)",
+    kind: "tool",
+  },
+  {
+    name: "forma",
+    usage: "/forma --needed N [--current 60]",
+    description: "Forma count heuristic (offline)",
+    kind: "tool",
+  },
+  {
+    name: "inventory",
+    usage: "/inventory <pasted list>",
+    description: "Parse owned gear list (heuristic)",
+    kind: "tool",
+  },
+  {
+    name: "farm-vs-buy",
+    usage: "/farm-vs-buy <item>",
+    description: "Farm route + market price tips",
+    kind: "tool",
+  },
+  {
+    name: "buyvsfarm",
+    usage: "/buyvsfarm <item>",
+    description: "Alias for /farm-vs-buy",
+    kind: "tool",
+  },
+  {
+    name: "profile",
+    usage: "/profile",
+    description: "Player profile stub (CLI / localStorage later)",
+    kind: "meta",
+  },
 ];
 
 export function formatCommandList(): string {
@@ -224,10 +312,10 @@ export function formatCommandList(): string {
     "• /knowledge — pull or query offline knowledge pack (WFCD/Wiki/Overframe)",
     "",
     "Useful CLI:",
-    "• npm run wf -- summary | fissures --steel-path | cycles | baro | nightwave | archon",
+    "• npm run wf -- summary | fissures --steel-path | cycles | baro | nightwave | archon | arbitration | darvo | construction",
     "• npm run market -- price <slug> | slug-search \"…\" | changes",
     "• npm run patches -- latest | changes",
-    "• npm run knowledge -- status | lookup \"…\" | farm|builds \"…\" | preset-list",
+    "• npm run knowledge -- status | lookup \"…\" | farm|builds \"…\" | ehp|forma|relic|profile|farm-vs-buy",
     "• npm run knowledge -- dps|compare-dps|compare-loadout … | import-builds | crawl-overframe",
     "• npm run cleanup:verify | cleanup:verify:all",
     "",
@@ -413,6 +501,86 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
     case "patch-changes":
     case "patch_changes":
       return fromTool("get_patch_notes_daily_changes");
+    case "arbitration":
+    case "arb":
+      return fromTool("get_arbitration");
+    case "darvo":
+    case "daily-deals":
+    case "dailydeals":
+      return fromTool("get_daily_deals");
+    case "construction":
+      return fromTool("get_construction");
+    case "relic": {
+      const query = relicPositionalArgs(args);
+      if (!query && !args.some((a) => /^--refinement$/i.test(a))) {
+        return meta(
+          [
+            "Usage: /relic <query> [--refinement intact|exceptional|flawless|radiant]",
+            "Example: /relic Mirage Prime Neuroptics --refinement radiant",
+            "Tip: odds table only — omit query for refinement table.",
+          ].join("\n"),
+        );
+      }
+      return {
+        handled: true,
+        content: await runRelicSlash(query, args),
+        toolsUsed: ["lookup_relic"],
+      };
+    }
+    case "explain":
+      return meta(runExplainStub(args.join(" ").trim() || undefined));
+    case "optimize":
+    case "loadout":
+      return meta(runOptimizeStub(args[0]));
+    case "ehp":
+      return {
+        handled: true,
+        content: runEhpSlash(args),
+        toolsUsed: ["estimate_ehp"],
+      };
+    case "forma":
+      return {
+        handled: true,
+        content: runFormaSlash(args),
+        toolsUsed: ["plan_forma"],
+      };
+    case "inventory":
+    case "owned": {
+      const text = args.join(" ").trim();
+      return {
+        handled: true,
+        content: runInventorySlash(text),
+        toolsUsed: ["parse_inventory"],
+      };
+    }
+    case "farm-vs-buy":
+    case "buyvsfarm":
+    case "farmvsbuy": {
+      const item = args.join(" ").trim();
+      if (!item) {
+        return meta(
+          "Usage: /farm-vs-buy <item>\nExample: /farm-vs-buy Mirage Prime Neuroptics",
+        );
+      }
+      return {
+        handled: true,
+        content: await runFarmVsBuySlash(item),
+        toolsUsed: ["farm_vs_buy"],
+      };
+    }
+    case "profile":
+      return meta(
+        [
+          "Player profile — stub",
+          "",
+          "Persistent profiles are not stored in the web UI yet.",
+          "From repo root:",
+          "• npm run knowledge -- profile",
+          "• npm run knowledge -- profile-set --mr N [--steel-path] [--budget low|mid|high]",
+          "",
+          "Future: localStorage profile in web chat.",
+        ].join("\n"),
+      );
     case "knowledge":
     case "lookup": {
       const query = args.join(" ").trim();
