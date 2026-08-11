@@ -153,6 +153,38 @@ export interface WorldEvent {
   rewards?: MissionReward[];
 }
 
+export interface Arbitration {
+  node?: string;
+  nodeKey?: string;
+  type?: string;
+  typeKey?: string;
+  enemy?: string;
+  faction?: string;
+  expiry?: string;
+  activation?: string;
+  archwing?: boolean;
+  sharkwing?: boolean;
+  /** Status API sets true when the placeholder “no active arb” payload is returned. */
+  expired?: boolean;
+}
+
+export interface DailyDeal {
+  item?: string;
+  originalPrice?: number;
+  salePrice?: number;
+  total?: number;
+  sold?: number;
+  expiry?: string;
+  discount?: number;
+}
+
+export interface ConstructionProgress {
+  id?: string;
+  fomorianProgress?: number | string;
+  razorbackProgress?: number | string;
+  unknownProgress?: number | string;
+}
+
 export interface ClientOptions {
   platform?: Platform;
   language?: string;

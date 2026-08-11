@@ -14,10 +14,25 @@ import { parseOverframeHtmlPaths } from "./overframe-html.js";
 import { lookupLocalKnowledge } from "./query.js";
 import {
   formatFarmRoute,
+  formatFarmVsBuy,
   formatLocalBuildsOnly,
   formatPresetList,
   syncModsAsOf,
 } from "./pack-shortcuts.js";
+import { formatEhpEstimate } from "./ehp.js";
+import { formatFormaPlan } from "./forma.js";
+import { formatRelicAdviceWithLookup } from "./relic-ev.js";
+import { formatInventoryParse, parseInventory } from "./inventory-parse.js";
+import {
+  formatPlayerProfile,
+  loadPlayerProfile,
+  updatePlayerProfile,
+  type PlayerBudget,
+} from "./profile.js";
+import {
+  formatPublicExportStubResult,
+  pullPublicExportStub,
+} from "./public-export.js";
 import { pullArcanesOnly, pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
 import { loadManifest } from "./store.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -42,6 +57,14 @@ Usage:
   npm run knowledge -- compare-dps <weaponA> <weaponB> [--preset name|--mods a,b,c]
   npm run knowledge -- compare-loadout <item> --mods a,b,c [--arcanes x,y]
   npm run knowledge -- status
+  npm run knowledge -- ehp --health N --shields N --armor N [--dr 0.75] [--overguard N] [--adaptation 0-10]
+  npm run knowledge -- forma --needed N [--current 60] [--matching N]
+  npm run knowledge -- relic <query> [--refinement intact|exceptional|flawless|radiant]
+  npm run knowledge -- inventory-parse "<text>" | --file path
+  npm run knowledge -- profile
+  npm run knowledge -- profile-set [--mr N] [--steel-path] [--budget low|mid|high] [--platform pc] [--playstyle text] [--goal text]
+  npm run knowledge -- pull-public-export
+  npm run knowledge -- farm-vs-buy <item>
 
 pull options:
   --limit <n>              Only first N catalog items (dev/sample)
@@ -92,6 +115,14 @@ parse-overframe-html options:
   --out <file>             Write/merge import JSON (default data/knowledge/builds-export.json)
   --item <name>            Force item name for single-file parses
   --import                 Also run crawl-overframe --import-builds on --out
+
+ehp / forma / relic / profile:
+  Offline calculators and player profile (Tier 2–3 helpers — not full simulators)
+  ehp: simple EHP estimate with armor, DR, overguard, Adaptation stacks
+  forma: heuristic forma count from capacity deficit
+  relic: refinement odds table + radshare tips (+ pack lookup when available)
+  profile-set: persists data/knowledge/player-profile.json
+  farm-vs-buy: offline farm route + market price check reminder
 `);
   process.exit(1);
 }
@@ -100,6 +131,38 @@ function getFlag(args: string[], name: string): string | undefined {
   const idx = args.indexOf(name);
   if (idx === -1) return undefined;
   return args[idx + 1];
+}
+
+function getNumberFlag(args: string[], name: string): number | undefined {
+  const raw = getFlag(args, name);
+  if (raw == null) return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function getCsvFlag(args: string[], name: string): string[] | undefined {
+  const raw = getFlag(args, name);
+  if (raw == null) return undefined;
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function positionalArgs(
+  args: string[],
+  flagNames: string[],
+): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i]!;
+    if (arg.startsWith("--")) {
+      if (flagNames.includes(arg)) i += 1;
+      continue;
+    }
+    out.push(arg);
+  }
+  return out;
 }
 
 async function main() {
@@ -386,6 +449,123 @@ async function main() {
         `Import with: npm run knowledge -- crawl-overframe --import-builds "${out}"`,
       );
     }
+    return;
+  }
+
+  if (command === "ehp") {
+    const health = getNumberFlag(rest, "--health");
+    const shields = getNumberFlag(rest, "--shields");
+    const armor = getNumberFlag(rest, "--armor");
+    if (health == null || shields == null || armor == null) {
+      console.error(
+        "Usage: npm run knowledge -- ehp --health N --shields N --armor N [--dr 0.75] [--overguard N] [--adaptation 0-10]",
+      );
+      process.exit(1);
+    }
+    console.log(
+      formatEhpEstimate({
+        health,
+        shields,
+        armor,
+        damageReduction: getNumberFlag(rest, "--dr"),
+        overguard: getNumberFlag(rest, "--overguard"),
+        adaptationStacks: getNumberFlag(rest, "--adaptation"),
+      }),
+    );
+    return;
+  }
+
+  if (command === "forma") {
+    const needed = getNumberFlag(rest, "--needed");
+    if (needed == null) {
+      console.error(
+        "Usage: npm run knowledge -- forma --needed N [--current 60] [--matching N]",
+      );
+      process.exit(1);
+    }
+    console.log(
+      formatFormaPlan({
+        capacityNeeded: needed,
+        currentCapacity: getNumberFlag(rest, "--current"),
+        matchingPolarities: getNumberFlag(rest, "--matching"),
+      }),
+    );
+    return;
+  }
+
+  if (command === "relic") {
+    const refinement = getFlag(rest, "--refinement");
+    const query = positionalArgs(rest, ["--refinement"]).join(" ").trim();
+    console.log(await formatRelicAdviceWithLookup(query, { refinement }));
+    return;
+  }
+
+  if (command === "inventory-parse") {
+    const file = getFlag(rest, "--file");
+    let raw = "";
+    if (file) {
+      raw = await readFile(file, "utf8");
+    } else {
+      raw = positionalArgs(rest, ["--file"]).join(" ").trim();
+    }
+    if (!raw) {
+      console.error(
+        'Usage: npm run knowledge -- inventory-parse "<text>" | --file path',
+      );
+      process.exit(1);
+    }
+    console.log(formatInventoryParse(raw));
+    if (rest.includes("--json")) {
+      console.log(JSON.stringify(parseInventory(raw), null, 2));
+    }
+    return;
+  }
+
+  if (command === "profile") {
+    console.log(formatPlayerProfile(await loadPlayerProfile()));
+    return;
+  }
+
+  if (command === "profile-set") {
+    const partial: Parameters<typeof updatePlayerProfile>[0] = {};
+    const mr = getNumberFlag(rest, "--mr") ?? getNumberFlag(rest, "--mastery");
+    if (mr != null) partial.masteryRank = mr;
+    if (rest.includes("--steel-path")) partial.steelPath = true;
+    if (rest.includes("--no-steel-path")) partial.steelPath = false;
+    const budget = getFlag(rest, "--budget");
+    if (budget && ["low", "mid", "high"].includes(budget)) {
+      partial.budget = budget as PlayerBudget;
+    }
+    const platform = getFlag(rest, "--platform");
+    if (platform) partial.platform = platform;
+    const playstyle = getFlag(rest, "--playstyle");
+    if (playstyle) partial.playstyle = playstyle;
+    const goal = getFlag(rest, "--goal");
+    if (goal) partial.goals = [goal];
+    const frames = getCsvFlag(rest, "--frames");
+    if (frames) partial.ownedFrames = frames;
+    const weapons = getCsvFlag(rest, "--weapons");
+    if (weapons) partial.ownedWeapons = weapons;
+    const mods = getCsvFlag(rest, "--mods");
+    if (mods) partial.ownedMods = mods;
+    const saved = await updatePlayerProfile(partial);
+    console.log(formatPlayerProfile(saved));
+    return;
+  }
+
+  if (command === "pull-public-export") {
+    const index = await pullPublicExportStub();
+    console.log(formatPublicExportStubResult(index));
+    return;
+  }
+
+  if (command === "farm-vs-buy") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      console.error('Usage: npm run knowledge -- farm-vs-buy "<item>"');
+      process.exit(1);
+    }
+    console.log(await formatFarmVsBuy(query));
     return;
   }
 

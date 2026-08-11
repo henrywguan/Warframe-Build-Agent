@@ -38,6 +38,17 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/patches [n]` | Latest official updates/hotfixes |
 | `/hotfix` | Alias for `/patches` |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
+| `/arbitration` | Live Arbitration mission + timer |
+| `/darvo` / `/daily-deals` | Darvo daily deals |
+| `/construction` | Fomorian / Razorback construction progress |
+| `/relic <query>` | Void Relic refinement odds + radshare tips |
+| `/explain <topic>` | Mechanics explain stub → `/knowledge` |
+| `/optimize <mode>` | Mission loadout tips stub (`archon\|sp\|netracell\|da\|eidolon\|pt\|arb\|circuit`) |
+| `/ehp --health N --shields N --armor N …` | Effective HP estimate (offline) |
+| `/forma --needed N [--current 60]` | Forma count heuristic (offline) |
+| `/inventory <pasted list>` | Parse owned gear list (heuristic) |
+| `/farm-vs-buy <item>` / `/buyvsfarm` | Farm route + market price tips |
+| `/profile` | Player profile stub (CLI / localStorage later) |
 | `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
 | `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
 | `/dps <weapon> [vs <weaponB>] [--preset …]` | Offline modded DPS estimate / A vs B compare |
@@ -93,6 +104,22 @@ Details:
 | `overframe-import` | Playwright / CDP import path |
 | `screenshot-qa` | OCR loadout quality checks |
 | `new-player-onboarding` | First-week guidance |
+| `event-optimizer` | Timed event currency / farm plans |
+| `relic-advisor` | Void Relic refinement + radshare |
+| `farm-vs-buy` | Farm route vs market price |
+| `loadout-optimize` | Mission-specific loadout packages |
+| `arbitration-guide` | Live Arbitration + rotation tips |
+| `helminth-picker` | Subsumed ability recommendations |
+| `amp-setup` | Operator amp + Virtuos arcanes |
+| `necramech-loadout` | Necramech mod builds |
+| `railjack-setup` | Railjack hull / crew / armaments |
+| `ehp-survivability` | Effective HP + DR priorities |
+| `citation-check` | Source freshness + patch labels |
+| `progression-profile` | MR / quest aware next steps |
+| `forma-planner` | Forma / polarity spend estimate |
+| `inventory-import` | Parse owned gear lists |
+| `public-export-sync` | Refresh public game data stub |
+| `damage-simulator` | DPS vs full damage explanations |
 
 Hermes Desktop import ships the matching player-facing skills (v0.3.0) under `hermes/skills/warframe/` — see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) for Qwen/Ollama.
 
@@ -113,6 +140,9 @@ npm run wf -- baro
 npm run wf -- nightwave
 npm run wf -- archon
 npm run wf -- events
+npm run wf -- arbitration
+npm run wf -- darvo
+npm run wf -- construction
 
 # Market
 npm run market -- status
@@ -142,6 +172,13 @@ npm run knowledge -- pull-mechanics
 npm run knowledge -- pull-arcanes
 npm run knowledge -- crawl-overframe
 npm run knowledge -- import-builds ./data/knowledge/builds-export.json
+npm run knowledge -- ehp --health 500 --shields 300 --armor 300 [--dr 0.75]
+npm run knowledge -- forma --needed 74 [--current 60] [--matching 4]
+npm run knowledge -- relic "Mirage Prime" [--refinement radiant]
+npm run knowledge -- inventory-parse "Soma Prime, Primed Flow"
+npm run knowledge -- profile | profile-set --mr 16 --steel-path
+npm run knowledge -- farm-vs-buy "Mirage Prime Neuroptics"
+npm run knowledge -- pull-public-export
 npm run knowledge:export-overframe -- --limit 5
 npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/builds-import.sample.json
 ./scripts/pack-hermes-profile.sh

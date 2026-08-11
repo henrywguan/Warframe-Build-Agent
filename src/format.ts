@@ -1,7 +1,10 @@
 import type {
   Alert,
   ArchonHunt,
+  Arbitration,
+  ConstructionProgress,
   CycleState,
+  DailyDeal,
   Fissure,
   Invasion,
   MissionReward,
@@ -282,6 +285,76 @@ export function formatEvents(events: WorldEvent[]): string {
             : null;
       return `• ${title}${progress ? ` (${progress})` : ""} — ${humanizeExpiry(event.expiry)}`;
     })
+    .join("\n");
+}
+
+export function formatArbitration(arb: Arbitration): string {
+  if (isInactiveArbitration(arb)) {
+    return [
+      "No active Arbitration right now (Status returned an empty placeholder).",
+      "Arbitrations rotate frequently — re-check with: npm run wf -- arbitration",
+      "Tip when live: SP-ready AOE + enemy radar; rewards rotate (Endo / mods / Ayatan).",
+    ].join("\n");
+  }
+  const flags = [
+    arb.archwing ? "Archwing" : null,
+    arb.sharkwing ? "Sharkwing" : null,
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return [
+    `Arbitration — ${arb.type ?? "Mission"} @ ${arb.node ?? "?"}`,
+    `Enemy / faction: ${arb.enemy ?? arb.faction ?? "?"}`,
+    flags ? `Flags: ${flags}` : null,
+    `Timer: ${humanizeExpiry(arb.expiry)}`,
+    "",
+    "Tip: bring SP-ready AOE + enemy radar; reward rotates (Endo / mods / Ayatan).",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+function isInactiveArbitration(arb: Arbitration | null | undefined): boolean {
+  return (
+    !arb ||
+    arb.expired === true ||
+    arb.nodeKey === "SolNode000" ||
+    arb.node === "SolNode000" ||
+    /^unknown$/i.test(arb.type ?? "") ||
+    (!arb.node && !arb.type)
+  );
+}
+
+export function formatDailyDeals(deals: DailyDeal[]): string {
+  if (!deals?.length) return "No Darvo daily deals listed.";
+  const lines = ["Darvo daily deals:", ""];
+  for (const deal of deals) {
+    const sold =
+      typeof deal.sold === "number" && typeof deal.total === "number"
+        ? `${deal.sold}/${deal.total} sold`
+        : "stock n/a";
+    const disc =
+      typeof deal.discount === "number"
+        ? `${Math.round(deal.discount * 100)}% off`
+        : "sale";
+    lines.push(
+      `• ${deal.item ?? "item"} — ${deal.salePrice ?? "?"}p (was ${deal.originalPrice ?? "?"}p, ${disc}) · ${sold} · ${humanizeExpiry(deal.expiry)}`,
+    );
+  }
+  return lines.join("\n");
+}
+
+export function formatConstructionProgress(progress: ConstructionProgress): string {
+  if (!progress) return "No construction progress data.";
+  return [
+    "Invasion construction progress",
+    `• Fomorian: ${progress.fomorianProgress ?? "?"}%`,
+    `• Razorback: ${progress.razorbackProgress ?? "?"}%`,
+    progress.unknownProgress != null
+      ? `• Other: ${progress.unknownProgress}%`
+      : null,
+  ]
+    .filter(Boolean)
     .join("\n");
 }
 

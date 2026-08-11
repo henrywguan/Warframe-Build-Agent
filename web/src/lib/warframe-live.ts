@@ -578,6 +578,122 @@ export async function liveArchonHunt(): Promise<string> {
   return lines.join("\n");
 }
 
+export async function liveArbitration(): Promise<string> {
+  const arb = await statusGet<{
+    node?: string;
+    nodeKey?: string;
+    type?: string;
+    enemy?: string;
+    faction?: string;
+    expiry?: string;
+    archwing?: boolean;
+    sharkwing?: boolean;
+    expired?: boolean;
+  }>("arbitration");
+
+  if (isInactiveArbitration(arb)) {
+    return [
+      "No active Arbitration right now (Status returned an empty placeholder).",
+      "Arbitrations rotate frequently — re-check with /arbitration",
+      "Tip when live: SP-ready AOE + enemy radar; rewards rotate (Endo / mods / Ayatan).",
+      "",
+      "Source: api.warframestat.us (platform: pc)",
+    ].join("\n");
+  }
+
+  const flags = [
+    arb.archwing ? "Archwing" : null,
+    arb.sharkwing ? "Sharkwing" : null,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const lines = [
+    `Arbitration — ${arb.type ?? "Mission"} @ ${arb.node ?? "?"}`,
+    `Enemy / faction: ${arb.enemy ?? arb.faction ?? "?"}`,
+    flags ? `Flags: ${flags}` : null,
+    `Timer: ${humanizeExpiry(arb.expiry)}`,
+    "",
+    "Tip: bring SP-ready AOE + enemy radar; reward rotates (Endo / mods / Ayatan).",
+    "",
+    "Source: api.warframestat.us (platform: pc) — timers can shift.",
+  ].filter(Boolean) as string[];
+
+  return lines.join("\n");
+}
+
+function isInactiveArbitration(arb: {
+  node?: string;
+  nodeKey?: string;
+  type?: string;
+  expired?: boolean;
+} | null | undefined): boolean {
+  return (
+    !arb ||
+    arb.expired === true ||
+    arb.nodeKey === "SolNode000" ||
+    arb.node === "SolNode000" ||
+    /^unknown$/i.test(arb.type ?? "") ||
+    (!arb.node && !arb.type)
+  );
+}
+
+export async function liveDailyDeals(): Promise<string> {
+  const deals = await statusGet<
+    Array<{
+      item?: string;
+      originalPrice?: number;
+      salePrice?: number;
+      total?: number;
+      sold?: number;
+      expiry?: string;
+      discount?: number;
+    }>
+  >("dailyDeals");
+
+  if (!deals?.length) return "No Darvo daily deals listed.";
+
+  const lines = ["Darvo daily deals:", ""];
+  for (const deal of deals) {
+    const sold =
+      typeof deal.sold === "number" && typeof deal.total === "number"
+        ? `${deal.sold}/${deal.total} sold`
+        : "stock n/a";
+    const disc =
+      typeof deal.discount === "number"
+        ? `${Math.round(deal.discount * 100)}% off`
+        : "sale";
+    lines.push(
+      `• ${deal.item ?? "item"} — ${deal.salePrice ?? "?"}p (was ${deal.originalPrice ?? "?"}p, ${disc}) · ${sold} · ${humanizeExpiry(deal.expiry)}`,
+    );
+  }
+  lines.push("", "Source: api.warframestat.us (platform: pc) — timers can shift.");
+  return lines.join("\n");
+}
+
+export async function liveConstruction(): Promise<string> {
+  const progress = await statusGet<{
+    fomorianProgress?: number | string;
+    razorbackProgress?: number | string;
+    unknownProgress?: number | string;
+  }>("constructionProgress");
+
+  if (!progress) return "No construction progress data.";
+
+  const lines = [
+    "Invasion construction progress",
+    `• Fomorian: ${progress.fomorianProgress ?? "?"}%`,
+    `• Razorback: ${progress.razorbackProgress ?? "?"}%`,
+    progress.unknownProgress != null
+      ? `• Other: ${progress.unknownProgress}%`
+      : null,
+    "",
+    "Source: api.warframestat.us (platform: pc)",
+  ].filter(Boolean) as string[];
+
+  return lines.join("\n");
+}
+
 export async function liveEvents(): Promise<string> {
   const events = await statusGet<
     Array<{

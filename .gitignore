@@ -14,3 +14,5 @@ exports/warframe-build-agent-knowledge.tar.gz
 # Optional huge scratch exports; the committed knowledge pack under data/knowledge stays tracked
 data/knowledge/.cache/
 data/knowledge/builds-export*.json
+# Per-machine player prefs (MR, owned gear) — do not commit
+data/knowledge/player-profile.json

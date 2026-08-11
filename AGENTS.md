@@ -53,6 +53,9 @@ npm run wf -- cycles
 npm run wf -- baro
 npm run wf -- nightwave
 npm run wf -- archon
+npm run wf -- arbitration
+npm run wf -- darvo
+npm run wf -- construction
 npm run market -- status
 npm run market -- price mirage_prime_set
 npm run market -- slug-search "Mirage Prime set"
@@ -78,6 +81,10 @@ npm run knowledge -- builds "Coda Hema"
 npm run knowledge -- preset-list
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
 npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
+npm run knowledge -- ehp --health 500 --shields 300 --armor 300
+npm run knowledge -- forma --needed 74
+npm run knowledge -- relic "Mirage Prime" --refinement radiant
+npm run knowledge -- farm-vs-buy "Mirage Prime Neuroptics"
 ```
 
 After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-simplify`) so touched code stays simple and verification stays green. For overlay + web integrity, use `/cleanup-simplify -all` (`./scripts/cleanup-verify-all.sh`). Details: [`docs/cleanup-agent.md`](docs/cleanup-agent.md).

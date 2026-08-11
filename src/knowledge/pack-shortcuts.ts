@@ -71,6 +71,30 @@ export async function formatFarmRoute(
   return lines.join("\n").trim();
 }
 
+export async function formatFarmVsBuy(
+  itemQuery: string,
+  options?: { repoRoot?: string },
+): Promise<string> {
+  const farm = await formatFarmRoute(itemQuery, options);
+  const slugHint = itemQuery
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
+  return [
+    farm,
+    "",
+    "---",
+    "",
+    "Farm vs buy (offline · check live prices before deciding)",
+    "",
+    `Market check: npm run market -- price ${slugHint || "<slug>"}`,
+    "Daily price changes: npm run market -- changes",
+    "",
+    "Rule of thumb: buy cheap vaulted parts; farm relics when fissures align or you enjoy the route.",
+  ].join("\n");
+}
+
 export async function formatLocalBuildsOnly(
   itemQuery: string,
   options?: { repoRoot?: string },

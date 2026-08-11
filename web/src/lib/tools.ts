@@ -16,8 +16,11 @@ import {
 import {
   liveAlerts,
   liveArchonHunt,
+  liveArbitration,
   liveBaro,
+  liveConstruction,
   liveCycles,
+  liveDailyDeals,
   liveEvents,
   liveFissures,
   liveInvasions,
@@ -30,6 +33,13 @@ import {
   liveSortie,
   liveWorldstateSummary,
 } from "@/lib/warframe-live";
+import {
+  formatEhpResult,
+  formatFormaResult,
+  runFarmVsBuySlash,
+  runInventorySlash,
+  runRelicSlash,
+} from "@/lib/tier-calcs";
 
 const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
   type: "function",
@@ -164,6 +174,132 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
       name: "get_events",
       description: "Get active worldstate events and timers.",
       parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_arbitration",
+      description: "Get today's Arbitration mission node, type, faction, and timer.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_daily_deals",
+      description: "Get Darvo's daily deals (discounted items, stock, timers).",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_construction",
+      description: "Get Fomorian / Razorback invasion construction progress.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "estimate_ehp",
+      description:
+        "Estimate Warframe effective HP from health, shields, armor, optional DR, overguard, and Adaptation stacks (offline heuristic).",
+      parameters: {
+        type: "object",
+        properties: {
+          health: { type: "number", description: "Base health" },
+          shields: { type: "number", description: "Shield capacity" },
+          armor: { type: "number", description: "Armor rating" },
+          dr: { type: "number", description: "Fractional damage reduction (e.g. 0.75)" },
+          overguard: { type: "number", description: "Overguard pool" },
+          adaptation: {
+            type: "number",
+            description: "Adaptation stacks (0–10)",
+          },
+        },
+        required: ["health", "shields", "armor"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "plan_forma",
+      description:
+        "Heuristic Forma count from mod capacity needed vs current capacity and matching polarities.",
+      parameters: {
+        type: "object",
+        properties: {
+          needed: { type: "number", description: "Total mod capacity needed" },
+          current: { type: "number", description: "Current capacity (default 60)" },
+          matching: {
+            type: "number",
+            description: "Count of polarity-matched mod slots",
+          },
+        },
+        required: ["needed"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "lookup_relic",
+      description:
+        "Void Relic refinement odds table, radshare tips, and optional pack lookup for a part/relic name.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "Relic or part name (optional)",
+          },
+          refinement: {
+            type: "string",
+            description: "intact | exceptional | flawless | radiant",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "parse_inventory",
+      description:
+        "Parse a pasted owned-gear list into coarse frames/weapons/mods buckets (session-only heuristic).",
+      parameters: {
+        type: "object",
+        properties: {
+          text: {
+            type: "string",
+            description: "Comma or newline separated inventory list",
+          },
+        },
+        required: ["text"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "farm_vs_buy",
+      description:
+        "Offline farm route from wiki digest plus market price check tips for farm-vs-buy decisions.",
+      parameters: {
+        type: "object",
+        properties: {
+          item: { type: "string", description: "Item or part name" },
+        },
+        required: ["item"],
+        additionalProperties: false,
+      },
     },
   },
   {
@@ -403,6 +539,10 @@ function asString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
+function asFiniteNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
 async function withRequiredQuery(
   args: ToolArgs,
   run: (query: string) => Promise<string>,
@@ -449,6 +589,54 @@ export async function runChatTool(
         return await liveArchonHunt();
       case "get_events":
         return await liveEvents();
+      case "get_arbitration":
+        return await liveArbitration();
+      case "get_daily_deals":
+        return await liveDailyDeals();
+      case "get_construction":
+        return await liveConstruction();
+      case "estimate_ehp": {
+        const health = asFiniteNumber(args.health);
+        const shields = asFiniteNumber(args.shields);
+        const armor = asFiniteNumber(args.armor);
+        if (health == null || shields == null || armor == null) {
+          return "Missing required health, shields, and armor numbers.";
+        }
+        return formatEhpResult({
+          health,
+          shields,
+          armor,
+          damageReduction: asFiniteNumber(args.dr),
+          overguard: asFiniteNumber(args.overguard),
+          adaptationStacks: asFiniteNumber(args.adaptation),
+        });
+      }
+      case "plan_forma": {
+        const needed = asFiniteNumber(args.needed);
+        if (needed == null) {
+          return "Missing required needed (capacity) number.";
+        }
+        return formatFormaResult({
+          capacityNeeded: needed,
+          currentCapacity: asFiniteNumber(args.current),
+          matchingPolarities: asFiniteNumber(args.matching),
+        });
+      }
+      case "lookup_relic": {
+        const query = asString(args.query) ?? "";
+        const refinement = asString(args.refinement);
+        return await runRelicSlash(query, refinement ? ["--refinement", refinement] : []);
+      }
+      case "parse_inventory": {
+        const text = asString(args.text);
+        if (!text) return "Missing required text.";
+        return runInventorySlash(text);
+      }
+      case "farm_vs_buy": {
+        const item = asString(args.item);
+        if (!item) return "Missing required item.";
+        return await runFarmVsBuySlash(item);
+      }
       case "get_market_price": {
         const slug = asString(args.slug);
         if (!slug) return "Missing required slug.";
