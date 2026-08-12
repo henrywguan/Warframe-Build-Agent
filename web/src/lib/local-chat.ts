@@ -21,6 +21,7 @@ import { looksLikeBuildRequest } from "@/lib/source-policy";
 import {
   liveCycles,
   liveFissures,
+  livePatchNotesDetail,
   livePatchNotesLatest,
   liveWorldstateSummary,
 } from "@/lib/warframe-live";
@@ -194,6 +195,20 @@ async function handlePlainLocal(text: string): Promise<LocalChatResult> {
     };
   }
   if (/\b(patch|hotfix|update)\b/i.test(text)) {
+    const version =
+      text.match(/\b(\d+\.\d+\.\d+(?:\.\d+)?)\b/)?.[1] ??
+      text.match(/\b(\d+-\d+-\d+(?:-\d+)?)\b/)?.[1];
+    const wantsDetail =
+      Boolean(version) ||
+      /\b(detail|synopsis|full|what.?s in|what changed|notes for)\b/i.test(text);
+    if (wantsDetail) {
+      toolsUsed.push("get_patch_notes_detail");
+      return {
+        content: await livePatchNotesDetail(version ?? "latest"),
+        toolsUsed,
+        model: "local-knowledge",
+      };
+    }
     toolsUsed.push("get_patch_notes_latest");
     return {
       content: await livePatchNotesLatest(8),

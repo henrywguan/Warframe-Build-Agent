@@ -53,14 +53,15 @@ def recommend_actions(context: LoadoutContext) -> list[ActionRecommendation]:
             ActionRecommendation(
                 priority=2,
                 category="Local data",
-                title="Confirm before online build search",
+                title="Enable Online search for community builds",
                 detail=(
-                    f"{local.detail} Open overlay chat and confirm online search "
-                    f"(Overframe / YouTube / public sources) if you want community "
-                    f"comparisons. Until then, cards below stay agent-calculated.\n\n"
+                    f"{local.detail} Turn on **Online search** in the web chat UI "
+                    f"(or overlay chat via CHAT_API_URL) for a live Overframe / "
+                    f"YouTube / Wiki crawl. Until then, cards below stay "
+                    f"agent-calculated — never type yes/no in chat.\n\n"
                     f"{format_online_search_confirmation(weapon)}"
                 ),
-                why="No local Overframe builds cached — ask before searching online.",
+                why="No local Overframe builds cached — Online search toggle gates live crawl.",
             )
         )
 

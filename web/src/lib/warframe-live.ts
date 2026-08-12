@@ -1,4 +1,10 @@
 import { loadDailyJson } from "@/lib/daily-data";
+import {
+  PATCH_DETAIL_DEFAULT_MAX_CHARS,
+  formatPatchDetail,
+  parsePatchDetailHtml,
+  resolvePatchDetailUrl,
+} from "@/lib/patch-detail";
 
 const STATUS_BASE = "https://api.warframestat.us";
 const MARKET_BASE = "https://api.warframe.market/v2";
@@ -89,6 +95,16 @@ function formatPatchEntry(entry: PatchEntry): string {
   const newest = entry.newest ? " [Newest]" : "";
   const version = entry.version ? ` (${entry.version})` : "";
   return `• ${entry.type}${newest}: ${entry.title}${version}\n   ${entry.url}`;
+}
+
+async function fetchPatchHtml(url: string): Promise<Response> {
+  return fetch(url, {
+    headers: {
+      Accept: "text/html,application/xhtml+xml",
+      "User-Agent": "warframe-build-agent-web/0.1.0",
+    },
+    cache: "no-store",
+  });
 }
 
 async function statusGet<T>(pathName: string): Promise<T> {
@@ -404,13 +420,7 @@ export async function liveMarketDailyChanges(): Promise<string> {
 }
 
 export async function livePatchNotesLatest(limit = 8): Promise<string> {
-  const response = await fetch(PATCH_NOTES_URL, {
-    headers: {
-      Accept: "text/html,application/xhtml+xml",
-      "User-Agent": "warframe-build-agent-web/0.1.0",
-    },
-    cache: "no-store",
-  });
+  const response = await fetchPatchHtml(PATCH_NOTES_URL);
   if (!response.ok) {
     // Fall back to the committed daily snapshot when the live hub is unreachable.
     const loaded = await loadDailyJson<{
@@ -433,6 +443,7 @@ export async function livePatchNotesLatest(limit = 8): Promise<string> {
       ...entries.slice(0, limit).map(formatPatchEntry),
       "",
       "Open the linked notes for full details. Hub listing can change after hotfixes.",
+      "For full text, call get_patch_notes_detail (or /patch <version>).",
     ].join("\n");
   }
 
@@ -456,9 +467,46 @@ export async function livePatchNotesLatest(limit = 8): Promise<string> {
   }
   lines.push(
     "",
-    "Open the linked notes for full details. Listing snapshots only — not full patch text.",
+    "Hub listing only — titles/links, not full patch text.",
+    "For a detailed synopsis, call get_patch_notes_detail with the version or URL (or use /patch <version>).",
   );
   return lines.join("\n");
+}
+
+export async function livePatchNotesDetail(
+  query = "latest",
+  maxChars = PATCH_DETAIL_DEFAULT_MAX_CHARS,
+): Promise<string> {
+  try {
+    let url = resolvePatchDetailUrl(query);
+    if (!url) {
+      const hubResponse = await fetchPatchHtml(PATCH_NOTES_URL);
+      if (!hubResponse.ok) {
+        return `Could not resolve newest patch from the hub (HTTP ${hubResponse.status}). Try /patch 43.0.8 with an explicit version.`;
+      }
+      const entries = parsePatchNotesHtml(await hubResponse.text());
+      const newest =
+        entries.find((entry) => entry.newest) ?? entries[0] ?? null;
+      if (!newest?.url) {
+        return "Could not resolve the newest patch-notes entry from the hub listing.";
+      }
+      url = newest.url;
+    }
+
+    const response = await fetchPatchHtml(url);
+    if (!response.ok) {
+      return `Could not fetch patch notes page (HTTP ${response.status}): ${url}`;
+    }
+
+    const detail = parsePatchDetailHtml(await response.text(), url, {
+      maxChars,
+    });
+    return formatPatchDetail(detail);
+  } catch (error) {
+    return error instanceof Error
+      ? error.message
+      : `Patch detail failed: ${String(error)}`;
+  }
 }
 
 export async function liveBaro(): Promise<string> {

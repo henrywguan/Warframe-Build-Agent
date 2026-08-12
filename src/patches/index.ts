@@ -1,4 +1,12 @@
 export { PatchNotesClient, PatchNotesError } from "./client.js";
+export {
+  PATCH_DETAIL_DEFAULT_MAX_CHARS,
+  formatPatchDetail,
+  htmlFragmentToPlainText,
+  parsePatchDetailHtml,
+  resolvePatchDetailUrl,
+  type PatchDetail,
+} from "./detail.js";
 export { computeNewEntries, parsePatchNotesHtml } from "./parse.js";
 export { formatPatchChanges, formatSnapshot } from "./format.js";
 export {

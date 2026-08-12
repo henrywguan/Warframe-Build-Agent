@@ -1,4 +1,5 @@
 import { fetchOverframeBuildsLive, type LiveOverframeBuild } from "@/lib/overframe-online";
+import { fetchPagesForHits } from "@/lib/fetch-page";
 
 export type WebHit = {
   title: string;
@@ -144,8 +145,12 @@ function formatHits(label: string, hits: WebHit[]): string {
 /**
  * General public-web search for AI chat (DuckDuckGo + Warframe Wiki).
  * Available when the WebUI AI toggle is on.
+ * When Online search is on, also auto-fetches full-page excerpts from top hits.
  */
-export async function searchWebOnline(query: string): Promise<string> {
+export async function searchWebOnline(
+  query: string,
+  options: { fetchPages?: boolean } = {},
+): Promise<string> {
   const q = query.trim();
   if (!q) return "Missing required query.";
 
@@ -173,6 +178,18 @@ export async function searchWebOnline(query: string): Promise<string> {
     lines.push(
       "No web results returned. Answer from local tools/knowledge and say the live search was empty.",
     );
+  } else if (options.fetchPages !== false) {
+    const deep = await fetchPagesForHits([...wikiHits, ...webHits], {
+      limit: 2,
+      maxCharsEach: 4_000,
+    });
+    if (deep) {
+      lines.push("", deep);
+      lines.push(
+        "",
+        "Prefer FULL_PAGE_EXCERPTS above over inventing details. Call fetch_web_page for any other promising URL.",
+      );
+    }
   }
 
   return lines.join("\n");
@@ -180,7 +197,8 @@ export async function searchWebOnline(query: string): Promise<string> {
 
 /**
  * Live community + public-web search for build advice.
- * Prefer calling only when the WebUI Online search toggle (or chat yes) is on.
+ * Prefer calling only when the WebUI Online search toggle is on.
+ * Auto-fetches full-page excerpts from top Wiki/web hits.
  */
 export async function searchCommunityBuildsOnline(query: string): Promise<string> {
   const item = query.trim();
@@ -221,8 +239,24 @@ export async function searchCommunityBuildsOnline(query: string): Promise<string
   if (!any) {
     lines.push("");
     lines.push(
-      "No live community results returned. Stay local + agent-calculated, or ask the player to import Overframe builds (docs/overframe-crawl.md).",
+      "No live community results returned. Stay local + agent-calculated, or import Overframe builds (docs/overframe-crawl.md).",
     );
+  } else {
+    const deepHits = [
+      ...wikiHits,
+      ...webHits.filter((hit) => !/youtube\.com|youtu\.be/i.test(hit.url)),
+    ];
+    if (overframe.itemUrl) {
+      deepHits.unshift({ title: `${item} (Overframe)`, url: overframe.itemUrl });
+    }
+    const deep = await fetchPagesForHits(deepHits, { limit: 2, maxCharsEach: 4_000 });
+    if (deep) {
+      lines.push("", deep);
+      lines.push(
+        "",
+        "Prefer FULL_PAGE_EXCERPTS above. Call fetch_web_page for more URLs if needed. Never invent mods from titles alone.",
+      );
+    }
   }
 
   return lines.join("\n");

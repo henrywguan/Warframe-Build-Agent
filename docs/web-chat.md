@@ -30,7 +30,8 @@ From the chat UI:
 
 - **AI** — smart LLM replies (requires **LLM / Ollama**). Registers `search_web` (DuckDuckGo + Wiki) so answers can be backed by public sources. Off = offline knowledge chatbot.
 - **LLM / Ollama** — Base URL / API key / model in the browser (localStorage). Example: `http://127.0.0.1:11434/v1`, key `ollama`, model `qwen2.5`.
-- **Online search** — live community crawl (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki) for builds when the local pack is missing. Separate from the AI toggle.
+- **Online search** — live community crawl (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts) when the local pack is missing. Standing consent — never asks the player to type yes/no. Separate from the AI toggle.
+- **Full page fetch** — with AI or Online search on, `fetch_web_page` reads a specific public URL into text (also auto-used on top search hits).
 
 Preferences (`aiChat`, `onlineSearch`) are sent on each `/api/chat` request.
 
@@ -118,7 +119,10 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/cycles` / `/sortie` / `/alerts` / `/invasions` | Live worldstate slices |
 | `/market <slug>` | Live Warframe.market price |
 | `/market-changes` | Daily 4pm Pacific market scrape |
-| `/patches` / `/hotfix` | Latest official updates/hotfixes |
+| `/list` / `/help` | Command catalog |
+| `/model` | Active LLM model id for this session |
+| `/patches` / `/hotfix` | Latest official updates/hotfixes (hub listing) |
+| `/patch [version]` | Full official patch-note text |
 | `/patch-changes` | Daily 4pm Pacific newly listed notes |
 | `/arbitration` | Live Arbitration mission + timer |
 | `/darvo` | Darvo daily deals |

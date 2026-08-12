@@ -14,7 +14,7 @@ Player wants a mod setup, “budget build”, “Steel Path config”, or upgrad
 1. Lock the stage: beginner / midgame / endgame / budget / min-max.
 2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md) for build sources:
    - Always check the offline pack first (`npm run knowledge -- lookup "<item>"` / `lookup_local_knowledge`) and compare from local data
-   - If local Overframe builds are missing, **ask yes/no** before any Overframe / YouTube / online search
+   - If local Overframe builds are missing, crawl only when Online search is on — never ask the player to type yes/no
    - Only after explicit **yes** may you use online community sources (never invent fake video URLs)
    - If **no**, stay local + agent-calculated for the goal
 3. Ground stats/mechanics in offline wiki/catalog facts from the pack (do not live-browse for those).

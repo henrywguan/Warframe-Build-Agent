@@ -18,7 +18,7 @@ description: Look up local offline Warframe knowledge pack (wiki, mechanics, arc
 3. In web chat, call tool `lookup_local_knowledge` with the item/topic
 4. Loadout vs Overframe: `compare_loadout_to_overframe` (web) or `npm run knowledge -- compare-loadout …`
 5. DPS: `estimate_modded_dps` (web) or `npm run knowledge -- dps|compare-dps …`
-6. For **build** requests, follow [`docs/source-policy.md`](../../../docs/source-policy.md): Overframe cache → ask before online → agent-calculated.
+6. For **build** requests, follow [`docs/source-policy.md`](../../../docs/source-policy.md): Overframe cache → Online search toggle → agent-calculated.
 
 ## Source policy reminder
 

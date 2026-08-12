@@ -46,6 +46,12 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     kind: "meta",
   },
   {
+    name: "model",
+    usage: "/model",
+    description: "Show the LLM model id for this chat session",
+    kind: "meta",
+  },
+  {
     name: "knowledge",
     usage: "/knowledge <query>",
     description: "Offline knowledge pack lookup (no LLM)",
@@ -204,13 +210,19 @@ export const CHAT_COMMANDS: ChatCommand[] = [
   {
     name: "patches",
     usage: "/patches [n]",
-    description: "Latest official updates/hotfixes (live hub)",
+    description: "Latest official updates/hotfixes (hub titles/links)",
     kind: "tool",
   },
   {
     name: "hotfix",
     usage: "/hotfix",
     description: "Alias for /patches",
+    kind: "tool",
+  },
+  {
+    name: "patch",
+    usage: "/patch [version|url|latest]",
+    description: "Full official patch-note text / synopsis source",
     kind: "tool",
   },
   {
@@ -378,6 +390,15 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
   if (name === "list" || name === "help" || name === "commands") {
     return meta(formatCommandList());
   }
+  if (name === "model" || name === "llm") {
+    return meta(
+      [
+        "Ask in plain language: “What model LLM is this agent running?”",
+        "The chat API answers with the resolved model id for this session (from LLM / Ollama settings or server OPENAI_MODEL).",
+        "Tip: check the footer when AI is on — it shows the active model name.",
+      ].join("\n"),
+    );
+  }
 
   switch (name) {
     case "summary":
@@ -492,11 +513,16 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
       return fromTool("get_market_daily_changes");
     case "patches":
     case "hotfix":
-    case "patch":
     case "patchnotes":
     case "patch-notes": {
       const limit = args[0] && Number.isFinite(Number(args[0])) ? Number(args[0]) : 8;
       return fromTool("get_patch_notes_latest", { limit });
+    }
+    case "patch":
+    case "patch-detail":
+    case "patchdetail": {
+      const query = args[0]?.trim() || "latest";
+      return fromTool("get_patch_notes_detail", { query });
     }
     case "patch-changes":
     case "patch_changes":

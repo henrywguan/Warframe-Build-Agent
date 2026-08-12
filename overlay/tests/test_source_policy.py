@@ -24,14 +24,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class SourcePolicyTests(unittest.TestCase):
-    def test_overlay_prompt_requires_confirmation_before_online_search(self) -> None:
+    def test_overlay_prompt_uses_online_search_toggle_not_yes_no(self) -> None:
         self.assertIn("Source policy", SYSTEM_PROMPT)
         self.assertIn("ONLINE_SEARCH_CONFIRMATION_REQUIRED", SOURCE_POLICY)
-        self.assertIn("yes/no", SOURCE_POLICY)
+        self.assertIn("Online search", SOURCE_POLICY)
+        self.assertIn("yes/no", SOURCE_POLICY)  # instructs never ask yes/no
         self.assertIn("local pack", SOURCE_POLICY)
+        self.assertIn("Never ask the player to type **yes**", SYSTEM_PROMPT)
         prompt = build_system_prompt("weapon/frame: Coda Hema\nslot: primary")
         self.assertIn("Coda Hema", prompt)
-        self.assertIn("confirmation", prompt.lower())
 
     def test_action_cards_gate_online_search_when_local_builds_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -52,8 +53,8 @@ class SourcePolicyTests(unittest.TestCase):
                     )
                 )
         titles = [a.title for a in actions]
-        self.assertTrue(any("Confirm before online" in t for t in titles))
-        confirm = next(a for a in actions if "Confirm before online" in a.title)
+        self.assertTrue(any("Enable Online search" in t for t in titles))
+        confirm = next(a for a in actions if "Enable Online search" in a.title)
         self.assertIn(ONLINE_SEARCH_CONFIRMATION_MARKER, confirm.detail)
 
     def test_action_cards_prefer_local_builds_when_cached(self) -> None:
@@ -91,7 +92,8 @@ class SourcePolicyTests(unittest.TestCase):
         text = format_online_search_confirmation("Aegrit")
         self.assertIn(ONLINE_SEARCH_CONFIRMATION_MARKER, text)
         self.assertIn("Aegrit", text)
-        self.assertIn("yes", text.lower())
+        self.assertIn("Online search", text)
+        self.assertNotIn("Reply **yes**", text)
 
     def test_web_api_path_seeds_loadout_and_source_policy_ack(self) -> None:
         captured: dict[str, object] = {}

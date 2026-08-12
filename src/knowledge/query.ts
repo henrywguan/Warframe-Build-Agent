@@ -24,8 +24,8 @@ function formatOnlineSearchConfirmation(itemNames: string[]): string {
   return [
     `${ONLINE_SEARCH_CONFIRMATION_REQUIRED} for ${items}`,
     `Local pack has catalog/wiki facts for comparison, but no cached Overframe community builds for ${items}.`,
-    "Search online (Overframe, YouTube, and other public build sources) for community comparisons?",
-    "Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.",
+    "If Online search is on: crawl Overframe/YouTube/Wiki now — do not ask the player to type yes/no.",
+    "If Online search is off: stay local + agent-calculated only, and tell the player to enable the Online search toggle.",
   ].join("\n");
 }
 

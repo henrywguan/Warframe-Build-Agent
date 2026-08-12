@@ -6,22 +6,24 @@ export const SOURCE_POLICY = `## Source policy
 - **Default (facts / digests / mechanics / arcanes):** use offline local knowledge via \`lookup_local_knowledge\` (WFCD catalog + Wiki digests + mechanics digests + Arcane Enhancement digests). Do not browse the live web for these when the pack can answer.
 - **DPS / damage estimates:** use \`estimate_modded_dps\` (offline calculator). Do not invent modded DPS numbers.
 - **Screenshot / pasted loadouts:** use \`compare_loadout_to_overframe\` against top local Overframe builds.
-- **Live timers / prices / patches only:** use the matching live tools. Do not invent those values.
+- **Live timers / prices / patches only:** use the matching live tools. Do not invent those values. For detailed patch text use \`get_patch_notes_detail\` or \`fetch_web_page\` on the official URL.
 - **Build-related requests** (mod setups, “best build”, Steel Path config, loadout advice, comparisons):
   1. Always call \`lookup_local_knowledge\` first and compare using **local pack** data (catalog/wiki + cached Overframe builds when present).
   2. If the tool reports \`LOCAL_BUILDS_AVAILABLE\`, use those local Overframe/import builds for the comparison. You may still refine with agent-calculated notes for the player's goal/budget.
-  3. If the tool reports \`ONLINE_SEARCH_CONFIRMATION_REQUIRED\` / local Overframe builds are missing: **stop and ask the player for confirmation** before any Overframe / YouTube / other online build search — unless the WebUI **Online search** toggle is on (that counts as standing consent). Use the confirmation prompt from the tool (yes = allow online search; no = stay local + agent-calculated only).
-  4. Only after an explicit **yes**, clear consent, or the Online search toggle may you call \`search_community_builds\` (live Overframe + DuckDuckGo web/YouTube + Wiki) or reason from those tool results. Never invent fake video URLs.
-  5. If the player says **no** (and the toggle is off), stay offline: local facts + agent-calculated best build only.
-- Do not browse online for builds proactively. A wiki/catalog digest alone is not a full community build comparison.`;
+  3. If the tool reports \`ONLINE_SEARCH_CONFIRMATION_REQUIRED\` / local Overframe builds are missing:
+     - **Online search toggle ON:** call \`search_community_builds\` immediately. Never ask the player to type yes/no.
+     - **Online search toggle OFF:** stay local + agent-calculated only. Tell them to turn on **Online search** in the chat UI if they want a live crawl. Never ask them to type **yes**.
+  4. Never invent fake video/Overframe URLs. Cite only URLs returned by tools.
+- When AI / Online search tools return link lists, call \`fetch_web_page\` (or rely on FULL_PAGE_EXCERPTS already attached) to read promising pages before answering.
+- Do not browse online for builds when Online search is off. A wiki/catalog digest alone is not a full community build comparison.`;
 
 export const LOCAL_KNOWLEDGE_TOOL_DESCRIPTION =
-  "Recall offline Warframe facts from the local knowledge pack: WFCD catalog, Wiki digests, mechanics digests (damage/status/armor/factions), Arcane Enhancement digests, and cached Overframe builds. For build questions, call this first. When Overframe builds are missing it returns ONLINE_SEARCH_CONFIRMATION_REQUIRED — ask the player before any online Overframe/YouTube/public search.";
+  "Recall offline Warframe facts from the local knowledge pack: WFCD catalog, Wiki digests, mechanics digests (damage/status/armor/factions), Arcane Enhancement digests, and cached Overframe builds. For build questions, call this first. When Overframe builds are missing it returns ONLINE_SEARCH_CONFIRMATION_REQUIRED — if Online search is on, call search_community_builds (do not ask yes/no); if off, stay local and mention the Online search toggle.";
 
 export const ONLINE_SEARCH_CONFIRMATION_MARKER = "ONLINE_SEARCH_CONFIRMATION_REQUIRED";
 export const LOCAL_BUILDS_AVAILABLE_MARKER = "LOCAL_BUILDS_AVAILABLE";
 
-/** Standard yes/no prompt when local Overframe builds are missing. */
+/** Marker text when local Overframe builds are missing (toggle controls online crawl). */
 export function formatOnlineSearchConfirmation(itemNames: string[]): string {
   const items =
     itemNames.length === 0
@@ -32,8 +34,8 @@ export function formatOnlineSearchConfirmation(itemNames: string[]): string {
   return [
     `${ONLINE_SEARCH_CONFIRMATION_MARKER} for ${items}`,
     `Local pack has catalog/wiki facts for comparison, but no cached Overframe community builds for ${items}.`,
-    "Search online (Overframe, YouTube, and other public build sources) for community comparisons?",
-    "Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.",
+    "If **Online search** is on in the chat UI: call search_community_builds now (do not ask the player to type yes/no).",
+    "If Online search is off: stay local + agent-calculated only, and tell the player to enable the Online search toggle for a live crawl.",
   ].join("\n");
 }
 
@@ -41,49 +43,6 @@ export function looksLikeBuildRequest(text: string): boolean {
   return /\b(builds?|mod\s*setup|loadout|forma|steel\s*path(\s+(build|config|setup))?|best\s+(build|setup|mods?)|max(imum)?\s+damage(\s+build)?|compare\s+builds?|community\s+builds?|crawl\s+(the\s+)?web|search\s+online)\b/i.test(
     text,
   );
-}
-
-/** Parse a short yes/no reply about online build search consent. */
-export function parseOnlineSearchConsent(text: string): "yes" | "no" | null {
-  const t = text.trim().toLowerCase();
-  if (!t) return null;
-  if (
-    /^(yes|y|yeah|yep|sure|ok|okay|please|go ahead|search|search online|do it|crawl)\b/.test(t) ||
-    /\b(yes[,.]?\s+search|search online|go ahead|allow online|crawl\s+(the\s+)?web|look\s+online)\b/.test(
-      t,
-    )
-  ) {
-    return "yes";
-  }
-  if (
-    /^(no|n|nope|nah|don't|dont|do not)\b/.test(t) ||
-    /\b(stay local|offline only|no online|don't search|do not search)\b/.test(t)
-  ) {
-    return "no";
-  }
-  return null;
-}
-
-export function conversationAllowsOnlineBuildSearch(
-  messages: Array<{ role: string; content: string }>,
-): boolean {
-  // Most recent explicit consent wins.
-  for (let i = messages.length - 1; i >= 0; i -= 1) {
-    const msg = messages[i]!;
-    if (msg.role !== "user") continue;
-    const consent = parseOnlineSearchConsent(msg.content);
-    if (consent === "yes") return true;
-    if (consent === "no") return false;
-  }
-  return false;
-}
-
-/** Combine chat yes/no history with the WebUI Online search toggle. */
-export function resolveOnlineBuildSearchAllowed(options: {
-  messages: Array<{ role: string; content: string }>;
-  uiToggle?: boolean;
-}): boolean {
-  return options.uiToggle === true || conversationAllowsOnlineBuildSearch(options.messages);
 }
 
 export function annotateToolResultForOnlineConsent(
@@ -99,7 +58,7 @@ export function annotateToolResultForOnlineConsent(
   return [
     result,
     "",
-    "ONLINE_SEARCH_ALLOWED: player consented (Online search toggle and/or chat yes).",
-    "Call search_community_builds now for live Overframe + public web/YouTube/Wiki results. Do NOT ask yes/no. Prefer local pack first; use the live tool when builds are still missing.",
+    "ONLINE_SEARCH_ALLOWED: Online search toggle is on.",
+    "Call search_community_builds now for live Overframe + public web/YouTube/Wiki results (full-page excerpts may already be attached). Do NOT ask the player to type yes/no.",
   ].join("\n");
 }

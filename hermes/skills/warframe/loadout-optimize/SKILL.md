@@ -17,7 +17,7 @@ Operator wants a tuned full package for a specific mission type — not one item
 ## Procedure
 
 1. Lock mission: Steel Path, Archon Hunt, Netracell, Deep Archimedea, Eidolons, Profit-taker, Arbitration, or Duviri Circuit — plus solo/squad and budget.
-2. Follow `references/source-policy.md`: local Overframe builds first; ask yes/no before online search if missing.
+2. Follow `references/source-policy.md`: local Overframe builds first; Online search toggle for live crawl if missing (never ask yes/no).
 3. Ground slots from pack (`terminal.cwd` → repo root):
    - `npm run knowledge -- lookup "<frame/weapon>"`
    - `npm run knowledge -- builds "<item>"`

@@ -35,7 +35,7 @@ Requires a Warframe-Build-Agent checkout with `data/knowledge/` populated (`term
    - Arcanes: `Arcane Energize` / `Primary Merciless`
 3. For builds, honor markers:
    - `LOCAL_BUILDS_AVAILABLE` → compare local Overframe mods/arcanes
-   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → ask yes/no before online search
+   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → Online search toggle on = crawl; off = stay local (never ask yes/no)
 4. Related CLIs:
    - Loadout vs top builds: `npm run knowledge -- compare-loadout "<item>" --mods "..." [--arcanes "..."]`
    - DPS: `npm run knowledge -- dps "<weapon>" --preset typical`

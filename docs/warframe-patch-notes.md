@@ -12,17 +12,21 @@ Each day the job:
 3. Saves a Pacific-date snapshot under `data/patches/`
 4. Diffs against the previous snapshot to list **newly appeared** notes
 
+For **full patch text** (synopsis of a specific hotfix/update), use the detail fetch — it loads the individual official page (e.g. `/en/patch-notes/pc/43-0-8`) and converts it to readable text.
+
 ## CLI
 
 ```bash
 npm run patches -- status
 npm run patches -- latest
+npm run patches -- detail              # newest full text
+npm run patches -- detail 43.0.8       # specific version
 npm run patches -- pull --force          # run now
 npm run patches -- changes
 npm run patches -- check                 # live fetch + write snapshot
 ```
 
-Options: `--data-dir`, `--limit`, `--json`, `--force`.
+Options: `--data-dir`, `--limit`, `--max-chars`, `--json`, `--force`.
 
 ## Saved files
 
@@ -45,14 +49,16 @@ GitHub Action [`.github/workflows/patch-notes-daily.yml`](../.github/workflows/p
 
 The on-the-go UI (`web/`) can call:
 
-- `get_patch_notes_latest` — live hub scrape (no env required)
+- `get_patch_notes_latest` — live hub scrape (titles/links only; no env required)
+- `get_patch_notes_detail` — full official page text for a version / URL / latest (`/patch 43.0.8`)
 - `get_patch_notes_daily_changes` — saved day-over-day diff via `PATCH_CHANGES_URL` (or local `data/patches/latest-changes.json` in dev)
 
 See [`docs/web-chat.md`](web-chat.md).
 
 ## Caveats
 
-- This tracks **what the hub lists**, not every forum post word-for-word
+- Daily snapshots track **what the hub lists**, not every forum post word-for-word
 - “New” means newly present vs yesterday’s snapshot (first run is baseline only)
-- Always open the linked patch notes for full details
-- Hub HTML structure can change; if parsing breaks, checks will fail loudly
+- Use `detail` / `get_patch_notes_detail` for full notes; large Update pages may be truncated with a link back to the official URL
+- Hub/detail HTML structure can change; if parsing breaks, checks will fail loudly
+- Never invent hotfix contents when a fetch fails — say so and link the official page

@@ -14,6 +14,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | --- | --- |
 | `/list` | Show this command list |
 | `/help` | Alias for `/list` |
+| `/model` | Show the LLM model id for this chat session |
 | `/summary` | Live worldstate summary |
 | `/fissures [sp\|steel] [tier]` | Live Void Fissures (optional Steel Path / relic tier) |
 | `/cycles` | Open-world cycle timers |
@@ -35,8 +36,9 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/slug <item name>` | Resolve Warframe.market slug |
 | `/market <slug>` | Live Warframe.market price (e.g. `mirage_prime_set`) |
 | `/market-changes` | Daily 4pm Pacific market scrape changes |
-| `/patches [n]` | Latest official updates/hotfixes |
+| `/patches [n]` | Latest official updates/hotfixes (hub titles/links) |
 | `/hotfix` | Alias for `/patches` |
+| `/patch [version\|url\|latest]` | Full official patch-note text (synopsis source) |
 | `/patch-changes` | Daily 4pm Pacific newly listed patch notes |
 | `/arbitration` | Live Arbitration mission + timer |
 | `/darvo` / `/daily-deals` | Darvo daily deals |
@@ -55,7 +57,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 
 Attach a loadout screenshot in the web UI to OCR/vision-read the Warframe/weapon + mods/arcanes and compare against top-3 cached Overframe builds.
 
-Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, the agent asks yes/no before online Overframe/YouTube search — see [`docs/source-policy.md`](source-policy.md). For a no-OpenAI chatbot, set `CHAT_MODE=local` (see [`docs/web-chat.md`](web-chat.md)).
+Plain-language questions still work (builds, comparisons, mechanics). Offline **item facts** and local build comparisons use the `lookup_local_knowledge` tool. If local Overframe builds are missing, turn on **Online search** for a live Overframe/YouTube crawl (never type yes/no) — see [`docs/source-policy.md`](source-policy.md). For a no-OpenAI chatbot, set `CHAT_MODE=local` (see [`docs/web-chat.md`](web-chat.md)).
 
 ---
 
@@ -153,6 +155,7 @@ npm run market -- changes
 
 # Patch notes
 npm run patches -- latest
+npm run patches -- detail 43.0.8
 npm run patches -- pull --force
 npm run patches -- changes
 

@@ -5,6 +5,7 @@ import {
 } from "@/lib/loadout-compare";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { searchCommunityBuildsOnline, searchWebOnline } from "@/lib/online-community-search";
+import { fetchPublicPage, formatFetchedPage } from "@/lib/fetch-page";
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import { runOfflineDps } from "@/lib/offline-dps";
 import {
@@ -29,6 +30,7 @@ import {
   liveMarketSlugSearch,
   liveNightwave,
   livePatchNotesDailyChanges,
+  livePatchNotesDetail,
   livePatchNotesLatest,
   liveSortie,
   liveWorldstateSummary,
@@ -46,7 +48,7 @@ const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "search_web",
     description:
-      "General public web search (DuckDuckGo + Warframe Wiki) to back up AI answers with live sources. Use when facts may be patch-sensitive, time-sensitive, or missing from local tools. Available when the WebUI AI toggle is on. Cite only returned URLs.",
+      "General public web search (DuckDuckGo + Warframe Wiki) with auto-fetched full-page excerpts from top hits. Use when facts may be patch-sensitive, time-sensitive, or missing from local tools. Available when the WebUI AI toggle is on. Cite only returned URLs. For a specific URL, call fetch_web_page.",
     parameters: {
       type: "object",
       properties: {
@@ -61,12 +63,36 @@ const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
   },
 };
 
+const FETCH_WEB_PAGE_TOOL: OpenAI.Chat.ChatCompletionTool = {
+  type: "function",
+  function: {
+    name: "fetch_web_page",
+    description:
+      "Fetch and parse a full public web page into readable text (wiki, patch notes, guides, Overframe, forums, etc.). Use after search_web / search_community_builds when you need the body of a specific URL, or whenever the player asks about content on a known page. Available when AI or Online search is on. Only http(s) public URLs.",
+    parameters: {
+      type: "object",
+      properties: {
+        url: {
+          type: "string",
+          description: "Full http(s) URL to fetch",
+        },
+        maxChars: {
+          type: "number",
+          description: "Optional body length cap (default 10000)",
+        },
+      },
+      required: ["url"],
+      additionalProperties: false,
+    },
+  },
+};
+
 const SEARCH_COMMUNITY_BUILDS_TOOL: OpenAI.Chat.ChatCompletionTool = {
   type: "function",
   function: {
     name: "search_community_builds",
     description:
-      "Live crawl of community build sources when Online search is enabled: Overframe.gg top builds (mods when available), DuckDuckGo web results, YouTube links, and Warframe Wiki opensearch. Call after lookup_local_knowledge when local Overframe builds are missing or the player wants wider community comparison. Requires Online search toggle (or chat yes).",
+      "Live crawl of community build sources when Online search is enabled: Overframe.gg top builds (mods when available), DuckDuckGo web results, YouTube links, Warframe Wiki, plus auto-fetched full-page excerpts. Call after lookup_local_knowledge when local Overframe builds are missing — do not ask the player to type yes/no (the Online search toggle is consent).",
     parameters: {
       type: "object",
       properties: {
@@ -412,13 +438,37 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "get_patch_notes_latest",
-      description: "Get the latest official Warframe updates/hotfixes from warframe.com.",
+      description:
+        "List recent official Warframe updates/hotfixes from the warframe.com hub (titles + links only — not full patch text). Use get_patch_notes_detail for a synopsis of a specific version.",
       parameters: {
         type: "object",
         properties: {
           limit: {
             type: "number",
             description: "Max entries to return (default 8)",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_patch_notes_detail",
+      description:
+        "Fetch and parse the full official Warframe patch-notes page text for a version (e.g. 43.0.8), slug (43-0-8), official URL, or latest/newest. Required for detailed synopsis / what changed questions. Never invent hotfix contents — only summarize this tool's returned text.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description:
+              'Version (43.0.8), slug (43-0-8), official warframe.com patch URL, or "latest"',
+          },
+          maxChars: {
+            type: "number",
+            description: "Optional body length cap (default 12000)",
           },
         },
         additionalProperties: false,
@@ -526,6 +576,7 @@ export function getChatTools(options?: {
   const tools = [...chatTools];
   if (options?.aiChat) tools.push(SEARCH_WEB_TOOL);
   if (options?.onlineSearch) tools.push(SEARCH_COMMUNITY_BUILDS_TOOL);
+  if (options?.aiChat || options?.onlineSearch) tools.push(FETCH_WEB_PAGE_TOOL);
   return tools;
 }
 
@@ -541,6 +592,13 @@ function asString(value: unknown): string | undefined {
 
 function asFiniteNumber(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+/** Clamp optional tool maxChars args (body length caps). */
+function clampMaxChars(value: unknown): number | undefined {
+  const n = asFiniteNumber(value);
+  if (n == null) return undefined;
+  return Math.max(500, Math.min(50_000, Math.floor(n)));
 }
 
 async function withRequiredQuery(
@@ -662,6 +720,10 @@ export async function runChatTool(
             : 8;
         return await livePatchNotesLatest(limit);
       }
+      case "get_patch_notes_detail": {
+        const query = asString(args.query) || "latest";
+        return await livePatchNotesDetail(query, clampMaxChars(args.maxChars));
+      }
       case "get_patch_notes_daily_changes":
         return await livePatchNotesDailyChanges();
       case "lookup_local_knowledge": {
@@ -680,12 +742,32 @@ export async function runChatTool(
         if (!query) return "Missing required query.";
         return await searchWebOnline(query);
       }
+      case "fetch_web_page": {
+        if (!options?.aiChat && !options?.onlineSearch) {
+          return [
+            "FETCH_PAGE_DISABLED: turn on AI and/or Online search in the chat UI to fetch full pages.",
+            "Answer from local tools only until then.",
+          ].join("\n");
+        }
+        const url = asString(args.url);
+        if (!url) return "Missing required url.";
+        try {
+          const page = await fetchPublicPage(url, {
+            maxChars: clampMaxChars(args.maxChars),
+          });
+          return formatFetchedPage(page);
+        } catch (error) {
+          return error instanceof Error
+            ? `Could not fetch page: ${error.message}`
+            : `Could not fetch page: ${String(error)}`;
+        }
+      }
       case "search_community_builds": {
         if (!options?.onlineSearch) {
           return [
             "ONLINE_SEARCH_DISABLED: the Online search toggle is off.",
-            "Tell the player to turn on Online search in the chat UI (or reply yes), then call search_community_builds again.",
-            "Do not invent Overframe/YouTube URLs.",
+            "Tell the player to turn on Online search in the chat UI, then call search_community_builds again.",
+            "Do not ask them to type yes/no. Do not invent Overframe/YouTube URLs.",
           ].join("\n");
         }
         const query = asString(args.query);

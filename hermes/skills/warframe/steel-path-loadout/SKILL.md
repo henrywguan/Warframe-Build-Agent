@@ -17,7 +17,7 @@ Operator wants a complete SP-ready package for survival, capture, boss, railjack
 ## Procedure
 
 1. Lock mission type, faction, solo vs squad, budget (min-max vs accessible).
-2. Follow source policy: local Overframe builds first; ask yes/no before online search if missing.
+2. Follow source policy: local Overframe builds first; Online search toggle for live crawl if missing (never ask yes/no).
 3. Ground each slot from the pack:
    - Frame: `npm run knowledge -- lookup "<Warframe>"`
    - Weapons: `dps` / `compare-dps`
