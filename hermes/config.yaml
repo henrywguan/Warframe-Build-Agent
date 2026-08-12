@@ -17,4 +17,5 @@
 terminal:
   # Point cwd at a Warframe-Build-Agent checkout so Ordis can run knowledge/wf/market/patches CLIs
   # against data/knowledge/ (mechanics, arcanes, Overframe builds, DPS calculator).
+  # Agent Reach installs to ~/.agent-reach/ (not into this cwd).
   cwd: "."

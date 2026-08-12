@@ -1,6 +1,6 @@
 name: warframe-build-agent
-version: 0.3.0
-description: "Warframe advisor (Ordis) for builds, loadout compare, modded DPS, mechanics/arcanes, offline knowledge, live world-state, market, and patch notes — works with local LLMs (Qwen/Ollama)"
+version: 0.4.0
+description: "Ordis — Warframe builds + offline pack, and general web research via Agent Reach (YouTube/Reddit/GitHub/Jina/Exa); local-LLM friendly"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"
@@ -17,6 +17,7 @@ env_requires:
 distribution_owned:
   - SOUL.md
   - LOCAL_LLM.md
+  - AGENT_REACH.md
   - config.yaml
   - skills/
   - distribution.yaml

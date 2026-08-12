@@ -6,8 +6,9 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.3.0` (Hermes ≥ 0.12.0)  
-Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.
+**Profile version:** `0.4.0` (Hermes ≥ 0.12.0)  
+Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
+**Not Warframe-only:** general web research via [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional install on the Hermes host).
 
 ---
 
@@ -47,9 +48,11 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 | Path | Role |
 | --- | --- |
-| `SOUL.md` | Ordis identity + source policy |
+| `SOUL.md` | Ordis identity + dual-mode source policy (Warframe + research) |
 | `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
+| `AGENT_REACH.md` | Install / doctor / boundaries for Agent Reach |
 | `skills/warframe/*` | Compare, builds, mechanics, knowledge, loadout, DPS, world-state, market, patches |
+| `skills/research/agent-reach/` | General web / social / video research skill |
 | `distribution.yaml` | Hermes distribution manifest |
 | `config.yaml` / `profile.yaml` | Light defaults |
 
@@ -68,6 +71,24 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 3. Smoke test in Hermes chat:  
    `Lookup Arcane Energize from the local knowledge pack`
+4. *(Optional)* Install Agent Reach for general research — see [`AGENT_REACH.md`](AGENT_REACH.md). Then try:  
+   `Research current AI agent frameworks and summarize with sources`
+
+---
+
+## General research (Agent Reach)
+
+On the **same machine** as Hermes (not inside this repo’s `data/` tree):
+
+```bash
+pipx install https://github.com/Panniantong/Agent-Reach/archive/main.zip
+agent-reach install --env=auto          # check-only first
+# After you approve system packages:
+agent-reach install --env=auto --system
+agent-reach doctor
+```
+
+Details and safety boundaries: [`AGENT_REACH.md`](AGENT_REACH.md).
 
 ---
 
@@ -93,5 +114,6 @@ npm run wf -- summary
 ## More help
 
 - Beginner Hermes guide: [`docs/hermes-export.md`](../docs/hermes-export.md)  
+- Agent Reach: [`AGENT_REACH.md`](AGENT_REACH.md) · https://github.com/Panniantong/Agent-Reach  
 - Getting started hub: [`docs/getting-started.md`](../docs/getting-started.md)  
 - Offline pack: [`docs/offline-knowledge.md`](../docs/offline-knowledge.md)

@@ -9,9 +9,10 @@ Follow the steps in order. When you finish, Hermes Desktop will chat as **Ordis*
 
 - Hermes Desktop with the **warframe-build-agent** profile  
 - Ordis skills: builds, loadout compare, modded DPS, mechanics, arcanes, fissures, market, patches  
-- Access to this repo’s **offline knowledge pack** (Wiki digests, arcanes, mechanics, Overframe builds when available)
+- Access to this repo’s **offline knowledge pack** (Wiki digests, arcanes, mechanics, Overframe builds when available)  
+- Optional: **general web research** (not Warframe-only) via [Agent Reach](https://github.com/Panniantong/Agent-Reach)
 
-**Time:** about 15–30 minutes the first time.
+**Time:** about 15–30 minutes the first time (plus a few minutes if you install Agent Reach).
 
 ---
 
@@ -241,7 +242,31 @@ Optional CLI check:
 hermes -p warframe-build-agent skills list
 ```
 
-You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dps`, `recommend-build`, `world-state`.
+You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dps`, `recommend-build`, `world-state`, and `agent-reach`.
+
+---
+
+## Step 9 — Optional: Agent Reach (general web research)
+
+The Hermes profile is **not limited to Warframe**. To use Ordis as a general AI web research tool (YouTube, Reddit, GitHub, web pages, etc.), install [Agent Reach](https://github.com/Panniantong/Agent-Reach) on the **same machine** as Hermes.
+
+Full guide: [`../hermes/AGENT_REACH.md`](../hermes/AGENT_REACH.md).
+
+Short version:
+
+```bash
+pipx install https://github.com/Panniantong/Agent-Reach/archive/main.zip
+agent-reach install --env=auto                 # check-only first
+# Only after you approve system packages:
+agent-reach install --env=auto --system
+agent-reach doctor
+```
+
+Then in Hermes chat try:
+
+> Research current AI agent frameworks and summarize with sources
+
+Keep Agent Reach files under `~/.agent-reach/` — do not install into this repo’s `data/` tree. Do not run `--system` without approving it.
 
 ---
 
@@ -257,8 +282,9 @@ You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dp
 | Fissures / cycles / sortie | Live Warframe Status CLI |
 | Prices | Warframe.market CLI |
 | Hotfixes / updates | Official patch-notes CLI |
+| General web / YouTube / Reddit / GitHub research | Agent Reach (after Step 9) |
 
-Builds follow the source policy: **local Overframe cache first**, then ask before searching the open web. See [`source-policy.md`](source-policy.md).
+Builds follow the source policy: **local Overframe cache first**, then Online search toggle / consent rules for open-web community pulls. See [`source-policy.md`](source-policy.md).
 
 ---
 
@@ -298,6 +324,10 @@ Then open http://localhost:3000 and tap **LLM / Ollama** to point at the same lo
 
 Separate window for in-game coaching — [`overlay.md`](overlay.md). Not required for Hermes.
 
+### Agent Reach (general research)
+
+See Step 9 and [`../hermes/AGENT_REACH.md`](../hermes/AGENT_REACH.md).
+
 ---
 
 ## Quick copy-paste summary
@@ -319,6 +349,7 @@ hermes profile use warframe-build-agent
 ## Related docs
 
 - Local model detail: [`../hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md)  
+- Agent Reach: [`../hermes/AGENT_REACH.md`](../hermes/AGENT_REACH.md)  
 - Profile folder notes: [`../hermes/README.md`](../hermes/README.md)  
 - Offline pack: [`offline-knowledge.md`](offline-knowledge.md)  
 - Getting started hub: [`getting-started.md`](getting-started.md)
