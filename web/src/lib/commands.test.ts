@@ -19,6 +19,8 @@ describe("slash commands", () => {
     if (!result.handled) return;
     assert.match(result.content, /\/list/);
     assert.match(result.content, /\/patches/);
+    assert.match(result.content, /\/patch /);
+    assert.match(result.content, /\/model/);
     assert.match(result.content, /\/market/);
     assert.match(result.content, /\/baro/);
     assert.match(result.content, /\/build/);
@@ -61,6 +63,13 @@ describe("slash commands", () => {
     if (!result.handled) return;
     assert.match(result.content, /Circuit/i);
     assert.deepEqual(result.toolsUsed, []);
+  });
+
+  it("routes /patch to detail tool", async () => {
+    const result = await runSlashCommand("/patch 43.0.8");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.deepEqual(result.toolsUsed, ["get_patch_notes_detail"]);
   });
 
   it("returns market usage when slug missing", async () => {

@@ -17,7 +17,7 @@ User-friendly guides for the Warframe Build Agent (Ordis).
 | --- | --- |
 | [Offline knowledge pack](offline-knowledge.md) | Catalog, wiki, mechanics, arcanes, Overframe builds |
 | [Overframe crawl / import](overframe-crawl.md) | Top builds when Cloudflare blocks Node |
-| [Source policy](source-policy.md) | Local builds first; ask before online search |
+| [Source policy](source-policy.md) | Local builds first; Online search toggle for live crawl |
 | [Sources](sources.md) | How we prioritize Wiki / Market / Status / Overframe |
 | [Warframe Status](warframe-status.md) | Live world-state fields |
 | [Warframe.market](warframe-market.md) | Prices + daily 4pm Pacific scrape |

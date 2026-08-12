@@ -109,4 +109,4 @@ Full guide: [`docs/overframe-crawl.md`](overframe-crawl.md).
 - Hermes: profile v0.3.0 + [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md); pack with `./scripts/pack-hermes-profile.sh`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 
-Prefer local knowledge for **item/mechanic/arcane facts**, **loadout compares**, and **DPS estimates** first. If Overframe builds are missing from the pack, ask the player for confirmation before searching Overframe / YouTube / online sources — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.
+Prefer local knowledge for **item/mechanic/arcane facts**, **loadout compares**, and **DPS estimates** first. If Overframe builds are missing from the pack, enable the WebUI **Online search** toggle for a live crawl (never ask the player to type yes/no) — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.

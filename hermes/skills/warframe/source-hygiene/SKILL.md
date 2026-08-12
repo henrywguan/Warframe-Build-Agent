@@ -1,6 +1,6 @@
 ---
 name: source-hygiene
-description: Enforce local knowledge pack first, explicit consent before online build search, and correct tool choice per surface.
+description: Enforce local knowledge pack first, Online search toggle before online build crawl, and correct tool choice per surface.
 version: 0.3.0
 metadata:
   hermes:
@@ -22,7 +22,7 @@ Any build, compare, or fact request — especially when local Overframe cache is
 4. **Loadouts:** `npm run knowledge -- compare-loadout` after OCR or pasted mods.
 5. **Builds:**
    - `LOCAL_BUILDS_AVAILABLE` → compare locally
-   - Missing → ask yes/no before Overframe / YouTube / online search
+   - Missing → Online search toggle on = crawl; off = stay local (never ask yes/no)
    - After **yes** → community search; never invent video URLs
    - **No** → agent-calculated + local facts only
 6. Live tools only for worldstate (`npm run wf`), market (`npm run market`), patches (`npm run patches`).

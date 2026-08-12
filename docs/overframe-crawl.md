@@ -120,4 +120,4 @@ The WFCD catalog pull currently covers **warframes + weapons**. Companions need 
 
 ## Agent use
 
-After a successful import, build comparisons use local Overframe rows first (`lookup_local_knowledge` / `compare-loadout`). If builds are still missing for an item, the agent asks yes/no before any online search — see [`docs/source-policy.md`](source-policy.md).
+After a successful import, build comparisons use local Overframe rows first (`lookup_local_knowledge` / `compare-loadout`). If builds are still missing for an item, enable the WebUI **Online search** toggle for a live crawl — see [`docs/source-policy.md`](source-policy.md).

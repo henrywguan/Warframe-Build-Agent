@@ -30,7 +30,7 @@ Requires a Warframe-Build-Agent checkout with Overframe builds crawled/imported 
    ```
 4. Honor markers in the output:
    - `LOCAL_BUILDS_AVAILABLE` → summarize closest rank, missing mods, extras
-   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → **ask yes/no** before Overframe/YouTube/online search
+   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → **do not ask yes/no** — Online search toggle gates Overframe/YouTube/online search
 5. If builds are missing locally, suggest residential crawl:
    - `npm run knowledge -- crawl-overframe`
    - or Playwright export: `npm run knowledge:export-overframe`
@@ -40,5 +40,5 @@ Requires a Warframe-Build-Agent checkout with Overframe builds crawled/imported 
 - Closest local Overframe rank + overlap %
 - Missing mods / arcanes vs that build
 - Extra mods on the Operator’s loadout
-- Whether online search needs confirmation
+- Whether Online search toggle is on
 - One practical next change

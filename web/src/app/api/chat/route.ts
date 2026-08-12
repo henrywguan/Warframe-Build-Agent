@@ -26,7 +26,6 @@ import {
 import {
   annotateToolResultForOnlineConsent,
   looksLikeBuildRequest,
-  resolveOnlineBuildSearchAllowed,
 } from "@/lib/source-policy";
 import {
   fallbackFromToolResults,
@@ -96,28 +95,21 @@ async function runModelCompletion(
       return { role: "user", content };
     });
 
-  const consentMessages = incoming.map((m) => ({
-    role: m.role,
-    content: messageText(m.content),
-  }));
-  const onlineAllowed = resolveOnlineBuildSearchAllowed({
-    messages: consentMessages,
-    uiToggle: onlineSearchToggle,
-  });
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
   const buildAsk = latestUser
     ? looksLikeBuildRequest(messageText(latestUser.content))
     : false;
   const consentNote = [
+    `\n\n## Runtime LLM\nThis session's model id is \`${model}\`${
+      resolveBaseUrl(clientLlm) ? ` at \`${resolveBaseUrl(clientLlm)}\`` : ""
+    }. When asked what model/LLM this agent is running, answer with that exact id — do not guess another model name.`,
     aiChat
-      ? "\n\n## Runtime mode\n**AI chat is ON.** Give smart, player-friendly answers. Prefer local live tools and `lookup_local_knowledge` first. When you need public corroboration (patch-sensitive tips, guides, general Warframe questions missing from the pack), call `search_web` and cite returned URLs only."
+      ? "\n\n## Runtime mode\n**AI chat is ON.** Give smart, player-friendly answers. Prefer local live tools and `lookup_local_knowledge` first. When you need public corroboration, call `search_web` (includes full-page excerpts) and/or `fetch_web_page` for specific URLs. Cite returned URLs only. Never ask the player to type yes/no for web search."
       : "",
     onlineSearchToggle
-      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. Treat this as standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` (live Overframe + DuckDuckGo web/YouTube + Wiki). Do NOT ask yes/no. Cite only URLs returned by tools."
+      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
       : buildAsk
-        ? onlineAllowed
-          ? "\n\n## Runtime consent\nPlayer has allowed online build search in this conversation. After local lookup, you may call `search_community_builds` when builds are missing. Still prefer the local pack first."
-          : "\n\n## Runtime consent\nPlayer has NOT consented to online build search. Stay on local pack + agent-calculated only. Do not call `search_community_builds`. If Overframe builds are missing, ask yes/no — do not invent community builds."
+        ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
         : "",
   ].join("");
 
@@ -127,7 +119,7 @@ async function runModelCompletion(
   ];
 
   const tools = getChatTools({
-    onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+    onlineSearch: Boolean(onlineSearchToggle),
     aiChat: Boolean(aiChat),
   });
   const toolsUsed: string[] = [];
@@ -170,7 +162,7 @@ async function runModelCompletion(
       let raw = dedupe.duplicate
         ? dedupe.stub!
         : await runChatTool(call.function.name, args, {
-            onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+            onlineSearch: Boolean(onlineSearchToggle),
             aiChat: Boolean(aiChat),
           });
 
@@ -179,7 +171,7 @@ async function runModelCompletion(
           toolName: call.function.name,
           rawArgs: args,
           result: raw,
-          onlineSearch: Boolean(onlineSearchToggle || onlineAllowed),
+          onlineSearch: Boolean(onlineSearchToggle),
           aiChat: Boolean(aiChat),
         });
         raw = augmented.result;
@@ -195,7 +187,7 @@ async function runModelCompletion(
         tool_call_id: call.id,
         content: annotateToolResultForOnlineConsent(
           raw,
-          Boolean(onlineSearchToggle || onlineAllowed),
+          Boolean(onlineSearchToggle),
         ),
       };
       messages.push(toolMessage);
@@ -280,6 +272,12 @@ export async function POST(request: Request) {
   try {
     const result = await resolveChatTurn(incoming, {
       preferLocal: useLocal,
+      activeLlm: {
+        model,
+        baseUrl: resolveBaseUrl(clientLlm),
+        mode: useLocal ? "local-knowledge" : "llm",
+        usingVision: hasImages(incoming),
+      },
       runLocal: (messages) => runLocalChat(messages),
       runModel: (messages) =>
         runModelCompletion(

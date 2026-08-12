@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  formatActiveLlmReply,
   formatLlmConnectionError,
   isLlmConnectionError,
   llmConfigReady,
+  looksLikeModelIdentityQuestion,
   parseClientLlm,
   resolveApiKey,
   resolveBaseUrl,
@@ -37,6 +39,28 @@ describe("model-config", () => {
     assert.equal(resolveBaseUrl({ baseUrl: "http://127.0.0.1:11434/v1" }), "http://127.0.0.1:11434/v1");
     assert.equal(resolveModel({ model: "qwen2.5" }, false), "qwen2.5");
     assert.equal(resolveModel({ visionModel: "llava", model: "qwen2.5" }, true), "llava");
+  });
+
+  it("detects model-identity questions and formats the reply", () => {
+    assert.equal(
+      looksLikeModelIdentityQuestion("What model LLM is this agent running"),
+      true,
+    );
+    assert.equal(looksLikeModelIdentityQuestion("/model"), true);
+    assert.equal(looksLikeModelIdentityQuestion("which llm are you using?"), true);
+    assert.equal(looksLikeModelIdentityQuestion("best Mesa build"), false);
+    assert.match(
+      formatActiveLlmReply({
+        model: "qwen2.5",
+        baseUrl: "http://127.0.0.1:11434/v1",
+        mode: "llm",
+      }),
+      /\*\*qwen2\.5\*\*/,
+    );
+    assert.match(
+      formatActiveLlmReply({ model: "local-knowledge", mode: "local-knowledge" }),
+      /local-knowledge/,
+    );
   });
 
   it("detects LLM connection failures", () => {

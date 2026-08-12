@@ -8,11 +8,8 @@ import {
   ONLINE_SEARCH_CONFIRMATION_MARKER,
   SOURCE_POLICY,
   annotateToolResultForOnlineConsent,
-  conversationAllowsOnlineBuildSearch,
   formatOnlineSearchConfirmation,
   looksLikeBuildRequest,
-  parseOnlineSearchConsent,
-  resolveOnlineBuildSearchAllowed,
 } from "./source-policy.ts";
 import { SYSTEM_PROMPT } from "./system-prompt.ts";
 import { chatTools } from "./tools.ts";
@@ -20,19 +17,22 @@ import { chatTools } from "./tools.ts";
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(here, "../../..");
 
-describe("web source policy (local first + online confirmation)", () => {
-  it("requires local lookup first and confirmation before online search", () => {
+describe("web source policy (local first + online toggle)", () => {
+  it("requires local lookup first and Online search toggle (no yes/no)", () => {
     assert.match(SYSTEM_PROMPT, /Source policy/);
     assert.match(SYSTEM_PROMPT, /lookup_local_knowledge/);
     assert.match(SYSTEM_PROMPT, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
-    assert.match(SYSTEM_PROMPT, /ask the player for confirmation/);
+    assert.match(SYSTEM_PROMPT, /Never ask the player to type \*\*yes\*\*/);
+    assert.doesNotMatch(SYSTEM_PROMPT, /ask yes\/no before Overframe/);
     assert.match(SOURCE_POLICY, /Always call/);
-    assert.match(SOURCE_POLICY, /explicit \*\*yes\*\*/);
+    assert.match(SOURCE_POLICY, /Online search toggle ON/);
+    assert.doesNotMatch(SOURCE_POLICY, /Reply \*\*yes\*\*/);
     assert.ok(SYSTEM_PROMPT.includes(SOURCE_POLICY));
   });
 
-  it("tool description mentions confirmation gate", () => {
+  it("tool description mentions Online search toggle gate", () => {
     assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
+    assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /do not ask yes\/no/i);
     assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /mechanics|Arcane/i);
     const tool = chatTools.find(
       (entry) => entry.type === "function" && entry.function.name === "lookup_local_knowledge",
@@ -49,6 +49,7 @@ describe("web source policy (local first + online confirmation)", () => {
     assert.ok(names.includes("estimate_modded_dps"));
     assert.ok(names.includes("lookup_local_knowledge"));
     assert.ok(!names.includes("search_community_builds"));
+    assert.ok(!names.includes("fetch_web_page"));
   });
 
   it("adds search_community_builds when online search is enabled", async () => {
@@ -57,6 +58,7 @@ describe("web source policy (local first + online confirmation)", () => {
       .filter((entry) => entry.type === "function")
       .map((entry) => entry.function.name);
     assert.ok(names.includes("search_community_builds"));
+    assert.ok(names.includes("fetch_web_page"));
     assert.ok(!names.includes("search_web"));
     const disabled = await runChatTool(
       "search_community_builds",
@@ -64,14 +66,16 @@ describe("web source policy (local first + online confirmation)", () => {
       { onlineSearch: false },
     );
     assert.match(disabled, /ONLINE_SEARCH_DISABLED/);
+    assert.match(disabled, /Do not ask them to type yes\/no/);
   });
 
-  it("adds search_web when AI chat is enabled", async () => {
+  it("adds search_web and fetch_web_page when AI chat is enabled", async () => {
     const { getChatTools, runChatTool } = await import("./tools.ts");
     const names = getChatTools({ aiChat: true })
       .filter((entry) => entry.type === "function")
       .map((entry) => entry.function.name);
     assert.ok(names.includes("search_web"));
+    assert.ok(names.includes("fetch_web_page"));
     assert.ok(!names.includes("search_community_builds"));
     const disabled = await runChatTool(
       "search_web",
@@ -79,22 +83,30 @@ describe("web source policy (local first + online confirmation)", () => {
       { aiChat: false },
     );
     assert.match(disabled, /AI_CHAT_DISABLED/);
+    const fetchDisabled = await runChatTool(
+      "fetch_web_page",
+      JSON.stringify({ url: "https://wiki.warframe.com/w/Mesa" }),
+      { aiChat: false, onlineSearch: false },
+    );
+    assert.match(fetchDisabled, /FETCH_PAGE_DISABLED/);
     const both = getChatTools({ aiChat: true, onlineSearch: true }).map(
       (entry) => (entry.type === "function" ? entry.function.name : ""),
     );
     assert.ok(both.includes("search_web"));
     assert.ok(both.includes("search_community_builds"));
+    assert.ok(both.includes("fetch_web_page"));
   });
 
-  it("formats a yes/no online search confirmation", () => {
+  it("formats a toggle-gated online search marker (no Reply yes)", () => {
     const text = formatOnlineSearchConfirmation(["Coda Hema"]);
     assert.match(text, new RegExp(ONLINE_SEARCH_CONFIRMATION_MARKER));
     assert.match(text, /Coda Hema/);
-    assert.match(text, /Reply \*\*yes\*\*/);
-    assert.match(text, /Overframe, YouTube/);
+    assert.doesNotMatch(text, /Reply \*\*yes\*\*/);
+    assert.match(text, /Online search/);
+    assert.match(text, /do not ask the player to type yes\/no/i);
   });
 
-  it("detects build requests and yes/no consent", () => {
+  it("detects build requests; Online search annotate is toggle-gated", () => {
     assert.equal(looksLikeBuildRequest("best build for Coda Hema?"), true);
     assert.equal(
       looksLikeBuildRequest("maximum damage build for Enkaus"),
@@ -105,57 +117,13 @@ describe("web source policy (local first + online confirmation)", () => {
       true,
     );
     assert.equal(looksLikeBuildRequest("what time is cetus night?"), false);
-    assert.equal(parseOnlineSearchConsent("yes"), "yes");
-    assert.equal(parseOnlineSearchConsent("crawl the web"), "yes");
-    assert.equal(parseOnlineSearchConsent("search online"), "yes");
-    assert.equal(parseOnlineSearchConsent("no"), "no");
-    assert.equal(parseOnlineSearchConsent("stay local"), "no");
-    assert.equal(parseOnlineSearchConsent("maybe later"), null);
-    assert.equal(
-      conversationAllowsOnlineBuildSearch([
-        { role: "assistant", content: formatOnlineSearchConfirmation(["X"]) },
-        { role: "user", content: "yes" },
-      ]),
-      true,
-    );
-    assert.equal(
-      conversationAllowsOnlineBuildSearch([
-        { role: "user", content: "yes" },
-        { role: "user", content: "no thanks, stay local" },
-      ]),
-      false,
-    );
-    assert.equal(
-      resolveOnlineBuildSearchAllowed({
-        messages: [{ role: "user", content: "best build for X?" }],
-        uiToggle: true,
-      }),
-      true,
-    );
-    assert.equal(
-      resolveOnlineBuildSearchAllowed({
-        messages: [{ role: "user", content: "best build for X?" }],
-        uiToggle: false,
-      }),
-      false,
-    );
-    assert.equal(
-      resolveOnlineBuildSearchAllowed({
-        messages: [
-          { role: "assistant", content: formatOnlineSearchConfirmation(["X"]) },
-          { role: "user", content: "yes" },
-        ],
-        uiToggle: false,
-      }),
-      true,
-    );
     const annotated = annotateToolResultForOnlineConsent(
       formatOnlineSearchConfirmation(["Coda Hema"]),
       true,
     );
     assert.match(annotated, /ONLINE_SEARCH_ALLOWED/);
     assert.match(annotated, /search_community_builds/);
-    assert.match(annotated, /Do NOT ask yes\/no/);
+    assert.match(annotated, /Do NOT ask the player to type yes\/no/);
     assert.equal(
       annotateToolResultForOnlineConsent(
         formatOnlineSearchConfirmation(["Coda Hema"]),
@@ -165,11 +133,13 @@ describe("web source policy (local first + online confirmation)", () => {
     );
   });
 
-  it("documents the confirmation policy", () => {
+  it("documents the Online search toggle policy", () => {
     const doc = readFileSync(join(repoRoot, "docs/source-policy.md"), "utf8");
     assert.match(doc, /Local knowledge pack first/);
     assert.match(doc, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
-    assert.match(doc, /explicit yes/i);
+    assert.match(doc, /Online search toggle ON/i);
+    assert.match(doc, /never ask the player to type/i);
+    assert.match(doc, /fetch_web_page/);
     assert.match(doc, /search_community_builds/);
     assert.match(doc, /Web chat/);
     assert.match(doc, /Overlay/);

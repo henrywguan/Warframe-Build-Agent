@@ -24,7 +24,7 @@ Player wants a tuned **full package** for a specific mission type — not just o
    | **Arbitration** | rot-long survival, perma buff/DR, revive risk |
    | **Duviri Circuit** | incarnon familiarity, balanced roles |
 
-2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md): local Overframe builds first; ask yes/no before online search if missing.
+2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md): local Overframe builds first; Online search toggle for live crawl if missing (never ask yes/no).
 3. Ground each slot from the pack:
    - `npm run knowledge -- lookup "<Warframe / weapon>"`
    - `npm run knowledge -- builds "<item>"` for cached community setups

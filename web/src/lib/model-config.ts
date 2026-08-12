@@ -92,6 +92,47 @@ export function resolveModel(
   return client?.model?.trim() || fallback;
 }
 
+/** Detect “what model / LLM is this agent running?” (and `/model`). */
+export function looksLikeModelIdentityQuestion(text: string): boolean {
+  const t = text.trim().toLowerCase();
+  if (!t) return false;
+  if (/^\/model\b/.test(t)) return true;
+  if (/\bwhat\s+model\s+llm\b/.test(t)) return true;
+  if (/\bwhat\s+model\b/.test(t) && /\b(llm|agent|running|using|are you|is this)\b/.test(t)) {
+    return true;
+  }
+  if (/\b(which|what)\s+(llm|model)\b/.test(t)) return true;
+  if (/\b(llm|model)\s+(are you|is this|am i|running|using)\b/.test(t)) return true;
+  if (/\bwhat\s+ai\s+(model|are you)\b/.test(t)) return true;
+  if (/\bwhich\s+ai\b/.test(t) && /\b(model|running|using)\b/.test(t)) return true;
+  return false;
+}
+
+export type ActiveLlmIdentity = {
+  model: string;
+  baseUrl?: string;
+  mode: "llm" | "local-knowledge";
+  usingVision?: boolean;
+};
+
+/** Deterministic reply for model-identity questions (no LLM guessing). */
+export function formatActiveLlmReply(info: ActiveLlmIdentity): string {
+  if (info.mode === "local-knowledge") {
+    return [
+      "This session is using the **local-knowledge** chatbot (no cloud/Ollama LLM).",
+      "Turn on **AI** and configure **LLM / Ollama** to run a named model.",
+    ].join("\n");
+  }
+  const lines = [`This agent is currently running **${info.model}**.`];
+  if (info.baseUrl) lines.push(`Endpoint: ${info.baseUrl}`);
+  if (info.usingVision) {
+    lines.push(
+      "(Vision model selected for this message because an image was attached.)",
+    );
+  }
+  return lines.join("\n");
+}
+
 /** True when the OpenAI SDK / fetch failed to reach the model host. */
 export function isLlmConnectionError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);

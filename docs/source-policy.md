@@ -1,6 +1,6 @@
 # Source policy (web chat + overlay + Hermes)
 
-How the agent chooses evidence. **Local knowledge pack first; ask before searching online for builds.**
+How the agent chooses evidence. **Local knowledge pack first; Online search toggle for live crawls — never ask the player to type yes/no.**
 
 ## Default — offline knowledge (not live web browsing)
 
@@ -10,7 +10,7 @@ For item stats, Warframe/weapon digests, **mechanics**, **arcanes**, DPS estimat
 2. Prefer **offline modded DPS** (`estimate_modded_dps` / `npm run knowledge -- dps|compare-dps`) over inventing numbers.
 3. Prefer **loadout compare** (`compare_loadout_to_overframe` / `npm run knowledge -- compare-loadout`) for pasted/screenshot loadouts.
 4. Do **not** browse the live web for these when the pack can answer.
-5. Live tools stay reserved for worldstate, market, and patch hubs.
+5. Live tools stay reserved for worldstate, market, and patch hubs (plus `get_patch_notes_detail` / `fetch_web_page` for full official text).
 
 ## Build-related requests
 
@@ -18,36 +18,33 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 
 1. **Local first** — call/read the knowledge pack. Use catalog + wiki facts and any cached Overframe/import builds under `builds/by-item/` for the comparison.
 2. **If local Overframe builds exist** (`LOCAL_BUILDS_AVAILABLE`) — compare from that local data. Optionally refine with agent-calculated notes for goal/budget. Do **not** search online unless the player asks to widen the comparison.
-3. **If local Overframe builds are missing** (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`) — **stop and ask for confirmation** before any online search, **unless** the WebUI **Online search** toggle is on (standing consent):
-
-   > Search online (Overframe, YouTube, and other public build sources) for community comparisons?  
-   > Reply **yes** to allow online search, or **no** to stay local + agent-calculated only.
-
-4. **Only after explicit yes**, clear chat consent, **or the Online search toggle** may the agent call **`search_community_builds`** (live Overframe.gg crawl + DuckDuckGo web/YouTube + Warframe Wiki) and reason from those tool results. Never invent fake video URLs.
-5. **If the player says no** (and the toggle is off) — stay offline: local facts + agent-calculated best build only.
-
-When the toggle is on, the chat API registers `search_community_builds` and the model is instructed to use it after local lookup. Overframe may still be Cloudflare-blocked on some networks; DuckDuckGo/Wiki results still return when possible.
+3. **If local Overframe builds are missing** (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`):
+   - **Online search toggle ON** — call **`search_community_builds`** immediately (live Overframe.gg crawl + DuckDuckGo web/YouTube + Warframe Wiki + full-page excerpts). Never ask the player to type **yes**.
+   - **Online search toggle OFF** — stay offline: local facts + agent-calculated only. Tell them to enable **Online search** in the chat UI if they want a live crawl. Never ask them to type **yes**.
+4. Never invent fake video URLs. Cite only URLs returned by tools.
+5. For specific public pages (wiki, guides, patch notes), call **`fetch_web_page`** (or use `FULL_PAGE_EXCERPTS` already attached to search results).
 
 ## Surfaces
 
 | Surface | Facts | Builds |
 | --- | --- | --- |
-| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** LLM + `search_web`. **Online search on:** `search_community_builds`. AI off: offline chatbot |
+| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** LLM + `search_web` + `fetch_web_page`. **Online search on:** `search_community_builds` (+ full pages). AI off: offline chatbot |
 | **Web DPS** | `estimate_modded_dps` | Offline calculator presets |
 | **Web loadout** | `compare_loadout_to_overframe` / Attach OCR | Top-3 local Overframe diffs |
-| **Overlay action cards** | Local-pack gate card | Agent-calculated cards + confirmation card |
-| **Overlay chat → web API** (`CHAT_API_URL`) | Same tools/prompt as web chat | Same confirmation flow (+ loadout context) |
-| **Overlay chat → direct OpenAI** | No pack tools — say so | Still ask before claiming an online search |
-| **Hermes + local LLM** | Shell `npm run knowledge -- …` with `terminal.cwd` = repo | Same markers / consent rules |
+| **Overlay action cards** | Local-pack gate card | Agent-calculated cards + Online-search toggle tip |
+| **Overlay chat → web API** (`CHAT_API_URL`) | Same tools/prompt as web chat | Same Online-search toggle gate |
+| **Overlay chat → direct OpenAI** | No pack tools — say so | Do not claim online search without the toggle |
+| **Hermes + local LLM** | Shell `npm run knowledge -- …` with `terminal.cwd` = repo | Same markers; no chat yes/no |
 
 ## Markers
 
 | Marker | Meaning |
 | --- | --- |
 | `LOCAL_BUILDS_AVAILABLE` | Cached Overframe/import builds present — compare locally |
-| `ONLINE_SEARCH_CONFIRMATION_REQUIRED` | No local community builds — ask yes/no before online search |
+| `ONLINE_SEARCH_CONFIRMATION_REQUIRED` | No local community builds — Online search toggle gates live crawl (never ask yes/no in chat) |
 | `ONLINE_COMMUNITY_SEARCH_RESULTS` | Live `search_community_builds` tool returned Overframe/web/YouTube/Wiki hits |
 | `WEB_SEARCH_RESULTS` | Live `search_web` tool returned DuckDuckGo/Wiki hits (AI chat on) |
+| `WEB_PAGE_CONTENT` / `FULL_PAGE_EXCERPTS` | Full-page fetch/parse of a public URL |
 
 ## Related
 

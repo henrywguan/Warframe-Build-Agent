@@ -3,6 +3,11 @@ import {
   type IncomingChatMessage,
 } from "@/lib/chat-types";
 import {
+  type ActiveLlmIdentity,
+  formatActiveLlmReply,
+  looksLikeModelIdentityQuestion,
+} from "@/lib/model-config";
+import {
   isSlashCommand,
   runSlashCommand,
   type CommandResult,
@@ -33,11 +38,13 @@ export interface ChatTurnDeps {
     model: string;
   }>;
   preferLocal?: boolean;
+  /** Resolved model for this request — used for identity questions / `/model`. */
+  activeLlm?: ActiveLlmIdentity;
 }
 
 /**
  * Shared chat resolution used by the API route and integrity tests:
- * slash commands first, then local or model completion path.
+ * model-identity questions, slash commands, then local or model completion.
  */
 export async function resolveChatTurn(
   incoming: IncomingChatMessage[],
@@ -46,6 +53,20 @@ export async function resolveChatTurn(
   const runSlash = deps.runSlash ?? runSlashCommand;
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
   const latestText = latestUser ? messageText(latestUser.content) : "";
+
+  if (latestText && looksLikeModelIdentityQuestion(latestText) && deps.activeLlm) {
+    return {
+      message: {
+        role: "assistant",
+        content: formatActiveLlmReply(deps.activeLlm),
+      },
+      toolsUsed: [],
+      model:
+        deps.activeLlm.mode === "local-knowledge"
+          ? "local-knowledge"
+          : deps.activeLlm.model,
+    };
+  }
 
   if (latestUser && latestText && isSlashCommand(latestText)) {
     // Image+slash still goes to model/local so screenshots can be processed.

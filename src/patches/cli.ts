@@ -2,6 +2,10 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PatchNotesClient, PatchNotesError } from "./client.js";
+import {
+  PATCH_DETAIL_DEFAULT_MAX_CHARS,
+  formatPatchDetail,
+} from "./detail.js";
 import { formatPatchChanges, formatSnapshot } from "./format.js";
 import {
   buildDailySnapshot,
@@ -23,7 +27,15 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const DEFAULT_DATA_DIR = path.join(ROOT, "data/patches");
 
-const COMMANDS = ["latest", "check", "pull", "changes", "status", "help"] as const;
+const COMMANDS = [
+  "latest",
+  "detail",
+  "check",
+  "pull",
+  "changes",
+  "status",
+  "help",
+] as const;
 type Command = (typeof COMMANDS)[number];
 
 interface ParsedArgs {
@@ -32,6 +44,9 @@ interface ParsedArgs {
   force: boolean;
   dataDir: string;
   limit: number;
+  /** Version, slug, URL, or latest — used by `detail`. */
+  detailQuery: string;
+  maxChars: number;
 }
 
 function printHelp(): void {
@@ -42,16 +57,23 @@ Usage:
   npm run patches -- <command> [options]
 
 Commands:
-  latest     Show current hub entries (live fetch)
+  latest     Show current hub entries (live fetch) — titles/links only
+  detail     Fetch full official text for a version/URL (or newest)
   check      Alias of pull --force summary for ad-hoc checks
   pull       Daily job: snapshot at 4pm Pacific, write new-entry diff
   changes    Show latest saved day-over-day new updates/hotfixes
   status     Show Pacific time / pull-window status
   help       Show help
 
+Examples:
+  npm run patches -- detail
+  npm run patches -- detail 43.0.8
+  npm run patches -- detail https://www.warframe.com/en/patch-notes/pc/43-0-8
+
 Options:
   --data-dir <path>   Default: data/patches
   --limit <n>         How many entries to print for latest (default 15)
+  --max-chars <n>     Body length cap for detail (default ${PATCH_DETAIL_DEFAULT_MAX_CHARS})
   --force             For pull: ignore 4pm Pacific window check
   --json              Print raw JSON
 `);
@@ -75,6 +97,8 @@ function parseArgs(argv: string[]): ParsedArgs {
     force: false,
     dataDir: DEFAULT_DATA_DIR,
     limit: 15,
+    detailQuery: "latest",
+    maxChars: PATCH_DETAIL_DEFAULT_MAX_CHARS,
   };
 
   while (args.length) {
@@ -105,7 +129,20 @@ function parseArgs(argv: string[]): ParsedArgs {
         }
         break;
       }
+      case "--max-chars": {
+        const value = args.shift();
+        if (!value) throw new Error("--max-chars requires a number");
+        parsed.maxChars = Number(value);
+        if (!Number.isFinite(parsed.maxChars) || parsed.maxChars < 500) {
+          throw new Error("--max-chars must be at least 500");
+        }
+        break;
+      }
       default:
+        if (parsed.command === "detail" && !token.startsWith("-")) {
+          parsed.detailQuery = token;
+          break;
+        }
         throw new Error(`Unknown option "${token}"`);
     }
   }
@@ -154,6 +191,14 @@ async function main(): Promise<void> {
         client: new PatchNotesClient(),
       });
       print(snapshot, formatSnapshot(snapshot, { limit: parsed.limit }));
+      break;
+    }
+    case "detail": {
+      const client = new PatchNotesClient();
+      const detail = await client.fetchDetail(parsed.detailQuery, {
+        maxChars: parsed.maxChars,
+      });
+      print(detail, formatPatchDetail(detail));
       break;
     }
     case "check": {

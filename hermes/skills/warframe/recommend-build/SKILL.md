@@ -22,7 +22,7 @@ Operator wants a mod setup, budget build, Steel Path config, or upgrade path.
    - Pull arcane facts with `lookup "Arcane …"` / `Primary Merciless` when relevant
    - If local Overframe builds exist (`LOCAL_BUILDS_AVAILABLE`), compare from that cache (mods + arcanes)
    - If the Operator pastes their mods, run `compare-loadout` (see loadout-compare skill)
-   - If missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`), **ask yes/no** before Overframe / YouTube / online search
+   - If missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`), **do not ask yes/no** — Online search toggle gates Overframe / YouTube / online search
    - Only after **yes** may you use online community sources; never invent fake video URLs
    - If **no**, stay local + agent-calculated for the goal
 3. Ground stats/mechanics in offline wiki/catalog/mechanics digests from the pack.

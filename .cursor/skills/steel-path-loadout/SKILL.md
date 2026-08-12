@@ -12,7 +12,7 @@ Player wants a complete SP-ready package for a mission type (survival, capture, 
 ## Steps
 
 1. Lock mission type, faction, solo vs squad, and budget (min-max vs accessible).
-2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md): local Overframe builds first; ask yes/no before online search if missing.
+2. Follow [`docs/source-policy.md`](../../../docs/source-policy.md): local Overframe builds first; Online search toggle for live crawl if missing (never ask yes/no).
 3. Ground each slot from the pack:
    - Frame: `npm run knowledge -- lookup "<Warframe>"`
    - Weapons: `compare-dps` or `dps` for primary/secondary/melee roles

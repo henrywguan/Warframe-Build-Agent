@@ -40,6 +40,27 @@ describe("resolveChatTurn", () => {
     assert.deepEqual(result.toolsUsed, ["get_worldstate_summary"]);
   });
 
+  it("answers model-identity questions from activeLlm without calling the model", async () => {
+    let modelCalls = 0;
+    const result = await resolveChatTurn(
+      [{ role: "user", content: "What model LLM is this agent running" }],
+      {
+        activeLlm: {
+          model: "qwen2.5",
+          baseUrl: "http://127.0.0.1:11434/v1",
+          mode: "llm",
+        },
+        runModel: async () => {
+          modelCalls += 1;
+          return { content: "I am GPT", toolsUsed: [], model: "wrong" };
+        },
+      },
+    );
+    assert.equal(result.model, "qwen2.5");
+    assert.match(result.message.content, /\*\*qwen2\.5\*\*/);
+    assert.equal(modelCalls, 0);
+  });
+
   it("uses the local chatbot when preferLocal is set", async () => {
     let modelCalls = 0;
     const result = await resolveChatTurn(

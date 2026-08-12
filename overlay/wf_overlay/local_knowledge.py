@@ -96,8 +96,8 @@ def format_online_search_confirmation(item_name: str) -> str:
     return (
         f"{ONLINE_SEARCH_CONFIRMATION_MARKER} for {item}\n"
         f"Local pack has no cached Overframe community builds for {item}.\n"
-        "Search online (Overframe, YouTube, and other public build sources) "
-        "for community comparisons?\n"
-        "Reply **yes** to allow online search, or **no** to stay local + "
-        "agent-calculated only."
+        "If Online search is on in the web chat UI, live community crawl runs "
+        "automatically — do not ask the player to type yes/no.\n"
+        "If Online search is off: stay local + agent-calculated only, and tell "
+        "the player to enable the Online search toggle for a live crawl."
     )

@@ -62,6 +62,7 @@ npm run market -- slug-search "Mirage Prime set"
 npm run market -- pull --force
 npm run market -- changes
 npm run patches -- latest
+npm run patches -- detail 43.0.8
 npm run patches -- pull --force
 npm run patches -- changes
 npm run web:dev
