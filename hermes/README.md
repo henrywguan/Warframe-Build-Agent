@@ -6,8 +6,9 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.4.0` (Hermes ≥ 0.12.0)  
+**Profile version:** `0.4.1` (Hermes ≥ 0.12.0)  
 Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
+Aligned with web chat tools (knowledge / DPS / loadout / ehp / forma / relic / patches detail / market slug-search / worldstate).  
 **Not Warframe-only:** general web research via [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional install on the Hermes host).
 
 ---
@@ -51,7 +52,7 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 | `SOUL.md` | Ordis identity + dual-mode source policy (Warframe + research) |
 | `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
 | `AGENT_REACH.md` | Install / doctor / boundaries for Agent Reach |
-| `skills/warframe/*` | Compare, builds, mechanics, knowledge, loadout, DPS, world-state, market, patches |
+| `skills/warframe/*` | Builds, loadout, DPS, EHP/Forma/Relic, world-state, market, patches, community-search, … |
 | `skills/research/agent-reach/` | General web / social / video research skill |
 | `distribution.yaml` | Hermes distribution manifest |
 | `config.yaml` / `profile.yaml` | Light defaults |
@@ -106,7 +107,11 @@ npm run knowledge -- status
 npm run knowledge -- lookup "Primary Merciless"
 npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+npm run knowledge -- ehp --health 700 --shields 300 --armor 300 --dr 0.5
+npm run market -- slug-search "Arcane Energize"
+npm run patches -- detail
 npm run wf -- summary
+npm run wf -- arbitration
 ```
 
 ---

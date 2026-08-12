@@ -246,6 +246,20 @@ You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dp
 
 ---
 
+## Online community search in Hermes (no yes/no)
+
+Web chat uses an **Online search** toggle. Hermes Desktop does not have that toggle.
+
+When local Overframe builds are missing:
+
+- Stay local + agent-calculated by default
+- Crawl only if the Operator says **“search online”** / **“crawl Overframe/YouTube”** (or uses Agent Reach for a clear live-community ask)
+- Never ask them to type **yes** or **no**
+
+Same policy as [`source-policy.md`](source-policy.md). Screenshot/OCR Attach is web-chat only — in Hermes, paste mod names for `compare-loadout`.
+
+---
+
 ## Step 9 — Optional: Agent Reach (general web research)
 
 The Hermes profile is **not limited to Warframe**. To use Ordis as a general AI web research tool (YouTube, Reddit, GitHub, web pages, etc.), install [Agent Reach](https://github.com/Panniantong/Agent-Reach) on the **same machine** as Hermes.

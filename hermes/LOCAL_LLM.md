@@ -75,12 +75,17 @@ With Hermes cwd = this repo:
 | --- | --- |
 | Pack health | `npm run knowledge -- status` |
 | Item / mechanics / arcanes | `npm run knowledge -- lookup "<query>"` |
+| Local builds / farm | `npm run knowledge -- builds "<item>"` / `farm "<item>"` |
 | Loadout vs Overframe | `npm run knowledge -- compare-loadout "<item>" --mods "..." [--arcanes "..."]` |
 | Modded DPS | `npm run knowledge -- dps "<weapon>" --preset typical` |
 | DPS A vs B | `npm run knowledge -- compare-dps "<A>" "<B>" --preset typical` |
-| Live world-state | `npm run wf -- summary` |
-| Market | `npm run market -- price <slug>` |
-| Patches | `npm run patches -- latest` |
+| DPS presets | `npm run knowledge -- preset-list` |
+| EHP / Forma / Relic | `npm run knowledge -- ehp …` / `forma …` / `relic "<query>"` |
+| Inventory / farm-vs-buy | `npm run knowledge -- inventory-parse "…"` / `farm-vs-buy "<item>"` |
+| Player profile | `npm run knowledge -- profile` / `profile-set …` |
+| Live world-state | `npm run wf -- summary` (also `arbitration`, `darvo`, `construction`, …) |
+| Market | `npm run market -- slug-search "<name>"` / `price <slug>` / `changes` |
+| Patches | `npm run patches -- latest` / `detail` / `changes` |
 
 Refresh pack pieces:
 
@@ -119,4 +124,4 @@ Details: [`docs/web-chat.md`](../docs/web-chat.md).
 | Connection refused | Is Ollama running? Is the Base URL exactly `…/v1`? |
 | Wrong / empty answers | Is Hermes cwd the repo root? Run `npm run knowledge -- status` |
 | Model not found | `ollama list` — model name must match Hermes |
-| Still inventing builds | Overframe cache may be empty — import builds or allow online search when Ordis asks |
+| Still inventing builds | Overframe cache may be empty — import builds, enable **Online search** in the web UI, or say “search online” in Hermes (never type yes/no) |

@@ -1,7 +1,7 @@
 ---
 name: ehp-survivability
 description: Advise on Warframe effective HP, damage reduction, gating, and survivability mod priorities.
-version: 0.3.0
+version: 0.4.0
 metadata:
   hermes:
     tags: [Warframe, Survivability, EHP, Mods]
@@ -22,7 +22,9 @@ Operator asks tankiness, SP/arbitration survival, or defensive mod/arcane priori
    - `npm run knowledge -- lookup "<Warframe>"`
    - `npm run knowledge -- lookup "Damage Reduction"` / `"Archon Shard"`
 3. Explain EHP from digests; no invented values without data.
-4. Use EHP calculator when available in repo/web; else qualitative ranking (gating > DR > EHP > recovery).
+4. Prefer the offline calculator (same as webchat `/ehp`):
+   - `npm run knowledge -- ehp --health N --shields N --armor N [--dr 0.75] [--overguard N] [--adaptation 0-10]`
+   - Else qualitative ranking (gating > DR > EHP > recovery).
 5. Gating patterns only when frame supports them.
 6. Mod/arcane priorities matched to kit; helminth options when relevant.
 7. Stats from catalog + wiki digest only.

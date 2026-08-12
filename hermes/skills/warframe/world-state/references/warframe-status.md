@@ -26,6 +26,7 @@ Default platform path: **`/pc`** (cross-play / mobile default in this project)
 | `news` | Official news / update headlines |
 | `arbitration` | Current Arbitration (when available) |
 | `dailyDeals` | Darvo deals |
+| `constructionProgress` | Fomorian / Razorback progress |
 
 ## CLI
 
@@ -41,7 +42,10 @@ npm run wf -- void-trader
 npm run wf -- steel-path
 npm run wf -- cycles
 npm run wf -- events
-npm run wf -- get <field>          # raw JSON for any worldstate child
+npm run wf -- arbitration
+npm run wf -- darvo              # alias: daily-deals
+npm run wf -- construction       # Fomorian / Razorback
+npm run wf -- get <field>        # raw JSON for any worldstate child
 ```
 
 Options shared by most commands:

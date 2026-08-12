@@ -3,8 +3,8 @@ name: agent-reach
 description: >
   General web/social/video research via Agent Reach (Jina, Exa, YouTube/yt-dlp,
   GitHub/gh, Reddit, Twitter/X, RSS, Bilibili, and other routed backends).
-  Use for non-Warframe research and for consented online community lookup.
-version: 0.1.0
+  Use for non-Warframe research and for opted-in online community lookup.
+version: 0.1.1
 metadata:
   hermes:
     tags: [Research, Web, YouTube, Reddit, Twitter, GitHub, AgentReach]
@@ -17,7 +17,7 @@ metadata:
 
 - Operator wants general research, link reading, YouTube/Reddit/Twitter/GitHub/web search
 - Operator shares a URL and wants a summary with sources
-- Hybrid Warframe questions that need **online** community material **after** yes/no consent
+- Hybrid Warframe questions that need **online** community material after Online opt-in (WebUI Online search toggle, or Operator said “search online” in Hermes) — never ask yes/no
 
 ## When not to use
 
