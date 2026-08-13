@@ -1,0 +1,141 @@
+.markdown {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: inherit;
+}
+
+.markdown :where(p, ul, ol, pre, blockquote, table, h1, h2, h3, h4) {
+  margin: 0 0 0.65rem;
+}
+
+.markdown :where(p, ul, ol, pre, blockquote, table, h1, h2, h3, h4):last-child {
+  margin-bottom: 0;
+}
+
+.markdown :where(h1, h2, h3, h4) {
+  font-family: var(--font-orbitron), var(--font-display), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: var(--gold, #d7b56d);
+}
+
+.markdown h1 {
+  font-size: 1.05rem;
+}
+
+.markdown h2 {
+  font-size: 0.98rem;
+}
+
+.markdown h3,
+.markdown h4 {
+  font-size: 0.92rem;
+}
+
+.markdown :where(ul, ol) {
+  padding-left: 1.25rem;
+}
+
+.markdown li {
+  margin: 0.2rem 0;
+}
+
+.markdown li > ul,
+.markdown li > ol {
+  margin: 0.25rem 0 0.35rem;
+}
+
+.markdown strong {
+  color: #f3efe4;
+  font-weight: 700;
+}
+
+.markdown em {
+  color: var(--mist, #9bb4c8);
+}
+
+.markdown a {
+  color: var(--cyan, #7fe7ef);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.markdown a:hover,
+.markdown a:focus-visible {
+  color: var(--signal, #6edc9a);
+  outline: none;
+}
+
+.markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  padding: 0.1em 0.35em;
+  border: 1px solid rgba(122, 101, 52, 0.45);
+  border-radius: 1px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--plasma, #5eb8e8);
+}
+
+.markdown pre {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(122, 101, 52, 0.5);
+  border-left: 2px solid var(--cyan, #7fe7ef);
+  border-radius: 1px;
+  background: rgba(0, 0, 0, 0.45);
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.markdown pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink, #e8eef5);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.markdown blockquote {
+  margin-left: 0;
+  padding: 0.35rem 0.75rem;
+  border-left: 2px solid var(--ember, #e08a5a);
+  background: rgba(224, 138, 90, 0.08);
+  color: var(--ink-soft, rgba(196, 208, 220, 0.85));
+}
+
+.markdown hr {
+  border: 0;
+  border-top: 1px solid rgba(122, 101, 52, 0.45);
+  margin: 0.75rem 0;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid rgba(122, 101, 52, 0.45);
+  padding: 0.4rem 0.55rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown th {
+  color: var(--gold, #d7b56d);
+  background: rgba(0, 0, 0, 0.35);
+  font-family: var(--font-orbitron), var(--font-display), sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.markdown tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
