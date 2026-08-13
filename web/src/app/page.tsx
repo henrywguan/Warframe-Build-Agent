@@ -187,7 +187,7 @@ export default function HomePage() {
     setLlmConfig(saved);
     setOnlineSearch(loadOnlineSearchEnabled());
     const savedAi = loadAiChatPreference();
-    setAiChat(savedAi ?? defaultAiChatEnabled(llmConfigReady(saved)));
+    setAiChat(savedAi ?? defaultAiChatEnabled());
     let cancelled = false;
     (async () => {
       try {
@@ -205,7 +205,7 @@ export default function HomePage() {
         setPasswordRequired(Boolean(authJson.passwordRequired));
         setAuthorized(!authJson.passwordRequired);
         const browserLlm = llmConfigReady(saved);
-        const aiOn = savedAi ?? defaultAiChatEnabled(browserLlm || Boolean(healthJson.openaiConfigured));
+        const aiOn = savedAi ?? defaultAiChatEnabled();
         setAiChat(aiOn);
         if (!healthJson.chatReady && !browserLlm && aiOn) {
           setError(
@@ -623,9 +623,7 @@ export default function HomePage() {
         {error
           ? error
           : llmConfigReady(llmConfig)
-            ? aiChat
-              ? `AI general agent · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
-              : `LLM on (Warframe advisor) · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
+            ? `${aiChat ? "AI general agent" : "LLM on (Warframe advisor)"} · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
             : aiChat
               ? "AI on — configure LLM / Ollama for the general agent"
               : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}

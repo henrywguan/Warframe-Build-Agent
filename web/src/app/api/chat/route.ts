@@ -123,7 +123,6 @@ async function runModelCompletion(
 
   const tools = getChatTools({
     llmMode: true,
-    generalAgent: Boolean(generalAgent),
     onlineSearch: Boolean(onlineSearchToggle),
   });
   const toolsUsed: string[] = [];
@@ -169,7 +168,6 @@ async function runModelCompletion(
         : await runChatTool(call.function.name, args, {
             onlineSearch: Boolean(onlineSearchToggle),
             llmMode: true,
-            generalAgent: Boolean(generalAgent),
           });
 
       if (!dedupe.duplicate) {

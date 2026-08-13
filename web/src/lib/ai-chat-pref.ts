@@ -17,10 +17,7 @@ export function saveAiChatEnabled(enabled: boolean): void {
   window.localStorage.setItem(AI_CHAT_STORAGE_KEY, enabled ? "1" : "0");
 }
 
-/**
- * Default AI (general agent) off — LLM-on alone is the Warframe advisor.
- * `llmReady` is accepted for call-site compatibility.
- */
-export function defaultAiChatEnabled(_llmReady: boolean): boolean {
+/** Default AI (general agent) off — LLM-on alone is the Warframe advisor. */
+export function defaultAiChatEnabled(): boolean {
   return false;
 }

@@ -159,11 +159,10 @@ export function resolveWebSearchQuery(
   options: { forceWarframe?: boolean } = {},
 ): { searchQuery: string; includeWiki: boolean } {
   const q = query.trim();
-  const includeWiki = options.forceWarframe === true || looksWarframeRelated(q);
+  const warframey = looksWarframeRelated(q);
+  const includeWiki = options.forceWarframe === true || warframey;
   const searchQuery =
-    options.forceWarframe === true && !looksWarframeRelated(q)
-      ? `${q} warframe`
-      : q;
+    options.forceWarframe === true && !warframey ? `${q} warframe` : q;
   return { searchQuery, includeWiki };
 }
 

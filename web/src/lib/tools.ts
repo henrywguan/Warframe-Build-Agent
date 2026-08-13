@@ -573,8 +573,6 @@ export function getChatTools(options?: {
   onlineSearch?: boolean;
   /** LLM mode (Warframe advisor or general agent) — enables search_web + fetch_web_page. */
   llmMode?: boolean;
-  /** General-agent mode (AI on). Kept for callers; does not change tool registration. */
-  generalAgent?: boolean;
 }): OpenAI.Chat.ChatCompletionTool[] {
   const tools = [...chatTools];
   if (options?.llmMode) tools.push(SEARCH_WEB_TOOL);
@@ -619,7 +617,6 @@ export async function runChatTool(
   options?: {
     onlineSearch?: boolean;
     llmMode?: boolean;
-    generalAgent?: boolean;
   },
 ): Promise<string> {
   let args: ToolArgs = {};
