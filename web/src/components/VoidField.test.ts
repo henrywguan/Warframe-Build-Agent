@@ -20,5 +20,8 @@ describe("VoidField module", () => {
     assert.match(source, /0x6edc9a/);
     assert.match(source, /data-mood=\{mood\}/);
     assert.match(source, /Left \/ right void lights surge with Ordis replies/);
+    assert.match(source, /CRYSTAL_LAYOUTS/);
+    assert.match(source, /280/);
+    assert.match(source, /edgeBias/);
   });
 });

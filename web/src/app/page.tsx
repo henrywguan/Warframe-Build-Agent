@@ -120,12 +120,19 @@ function TopZone({
 }) {
   return (
     <div className={styles.topZone} data-mood={mood}>
-      <span className={`${styles.sideGlow} ${styles.sideGlowLeft}`} aria-hidden="true" />
-      <span className={`${styles.sideGlow} ${styles.sideGlowRight}`} aria-hidden="true" />
       <BrandHeader tagline={tagline} />
       <div className={styles.centerStage}>
         <OrdisStage mood={mood} caption={caption} />
       </div>
+    </div>
+  );
+}
+
+function PageSideGlows({ mood }: { mood: ReturnType<typeof deriveOrdisMood> }) {
+  return (
+    <div className={styles.pageGlows} data-mood={mood} aria-hidden="true">
+      <span className={`${styles.sideGlow} ${styles.sideGlowLeft}`} />
+      <span className={`${styles.sideGlow} ${styles.sideGlowRight}`} />
     </div>
   );
 }
@@ -522,6 +529,7 @@ export default function HomePage() {
   return (
     <>
       <VoidField mood={mood} />
+      <PageSideGlows mood={mood} />
       <div className={styles.workspace} data-mood={mood}>
       <ChatHistorySidebar
         memory={chatMemory}
