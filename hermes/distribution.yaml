@@ -1,6 +1,6 @@
 name: warframe-build-agent
-version: 0.5.0
-description: "Ordis — Warframe specialty + always-online research (Agent Reach) + Cursor-style coding agent skills; local-LLM friendly"
+version: 0.6.0
+description: "Ordis — Cursor-class general AI agent + Warframe specialty + always-online research (Agent Reach); local-LLM friendly"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"

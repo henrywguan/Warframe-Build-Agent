@@ -20,8 +20,8 @@ terminal:
   # Agent Reach installs to ~/.agent-reach/ (not into this cwd).
   cwd: "."
 
-# Coding-agent profile notes:
-# - Skills under skills/software-development/ implement a Cursor-like loop.
-# - Enable Hermes native tools (filesystem, terminal, web) in the Desktop/CLI settings.
-# - Optional: keep Hermes bundled software-development skills seeded
-#   (`hermes skills opt-in --sync`) in addition to this profile's skills.
+# Cursor-class agent profile notes:
+# - skills/software-development/* = full tool-using agent (see CODING.md).
+# - Enable ALL available Hermes toolsets for full power:
+#   filesystem, terminal, web, browser, vision, MCP, subagents/delegate.
+# - Optional: hermes skills opt-in --sync for upstream bundled software skills.

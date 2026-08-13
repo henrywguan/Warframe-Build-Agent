@@ -1,50 +1,64 @@
 ---
 name: agent-loop
-description: Autonomous coding loop — explore, edit, verify, report like Cursor.
-version: 0.1.0
+description: Full Cursor-class agent loop — tools, reason, edit, verify, deliver.
+version: 0.2.0
 metadata:
   hermes:
-    tags: [Coding, Agent, Autonomy, Cursor]
+    tags: [Coding, Agent, Autonomy, Cursor, Tools, Reasoning]
     category: software-development
-    related_skills: [codebase-explore, plan-task, implement-change, test-verify, git-workflow]
+    related_skills:
+      - tool-orchestration
+      - reasoning-discipline
+      - multi-step-delivery
+      - codebase-explore
+      - plan-task
+      - implement-change
+      - test-verify
+      - git-workflow
 ---
 
-# Agent loop (self-sufficient coding)
+# Agent loop (Cursor-class)
 
-Default operating mode for non-Warframe software tasks. Behave like a capable IDE agent: inspect reality, change code, prove it works, summarize.
+Default mode for open-ended work. You are a **powerful tool-using agent**: reason, call tools, change the world, prove results — not a chat FAQ.
+
+See profile `CODING.md` for the full capability map.
 
 ## When to use
 
-- Operator asks to build, fix, refactor, investigate, or ship code
-- Multi-step work spanning files, tests, and git
-- Don’t use for pure Warframe pack lookups (use warframe skills)
+- Build, fix, investigate, research-into-action, ship
+- Operator says “act like Cursor” / “use tools” / “don’t guess”
+- Don’t use for pure Warframe pack one-shot lookups (warframe skills are enough)
 
 ## Procedure
 
-1. **Restate the goal** in one line (completion criterion clear).
-2. **Explore** — `codebase-explore`: locate entry points, callers, tests, configs.
-3. **Plan lightly** — for large/ambiguous work, load `plan-task` first; otherwise outline 3–7 steps mentally and start.
-4. **Implement** — `implement-change`: smallest diff that satisfies the goal.
-5. **Verify** — `test-verify`: run the narrowest meaningful checks; fix failures you caused.
-6. **Cleanup** — `refactor-cleanup` on touched files only if messy.
-7. **Persist** — `git-workflow` when the Operator wants commits/PRs.
-8. **Report** — what changed, how verified, residual risks, next step.
+1. **Goal** — restate done-criteria (`multi-step-delivery`).
+2. **Rules** — load `project-rules` + `security-hygiene`.
+3. **Orient** — `codebase-explore` / `context-discipline` (minimum files).
+4. **Reason** — `reasoning-discipline` for non-trivial paths.
+5. **Plan** — `plan-task` if large/ambiguous; else proceed.
+6. **Orchestrate** — `tool-orchestration` (files, terminal, web, browser, vision, MCP, subagents).
+7. **Act** — implement / configure / crawl / bootstrap as needed.
+8. **Verify** — `test-verify`, `http-api-debug`, `browser-automate`, or vision checks.
+9. **Persist** — `git-workflow` / `pr-workflow` when asked.
+10. **Report** — changes, evidence, risks, next step (Ordis flavor light).
 
 ## Standing rules
 
-- Prefer tools (`read_file` / `search_files` / `patch` / `terminal`) over guessing.
-- Parallelize independent reads; serialize dependent edits.
-- Never claim tests passed without running them (or stating they couldn’t run and why).
-- Keep Ordis flavor light — code blocks and paths first.
+- Reality over memory — tool output beats training data.
+- Parallelize independent tool calls.
+- Smallest correct change; no scope creep.
+- Never invent passing tests or file contents.
+- Always-online research on Hermes (Agent Reach / web) without yes/no prompts.
+- Degrade gracefully when a toolset is missing; say what’s missing.
 
 ## Pitfalls
 
-- Editing before finding the real source of truth
-- Huge rewrites when a local fix works
-- Leaving the repo dirty without saying so
+- Essay without tools
+- Editing before locating source of truth
+- Stopping at the first error without the debug loop
 
 ## Verification
 
-- Goal met or blocked with a specific ask
-- Commands run + outcomes listed
+- Done-criteria met or precise blocker
+- Evidence listed (commands/paths/URLs)
 - Diff scope matches the ask
