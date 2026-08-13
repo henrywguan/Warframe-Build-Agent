@@ -93,7 +93,7 @@ After substantive code edits, run the **cleanup-simplify** subagent (`/cleanup-s
 ## How to answer players
 
 1. Identify the goal (compare, build, mechanic, arcane, DPS, loadout, progression, trade, live status).
-2. Ground claims in the **offline knowledge pack** first (`npm run knowledge -- lookup|dps|compare-dps|compare-loadout|ehp|forma|relic|…`), then `docs/` / Status / Market / Patches. When local Overframe builds are missing, honor **Online search** opt-in (web toggle or Hermes “search online”) — never ask the player to type yes/no.
+2. Ground claims in the **offline knowledge pack** first (`npm run knowledge -- lookup|dps|compare-dps|compare-loadout|ehp|forma|relic|…`), then `docs/` / Status / Market / Patches. When local Overframe builds are missing: **web chat** honors the Online search toggle; **Hermes is always online** and crawls immediately — never ask the player to type yes/no.
 3. Lead with a clear recommendation, then tradeoffs.
 4. End with one short next-step suggestion.
 
