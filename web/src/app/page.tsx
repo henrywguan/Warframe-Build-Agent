@@ -54,7 +54,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Toggle AI for Cursor-class general agent mode (any topic + Warframe tools; needs LLM / Ollama). Online search crawls Warframe community builds separately.",
+    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Toggle AI for smart LLM replies (needs LLM / Ollama). Online search crawls community builds separately.",
 };
 
 const MAX_IMAGE_BYTES = 1_600_000;
@@ -465,8 +465,8 @@ export default function HomePage() {
             aria-pressed={aiChat}
             title={
               aiChat
-                ? "AI on — general agent (web research + reasoning + Warframe tools)"
-                : "AI off — offline Warframe knowledge chatbot only"
+                ? "AI chat on — smart LLM replies with optional web search"
+                : "AI off — offline knowledge chatbot only"
             }
             onClick={() => {
               setAiChat((prev) => {
