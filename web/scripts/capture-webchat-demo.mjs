@@ -19,15 +19,18 @@ async function shot(page, name) {
 }
 
 async function clickButtonByText(page, needle) {
-  const chips = await page.$$("button");
-  for (const chip of chips) {
-    const text = (await page.evaluate((el) => el.textContent || "", chip)).trim();
-    if (text === needle || text.includes(needle)) {
-      await chip.click();
-      return true;
-    }
-  }
-  return false;
+  const clicked = await page.evaluate((target) => {
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const match = buttons.find((el) => {
+      const text = (el.textContent || "").trim();
+      return text === target || text.includes(target);
+    });
+    if (!match) return false;
+    match.scrollIntoView({ block: "center", inline: "nearest" });
+    match.click();
+    return true;
+  }, needle);
+  return clicked;
 }
 
 async function waitForUi(page) {
@@ -71,8 +74,26 @@ async function runViewport(browser, { width, height, prefix }) {
   }
 
   await clickButtonByText(page, "LLM / Ollama");
-  await new Promise((r) => setTimeout(r, 500));
+  await page
+    .waitForSelector('[aria-label="LLM settings"]', { timeout: 5_000 })
+    .catch(() => {});
+  await new Promise((r) => setTimeout(r, 400));
   await shot(page, `${prefix}-llm-panel.png`);
+  // Prove Save / lower fields are reachable via scroll
+  await page.evaluate(() => {
+    const panel = document.querySelector('[aria-label="LLM settings"]');
+    const scroller =
+      panel?.closest('[class*="dockScroll"]') ||
+      panel?.parentElement ||
+      panel;
+    if (scroller) scroller.scrollTop = scroller.scrollHeight;
+    const save = Array.from(document.querySelectorAll("button")).find((el) =>
+      (el.textContent || "").trim().startsWith("Save"),
+    );
+    save?.scrollIntoView({ block: "nearest" });
+  });
+  await new Promise((r) => setTimeout(r, 300));
+  await shot(page, `${prefix}-llm-panel-scrolled.png`);
 
   await page.close();
 }

@@ -29,6 +29,8 @@ describe("web UI wiring integrity", () => {
       "Chats",
       "panelDock",
       "panelDockCrowded",
+      "dockScroll",
+      "shellCrowded",
       "openNewChat",
       "chatMemory",
       "workspace",

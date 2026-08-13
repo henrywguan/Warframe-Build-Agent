@@ -199,6 +199,11 @@
   line-height: 1.35;
   color: var(--ink-soft, rgba(196, 208, 220, 0.72));
   flex-shrink: 0;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @keyframes riseSide {

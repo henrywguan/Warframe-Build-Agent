@@ -455,18 +455,20 @@ export default function HomePage() {
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
   useEffect(() => {
-    if (!sidebarOpen) return;
+    if (!sidebarOpen && !showLlmSettings) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") setSidebarOpen(false);
+      if (event.key !== "Escape") return;
+      if (showLlmSettings) setShowLlmSettings(false);
+      else if (sidebarOpen) setSidebarOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [sidebarOpen]);
+  }, [sidebarOpen, showLlmSettings]);
 
   if (!ready) {
     return (
@@ -529,7 +531,13 @@ export default function HomePage() {
         disabled={pending}
       />
       <main
-        className={`${styles.shell}${sidebarOpen ? ` ${styles.shellObscured}` : ""}`}
+        className={[
+          styles.shell,
+          sidebarOpen ? styles.shellObscured : "",
+          showLlmSettings ? styles.shellCrowded : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-hidden={sidebarOpen || undefined}
       >
       <TopZone
@@ -601,97 +609,99 @@ export default function HomePage() {
         <div
           className={`${styles.panelDock}${showLlmSettings ? ` ${styles.panelDockCrowded}` : ""}`}
         >
-        <div className={styles.suggestions}>
-          <button
-            type="button"
-            className={`${styles.chip} ${aiChat ? styles.chipActive : ""}`}
-            disabled={pending}
-            aria-pressed={aiChat}
-            title={
-              aiChat
-                ? "AI on — general research agent (non-Warframe-first). Requires LLM / Ollama."
-                : "AI off — keep Warframe LLM advisor when LLM is configured; offline chatbot when not"
-            }
-            onClick={() => {
-              setAiChat((prev) => {
-                const next = !prev;
-                if (next && !llmConfigReady(llmConfig)) {
-                  setShowLlmSettings(true);
-                  setError(
-                    "AI (general agent) needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
-                  );
-                  saveAiChatEnabled(false);
-                  return false;
-                }
-                saveAiChatEnabled(next);
-                if (next) setError(null);
-                return next;
-              });
-            }}
-          >
-            AI {aiChat ? "on" : "off"}
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
-            disabled={pending}
-            title={
-              llmConfigReady(llmConfig)
-                ? "LLM configured — Warframe advisor (AI off) or general agent (AI on)"
-                : "Configure Ollama / OpenAI-compatible model (enables LLM mode)"
-            }
-            onClick={() => setShowLlmSettings((open) => !open)}
-          >
-            LLM / Ollama
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${onlineSearch ? styles.chipActive : ""}`}
-            disabled={pending}
-            aria-pressed={onlineSearch}
-            title={
-              onlineSearch
-                ? "Live Overframe + community build crawl is on"
-                : "Turn on to crawl Overframe / community builds when local pack is missing"
-            }
-            onClick={() => {
-              setOnlineSearch((prev) => {
-                const next = !prev;
-                saveOnlineSearchEnabled(next);
-                return next;
-              });
-            }}
-          >
-            Online search {onlineSearch ? "on" : "off"}
-          </button>
-          {SUGGESTIONS.map((suggestion) => (
+          <div className={styles.suggestions}>
             <button
-              key={suggestion}
               type="button"
-              className={styles.chip}
+              className={`${styles.chip} ${aiChat ? styles.chipActive : ""}`}
               disabled={pending}
-              onClick={() => void sendMessage(suggestion)}
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-
-        {showLlmSettings ? (
-          <LlmSettingsPanel
-            initial={llmConfig}
-            onClose={() => setShowLlmSettings(false)}
-            onSave={(config) => {
-              saveLlmConfig(config);
-              setLlmConfig(config);
-              // Saving a valid LLM config enables LLM/Warframe-advisor mode.
-              // Do not auto-enable AI (general agent) — that stays an explicit toggle.
-              if (llmConfigReady(config)) {
-                setError(null);
+              aria-pressed={aiChat}
+              title={
+                aiChat
+                  ? "AI on — general research agent (non-Warframe-first). Requires LLM / Ollama."
+                  : "AI off — keep Warframe LLM advisor when LLM is configured; offline chatbot when not"
               }
-            }}
-          />
-        ) : null}
+              onClick={() => {
+                setAiChat((prev) => {
+                  const next = !prev;
+                  if (next && !llmConfigReady(llmConfig)) {
+                    setShowLlmSettings(true);
+                    setError(
+                      "AI (general agent) needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
+                    );
+                    saveAiChatEnabled(false);
+                    return false;
+                  }
+                  saveAiChatEnabled(next);
+                  if (next) setError(null);
+                  return next;
+                });
+              }}
+            >
+              AI {aiChat ? "on" : "off"}
+            </button>
+            <button
+              type="button"
+              className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
+              disabled={pending}
+              title={
+                llmConfigReady(llmConfig)
+                  ? "LLM configured — Warframe advisor (AI off) or general agent (AI on)"
+                  : "Configure Ollama / OpenAI-compatible model (enables LLM mode)"
+              }
+              onClick={() => setShowLlmSettings((open) => !open)}
+            >
+              LLM / Ollama
+            </button>
+            <button
+              type="button"
+              className={`${styles.chip} ${onlineSearch ? styles.chipActive : ""}`}
+              disabled={pending}
+              aria-pressed={onlineSearch}
+              title={
+                onlineSearch
+                  ? "Live Overframe + community build crawl is on"
+                  : "Turn on to crawl Overframe / community builds when local pack is missing"
+              }
+              onClick={() => {
+                setOnlineSearch((prev) => {
+                  const next = !prev;
+                  saveOnlineSearchEnabled(next);
+                  return next;
+                });
+              }}
+            >
+              Online search {onlineSearch ? "on" : "off"}
+            </button>
+            {SUGGESTIONS.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                className={styles.chip}
+                disabled={pending}
+                onClick={() => void sendMessage(suggestion)}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+
+          {showLlmSettings ? (
+            <div className={styles.dockScroll}>
+              <LlmSettingsPanel
+                initial={llmConfig}
+                onClose={() => setShowLlmSettings(false)}
+                onSave={(config) => {
+                  saveLlmConfig(config);
+                  setLlmConfig(config);
+                  // Saving a valid LLM config enables LLM/Warframe-advisor mode.
+                  // Do not auto-enable AI (general agent) — that stays an explicit toggle.
+                  if (llmConfigReady(config)) {
+                    setError(null);
+                  }
+                }}
+              />
+            </div>
+          ) : null}
 
         {attachment ? (
           <div className={styles.attachBar}>
