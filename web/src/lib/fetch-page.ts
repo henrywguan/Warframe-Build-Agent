@@ -94,8 +94,6 @@ export type FetchedPage = {
   truncated: boolean;
   fullLength: number;
   status: number;
-  /** How the page body was obtained. */
-  via?: "direct" | "jina";
 };
 
 function extractTitle(html: string): string | undefined {
@@ -132,57 +130,13 @@ export function truncatePlainText(
   return { text: cut.trimEnd(), truncated: true };
 }
 
-async function fetchViaJina(
-  targetUrl: string,
-  options: { maxChars: number; timeoutMs: number },
-): Promise<FetchedPage> {
-  // Jina reader: public proxy that returns Markdown/text for a URL.
-  const jinaUrl = `https://r.jina.ai/${targetUrl}`;
-  assertSafePublicUrl(jinaUrl);
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), options.timeoutMs);
-  try {
-    const response = await fetch(jinaUrl, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        Accept: "text/plain,text/markdown,*/*;q=0.8",
-        "User-Agent":
-          "Mozilla/5.0 (compatible; WarframeBuildAgent/0.1; +https://github.com/henrywguan/Warframe-Build-Agent)",
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`Jina HTTP ${response.status} for ${targetUrl}`);
-    }
-    const text = (await response.text()).trim();
-    if (text.length < 40) {
-      throw new Error(`Jina returned empty/short content for ${targetUrl}`);
-    }
-    const { text: body, truncated } = truncatePlainText(text, options.maxChars);
-    const titleMatch = text.match(/^Title:\s*(.+)$/m);
-    return {
-      url: targetUrl,
-      title: titleMatch?.[1]?.trim(),
-      body,
-      truncated,
-      fullLength: text.length,
-      status: response.status,
-      via: "jina",
-    };
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 export async function fetchPublicPage(
   rawUrl: string,
-  options: { maxChars?: number; timeoutMs?: number; allowJinaFallback?: boolean } = {},
+  options: { maxChars?: number; timeoutMs?: number } = {},
 ): Promise<FetchedPage> {
   const url = assertSafePublicUrl(rawUrl);
   const maxChars = options.maxChars ?? FETCH_PAGE_DEFAULT_MAX_CHARS;
   const timeoutMs = options.timeoutMs ?? 12_000;
-  const allowJinaFallback = options.allowJinaFallback !== false;
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -201,9 +155,6 @@ export async function fetchPublicPage(
     assertSafePublicUrl(finalUrl);
 
     if (!response.ok) {
-      if (allowJinaFallback) {
-        return await fetchViaJina(url.toString(), { maxChars, timeoutMs });
-      }
       throw new Error(`HTTP ${response.status} fetching ${finalUrl}`);
     }
 
@@ -217,16 +168,12 @@ export async function fetchPublicPage(
         truncated: html.length > maxChars,
         fullLength: html.length,
         status: response.status,
-        via: "direct",
       };
     }
 
     const title = extractTitle(html);
     const fullBody = htmlToPlainText(extractMainHtml(html));
-    if (!fullBody || fullBody.length < 80) {
-      if (allowJinaFallback) {
-        return await fetchViaJina(finalUrl, { maxChars, timeoutMs });
-      }
+    if (!fullBody) {
       throw new Error(`Parsed empty content from ${finalUrl}`);
     }
     const { text: body, truncated } = truncatePlainText(fullBody, maxChars);
@@ -237,17 +184,7 @@ export async function fetchPublicPage(
       truncated,
       fullLength: fullBody.length,
       status: response.status,
-      via: "direct",
     };
-  } catch (error) {
-    if (allowJinaFallback) {
-      try {
-        return await fetchViaJina(url.toString(), { maxChars, timeoutMs });
-      } catch {
-        // fall through to original error
-      }
-    }
-    throw error;
   } finally {
     clearTimeout(timer);
   }
@@ -258,7 +195,6 @@ export function formatFetchedPage(page: FetchedPage): string {
     "WEB_PAGE_CONTENT",
     `Source: ${page.url}`,
     page.title ? `Title: ${page.title}` : null,
-    page.via ? `Fetched via: ${page.via}` : null,
     "",
     page.body,
   ].filter((line): line is string => line !== null);

@@ -59,10 +59,7 @@ export async function maybeAugmentLookupWithLiveSearch(options: {
     sections.push("", community);
     extraTools.push("search_community_builds");
   } else if (options.aiChat) {
-    // Build auto-augment stays Warframe-scoped even though general search_web is unbiased.
-    const web = await searchWebOnline(`${query} warframe steel path build`, {
-      forceWarframe: true,
-    });
+    const web = await searchWebOnline(`${query} warframe steel path build`);
     sections.push("", web);
     extraTools.push("search_web");
   }
@@ -87,7 +84,7 @@ export function fallbackFromToolResults(
 ): string {
   const joined = toolPayloads.filter(Boolean).join("\n\n").trim();
   if (!joined) {
-    return "I could not finish that answer. Try again, enable Online search for Warframe community builds, or rephrase the question.";
+    return "I could not finish that answer. Try again with Online search on, or ask about a specific Warframe/weapon by name.";
   }
   const itemMatch = joined.match(/^##\s+([^\n(]+)\s*\(/m);
   const item = itemMatch?.[1]?.trim();

@@ -1,6 +1,6 @@
 # Source policy (web chat + overlay + Hermes)
 
-How the agent chooses evidence. **Warframe:** local knowledge pack first; Online search toggle for community-build crawls — never ask the player to type yes/no. **Web AI on:** general research via `search_web` / `fetch_web_page` for any topic (Hermes-aligned; not Warframe-only).
+How the agent chooses evidence. **Local knowledge pack first; Online search toggle for live crawls — never ask the player to type yes/no.**
 
 ## Default — offline knowledge (not live web browsing)
 
@@ -28,7 +28,7 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 
 | Surface | Facts | Builds |
 | --- | --- | --- |
-| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** Cursor-class general agent — any-topic `search_web` + `fetch_web_page` (no forced Warframe) + Warframe tools. **Online search on:** Warframe `search_community_builds` (+ full pages). AI off: offline chatbot |
+| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** LLM + `search_web` + `fetch_web_page`. **Online search on:** `search_community_builds` (+ full pages). AI off: offline chatbot |
 | **Web DPS** | `estimate_modded_dps` | Offline calculator presets |
 | **Web loadout** | `compare_loadout_to_overframe` / Attach OCR | Top-3 local Overframe diffs |
 | **Overlay action cards** | Local-pack gate card | Agent-calculated cards + Online-search toggle tip |

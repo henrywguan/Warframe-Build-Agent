@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  looksWarframeRelated,
-  parseDuckDuckGoHtml,
-} from "./online-community-search.ts";
+import { parseDuckDuckGoHtml } from "./online-community-search.ts";
 import { isCloudflareChallenge, parseOverframeTopBuilds } from "./overframe-online.ts";
 
 describe("online community search parsers", () => {
@@ -37,12 +34,5 @@ describe("online community search parsers", () => {
     assert.equal(hits[0]?.url, "https://overframe.gg/build/1/x");
     assert.match(hits[0]?.title ?? "", /Coda Hema/);
     assert.equal(hits[1]?.url, "https://wiki.warframe.com/w/Coda_Hema");
-  });
-
-  it("detects Warframe-related queries without forcing general topics", () => {
-    assert.equal(looksWarframeRelated("Coda Hema steel path build"), true);
-    assert.equal(looksWarframeRelated("best pasta recipe"), false);
-    assert.equal(looksWarframeRelated("Rust async tokio tutorial"), false);
-    assert.equal(looksWarframeRelated("what is an arcane in warframe"), true);
   });
 });

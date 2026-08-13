@@ -48,14 +48,13 @@ const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "search_web",
     description:
-      "General public web search (DuckDuckGo) with auto-fetched full-page excerpts. Warframe Wiki is included only when the query looks Warframe-related — do NOT force Warframe on general topics. Use for any research when AI chat is on. Cite only returned URLs. For a specific URL, call fetch_web_page.",
+      "General public web search (DuckDuckGo + Warframe Wiki) with auto-fetched full-page excerpts from top hits. Use when facts may be patch-sensitive, time-sensitive, or missing from local tools. Available when the WebUI AI toggle is on. Cite only returned URLs. For a specific URL, call fetch_web_page.",
     parameters: {
       type: "object",
       properties: {
         query: {
           type: "string",
-          description:
-            "Natural search query for any topic (e.g. 'Rust async tokio tutorial' or 'Steel Path Excalibur survivability 2026')",
+          description: "Search query (e.g. 'Steel Path Excalibur survivability 2026')",
         },
       },
       required: ["query"],
@@ -69,7 +68,7 @@ const FETCH_WEB_PAGE_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "fetch_web_page",
     description:
-      "Fetch and parse a full public web page into readable text (direct HTML parse, with Jina reader fallback when blocked/empty). Use after search_web / search_community_builds for a specific URL, or whenever the player asks about content on a known page. Available when AI or Online search is on. Only http(s) public URLs.",
+      "Fetch and parse a full public web page into readable text (wiki, patch notes, guides, Overframe, forums, etc.). Use after search_web / search_community_builds when you need the body of a specific URL, or whenever the player asks about content on a known page. Available when AI or Online search is on. Only http(s) public URLs.",
     parameters: {
       type: "object",
       properties: {

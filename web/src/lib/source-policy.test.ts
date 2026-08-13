@@ -30,14 +30,6 @@ describe("web source policy (local first + online toggle)", () => {
     assert.ok(SYSTEM_PROMPT.includes(SOURCE_POLICY));
   });
 
-  it("AI mode is a general agent, not Warframe-only", () => {
-    assert.match(SYSTEM_PROMPT, /general AI agent/i);
-    assert.match(SYSTEM_PROMPT, /Cursor-class/i);
-    assert.match(SYSTEM_PROMPT, /Do not force Warframe framing/i);
-    assert.match(SOURCE_POLICY, /General \/ non-Warframe questions/i);
-    assert.match(SOURCE_POLICY, /search_web/);
-  });
-
   it("tool description mentions Online search toggle gate", () => {
     assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
     assert.match(LOCAL_KNOWLEDGE_TOOL_DESCRIPTION, /do not ask yes\/no/i);
@@ -143,7 +135,7 @@ describe("web source policy (local first + online toggle)", () => {
 
   it("documents the Online search toggle policy", () => {
     const doc = readFileSync(join(repoRoot, "docs/source-policy.md"), "utf8");
-    assert.match(doc, /local knowledge pack first/i);
+    assert.match(doc, /Local knowledge pack first/);
     assert.match(doc, /ONLINE_SEARCH_CONFIRMATION_REQUIRED/);
     assert.match(doc, /Online search toggle ON/i);
     assert.match(doc, /never ask the player to type/i);
@@ -153,6 +145,5 @@ describe("web source policy (local first + online toggle)", () => {
     assert.match(doc, /Overlay/);
     assert.match(doc, /estimate_modded_dps/);
     assert.match(doc, /mechanics|arcanes/i);
-    assert.match(doc, /general agent|search_web/i);
   });
 });

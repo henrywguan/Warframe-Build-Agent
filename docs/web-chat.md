@@ -28,10 +28,10 @@ Open http://localhost:3000
 
 From the chat UI:
 
-- **AI** — Cursor-class **general agent** mode (requires **LLM / Ollama**). Reasoning + multi-step tools: `search_web` (any topic; Warframe Wiki only when relevant), `fetch_web_page` (direct + Jina fallback), plus all Warframe pack/live tools. Not Warframe-only. Off = offline knowledge chatbot.
+- **AI** — smart LLM replies (requires **LLM / Ollama**). Registers `search_web` (DuckDuckGo + Wiki) so answers can be backed by public sources. Off = offline knowledge chatbot.
 - **LLM / Ollama** — Base URL / API key / model in the browser (localStorage). Example: `http://127.0.0.1:11434/v1`, key `ollama`, model `qwen2.5`.
-- **Online search** — Warframe **community build** crawl only (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts) when the local pack is missing. Standing consent — never asks yes/no. Separate from the AI toggle (general `search_web` does not need Online search).
-- **Full page fetch** — with AI or Online search on, `fetch_web_page` reads a specific public URL into text (also auto-used on top search hits; Jina fallback when direct HTML is empty/blocked).
+- **Online search** — live community crawl (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts) when the local pack is missing. Standing consent — never asks the player to type yes/no. Separate from the AI toggle.
+- **Full page fetch** — with AI or Online search on, `fetch_web_page` reads a specific public URL into text (also auto-used on top search hits).
 
 Preferences (`aiChat`, `onlineSearch`) are sent on each `/api/chat` request.
 

@@ -33,15 +33,14 @@ import {
 } from "@/lib/live-search-augment";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import {
+  MAX_TOOL_ROUNDS,
   TOOL_BUDGET_EXHAUSTED_PROMPT,
   dedupeToolCall,
-  maxToolRoundsForMode,
 } from "@/lib/tool-loop";
 import { getChatTools, runChatTool } from "@/lib/tools";
 
 export const runtime = "nodejs";
-/** Allow longer multi-step AI research turns (Vercel/serverless may still clamp). */
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 function getClient(clientLlm?: Partial<ClientLlmConfig>): OpenAI {
   const apiKey = resolveApiKey(clientLlm);
@@ -105,12 +104,12 @@ async function runModelCompletion(
       resolveBaseUrl(clientLlm) ? ` at \`${resolveBaseUrl(clientLlm)}\`` : ""
     }. When asked what model/LLM this agent is running, answer with that exact id — do not guess another model name.`,
     aiChat
-      ? "\n\n## Runtime mode\n**AI chat is ON — Cursor-class general agent mode.** Answer any topic (not Warframe-only) with tools + reasoning. For general research use `search_web` / `fetch_web_page` without forcing Warframe. For Warframe facts/builds prefer `lookup_local_knowledge` and live Status/Market/Patches tools first. Multi-step tool use is expected — don't stop when one more fetch would settle the answer. Cite returned URLs only. Never ask the player to type yes/no for web search."
+      ? "\n\n## Runtime mode\n**AI chat is ON.** Give smart, player-friendly answers. Prefer local live tools and `lookup_local_knowledge` first. When you need public corroboration, call `search_web` (includes full-page excerpts) and/or `fetch_web_page` for specific URLs. Cite returned URLs only. Never ask the player to type yes/no for web search."
       : "",
     onlineSearchToggle
-      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle (Warframe community builds). That is standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
+      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
       : buildAsk
-        ? "\n\n## Runtime consent\n**Online search is OFF.** For Warframe builds stay on local pack + agent-calculated only — do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle. General `search_web` (AI on) may still be used for non-community-build research. Never ask them to type yes/no."
+        ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
         : "",
   ].join("");
 
@@ -126,10 +125,9 @@ async function runModelCompletion(
   const toolsUsed: string[] = [];
   const toolPayloads: string[] = [];
   const seenToolCalls = new Set<string>();
-  const maxRounds = maxToolRoundsForMode(Boolean(aiChat));
   let guard = 0;
 
-  while (guard < maxRounds) {
+  while (guard < MAX_TOOL_ROUNDS) {
     guard += 1;
     const completion = await client.chat.completions.create({
       model,
