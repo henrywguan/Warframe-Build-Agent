@@ -44,9 +44,8 @@ export function LlmSettingsPanel({
         </button>
       </div>
       <p className={styles.llmHint}>
-        Connect an OpenAI-compatible endpoint from the browser (stored only in localStorage). For
-        Ollama, use the preset below — Ollama must be running, or tap Clear to stay on the offline
-        chatbot.
+        OpenAI-compatible endpoint stored in this browser. Use the Ollama preset, or Clear to stay
+        on the offline chatbot.
       </p>
       <label className={styles.llmField}>
         <span>Base URL</span>

@@ -11,6 +11,7 @@ describe("web UI wiring integrity", () => {
   it("keeps Ordis stage, chat panel, composer, and API linked", () => {
     for (const needle of [
       "OrdisStage",
+      "VoidField",
       "MessageBody",
       "deriveOrdisMood",
       "shouldTriggerSpeaking",
@@ -24,6 +25,15 @@ describe("web UI wiring integrity", () => {
       "Transmission log",
       "clearChat",
       "Clear",
+      "ChatHistorySidebar",
+      "Chats",
+      "panelDock",
+      "panelDockCrowded",
+      "dockScroll",
+      "shellCrowded",
+      "openNewChat",
+      "chatMemory",
+      "workspace",
       "AI on",
       "aiChat",
       "general agent",

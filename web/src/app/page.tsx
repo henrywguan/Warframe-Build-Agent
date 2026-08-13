@@ -7,6 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
+import { BrandHeader } from "../components/BrandHeader";
 import { OrdisStage } from "../components/OrdisStage";
 import { MessageBody } from "../components/MessageBody";
 import { LlmSettingsPanel } from "../components/LlmSettingsPanel";
@@ -32,7 +34,25 @@ import {
   loadAiChatPreference,
   saveAiChatEnabled,
 } from "../lib/ai-chat-pref";
+import {
+  type ChatMemory,
+  deleteConversation,
+  emptyMemory,
+  getActiveConversation,
+  loadChatMemory,
+  saveChatMemory,
+  selectConversation,
+  startNewChat,
+  toMemoryMessages,
+  upsertActiveMessages,
+} from "../lib/chat-memory";
+import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import styles from "./page.module.css";
+
+const VoidField = dynamic(
+  () => import("../components/VoidField").then((mod) => mod.VoidField),
+  { ssr: false },
+);
 
 type Role = "user" | "assistant";
 
@@ -54,7 +74,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Toggle AI for smart LLM replies (needs LLM / Ollama). Online search crawls community builds separately.",
+    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Configure LLM / Ollama for the Warframe advisor; toggle AI for the general research agent. Online search crawls community builds separately.",
 };
 
 const MAX_IMAGE_BYTES = 1_600_000;
@@ -89,18 +109,6 @@ async function fileToDataUrl(file: File): Promise<string> {
   return dataUrl;
 }
 
-function BrandHeader({ tagline }: { tagline: string }) {
-  return (
-    <header className={styles.brand}>
-      <h1 className={styles.brandMark}>
-        Warframe <span>Build Agent</span>
-      </h1>
-      <hr className={styles.brandRule} />
-      <p className={styles.tagline}>{tagline}</p>
-    </header>
-  );
-}
-
 function TopZone({
   tagline,
   mood,
@@ -120,8 +128,15 @@ function TopZone({
   );
 }
 
+function withWelcome(messages: ChatMessage[]): ChatMessage[] {
+  if (messages.some((m) => m.id === "welcome")) return messages;
+  return [{ ...WELCOME_MESSAGE }, ...messages];
+}
+
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const [chatMemory, setChatMemory] = useState<ChatMemory>(() => emptyMemory());
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -140,6 +155,7 @@ export default function HomePage() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpokenIdRef = useRef<string | null>(null);
+  const memoryHydratedRef = useRef(false);
 
   const mood = deriveOrdisMood(pending, speaking);
 
@@ -188,6 +204,20 @@ export default function HomePage() {
     setOnlineSearch(loadOnlineSearchEnabled());
     const savedAi = loadAiChatPreference();
     setAiChat(savedAi ?? defaultAiChatEnabled());
+    const memory = loadChatMemory();
+    setChatMemory(memory);
+    const active = getActiveConversation(memory);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
+    memoryHydratedRef.current = true;
     let cancelled = false;
     (async () => {
       try {
@@ -222,6 +252,15 @@ export default function HomePage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!memoryHydratedRef.current || !ready) return;
+    setChatMemory((prev) => {
+      const next = upsertActiveMessages(prev, toMemoryMessages(messages));
+      saveChatMemory(next);
+      return next;
+    });
+  }, [messages, ready]);
 
   async function unlock(event: FormEvent) {
     event.preventDefault();
@@ -345,9 +384,7 @@ export default function HomePage() {
     }
   }
 
-  function clearChat() {
-    if (pending) return;
-    setMessages([{ ...WELCOME_MESSAGE }]);
+  function resetLocalComposer() {
     setInput("");
     setAttachment(null);
     setError(null);
@@ -357,72 +394,184 @@ export default function HomePage() {
       clearTimeout(speakTimerRef.current);
       speakTimerRef.current = null;
     }
+  }
+
+  function clearChat() {
+    if (pending) return;
+    setMessages([{ ...WELCOME_MESSAGE }]);
+    resetLocalComposer();
     inputRef.current?.focus();
+  }
+
+  function openNewChat() {
+    if (pending) return;
+    const next = startNewChat(chatMemory);
+    setChatMemory(next);
+    saveChatMemory(next);
+    setMessages([{ ...WELCOME_MESSAGE }]);
+    resetLocalComposer();
+    setSidebarOpen(false);
+    inputRef.current?.focus();
+  }
+
+  function openConversation(id: string) {
+    if (pending) return;
+    const next = selectConversation(chatMemory, id);
+    setChatMemory(next);
+    saveChatMemory(next);
+    const active = getActiveConversation(next);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
+    resetLocalComposer();
+    setSidebarOpen(false);
+  }
+
+  function removeConversation(id: string) {
+    if (pending) return;
+    const next = deleteConversation(chatMemory, id);
+    setChatMemory(next);
+    saveChatMemory(next);
+    const active = getActiveConversation(next);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
   }
 
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
+  useEffect(() => {
+    if (!sidebarOpen && !showLlmSettings) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (showLlmSettings) setShowLlmSettings(false);
+      else if (sidebarOpen) setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [sidebarOpen, showLlmSettings]);
+
   if (!ready) {
     return (
-      <main className={styles.shell}>
-        <TopZone tagline="Awakening cephalon…" mood="thinking" caption="Initializing…" />
-        <div className={styles.chatPanel} aria-hidden="true" />
-        <p className={styles.statusLine}>Booting…</p>
-      </main>
+      <>
+        <VoidField mood="thinking" />
+        <main className={styles.shell}>
+          <TopZone tagline="Awakening cephalon…" mood="thinking" caption="Initializing…" />
+          <div className={styles.chatPanel} aria-hidden="true" />
+          <p className={styles.statusLine}>Booting…</p>
+        </main>
+      </>
     );
   }
 
   if (passwordRequired && !authorized) {
     return (
-      <main className={styles.shell}>
-        <TopZone
-          tagline="Cephalon lock engaged. Enter your access password, Operator."
-          mood="idle"
-          caption="Awaiting clearance…"
-        />
-        <form className={styles.lock} onSubmit={unlock}>
-          <h2>Access</h2>
-          <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
-          <div className={styles.lockRow}>
-            <input
-              className={styles.input}
-              type="password"
-              autoComplete="current-password"
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <button className={styles.send} type="submit">
-              Enter
-            </button>
-          </div>
-          {error ? <p className={`${styles.statusLine} ${styles.error}`}>{error}</p> : null}
-        </form>
-        <p className={styles.statusLine} />
-      </main>
+      <>
+        <VoidField mood="idle" />
+        <main className={styles.shell}>
+          <TopZone
+            tagline="Cephalon lock engaged. Enter your access password, Operator."
+            mood="idle"
+            caption="Awaiting clearance…"
+          />
+          <form className={styles.lock} onSubmit={unlock}>
+            <h2>Access</h2>
+            <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
+            <div className={styles.lockRow}>
+              <input
+                className={styles.input}
+                type="password"
+                autoComplete="current-password"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <button className={styles.send} type="submit">
+                Enter
+              </button>
+            </div>
+            {error ? <p className={`${styles.statusLine} ${styles.error}`}>{error}</p> : null}
+          </form>
+          <p className={styles.statusLine} />
+        </main>
+      </>
     );
   }
 
   return (
-    <main className={styles.shell}>
+    <>
+      <VoidField mood={mood} />
+      <div className={styles.workspace}>
+      <ChatHistorySidebar
+        memory={chatMemory}
+        mobileOpen={sidebarOpen}
+        onMobileClose={() => setSidebarOpen(false)}
+        onSelect={openConversation}
+        onNew={openNewChat}
+        onDelete={removeConversation}
+        disabled={pending}
+      />
+      <main
+        className={[
+          styles.shell,
+          sidebarOpen ? styles.shellObscured : "",
+          showLlmSettings ? styles.shellCrowded : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-hidden={sidebarOpen || undefined}
+      >
       <TopZone
-        tagline="Builds, screenshot compares, live world-state, market, and patch notes — Ordis on the line."
+        tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
         mood={mood}
         caption={ordisCaption(mood)}
       />
 
       <section className={styles.chatPanel} aria-label="Chat">
         <div className={styles.panelHeader}>
-          <p className={styles.panelLabel}>Transmission log</p>
-          <button
-            type="button"
-            className={styles.clearBtn}
-            disabled={!canClearChat}
-            onClick={clearChat}
-            aria-label="Clear chat log"
-          >
-            Clear
-          </button>
+          <div className={styles.headerLead}>
+            <button
+              type="button"
+              className={styles.chatsToggle}
+              disabled={pending}
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open chats"
+              title="Open chats"
+            >
+              Chats
+            </button>
+            <p className={styles.panelLabel}>Transmission log</p>
+          </div>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.clearBtn}
+              disabled={!canClearChat}
+              onClick={clearChat}
+              aria-label="Clear chat log"
+            >
+              Clear
+            </button>
+          </div>
         </div>
         <div className={styles.messages} ref={messagesRef}>
           {messages.map((message) => (
@@ -457,97 +606,102 @@ export default function HomePage() {
           ) : null}
         </div>
 
-        <div className={styles.suggestions}>
-          <button
-            type="button"
-            className={`${styles.chip} ${aiChat ? styles.chipActive : ""}`}
-            disabled={pending}
-            aria-pressed={aiChat}
-            title={
-              aiChat
-                ? "AI on — general research agent (non-Warframe-first). Requires LLM / Ollama."
-                : "AI off — keep Warframe LLM advisor when LLM is configured; offline chatbot when not"
-            }
-            onClick={() => {
-              setAiChat((prev) => {
-                const next = !prev;
-                if (next && !llmConfigReady(llmConfig)) {
-                  setShowLlmSettings(true);
-                  setError(
-                    "AI (general agent) needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
-                  );
-                  saveAiChatEnabled(false);
-                  return false;
-                }
-                saveAiChatEnabled(next);
-                if (next) setError(null);
-                return next;
-              });
-            }}
-          >
-            AI {aiChat ? "on" : "off"}
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
-            disabled={pending}
-            title={
-              llmConfigReady(llmConfig)
-                ? "LLM configured — Warframe advisor (AI off) or general agent (AI on)"
-                : "Configure Ollama / OpenAI-compatible model (enables LLM mode)"
-            }
-            onClick={() => setShowLlmSettings((open) => !open)}
-          >
-            LLM / Ollama
-          </button>
-          <button
-            type="button"
-            className={`${styles.chip} ${onlineSearch ? styles.chipActive : ""}`}
-            disabled={pending}
-            aria-pressed={onlineSearch}
-            title={
-              onlineSearch
-                ? "Live Overframe + community build crawl is on"
-                : "Turn on to crawl Overframe / community builds when local pack is missing"
-            }
-            onClick={() => {
-              setOnlineSearch((prev) => {
-                const next = !prev;
-                saveOnlineSearchEnabled(next);
-                return next;
-              });
-            }}
-          >
-            Online search {onlineSearch ? "on" : "off"}
-          </button>
-          {SUGGESTIONS.map((suggestion) => (
+        <div
+          className={`${styles.panelDock}${showLlmSettings ? ` ${styles.panelDockCrowded}` : ""}`}
+        >
+          <div className={styles.suggestions}>
             <button
-              key={suggestion}
               type="button"
-              className={styles.chip}
+              className={`${styles.chip} ${aiChat ? styles.chipActive : ""}`}
               disabled={pending}
-              onClick={() => void sendMessage(suggestion)}
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-
-        {showLlmSettings ? (
-          <LlmSettingsPanel
-            initial={llmConfig}
-            onClose={() => setShowLlmSettings(false)}
-            onSave={(config) => {
-              saveLlmConfig(config);
-              setLlmConfig(config);
-              // Saving a valid LLM config enables LLM/Warframe-advisor mode.
-              // Do not auto-enable AI (general agent) — that stays an explicit toggle.
-              if (llmConfigReady(config)) {
-                setError(null);
+              aria-pressed={aiChat}
+              title={
+                aiChat
+                  ? "AI on — general research agent (non-Warframe-first). Requires LLM / Ollama."
+                  : "AI off — keep Warframe LLM advisor when LLM is configured; offline chatbot when not"
               }
-            }}
-          />
-        ) : null}
+              onClick={() => {
+                setAiChat((prev) => {
+                  const next = !prev;
+                  if (next && !llmConfigReady(llmConfig)) {
+                    setShowLlmSettings(true);
+                    setError(
+                      "AI (general agent) needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
+                    );
+                    saveAiChatEnabled(false);
+                    return false;
+                  }
+                  saveAiChatEnabled(next);
+                  if (next) setError(null);
+                  return next;
+                });
+              }}
+            >
+              AI {aiChat ? "on" : "off"}
+            </button>
+            <button
+              type="button"
+              className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
+              disabled={pending}
+              title={
+                llmConfigReady(llmConfig)
+                  ? "LLM configured — Warframe advisor (AI off) or general agent (AI on)"
+                  : "Configure Ollama / OpenAI-compatible model (enables LLM mode)"
+              }
+              onClick={() => setShowLlmSettings((open) => !open)}
+            >
+              LLM / Ollama
+            </button>
+            <button
+              type="button"
+              className={`${styles.chip} ${onlineSearch ? styles.chipActive : ""}`}
+              disabled={pending}
+              aria-pressed={onlineSearch}
+              title={
+                onlineSearch
+                  ? "Live Overframe + community build crawl is on"
+                  : "Turn on to crawl Overframe / community builds when local pack is missing"
+              }
+              onClick={() => {
+                setOnlineSearch((prev) => {
+                  const next = !prev;
+                  saveOnlineSearchEnabled(next);
+                  return next;
+                });
+              }}
+            >
+              Online search {onlineSearch ? "on" : "off"}
+            </button>
+            {SUGGESTIONS.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                className={styles.chip}
+                disabled={pending}
+                onClick={() => void sendMessage(suggestion)}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+
+          {showLlmSettings ? (
+            <div className={styles.dockScroll}>
+              <LlmSettingsPanel
+                initial={llmConfig}
+                onClose={() => setShowLlmSettings(false)}
+                onSave={(config) => {
+                  saveLlmConfig(config);
+                  setLlmConfig(config);
+                  // Saving a valid LLM config enables LLM/Warframe-advisor mode.
+                  // Do not auto-enable AI (general agent) — that stays an explicit toggle.
+                  if (llmConfigReady(config)) {
+                    setError(null);
+                  }
+                }}
+              />
+            </div>
+          ) : null}
 
         {attachment ? (
           <div className={styles.attachBar}>
@@ -617,6 +771,7 @@ export default function HomePage() {
             Send
           </button>
         </form>
+        </div>
       </section>
 
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
@@ -628,6 +783,8 @@ export default function HomePage() {
               ? "AI on — configure LLM / Ollama for the general agent"
               : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
       </p>
-    </main>
+      </main>
+      </div>
+    </>
   );
 }
