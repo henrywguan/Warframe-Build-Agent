@@ -164,7 +164,8 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 - Captions (from `lib/ordis.ts`): standing by / consulting / transmitting
 - Speaking mood lasts **3400ms** after assistant reply
 - SVG gradients: core cyan, facet gold→cyan, edge warm ivory→dim gold
-- **Mood-reactive side glow:** ember wash (left) + plasma/cyan (right) behind Ordis; stronger while thinking/speaking. Workspace `::before` aurora and VoidField point lights surge on reply.
+- **Mood-reactive side glow:** ember wash (left) + plasma/cyan (right) as full-viewport washes behind Ordis that reach into laptop side margins; stronger while thinking/speaking. Workspace `::before` aurora and VoidField point lights surge on reply.
+- **Void atmosphere:** denser float particles (edge-biased) and wireframe octahedrons spread across the full field, including blank left/right margins.
 
 ### Message bubbles
 

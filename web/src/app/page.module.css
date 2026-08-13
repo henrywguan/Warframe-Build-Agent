@@ -103,62 +103,75 @@
   padding-bottom: 0.35rem;
 }
 
+/* Full-viewport Ordis side washes — reach into laptop dead margins */
+.pageGlows {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .sideGlow {
   position: absolute;
-  grid-column: 1;
-  grid-row: 1 / -1;
-  top: 28%;
-  width: min(42%, 11rem);
-  height: min(70%, 9.5rem);
+  top: -4%;
+  width: min(48vw, 34rem);
+  height: min(58vh, 28rem);
   pointer-events: none;
-  z-index: 0;
   border-radius: 50%;
-  filter: blur(18px);
-  opacity: 0.28;
+  filter: blur(28px);
+  opacity: 0.34;
   transition: opacity 240ms var(--ease-soft), transform 240ms var(--ease-soft);
 }
 
 .sideGlowLeft {
-  left: -2%;
-  background: radial-gradient(circle, rgba(224, 138, 90, 0.55), transparent 68%);
-  transform: translateY(0) scale(0.92);
+  left: max(-8vw, -3rem);
+  background:
+    radial-gradient(circle at 40% 45%, rgba(224, 138, 90, 0.58), transparent 62%),
+    radial-gradient(circle at 70% 70%, rgba(215, 181, 109, 0.22), transparent 70%);
+  transform: translateY(0) scale(1);
 }
 
 .sideGlowRight {
-  right: -2%;
-  background: radial-gradient(circle, rgba(94, 184, 232, 0.55), transparent 68%);
-  transform: translateY(0) scale(0.92);
+  right: max(-8vw, -3rem);
+  background:
+    radial-gradient(circle at 60% 42%, rgba(94, 184, 232, 0.58), transparent 62%),
+    radial-gradient(circle at 30% 72%, rgba(127, 231, 239, 0.24), transparent 70%);
+  transform: translateY(0) scale(1);
 }
 
-.topZone[data-mood="thinking"] .sideGlow {
-  opacity: 0.55;
+.pageGlows[data-mood="thinking"] .sideGlow {
+  opacity: 0.58;
   animation: sideGlowThink 2.4s ease-in-out infinite alternate;
 }
 
-.topZone[data-mood="thinking"] .sideGlowLeft {
-  background: radial-gradient(circle, rgba(94, 184, 232, 0.62), transparent 68%);
+.pageGlows[data-mood="thinking"] .sideGlowLeft {
+  background:
+    radial-gradient(circle at 40% 45%, rgba(94, 184, 232, 0.62), transparent 62%),
+    radial-gradient(circle at 70% 70%, rgba(127, 231, 239, 0.28), transparent 70%);
 }
 
-.topZone[data-mood="thinking"] .sideGlowRight {
-  background: radial-gradient(circle, rgba(127, 231, 239, 0.58), transparent 68%);
+.pageGlows[data-mood="thinking"] .sideGlowRight {
+  background:
+    radial-gradient(circle at 60% 42%, rgba(127, 231, 239, 0.6), transparent 62%),
+    radial-gradient(circle at 30% 72%, rgba(94, 184, 232, 0.26), transparent 70%);
 }
 
-.topZone[data-mood="speaking"] .sideGlow {
-  opacity: 0.9;
+.pageGlows[data-mood="speaking"] .sideGlow {
+  opacity: 0.92;
   animation: sideGlowSpeak 0.85s ease-in-out infinite alternate;
 }
 
-.topZone[data-mood="speaking"] .sideGlowLeft {
-  background: radial-gradient(circle, rgba(224, 138, 90, 0.75) 0%, rgba(215, 181, 109, 0.35) 42%, transparent 70%);
+.pageGlows[data-mood="speaking"] .sideGlowLeft {
+  background:
+    radial-gradient(circle at 38% 42%, rgba(224, 138, 90, 0.78) 0%, rgba(215, 181, 109, 0.32) 42%, transparent 68%),
+    radial-gradient(circle at 65% 75%, rgba(215, 181, 109, 0.28), transparent 72%);
 }
 
-.topZone[data-mood="speaking"] .sideGlowRight {
-  background: radial-gradient(circle, rgba(127, 231, 239, 0.78) 0%, rgba(94, 184, 232, 0.38) 42%, transparent 70%);
-}
-
-.topZone > :not(.sideGlow) {
-  position: relative;
-  z-index: 1;
+.pageGlows[data-mood="speaking"] .sideGlowRight {
+  background:
+    radial-gradient(circle at 62% 40%, rgba(127, 231, 239, 0.8) 0%, rgba(94, 184, 232, 0.34) 42%, transparent 68%),
+    radial-gradient(circle at 28% 78%, rgba(94, 184, 232, 0.28), transparent 72%);
 }
 
 .chatsToggle {
@@ -916,23 +929,23 @@
 
 @keyframes sideGlowThink {
   from {
-    opacity: 0.4;
-    transform: translateY(2px) scale(0.95);
+    opacity: 0.42;
+    transform: translateY(4px) scale(0.96);
   }
   to {
-    opacity: 0.7;
-    transform: translateY(-3px) scale(1.05);
+    opacity: 0.72;
+    transform: translateY(-6px) scale(1.06);
   }
 }
 
 @keyframes sideGlowSpeak {
   from {
-    opacity: 0.55;
-    transform: translateY(3px) scale(0.9);
+    opacity: 0.58;
+    transform: translateY(6px) scale(0.94);
   }
   to {
     opacity: 1;
-    transform: translateY(-5px) scale(1.14);
+    transform: translateY(-8px) scale(1.12);
   }
 }
 
@@ -1200,8 +1213,8 @@
     animation: none !important;
   }
 
-  .topZone[data-mood="speaking"] .sideGlow,
-  .topZone[data-mood="thinking"] .sideGlow {
+  .pageGlows[data-mood="speaking"] .sideGlow,
+  .pageGlows[data-mood="thinking"] .sideGlow {
     opacity: 0.65;
   }
 }
