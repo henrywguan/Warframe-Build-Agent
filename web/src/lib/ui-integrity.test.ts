@@ -11,8 +11,6 @@ describe("web UI wiring integrity", () => {
   it("keeps Ordis stage, chat panel, composer, and API linked", () => {
     for (const needle of [
       "OrdisStage",
-      "OrdisTransmitOverlay",
-      "messagesShell",
       "VoidField",
       "MessageBody",
       "deriveOrdisMood",

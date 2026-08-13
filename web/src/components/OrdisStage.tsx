@@ -6,22 +6,13 @@ export type { OrdisMood };
 interface OrdisStageProps {
   mood: OrdisMood;
   caption: string;
-  /** Larger cephalon for the transmit overlay “wow” moment. */
-  size?: "stage" | "hero";
   className?: string;
 }
 
-export function OrdisStage({
-  mood,
-  caption,
-  size = "stage",
-  className,
-}: OrdisStageProps) {
+export function OrdisStage({ mood, caption, className }: OrdisStageProps) {
   return (
     <section
-      className={[styles.stage, styles[mood], size === "hero" ? styles.hero : "", className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.stage, styles[mood], className].filter(Boolean).join(" ")}
       aria-label="Ordis cephalon"
       data-mood={mood}
     >

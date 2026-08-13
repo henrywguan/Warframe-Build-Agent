@@ -26,4 +26,9 @@ describe("OrdisStage talking animation wiring", () => {
     assert.match(stageCss, /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+var\(--caption-slot\)/);
     assert.match(stageCss, /height:\s*var\(--caption-slot\)/);
   });
+
+  it("plays the transmit pop on the header stage, not over chat messages", () => {
+    assert.match(stageCss, /transmitPop/);
+    assert.match(stageCss, /\.speaking\s+\.field/);
+  });
 });
