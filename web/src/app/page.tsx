@@ -119,7 +119,9 @@ function TopZone({
   caption: string;
 }) {
   return (
-    <div className={styles.topZone}>
+    <div className={styles.topZone} data-mood={mood}>
+      <span className={`${styles.sideGlow} ${styles.sideGlowLeft}`} aria-hidden="true" />
+      <span className={`${styles.sideGlow} ${styles.sideGlowRight}`} aria-hidden="true" />
       <BrandHeader tagline={tagline} />
       <div className={styles.centerStage}>
         <OrdisStage mood={mood} caption={caption} />
@@ -520,7 +522,7 @@ export default function HomePage() {
   return (
     <>
       <VoidField mood={mood} />
-      <div className={styles.workspace}>
+      <div className={styles.workspace} data-mood={mood}>
       <ChatHistorySidebar
         memory={chatMemory}
         mobileOpen={sidebarOpen}

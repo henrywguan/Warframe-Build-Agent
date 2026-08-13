@@ -27,6 +27,38 @@
     radial-gradient(620px 460px at 78% 82%, rgba(110, 220, 154, 0.1), transparent 58%),
     radial-gradient(800px 600px at 0% 80%, rgba(94, 184, 232, 0.1), transparent 55%),
     linear-gradient(180deg, #0e141e 0%, #080c12 45%, #04070c 100%);
+  transition: filter 280ms ease, opacity 280ms ease;
+}
+
+.fallback[data-mood="thinking"] {
+  filter: saturate(1.15) brightness(1.08);
+  background:
+    radial-gradient(900px 520px at 50% -8%, rgba(0, 196, 204, 0.22), transparent 55%),
+    radial-gradient(700px 460px at 10% 20%, rgba(94, 184, 232, 0.28), transparent 58%),
+    radial-gradient(720px 480px at 96% 12%, rgba(127, 231, 239, 0.24), transparent 55%),
+    radial-gradient(620px 460px at 78% 82%, rgba(110, 220, 154, 0.12), transparent 58%),
+    linear-gradient(180deg, #0e141e 0%, #080c12 45%, #04070c 100%);
+}
+
+.fallback[data-mood="speaking"] {
+  filter: saturate(1.35) brightness(1.16);
+  animation: fallbackSpeak 1.05s ease-in-out infinite alternate;
+  background:
+    radial-gradient(900px 520px at 50% -8%, rgba(0, 196, 204, 0.26), transparent 55%),
+    radial-gradient(720px 480px at 8% 18%, rgba(224, 138, 90, 0.38), transparent 58%),
+    radial-gradient(740px 500px at 96% 14%, rgba(94, 184, 232, 0.36), transparent 55%),
+    radial-gradient(520px 360px at 18% 42%, rgba(215, 181, 109, 0.18), transparent 62%),
+    radial-gradient(520px 360px at 84% 44%, rgba(127, 231, 239, 0.2), transparent 62%),
+    linear-gradient(180deg, #0e141e 0%, #080c12 45%, #04070c 100%);
+}
+
+@keyframes fallbackSpeak {
+  from {
+    filter: saturate(1.25) brightness(1.1);
+  }
+  to {
+    filter: saturate(1.45) brightness(1.22);
+  }
 }
 
 .fallback::after {
@@ -52,7 +84,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fallback::after {
+  .fallback::after,
+  .fallback[data-mood="speaking"] {
     animation: none;
   }
 }

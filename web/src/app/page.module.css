@@ -26,6 +26,31 @@
     radial-gradient(50% 42% at 12% 78%, var(--mist-soft), transparent 70%);
   animation: auroraDrift 18s var(--ease-soft) infinite alternate;
   opacity: 0.95;
+  transition: opacity 280ms var(--ease-soft), filter 280ms var(--ease-soft);
+}
+
+.workspace[data-mood="thinking"]::before {
+  opacity: 1;
+  filter: saturate(1.15) brightness(1.08);
+  animation: auroraThink 7s var(--ease-soft) infinite alternate;
+  background:
+    radial-gradient(46% 38% at 14% 16%, rgba(94, 184, 232, 0.32), transparent 72%),
+    radial-gradient(42% 36% at 90% 14%, rgba(127, 231, 239, 0.28), transparent 70%),
+    radial-gradient(46% 40% at 70% 88%, var(--signal-soft), transparent 72%),
+    radial-gradient(50% 42% at 12% 78%, var(--mist-soft), transparent 70%);
+}
+
+.workspace[data-mood="speaking"]::before {
+  opacity: 1;
+  filter: saturate(1.35) brightness(1.18);
+  animation: auroraSpeak 1.05s ease-in-out infinite alternate;
+  background:
+    radial-gradient(48% 40% at 10% 18%, rgba(224, 138, 90, 0.42), transparent 72%),
+    radial-gradient(46% 38% at 92% 16%, rgba(94, 184, 232, 0.4), transparent 70%),
+    radial-gradient(40% 34% at 18% 40%, rgba(215, 181, 109, 0.22), transparent 68%),
+    radial-gradient(40% 34% at 84% 42%, rgba(127, 231, 239, 0.26), transparent 68%),
+    radial-gradient(46% 40% at 70% 88%, var(--signal-soft), transparent 72%),
+    radial-gradient(50% 42% at 12% 78%, var(--mist-soft), transparent 70%);
 }
 
 .shell {
@@ -67,6 +92,7 @@
 }
 
 .topZone {
+  position: relative;
   min-height: 0;
   max-height: 26dvh;
   display: grid;
@@ -75,6 +101,64 @@
   align-content: start;
   overflow: hidden;
   padding-bottom: 0.35rem;
+}
+
+.sideGlow {
+  position: absolute;
+  grid-column: 1;
+  grid-row: 1 / -1;
+  top: 28%;
+  width: min(42%, 11rem);
+  height: min(70%, 9.5rem);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.28;
+  transition: opacity 240ms var(--ease-soft), transform 240ms var(--ease-soft);
+}
+
+.sideGlowLeft {
+  left: -2%;
+  background: radial-gradient(circle, rgba(224, 138, 90, 0.55), transparent 68%);
+  transform: translateY(0) scale(0.92);
+}
+
+.sideGlowRight {
+  right: -2%;
+  background: radial-gradient(circle, rgba(94, 184, 232, 0.55), transparent 68%);
+  transform: translateY(0) scale(0.92);
+}
+
+.topZone[data-mood="thinking"] .sideGlow {
+  opacity: 0.55;
+  animation: sideGlowThink 2.4s ease-in-out infinite alternate;
+}
+
+.topZone[data-mood="thinking"] .sideGlowLeft {
+  background: radial-gradient(circle, rgba(94, 184, 232, 0.62), transparent 68%);
+}
+
+.topZone[data-mood="thinking"] .sideGlowRight {
+  background: radial-gradient(circle, rgba(127, 231, 239, 0.58), transparent 68%);
+}
+
+.topZone[data-mood="speaking"] .sideGlow {
+  opacity: 0.9;
+  animation: sideGlowSpeak 0.85s ease-in-out infinite alternate;
+}
+
+.topZone[data-mood="speaking"] .sideGlowLeft {
+  background: radial-gradient(circle, rgba(224, 138, 90, 0.75) 0%, rgba(215, 181, 109, 0.35) 42%, transparent 70%);
+}
+
+.topZone[data-mood="speaking"] .sideGlowRight {
+  background: radial-gradient(circle, rgba(127, 231, 239, 0.78) 0%, rgba(94, 184, 232, 0.38) 42%, transparent 70%);
+}
+
+.topZone > :not(.sideGlow) {
+  position: relative;
+  z-index: 1;
 }
 
 .chatsToggle {
@@ -808,6 +892,50 @@
   }
 }
 
+@keyframes auroraThink {
+  from {
+    transform: translate3d(-1%, 0, 0) scale(1.02);
+    filter: saturate(1.1) brightness(1.05);
+  }
+  to {
+    transform: translate3d(1.2%, 0.8%, 0) scale(1.05);
+    filter: saturate(1.25) brightness(1.12);
+  }
+}
+
+@keyframes auroraSpeak {
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1.04);
+    filter: saturate(1.25) brightness(1.12);
+  }
+  to {
+    transform: translate3d(2.2%, 1%, 0) scale(1.08);
+    filter: saturate(1.45) brightness(1.22);
+  }
+}
+
+@keyframes sideGlowThink {
+  from {
+    opacity: 0.4;
+    transform: translateY(2px) scale(0.95);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(-3px) scale(1.05);
+  }
+}
+
+@keyframes sideGlowSpeak {
+  from {
+    opacity: 0.55;
+    transform: translateY(3px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.14);
+  }
+}
+
 @media (max-width: 980px) {
   .workspace {
     grid-template-columns: minmax(13rem, 14.5rem) minmax(0, 1fr);
@@ -1067,7 +1195,13 @@
   .attachBar,
   .lock,
   .brandRule,
-  .workspace::before {
+  .workspace::before,
+  .sideGlow {
     animation: none !important;
+  }
+
+  .topZone[data-mood="speaking"] .sideGlow,
+  .topZone[data-mood="thinking"] .sideGlow {
+    opacity: 0.65;
   }
 }
