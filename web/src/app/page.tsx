@@ -10,6 +10,7 @@ import {
 import dynamic from "next/dynamic";
 import { BrandHeader } from "../components/BrandHeader";
 import { OrdisStage } from "../components/OrdisStage";
+import { OrdisTransmitOverlay } from "../components/OrdisTransmitOverlay";
 import { MessageBody } from "../components/MessageBody";
 import { LlmSettingsPanel } from "../components/LlmSettingsPanel";
 import {
@@ -573,7 +574,9 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        <div className={styles.messages} ref={messagesRef}>
+        <div className={styles.messagesShell}>
+          <OrdisTransmitOverlay active={mood === "speaking"} />
+          <div className={styles.messages} ref={messagesRef}>
           {messages.map((message) => (
             <article
               key={message.id}
@@ -604,6 +607,7 @@ export default function HomePage() {
               Checking the latest intel…
             </article>
           ) : null}
+          </div>
         </div>
 
         <div

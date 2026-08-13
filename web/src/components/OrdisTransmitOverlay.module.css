@@ -1,0 +1,176 @@
+.root {
+  --speak-ms: 3400ms;
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(55% 48% at 50% 42%, rgba(127, 231, 239, 0.18), transparent 70%),
+    radial-gradient(40% 36% at 50% 55%, rgba(215, 181, 109, 0.1), transparent 72%),
+    linear-gradient(180deg, rgba(4, 8, 14, 0.08), rgba(4, 8, 14, 0.28));
+  animation: veilPulse var(--speak-ms) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.scan {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 18%;
+  height: 42%;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(127, 231, 239, 0.07) 0 1px,
+    transparent 1px 5px
+  );
+  mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
+  opacity: 0;
+  animation: scanSweep var(--speak-ms) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.burst {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: min(72vw, 22rem);
+  height: min(72vw, 22rem);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(184, 251, 255, 0.35) 0%, rgba(127, 231, 239, 0.12) 34%, transparent 68%);
+  filter: blur(2px);
+  animation: burstFlash var(--speak-ms) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.figure {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(72vw, 17rem);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 28px rgba(127, 231, 239, 0.35));
+  animation: hologramPop var(--speak-ms) cubic-bezier(0.18, 0.9, 0.28, 1.15) both;
+}
+
+@keyframes hologramPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -42%) scale(0.42);
+    filter: blur(12px) brightness(1.8) drop-shadow(0 0 8px rgba(127, 231, 239, 0.2));
+  }
+  14% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.14);
+    filter: blur(0) brightness(1.35) drop-shadow(0 0 36px rgba(127, 231, 239, 0.55));
+  }
+  26% {
+    transform: translate(-50%, -50%) scale(0.96);
+    filter: brightness(1.12) drop-shadow(0 0 26px rgba(127, 231, 239, 0.4));
+  }
+  38% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: brightness(1.08) drop-shadow(0 0 28px rgba(127, 231, 239, 0.42));
+  }
+  72% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.9);
+    filter: blur(6px) brightness(1.25) drop-shadow(0 0 12px rgba(127, 231, 239, 0.2));
+  }
+}
+
+@keyframes veilPulse {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes burstFlash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  10% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  28% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.45);
+  }
+}
+
+@keyframes scanSweep {
+  0% {
+    opacity: 0;
+    transform: translateY(-18%);
+  }
+  12% {
+    opacity: 0.7;
+  }
+  40% {
+    opacity: 0.35;
+    transform: translateY(28%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(55%);
+  }
+}
+
+@media (max-width: 600px) {
+  .figure {
+    width: min(78vw, 15rem);
+    top: 48%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil,
+  .scan,
+  .burst,
+  .figure {
+    animation: none !important;
+  }
+
+  .root {
+    opacity: 0.85;
+  }
+
+  .veil {
+    opacity: 0.55;
+  }
+
+  .scan,
+  .burst {
+    opacity: 0;
+  }
+
+  .figure {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: drop-shadow(0 0 20px rgba(127, 231, 239, 0.3));
+  }
+}
