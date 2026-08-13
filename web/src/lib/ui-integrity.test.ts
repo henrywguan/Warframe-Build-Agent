@@ -13,6 +13,8 @@ describe("web UI wiring integrity", () => {
       "OrdisStage",
       "VoidField",
       "sideGlow",
+      "PageSideGlows",
+      "pageGlows",
       "data-mood={mood}",
       "MessageBody",
       "deriveOrdisMood",
