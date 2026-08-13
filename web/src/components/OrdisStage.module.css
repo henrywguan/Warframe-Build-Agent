@@ -12,8 +12,8 @@
 
 .field {
   position: relative;
-  width: min(42vw, 150px);
-  max-height: min(18dvh, 150px);
+  width: min(46vw, 168px);
+  max-height: min(16dvh, 160px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;

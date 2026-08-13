@@ -7,6 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
+import { BrandHeader } from "../components/BrandHeader";
 import { OrdisStage } from "../components/OrdisStage";
 import { MessageBody } from "../components/MessageBody";
 import { LlmSettingsPanel } from "../components/LlmSettingsPanel";
@@ -34,6 +36,11 @@ import {
 } from "../lib/ai-chat-pref";
 import styles from "./page.module.css";
 
+const VoidField = dynamic(
+  () => import("../components/VoidField").then((mod) => mod.VoidField),
+  { ssr: false },
+);
+
 type Role = "user" | "assistant";
 
 type ContentPart =
@@ -54,7 +61,7 @@ const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Toggle AI for smart LLM replies (needs LLM / Ollama). Online search crawls community builds separately.",
+    "Operator? Ordis is online. Attach a loadout screenshot, ask in plain language, or type /list. Configure LLM / Ollama for the Warframe advisor; toggle AI for the general research agent. Online search crawls community builds separately.",
 };
 
 const MAX_IMAGE_BYTES = 1_600_000;
@@ -87,18 +94,6 @@ async function fileToDataUrl(file: File): Promise<string> {
     dataUrl = canvas.toDataURL("image/jpeg", quality);
   }
   return dataUrl;
-}
-
-function BrandHeader({ tagline }: { tagline: string }) {
-  return (
-    <header className={styles.brand}>
-      <h1 className={styles.brandMark}>
-        Warframe <span>Build Agent</span>
-      </h1>
-      <hr className={styles.brandRule} />
-      <p className={styles.tagline}>{tagline}</p>
-    </header>
-  );
 }
 
 function TopZone({
@@ -364,49 +359,57 @@ export default function HomePage() {
 
   if (!ready) {
     return (
-      <main className={styles.shell}>
-        <TopZone tagline="Awakening cephalon…" mood="thinking" caption="Initializing…" />
-        <div className={styles.chatPanel} aria-hidden="true" />
-        <p className={styles.statusLine}>Booting…</p>
-      </main>
+      <>
+        <VoidField mood="thinking" />
+        <main className={styles.shell}>
+          <TopZone tagline="Awakening cephalon…" mood="thinking" caption="Initializing…" />
+          <div className={styles.chatPanel} aria-hidden="true" />
+          <p className={styles.statusLine}>Booting…</p>
+        </main>
+      </>
     );
   }
 
   if (passwordRequired && !authorized) {
     return (
-      <main className={styles.shell}>
-        <TopZone
-          tagline="Cephalon lock engaged. Enter your access password, Operator."
-          mood="idle"
-          caption="Awaiting clearance…"
-        />
-        <form className={styles.lock} onSubmit={unlock}>
-          <h2>Access</h2>
-          <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
-          <div className={styles.lockRow}>
-            <input
-              className={styles.input}
-              type="password"
-              autoComplete="current-password"
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <button className={styles.send} type="submit">
-              Enter
-            </button>
-          </div>
-          {error ? <p className={`${styles.statusLine} ${styles.error}`}>{error}</p> : null}
-        </form>
-        <p className={styles.statusLine} />
-      </main>
+      <>
+        <VoidField mood="idle" />
+        <main className={styles.shell}>
+          <TopZone
+            tagline="Cephalon lock engaged. Enter your access password, Operator."
+            mood="idle"
+            caption="Awaiting clearance…"
+          />
+          <form className={styles.lock} onSubmit={unlock}>
+            <h2>Access</h2>
+            <p>Use the CHAT_PASSWORD you configured for this deployment.</p>
+            <div className={styles.lockRow}>
+              <input
+                className={styles.input}
+                type="password"
+                autoComplete="current-password"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <button className={styles.send} type="submit">
+                Enter
+              </button>
+            </div>
+            {error ? <p className={`${styles.statusLine} ${styles.error}`}>{error}</p> : null}
+          </form>
+          <p className={styles.statusLine} />
+        </main>
+      </>
     );
   }
 
   return (
-    <main className={styles.shell}>
+    <>
+      <VoidField mood={mood} />
+      <main className={styles.shell}>
       <TopZone
-        tagline="Builds, screenshot compares, live world-state, market, and patch notes — Ordis on the line."
+        tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
         mood={mood}
         caption={ordisCaption(mood)}
       />
@@ -628,6 +631,7 @@ export default function HomePage() {
               ? "AI on — configure LLM / Ollama for the general agent"
               : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
       </p>
-    </main>
+      </main>
+    </>
   );
 }

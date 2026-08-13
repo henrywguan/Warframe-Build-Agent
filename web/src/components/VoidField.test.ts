@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
+
+const here = dirname(fileURLToPath(import.meta.url));
+
+describe("VoidField module", () => {
+  it("exports a client Three.js atmosphere wired to Ordis moods", () => {
+    const source = readFileSync(join(here, "VoidField.tsx"), "utf8");
+    assert.match(source, /import\("three"\)/);
+    assert.match(source, /OrdisMood/);
+    assert.match(source, /prefers-reduced-motion/);
+    assert.match(source, /visibilitychange/);
+    assert.match(source, /OctahedronGeometry/);
+    assert.match(source, /0x7fe7ef/);
+    assert.match(source, /0xd7b56d/);
+  });
+});

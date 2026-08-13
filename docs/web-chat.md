@@ -2,7 +2,7 @@
 
 A phone-friendly chat front-end lives in [`web/`](../web/). It can run against an OpenAI-compatible model **or** a fully local knowledge chatbot (`CHAT_MODE=local` / no API key). It supports **loadout screenshot attachments** (vision model or local OCR) to compare against top-3 Overframe builds in the offline pack, plus Warframe Status, Warframe.market, and official patch-notes helpers.
 
-The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
+The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands. Behind the shell, a modular **Three.js void field** (`VoidField`) draws mood-reactive particles and wireframe crystals (DPR-capped, paused when the tab is hidden; CSS fallback when `prefers-reduced-motion` is on). Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
 ## Why this exists
 
