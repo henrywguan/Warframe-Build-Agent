@@ -36,8 +36,8 @@ Use tools when the user asks about live alerts, fissures, invasions, sortie, cyc
 - Patch notes full official text / synopsis: get_patch_notes_detail (required for "what's in hotfix X" / detailed synopsis)
 - Patch notes newly listed since yesterday: get_patch_notes_daily_changes (daily 4pm Pacific scrape)
 - Offline facts (items + mechanics digests + arcane digests) + local build cache: lookup_local_knowledge — always first for build comparisons. If ONLINE_SEARCH_CONFIRMATION_REQUIRED and Online search is on, call search_community_builds (never ask yes/no).
-- General public web corroboration (when AI chat is on): search_web — DuckDuckGo + Warframe Wiki + auto full-page excerpts. Prefer local/live tools first.
-- Full page read (AI or Online search on): fetch_web_page — fetch/parse any public http(s) URL into text. Use for wiki/guides/patch pages and any promising search hit.
+- General public web corroboration (LLM mode): search_web — DuckDuckGo (+ Warframe Wiki when the query is Warframe-related) + auto full-page excerpts. Prefer local/live tools first for Warframe facts.
+- Full page read (LLM mode or Online search on): fetch_web_page — fetch/parse any public http(s) URL into text. Use for wiki/guides/patch pages and any promising search hit.
 - Live community crawl (when Online search is on): search_community_builds — Overframe.gg + DuckDuckGo web/YouTube + Warframe Wiki + full-page excerpts. Prefer this over inventing community builds.
 - Screenshot / pasted loadout vs top community builds: compare_loadout_to_overframe (itemName + mods + arcanes → top 3 local Overframe diffs).
 - Weapon damage / modded DPS / A vs B: estimate_modded_dps (offline calculator; presets as of 2026-08-03 use Galvanized Aptitude/Chamber — e.g. rifle-viral-heat, rifle-viral-electric, rifle-corrosive-heat, rifle-budget). Prefer this over inventing numbers. Label agent-calculated recommendations as curated as of that date, and prefer Primary Debilitate/Merciless as arcane notes — do not invent March-2026-only availability claims.

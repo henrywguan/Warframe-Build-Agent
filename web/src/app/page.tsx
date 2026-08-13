@@ -209,7 +209,7 @@ export default function HomePage() {
         setAiChat(aiOn);
         if (!healthJson.chatReady && !browserLlm && aiOn) {
           setError(
-            "AI chat needs an LLM — tap LLM / Ollama to add a key or Ollama URL, or turn AI off for the offline chatbot.",
+            "AI (general agent) needs an LLM — tap LLM / Ollama to add a key or Ollama URL, or turn AI off.",
           );
         }
       } catch {
@@ -465,8 +465,8 @@ export default function HomePage() {
             aria-pressed={aiChat}
             title={
               aiChat
-                ? "AI chat on — smart LLM replies with optional web search"
-                : "AI off — offline knowledge chatbot only"
+                ? "AI on — general research agent (non-Warframe-first). Requires LLM / Ollama."
+                : "AI off — keep Warframe LLM advisor when LLM is configured; offline chatbot when not"
             }
             onClick={() => {
               setAiChat((prev) => {
@@ -474,7 +474,7 @@ export default function HomePage() {
                 if (next && !llmConfigReady(llmConfig)) {
                   setShowLlmSettings(true);
                   setError(
-                    "AI needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
+                    "AI (general agent) needs an LLM — add Ollama/OpenAI in LLM / Ollama, then try again.",
                   );
                   saveAiChatEnabled(false);
                   return false;
@@ -491,6 +491,11 @@ export default function HomePage() {
             type="button"
             className={`${styles.chip} ${llmConfigReady(llmConfig) ? styles.chipActive : ""}`}
             disabled={pending}
+            title={
+              llmConfigReady(llmConfig)
+                ? "LLM configured — Warframe advisor (AI off) or general agent (AI on)"
+                : "Configure Ollama / OpenAI-compatible model (enables LLM mode)"
+            }
             onClick={() => setShowLlmSettings((open) => !open)}
           >
             LLM / Ollama
@@ -535,13 +540,10 @@ export default function HomePage() {
             onSave={(config) => {
               saveLlmConfig(config);
               setLlmConfig(config);
-              const ready = llmConfigReady(config);
-              if (ready) {
+              // Saving a valid LLM config enables LLM/Warframe-advisor mode.
+              // Do not auto-enable AI (general agent) — that stays an explicit toggle.
+              if (llmConfigReady(config)) {
                 setError(null);
-                if (!aiChat) {
-                  setAiChat(true);
-                  saveAiChatEnabled(true);
-                }
               }
             }}
           />
@@ -620,11 +622,13 @@ export default function HomePage() {
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
         {error
           ? error
-          : aiChat && llmConfigReady(llmConfig)
-            ? `AI on · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
+          : llmConfigReady(llmConfig)
+            ? aiChat
+              ? `AI general agent · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
+              : `LLM on (Warframe advisor) · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
             : aiChat
-              ? "AI on — configure LLM / Ollama to chat"
-              : "AI off — offline knowledge chatbot. Toggle AI on for smart LLM replies."}
+              ? "AI on — configure LLM / Ollama for the general agent"
+              : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
       </p>
     </main>
   );

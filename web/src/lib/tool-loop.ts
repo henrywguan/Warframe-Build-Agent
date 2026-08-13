@@ -1,5 +1,8 @@
-/** Max model→tools→model cycles before forcing a text answer. */
+/** Max model→tools→model cycles before forcing a text answer (Warframe LLM advisor). */
 export const MAX_TOOL_ROUNDS = 6;
+
+/** Slightly higher budget for general-agent research (AI on). */
+export const GENERAL_AGENT_MAX_TOOL_ROUNDS = 12;
 
 export const TOOL_BUDGET_EXHAUSTED_PROMPT =
   "Tool budget exhausted. Using only the tool results already above, give your final player-facing answer now. Do not call any more tools.";

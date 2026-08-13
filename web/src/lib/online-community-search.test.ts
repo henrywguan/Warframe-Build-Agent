@@ -1,9 +1,35 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseDuckDuckGoHtml } from "./online-community-search.ts";
+import {
+  looksWarframeRelated,
+  parseDuckDuckGoHtml,
+  resolveWebSearchQuery,
+} from "./online-community-search.ts";
 import { isCloudflareChallenge, parseOverframeTopBuilds } from "./overframe-online.ts";
 
 describe("online community search parsers", () => {
+  it("does not treat smoothie/recipe asks as Warframe-related", () => {
+    assert.equal(looksWarframeRelated("strawberry smoothie recipes"), false);
+    assert.equal(looksWarframeRelated("how to make banana bread"), false);
+    assert.equal(looksWarframeRelated("best Excalibur steel path build"), true);
+    assert.equal(looksWarframeRelated("Coda Hema mods"), true);
+  });
+
+  it("general queries do not append warframe; forceWarframe does for augment", () => {
+    const general = resolveWebSearchQuery("strawberry smoothie recipes");
+    assert.equal(general.searchQuery, "strawberry smoothie recipes");
+    assert.equal(general.includeWiki, false);
+    assert.doesNotMatch(general.searchQuery, /warframe/i);
+
+    const wf = resolveWebSearchQuery("Excalibur steel path");
+    assert.equal(wf.searchQuery, "Excalibur steel path");
+    assert.equal(wf.includeWiki, true);
+
+    const forced = resolveWebSearchQuery("Enkaus", { forceWarframe: true });
+    assert.match(forced.searchQuery, /warframe/i);
+    assert.equal(forced.includeWiki, true);
+  });
+
   it("parses Overframe item HTML build links", () => {
     const html = `
       <a href="/build/111/excalibur-sp-umbra">SP Umbra Blade</a>

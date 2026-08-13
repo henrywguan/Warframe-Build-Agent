@@ -130,6 +130,44 @@ export function truncatePlainText(
   return { text: cut.trimEnd(), truncated: true };
 }
 
+/** Optional Jina Reader fallback when direct fetch is empty/blocked. */
+async function fetchViaJina(
+  targetUrl: string,
+  maxChars: number,
+  timeoutMs: number,
+): Promise<FetchedPage | null> {
+  const jinaUrl = `https://r.jina.ai/${targetUrl}`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(jinaUrl, {
+      signal: controller.signal,
+      redirect: "follow",
+      headers: {
+        Accept: "text/plain,text/markdown,*/*;q=0.8",
+        "User-Agent":
+          "Mozilla/5.0 (compatible; WarframeBuildAgent/0.1; +https://github.com/henrywguan/Warframe-Build-Agent)",
+      },
+    });
+    if (!response.ok) return null;
+    const text = (await response.text()).trim();
+    if (text.length < 40) return null;
+    const { text: body, truncated } = truncatePlainText(text, maxChars);
+    return {
+      url: targetUrl,
+      title: undefined,
+      body,
+      truncated,
+      fullLength: text.length,
+      status: response.status,
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchPublicPage(
   rawUrl: string,
   options: { maxChars?: number; timeoutMs?: number } = {},
@@ -140,6 +178,7 @@ export async function fetchPublicPage(
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let directError: Error | null = null;
   try {
     const response = await fetch(url.toString(), {
       signal: controller.signal,
@@ -162,18 +201,21 @@ export async function fetchPublicPage(
     const html = await response.text();
     if (!/html|xml|text\/plain/i.test(contentType) && /<\s*html/i.test(html) === false) {
       const plain = html.slice(0, maxChars).trim();
-      return {
-        url: finalUrl,
-        body: plain || `(non-HTML response, ${contentType || "unknown type"})`,
-        truncated: html.length > maxChars,
-        fullLength: html.length,
-        status: response.status,
-      };
+      if (plain.length >= 40) {
+        return {
+          url: finalUrl,
+          body: plain || `(non-HTML response, ${contentType || "unknown type"})`,
+          truncated: html.length > maxChars,
+          fullLength: html.length,
+          status: response.status,
+        };
+      }
+      throw new Error(`Empty non-HTML response from ${finalUrl}`);
     }
 
     const title = extractTitle(html);
     const fullBody = htmlToPlainText(extractMainHtml(html));
-    if (!fullBody) {
+    if (!fullBody || fullBody.length < 40) {
       throw new Error(`Parsed empty content from ${finalUrl}`);
     }
     const { text: body, truncated } = truncatePlainText(fullBody, maxChars);
@@ -185,9 +227,15 @@ export async function fetchPublicPage(
       fullLength: fullBody.length,
       status: response.status,
     };
+  } catch (error) {
+    directError = error instanceof Error ? error : new Error(String(error));
   } finally {
     clearTimeout(timer);
   }
+
+  const jina = await fetchViaJina(url.toString(), maxChars, timeoutMs);
+  if (jina) return jina;
+  throw directError ?? new Error(`Could not fetch ${url.toString()}`);
 }
 
 export function formatFetchedPage(page: FetchedPage): string {

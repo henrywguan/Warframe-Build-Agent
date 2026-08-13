@@ -26,6 +26,8 @@ describe("web UI wiring integrity", () => {
       "Clear",
       "AI on",
       "aiChat",
+      "general agent",
+      "Warframe advisor",
       "LLM / Ollama",
       "Online search",
       "onlineSearch",

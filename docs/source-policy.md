@@ -28,7 +28,7 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 
 | Surface | Facts | Builds |
 | --- | --- | --- |
-| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **AI on:** LLM + `search_web` + `fetch_web_page`. **Online search on:** `search_community_builds` (+ full pages). AI off: offline chatbot |
+| **Web chat** | `lookup_local_knowledge`, mechanics/arcanes digests | **LLM configured:** Warframe advisor + `search_web` + `fetch_web_page`. **AI on (general agent):** non-Warframe-first research prompt (same web tools). **Online search on:** `search_community_builds` (+ full pages). No LLM: offline chatbot |
 | **Web DPS** | `estimate_modded_dps` | Offline calculator presets |
 | **Web loadout** | `compare_loadout_to_overframe` / Attach OCR | Top-3 local Overframe diffs |
 | **Overlay action cards** | Local-pack gate card | Agent-calculated cards + Online-search toggle tip |
@@ -43,7 +43,7 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 | `LOCAL_BUILDS_AVAILABLE` | Cached Overframe/import builds present — compare locally |
 | `ONLINE_SEARCH_CONFIRMATION_REQUIRED` | No local community builds — Online search toggle gates live crawl (never ask yes/no in chat) |
 | `ONLINE_COMMUNITY_SEARCH_RESULTS` | Live `search_community_builds` tool returned Overframe/web/YouTube/Wiki hits |
-| `WEB_SEARCH_RESULTS` | Live `search_web` tool returned DuckDuckGo/Wiki hits (AI chat on) |
+| `WEB_SEARCH_RESULTS` | Live `search_web` tool returned DuckDuckGo/(optional Wiki) hits (LLM mode) |
 | `WEB_PAGE_CONTENT` / `FULL_PAGE_EXCERPTS` | Full-page fetch/parse of a public URL |
 
 ## Related

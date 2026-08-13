@@ -10,7 +10,7 @@ describe("live-search-augment", () => {
       rawArgs: JSON.stringify({ query: "Enkaus" }),
       result: "Just facts about Enkaus",
       onlineSearch: true,
-      aiChat: true,
+      llmMode: true,
     });
     assert.equal(plain.extraTools.length, 0);
 
@@ -19,7 +19,7 @@ describe("live-search-augment", () => {
       rawArgs: JSON.stringify({ query: "Enkaus" }),
       result: `${ONLINE_SEARCH_CONFIRMATION_MARKER} for Enkaus\nNo builds`,
       onlineSearch: false,
-      aiChat: false,
+      llmMode: false,
     });
     assert.equal(gated.extraTools.length, 0);
     assert.equal(gated.result, `${ONLINE_SEARCH_CONFIRMATION_MARKER} for Enkaus\nNo builds`);
