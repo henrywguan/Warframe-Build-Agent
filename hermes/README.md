@@ -6,11 +6,14 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.4.2` (Hermes ≥ 0.12.0)  
+**Profile version:** `0.5.0` (Hermes ≥ 0.12.0)  
 Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
-**Always online** on Hermes (local pack first, then live crawl — no Online search toggle).  
-Aligned with web chat tools (knowledge / DPS / loadout / ehp / forma / relic / patches detail / market slug-search / worldstate).  
-**Not Warframe-only:** general web research via [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional install on the Hermes host).
+
+Capabilities:
+
+- **Warframe specialty** — pack + webchat-parity CLIs  
+- **Always-online research** — [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional host install)  
+- **Cursor-style coding agent** — `skills/software-development/*` + [`CODING.md`](CODING.md)
 
 ---
 
@@ -50,11 +53,13 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 | Path | Role |
 | --- | --- |
-| `SOUL.md` | Ordis identity + dual-mode source policy (Warframe + research) |
+| `SOUL.md` | Ordis identity + Warframe / research / coding routing |
 | `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
 | `AGENT_REACH.md` | Install / doctor / boundaries for Agent Reach |
-| `skills/warframe/*` | Builds, loadout, DPS, EHP/Forma/Relic, world-state, market, patches, community-search, … |
-| `skills/research/agent-reach/` | General web / social / video research skill |
+| `CODING.md` | Cursor-style coding agent guide |
+| `skills/warframe/*` | Builds, loadout, DPS, world-state, market, patches, … |
+| `skills/research/agent-reach/` | General web / social / video research |
+| `skills/software-development/*` | Agent loop, explore, plan, implement, debug, test, git, PR, review, … |
 | `distribution.yaml` | Hermes distribution manifest |
 | `config.yaml` / `profile.yaml` | Light defaults |
 
@@ -75,6 +80,23 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
    `Lookup Arcane Energize from the local knowledge pack`
 4. *(Optional)* Install Agent Reach for general research — see [`AGENT_REACH.md`](AGENT_REACH.md). Then try:  
    `Research current AI agent frameworks and summarize with sources`
+5. Enable Hermes **filesystem + terminal (+ web)** tools so coding skills can edit and verify.  
+   Smoke test: `Explore how npm run knowledge is wired, then summarize the entry files.`
+6. For coding **other repos**, point the Hermes working directory at that project (Warframe CLIs need this repo).
+
+---
+
+## Coding agent (Cursor-style)
+
+See [`CODING.md`](CODING.md). Core skills:
+
+`agent-loop` · `codebase-explore` · `plan-task` · `implement-change` · `debug-issue` · `test-verify` · `git-workflow` · `pr-workflow` · `code-review` · `refactor-cleanup` · `shell-discipline` · `docs-sync`
+
+Optional: keep Hermes’s own bundled software-development skills seeded too:
+
+```bash
+hermes skills opt-in --sync
+```
 
 ---
 
@@ -120,6 +142,7 @@ npm run wf -- arbitration
 ## More help
 
 - Beginner Hermes guide: [`docs/hermes-export.md`](../docs/hermes-export.md)  
+- Coding agent: [`CODING.md`](CODING.md)  
 - Agent Reach: [`AGENT_REACH.md`](AGENT_REACH.md) · https://github.com/Panniantong/Agent-Reach  
 - Getting started hub: [`docs/getting-started.md`](../docs/getting-started.md)  
 - Offline pack: [`docs/offline-knowledge.md`](../docs/offline-knowledge.md)

@@ -8,9 +8,10 @@ Follow the steps in order. When you finish, Hermes Desktop will chat as **Ordis*
 ## What you will have when done
 
 - Hermes Desktop with the **warframe-build-agent** profile  
-- Ordis skills: builds, loadout compare, modded DPS, mechanics, arcanes, fissures, market, patches  
+- Ordis skills: Warframe builds/DPS/worldstate/market/patches **plus** Cursor-style coding skills  
 - Access to this repo’s **offline knowledge pack** (Wiki digests, arcanes, mechanics, Overframe builds when available)  
-- Optional: **general web research** (not Warframe-only) via [Agent Reach](https://github.com/Panniantong/Agent-Reach)
+- Optional: **general web research** via [Agent Reach](https://github.com/Panniantong/Agent-Reach)  
+- **Coding agent mode** — explore/plan/implement/debug/test/git (see [`../hermes/CODING.md`](../hermes/CODING.md))
 
 **Time:** about 15–30 minutes the first time (plus a few minutes if you install Agent Reach).
 
@@ -243,6 +244,21 @@ hermes -p warframe-build-agent skills list
 ```
 
 You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dps`, `recommend-build`, `world-state`, and `agent-reach`.
+
+---
+
+## Coding agent tools (recommended)
+
+For Cursor-like coding, enable in Hermes Desktop/CLI:
+
+1. **Filesystem** tools (read/write/patch)  
+2. **Terminal** tool  
+3. **Web** tools (or Agent Reach) for docs/issues  
+
+Then try: *“Explore the knowledge CLI entrypoint and explain how lookup works.”*  
+Full skill list: [`../hermes/CODING.md`](../hermes/CODING.md).
+
+Point the profile working directory at **this repo** for Warframe CLIs, or at **any other project** when you want general coding help.
 
 ---
 
