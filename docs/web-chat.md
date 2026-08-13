@@ -4,7 +4,7 @@ A phone-friendly chat front-end lives in [`web/`](../web/). It can run against a
 
 The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) plus tertiary accents (**ember** copper, **signal** verdant, **plasma** ice-blue, **mist** steel) for depth. A **center-stage Ordis cephalon** (original SVG/CSS, not game assets) idles, thinks, and speaks with replies. Behind the shell, a modular **Three.js void field** (`VoidField`) draws mood-reactive particles and wireframe crystals (DPR-capped, paused when the tab is hidden; CSS fallback when `prefers-reduced-motion` is on).
 
-**Chat memory:** History / New / Clear in the transmission log header. Conversations persist in browser `localStorage` (switch, create, delete — ChatGPT / Open WebUI style). Screenshot attachments are not stored in history. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
+**Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, and delete. On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
 ## Why this exists
 

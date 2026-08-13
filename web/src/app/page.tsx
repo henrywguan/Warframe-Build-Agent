@@ -46,7 +46,7 @@ import {
   toMemoryMessages,
   upsertActiveMessages,
 } from "../lib/chat-memory";
-import { ChatHistoryDrawer } from "../components/ChatHistoryDrawer";
+import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import styles from "./page.module.css";
 
 const VoidField = dynamic(
@@ -136,7 +136,7 @@ function withWelcome(messages: ChatMessage[]): ChatMessage[] {
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [chatMemory, setChatMemory] = useState<ChatMemory>(() => emptyMemory());
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -410,7 +410,7 @@ export default function HomePage() {
     saveChatMemory(next);
     setMessages([{ ...WELCOME_MESSAGE }]);
     resetLocalComposer();
-    setHistoryOpen(false);
+    setSidebarOpen(false);
     inputRef.current?.focus();
   }
 
@@ -431,7 +431,7 @@ export default function HomePage() {
       ),
     );
     resetLocalComposer();
-    setHistoryOpen(false);
+    setSidebarOpen(false);
   }
 
   function removeConversation(id: string) {
@@ -504,15 +504,27 @@ export default function HomePage() {
   return (
     <>
       <VoidField mood={mood} />
-      <ChatHistoryDrawer
-        open={historyOpen}
+      <div className={styles.workspace}>
+      <ChatHistorySidebar
         memory={chatMemory}
-        onClose={() => setHistoryOpen(false)}
+        mobileOpen={sidebarOpen}
+        onMobileClose={() => setSidebarOpen(false)}
         onSelect={openConversation}
         onNew={openNewChat}
         onDelete={removeConversation}
+        disabled={pending}
       />
       <main className={styles.shell}>
+      <button
+        type="button"
+        className={styles.chatsToggle}
+        disabled={pending}
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open chats"
+        title="Open chats"
+      >
+        Chats
+      </button>
       <TopZone
         tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
         mood={mood}
@@ -523,26 +535,6 @@ export default function HomePage() {
         <div className={styles.panelHeader}>
           <p className={styles.panelLabel}>Transmission log</p>
           <div className={styles.headerActions}>
-            <button
-              type="button"
-              className={styles.ghostBtn}
-              disabled={pending}
-              onClick={() => setHistoryOpen(true)}
-              aria-label="Open chat history"
-              title="Chat memory / history"
-            >
-              History
-            </button>
-            <button
-              type="button"
-              className={`${styles.ghostBtn} ${styles.ghostBtnAccent}`}
-              disabled={pending}
-              onClick={openNewChat}
-              aria-label="Start a new chat"
-              title="New chat"
-            >
-              New
-            </button>
             <button
               type="button"
               className={styles.clearBtn}
@@ -759,6 +751,7 @@ export default function HomePage() {
               : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
       </p>
       </main>
+      </div>
     </>
   );
 }

@@ -2,45 +2,58 @@
 
 import type { ChatMemory, Conversation } from "../lib/chat-memory";
 import { formatChatTime } from "../lib/chat-memory";
-import styles from "./ChatHistoryDrawer.module.css";
+import styles from "./ChatHistorySidebar.module.css";
 
-export function ChatHistoryDrawer({
-  open,
+export function ChatHistorySidebar({
   memory,
-  onClose,
+  mobileOpen,
+  onMobileClose,
   onSelect,
   onNew,
   onDelete,
+  disabled,
 }: {
-  open: boolean;
   memory: ChatMemory;
-  onClose: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
   onSelect: (id: string) => void;
   onNew: () => void;
   onDelete: (id: string) => void;
+  disabled?: boolean;
 }) {
-  if (!open) return null;
-
   return (
-    <div className={styles.overlay} role="presentation" onClick={onClose}>
+    <>
+      <div
+        className={`${styles.backdrop} ${mobileOpen ? styles.backdropOpen : ""}`}
+        role="presentation"
+        onClick={onMobileClose}
+        aria-hidden={!mobileOpen}
+      />
       <aside
-        className={styles.drawer}
-        role="dialog"
+        className={`${styles.sidebar} ${mobileOpen ? styles.sidebarOpen : ""}`}
         aria-label="Chat history"
-        aria-modal="true"
-        onClick={(event) => event.stopPropagation()}
       >
         <div className={styles.header}>
           <div>
             <p className={styles.label}>Memory</p>
             <h2 className={styles.title}>Transmissions</h2>
           </div>
-          <button type="button" className={styles.iconBtn} onClick={onClose} aria-label="Close history">
+          <button
+            type="button"
+            className={styles.closeMobile}
+            onClick={onMobileClose}
+            aria-label="Close chat list"
+          >
             Close
           </button>
         </div>
 
-        <button type="button" className={styles.newBtn} onClick={onNew}>
+        <button
+          type="button"
+          className={styles.newBtn}
+          onClick={onNew}
+          disabled={disabled}
+        >
           New chat
         </button>
 
@@ -50,6 +63,7 @@ export function ChatHistoryDrawer({
               key={chat.id}
               chat={chat}
               active={chat.id === memory.activeId}
+              disabled={disabled}
               onSelect={() => onSelect(chat.id)}
               onDelete={() => onDelete(chat.id)}
             />
@@ -57,27 +71,34 @@ export function ChatHistoryDrawer({
         </ul>
 
         <p className={styles.footnote}>
-          Saved in this browser only (localStorage). Screenshots are not kept in history.
+          Saved in this browser. Screenshots are not kept in history.
         </p>
       </aside>
-    </div>
+    </>
   );
 }
 
 function HistoryRow({
   chat,
   active,
+  disabled,
   onSelect,
   onDelete,
 }: {
   chat: Conversation;
   active: boolean;
+  disabled?: boolean;
   onSelect: () => void;
   onDelete: () => void;
 }) {
   return (
     <li className={`${styles.row} ${active ? styles.rowActive : ""}`}>
-      <button type="button" className={styles.rowMain} onClick={onSelect}>
+      <button
+        type="button"
+        className={styles.rowMain}
+        onClick={onSelect}
+        disabled={disabled}
+      >
         <span className={styles.rowTitle}>{chat.title}</span>
         <span className={styles.rowMeta}>{formatChatTime(chat.updatedAt)}</span>
       </button>
@@ -85,6 +106,7 @@ function HistoryRow({
         type="button"
         className={styles.deleteBtn}
         onClick={onDelete}
+        disabled={disabled}
         aria-label={`Delete ${chat.title}`}
         title="Delete chat"
       >
