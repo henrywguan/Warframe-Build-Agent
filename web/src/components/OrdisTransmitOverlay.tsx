@@ -5,9 +5,9 @@ import { OrdisStage } from "./OrdisStage";
 import styles from "./OrdisTransmitOverlay.module.css";
 
 /**
- * Holographic fade/pop when Ordis starts transmitting — inspired by
- * Warframe’s cephalon materialize (reference clip; we can’t decode the
- * YouTube frames here, so this is an original approximation).
+ * Holographic glitch materialize when Ordis starts transmitting.
+ * Tuned from a Warframe cephalon GIF reference (cyan diamond, white core,
+ * scanline slices, brief magenta flashes) — original SVG/CSS, not game assets.
  */
 export function OrdisTransmitOverlay({ active }: { active: boolean }) {
   if (!active) return null;
@@ -19,11 +19,17 @@ export function OrdisTransmitOverlay({ active }: { active: boolean }) {
       aria-hidden="true"
     >
       <div className={styles.veil} />
+      <div className={styles.aura} />
+      <div className={styles.dust} />
       <div className={styles.scan} />
-      <div className={styles.burst} />
+      <div className={styles.glitchA} />
+      <div className={styles.glitchB} />
       <div className={styles.figure}>
-        <OrdisStage mood="speaking" size="hero" caption="Ordis is transmitting…" />
+        <div className={styles.coreBloom} />
+        <div className={styles.eyeRings} />
+        <OrdisStage mood="speaking" size="hero" caption="" />
       </div>
+      <p className={styles.caption}>Ordis is transmitting…</p>
     </div>
   );
 }

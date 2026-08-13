@@ -16,8 +16,10 @@ describe("OrdisTransmitOverlay", () => {
     assert.match(source, /active/);
   });
 
-  it("defines fade/pop motion keyed to the speaking window", () => {
+  it("defines glitchy fade/pop motion keyed to the speaking window", () => {
     assert.match(css, /hologramPop/);
+    assert.match(css, /glitchSliceA|glitchSliceB/);
+    assert.match(css, /corePulse|eyeRingIn/);
     assert.match(css, /--speak-ms/);
     assert.match(css, /prefers-reduced-motion/);
   });

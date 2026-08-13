@@ -50,7 +50,7 @@ try {
         )
         .catch(() => {});
       // Capture mid-overlay (speaking window ~3.4s)
-      await new Promise((r) => setTimeout(r, 450));
+      await new Promise((r) => setTimeout(r, 280));
       await shot(page, `${prefix}-ordis-transmit.png`);
     }
     await page.close();

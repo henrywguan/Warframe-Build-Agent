@@ -37,9 +37,8 @@
 }
 
 .hero .caption {
-  color: var(--gold);
-  text-shadow: 0 0 18px rgba(127, 231, 239, 0.35);
-  letter-spacing: 0.16em;
+  /* Overlay supplies its own caption under the hologram */
+  display: none;
 }
 
 @media (max-width: 600px) {
