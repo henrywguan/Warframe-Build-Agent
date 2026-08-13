@@ -9,6 +9,7 @@ User-friendly guides for the Warframe Build Agent (Ordis).
 | **[Getting started](getting-started.md)** | Everyone — pick Hermes / Web / CLI |
 | **[Import into Hermes Desktop](hermes-export.md)** | End users — precise step-by-step Hermes setup |
 | [Web chat](web-chat.md) | Browser / phone UI + LLM / Ollama chip |
+| [Web chat design reference](web-chat-design.md) | Colors, type, layout, Ordis, motion tokens for redesign |
 | [Command list (`/list`)](commands.md) | Slash commands + CLI reference |
 
 ## Features & data
