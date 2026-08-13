@@ -4,6 +4,8 @@ A phone-friendly chat front-end lives in [`web/`](../web/). It can run against a
 
 The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) with a **center-stage Ordis cephalon**: an original SVG/CSS animation (not game assets) that idles, thinks while the model is working, and ripples/“speaks” when a reply lands. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
+For a full inventory of colors, typography, layout, components, and motion tokens (handy when redesigning), see **[`web-chat-design.md`](web-chat-design.md)**.
+
 ## Why this exists
 
 Cursor Cloud / desktop chat is great while coding. This UI is for **on-the-go** questions from a phone browser (and can be installed as a home-screen web app).
