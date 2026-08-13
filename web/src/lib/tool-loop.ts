@@ -1,5 +1,12 @@
-/** Max model→tools→model cycles before forcing a text answer. */
+/** Max model→tools→model cycles before forcing a text answer (AI off / conservative). */
 export const MAX_TOOL_ROUNDS = 6;
+
+/** Longer budget when AI chat is on (general agent + multi-step research). */
+export const MAX_TOOL_ROUNDS_AI = 12;
+
+export function maxToolRoundsForMode(aiChat?: boolean): number {
+  return aiChat ? MAX_TOOL_ROUNDS_AI : MAX_TOOL_ROUNDS;
+}
 
 export const TOOL_BUDGET_EXHAUSTED_PROMPT =
   "Tool budget exhausted. Using only the tool results already above, give your final player-facing answer now. Do not call any more tools.";

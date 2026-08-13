@@ -35,9 +35,11 @@ describe("fetch-page helpers", () => {
       truncated: false,
       fullLength: 18,
       status: 200,
+      via: "jina",
     });
     assert.match(formatted, /WEB_PAGE_CONTENT/);
     assert.match(formatted, /wiki\.warframe\.com/);
     assert.match(formatted, /do not invent/);
+    assert.match(formatted, /Fetched via: jina/);
   });
 });

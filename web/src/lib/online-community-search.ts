@@ -142,36 +142,47 @@ function formatHits(label: string, hits: WebHit[]): string {
   ].join("\n");
 }
 
+/** True when a query should also hit Warframe Wiki / keep Warframe context. */
+export function looksWarframeRelated(query: string): boolean {
+  return /\bwarframe\b|\btenno\b|\boverframe\b|\bhelminth\b|\bincarnon\b|\bnecramech\b|\brailjack\b|\bsteel\s*path\b|\bfissure\b|\bsortie\b|\barbitration\b|\bbaro\b|\bnightwave\b|\barchon\b|\briven\b|\barcane\b|\bprime\b|\bwarframes?\b|\bexcalibur\b|\bmesa\b|\brevenant\b|\btorid\b|\bkuva\b|\bcoda\b|\bmod(?:s|ding)?\b|\bbuild(?:s)?\b|\bloadout\b|\bplat(?:inum)?\b|\bforma\b|\brelic\b/i.test(
+    query,
+  );
+}
+
 /**
- * General public-web search for AI chat (DuckDuckGo + Warframe Wiki).
+ * General public-web search for AI chat (DuckDuckGo; Warframe Wiki only when relevant).
  * Available when the WebUI AI toggle is on.
- * When Online search is on, also auto-fetches full-page excerpts from top hits.
+ * Auto-fetches full-page excerpts from top hits by default.
  */
 export async function searchWebOnline(
   query: string,
-  options: { fetchPages?: boolean } = {},
+  options: { fetchPages?: boolean; forceWarframe?: boolean } = {},
 ): Promise<string> {
   const q = query.trim();
   if (!q) return "Missing required query.";
 
-  const warframey = /\bwarframe\b|\bbuild\b|\bmod\b|\bprime\b|\bfissure\b|\bsortie\b/i.test(
-    q,
-  );
-  const searchQuery = warframey ? q : `${q} warframe`;
+  const warframey = options.forceWarframe === true || looksWarframeRelated(q);
+  // Never rewrite general queries by appending "warframe" — that breaks non-WF research.
+  const searchQuery = q;
 
   const [webHits, wikiHits] = await Promise.all([
     searchDuckDuckGo(searchQuery, 6).catch(() => [] as WebHit[]),
-    searchWarframeWiki(q).catch(() => [] as WebHit[]),
+    warframey
+      ? searchWarframeWiki(q).catch(() => [] as WebHit[])
+      : Promise.resolve([] as WebHit[]),
   ]);
 
   const lines = [
     `WEB_SEARCH_RESULTS for ${q}`,
-    "Use these public results to back up your answer. Cite real URLs only — do not invent links.",
+    warframey
+      ? "Use these public results to back up your answer. Cite real URLs only — do not invent links."
+      : "General web results (not Warframe-scoped). Cite real URLs only — do not invent links or force Warframe framing.",
     "",
     formatHits("Public web (DuckDuckGo)", webHits),
-    "",
-    formatHits("Warframe Wiki", wikiHits),
   ];
+  if (warframey) {
+    lines.push("", formatHits("Warframe Wiki", wikiHits));
+  }
 
   if (!webHits.length && !wikiHits.length) {
     lines.push("");
@@ -180,8 +191,8 @@ export async function searchWebOnline(
     );
   } else if (options.fetchPages !== false) {
     const deep = await fetchPagesForHits([...wikiHits, ...webHits], {
-      limit: 2,
-      maxCharsEach: 4_000,
+      limit: warframey ? 2 : 3,
+      maxCharsEach: 5_000,
     });
     if (deep) {
       lines.push("", deep);

@@ -1,3 +1,8 @@
+/**
+ * Browser preference for the WebUI **AI** toggle.
+ * When on, the chat API runs Cursor-class general-agent mode (search_web,
+ * fetch_web_page, reasoning loop) plus Warframe specialty tools.
+ */
 export const AI_CHAT_STORAGE_KEY = "wfba_ai_chat";
 
 /** Returns null when the user has never set a preference. */
