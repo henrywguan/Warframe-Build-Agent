@@ -22,8 +22,8 @@ Product/behavior (toggles, LLM, Online search) stays in [`web-chat.md`](web-chat
 - **Theme:** Warframe arsenal / void-ship console — dark void panels, Orokin gold rules, energy cyan accents.
 - **Brand signal:** “Warframe Build Agent” + center-stage Ordis cephalon (original SVG/CSS, not game assets).
 - **Shape language:** Sharp / near-zero radius (`2px` / `1px`). Avoid pills and soft cards.
-- **Atmosphere:** Layered radial gradients + faint cyan/gold grid overlay (not a flat fill).
-- **Motion:** Entrance rise on shell pieces; Ordis idle / thinking / speaking moods; chip/send hover lift.
+- **Atmosphere:** Layered radial gradients + faint cyan/gold grid overlay (not a flat fill). Left/right side glows and workspace aurora intensify with Ordis mood.
+- **Motion:** Entrance rise on shell pieces; Ordis idle / thinking / speaking moods; mood-reactive side glow pulse; chip/send hover lift.
 
 ---
 
@@ -164,6 +164,7 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 - Captions (from `lib/ordis.ts`): standing by / consulting / transmitting
 - Speaking mood lasts **3400ms** after assistant reply
 - SVG gradients: core cyan, facet gold→cyan, edge warm ivory→dim gold
+- **Mood-reactive side glow:** ember wash (left) + plasma/cyan (right) behind Ordis; stronger while thinking/speaking. Workspace `::before` aurora and VoidField point lights surge on reply.
 
 ### Message bubbles
 
@@ -217,9 +218,11 @@ Shared bubble props: `border-radius: 1px`, padding `0.75rem 0.9rem`, `white-spac
 | `floatIdle` | 5.2s | Ordis bob |
 | `floatThink` / `cubeTilt` / `ringExpand` | ~1.1–1.8s | Thinking mood |
 | `speakBob` / `speechRipple` / `arcPulse` | ~0.45–1.05s | Speaking mood |
+| `sideGlowThink` / `sideGlowSpeak` | 2.4s / 0.85s | Left/right background glow intensity |
+| `auroraThink` / `auroraSpeak` | 7s / 1.05s | Workspace aurora while Ordis is active |
 | Chip / send hover | 160ms | Border/color/transform |
 
-Respect `prefers-reduced-motion` for Ordis (animations off).
+Respect `prefers-reduced-motion` for Ordis and side-glow/aurora pulses (animations off; static brighter glow retained).
 
 ---
 

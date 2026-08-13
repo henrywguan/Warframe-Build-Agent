@@ -6,12 +6,13 @@ export type { OrdisMood };
 interface OrdisStageProps {
   mood: OrdisMood;
   caption: string;
+  className?: string;
 }
 
-export function OrdisStage({ mood, caption }: OrdisStageProps) {
+export function OrdisStage({ mood, caption, className }: OrdisStageProps) {
   return (
     <section
-      className={`${styles.stage} ${styles[mood]}`}
+      className={[styles.stage, styles[mood], className].filter(Boolean).join(" ")}
       aria-label="Ordis cephalon"
       data-mood={mood}
     >

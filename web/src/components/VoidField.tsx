@@ -221,14 +221,39 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
           mat.color.setHex(currentMood === "speaking" && i === 0 ? GOLD : CYAN);
         }
 
-        key.intensity = 0.85 + pulse * 0.9;
-        rim.intensity = 0.45 + pulse * 0.7;
-        warm.intensity = 0.3 + pulse * 0.55;
-        life.intensity = currentMood === "thinking" ? 0.55 : 0.28 + pulse * 0.25;
+        // Left / right void lights surge with Ordis replies
+        if (currentMood === "speaking") {
+          const beat = 0.55 + Math.sin(t * 6.4) * 0.45;
+          const counter = 0.55 + Math.sin(t * 6.4 + Math.PI) * 0.45;
+          key.intensity = 1.15 + beat * 1.55;
+          key.color.setHex(EMBER);
+          key.position.set(-2.8, 1.6 + Math.sin(t * 4.2) * 0.25, 4.2);
+          rim.intensity = 1.05 + counter * 1.45;
+          rim.color.setHex(CYAN);
+          rim.position.set(3.4, -0.6 + Math.cos(t * 4.2) * 0.25, 3.1);
+          warm.intensity = 0.55 + beat * 0.85;
+          life.intensity = 0.4 + counter * 0.55;
+        } else if (currentMood === "thinking") {
+          key.intensity = 1.05 + pulse * 0.75;
+          key.color.setHex(PLASMA);
+          rim.intensity = 0.75 + pulse * 0.65;
+          rim.color.setHex(CYAN);
+          warm.intensity = 0.35 + pulse * 0.35;
+          life.intensity = 0.55 + pulse * 0.35;
+        } else {
+          key.intensity = 0.85 + pulse * 0.9;
+          key.color.setHex(CYAN);
+          rim.intensity = 0.45 + pulse * 0.7;
+          rim.color.setHex(GOLD);
+          warm.intensity = 0.3 + pulse * 0.55;
+          life.intensity = 0.28 + pulse * 0.25;
+        }
         particleMat.opacity = 0.35 + pulse * 0.45;
         goldMat.opacity = currentMood === "speaking" ? 0.55 : 0.32;
         emberMat.opacity = currentMood === "speaking" ? 0.55 : 0.3;
-        particleMat.color.setHex(currentMood === "thinking" ? PLASMA : CYAN);
+        particleMat.color.setHex(
+          currentMood === "speaking" ? GOLD : currentMood === "thinking" ? PLASMA : CYAN,
+        );
 
         const pos = particleGeo.getAttribute("position") as import("three").BufferAttribute;
         for (let i = 0; i < particleCount; i += 1) {
@@ -263,8 +288,13 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
   }, []);
 
   return (
-    <div className={styles.root} aria-hidden="true" data-void-field="true">
-      {useFallback ? <div className={styles.fallback} /> : null}
+    <div
+      className={styles.root}
+      aria-hidden="true"
+      data-void-field="true"
+      data-mood={mood}
+    >
+      {useFallback ? <div className={styles.fallback} data-mood={mood} /> : null}
       <div ref={hostRef} className={styles.host} />
     </div>
   );

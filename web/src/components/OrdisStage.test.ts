@@ -20,4 +20,15 @@ describe("OrdisStage talking animation wiring", () => {
   it("uses shared Ordis mood type from lib/ordis", () => {
     assert.match(stageTsx, /from ["']\.\.\/lib\/ordis["']/);
   });
+
+  it("reserves a fixed caption row so status text is not clipped", () => {
+    assert.match(stageCss, /--caption-slot/);
+    assert.match(stageCss, /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+var\(--caption-slot\)/);
+    assert.match(stageCss, /height:\s*var\(--caption-slot\)/);
+  });
+
+  it("plays the transmit pop on the header stage, not over chat messages", () => {
+    assert.match(stageCss, /transmitPop/);
+    assert.match(stageCss, /\.speaking\s+\.field/);
+  });
 });

@@ -12,6 +12,8 @@ describe("web UI wiring integrity", () => {
     for (const needle of [
       "OrdisStage",
       "VoidField",
+      "sideGlow",
+      "data-mood={mood}",
       "MessageBody",
       "deriveOrdisMood",
       "shouldTriggerSpeaking",
