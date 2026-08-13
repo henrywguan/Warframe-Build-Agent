@@ -397,6 +397,23 @@
   }
 }
 
+@media (max-height: 720px) {
+  .field {
+    width: min(36vw, 120px);
+    max-height: min(12dvh, 120px);
+  }
+
+  .caption {
+    font-size: 0.58rem;
+  }
+}
+
+@media (max-height: 560px) {
+  .caption {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cephalon,
   .cube,

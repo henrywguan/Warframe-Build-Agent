@@ -454,6 +454,20 @@ export default function HomePage() {
 
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [sidebarOpen]);
+
   if (!ready) {
     return (
       <>
@@ -514,17 +528,10 @@ export default function HomePage() {
         onDelete={removeConversation}
         disabled={pending}
       />
-      <main className={styles.shell}>
-      <button
-        type="button"
-        className={styles.chatsToggle}
-        disabled={pending}
-        onClick={() => setSidebarOpen(true)}
-        aria-label="Open chats"
-        title="Open chats"
+      <main
+        className={`${styles.shell}${sidebarOpen ? ` ${styles.shellObscured}` : ""}`}
+        aria-hidden={sidebarOpen || undefined}
       >
-        Chats
-      </button>
       <TopZone
         tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
         mood={mood}
@@ -533,7 +540,19 @@ export default function HomePage() {
 
       <section className={styles.chatPanel} aria-label="Chat">
         <div className={styles.panelHeader}>
-          <p className={styles.panelLabel}>Transmission log</p>
+          <div className={styles.headerLead}>
+            <button
+              type="button"
+              className={styles.chatsToggle}
+              disabled={pending}
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open chats"
+              title="Open chats"
+            >
+              Chats
+            </button>
+            <p className={styles.panelLabel}>Transmission log</p>
+          </div>
           <div className={styles.headerActions}>
             <button
               type="button"
@@ -579,6 +598,9 @@ export default function HomePage() {
           ) : null}
         </div>
 
+        <div
+          className={`${styles.panelDock}${showLlmSettings ? ` ${styles.panelDockCrowded}` : ""}`}
+        >
         <div className={styles.suggestions}>
           <button
             type="button"
@@ -739,6 +761,7 @@ export default function HomePage() {
             Send
           </button>
         </form>
+        </div>
       </section>
 
       <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>

@@ -95,6 +95,9 @@ const browser = await puppeteer.launch({
 try {
   await runViewport(browser, { width: 390, height: 844, prefix: "mobile" });
   await runViewport(browser, { width: 1280, height: 800, prefix: "desktop" });
+  // Short / narrow viewports — ensure composer + LLM panel stay reachable
+  await runViewport(browser, { width: 390, height: 640, prefix: "mobile-short" });
+  await runViewport(browser, { width: 900, height: 700, prefix: "tablet" });
   console.log("done", OUT);
 } finally {
   await browser.close();

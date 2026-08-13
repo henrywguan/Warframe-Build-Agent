@@ -22,7 +22,7 @@ export function ChatHistorySidebar({
   disabled?: boolean;
 }) {
   return (
-    <>
+    <div className={styles.rail} data-open={mobileOpen ? "true" : "false"}>
       <div
         className={`${styles.backdrop} ${mobileOpen ? styles.backdropOpen : ""}`}
         role="presentation"
@@ -74,7 +74,7 @@ export function ChatHistorySidebar({
           Saved in this browser. Screenshots are not kept in history.
         </p>
       </aside>
-    </>
+    </div>
   );
 }
 

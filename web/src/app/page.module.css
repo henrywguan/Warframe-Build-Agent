@@ -40,6 +40,13 @@
   overflow: hidden;
 }
 
+@media (max-width: 860px) {
+  .shellObscured {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 .topZone {
   min-height: 0;
   max-height: 24dvh;
@@ -52,11 +59,12 @@
 
 .chatsToggle {
   display: none;
+  flex: 0 0 auto;
   border: 1px solid rgba(155, 180, 200, 0.4);
   background: rgba(0, 0, 0, 0.35);
   color: var(--mist);
   border-radius: 1px;
-  padding: 0.32rem 0.65rem;
+  padding: 0.28rem 0.6rem;
   font-family: var(--display);
   font-size: 0.62rem;
   font-weight: 700;
@@ -70,6 +78,11 @@
   border-color: var(--plasma);
   color: var(--plasma);
   outline: none;
+}
+
+.chatsToggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .brand {
@@ -184,11 +197,50 @@
   background: linear-gradient(180deg, rgba(94, 184, 232, 0.08), transparent);
 }
 
+.headerLead {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.headerLead .panelLabel {
+  min-width: 0;
+}
+
 .headerActions {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   flex-shrink: 0;
+}
+
+.panelDock {
+  flex: 0 0 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* When LLM settings open, keep composer reachable via a capped scroll region */
+.panelDockCrowded {
+  flex: 0 1 auto;
+  max-height: min(48dvh, 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 180, 200, 0.4) rgba(0, 0, 0, 0.2);
+}
+
+.panelDockCrowded .composer,
+.panelDockCrowded .attachBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 .ghostBtn {
@@ -424,7 +476,13 @@
   border-top: 1px solid rgba(122, 101, 52, 0.4);
   background: rgba(0, 0, 0, 0.38);
   flex-shrink: 0;
+  min-width: 0;
   animation: messageIn 280ms var(--ease-out) both;
+}
+
+.llmPanel .input {
+  min-height: 2.55rem;
+  max-height: 3.5rem;
 }
 
 .llmHeader {
@@ -598,11 +656,17 @@
 .statusLine {
   min-height: 1.2rem;
   margin: 0;
+  padding-inline: 0.35rem;
   font-size: 0.82rem;
   letter-spacing: 0.02em;
   color: var(--ink-soft);
   text-align: center;
   flex-shrink: 0;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   animation: rise 980ms var(--ease-out) both;
 }
 
@@ -696,6 +760,13 @@
   }
 }
 
+@media (max-width: 980px) {
+  .workspace {
+    grid-template-columns: minmax(13rem, 14.5rem) minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+}
+
 @media (max-width: 860px) {
   .workspace {
     grid-template-columns: 1fr;
@@ -704,23 +775,25 @@
   }
 
   .shell {
-    grid-template-rows: minmax(0, 22dvh) minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 20dvh) minmax(0, 1fr) auto;
   }
 
   .topZone {
-    max-height: 22dvh;
+    max-height: 20dvh;
   }
 
   .chatsToggle {
     display: inline-flex;
-    position: absolute;
-    top: 0.15rem;
-    left: 0;
-    z-index: 3;
   }
 
-  .brand {
-    padding-inline: 4.2rem;
+  .panelDockCrowded {
+    max-height: min(46dvh, 100%);
+  }
+
+  .headerLead .panelLabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -730,7 +803,7 @@
   }
 
   .topZone {
-    max-height: 22dvh;
+    max-height: 18dvh;
   }
 
   .tagline {
@@ -746,6 +819,8 @@
 
   .composer {
     grid-template-columns: auto 1fr;
+    padding: 0.7rem;
+    gap: 0.45rem;
   }
 
   .send {
@@ -761,19 +836,102 @@
     grid-column: 1 / -1;
   }
 
+  .attachBar span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .messages {
+    padding: 0.3rem 0.75rem 0.85rem;
+  }
+
+  .suggestions {
+    padding: 0 0.75rem 0.7rem;
+  }
+
+  .llmPanel {
+    padding: 0.65rem 0.75rem 0.75rem;
+    gap: 0.45rem;
+  }
+
+  .llmPanel .input {
+    min-height: 2.35rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .llmActions .send {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
   .chatPanel {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
+
+  .panelDockCrowded {
+    max-height: min(52dvh, 100%);
+  }
+
+  .lock {
+    max-width: 100%;
+    margin-inline: 0;
+  }
+
+  .lockRow {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-height: 720px) {
+  .shell {
+    grid-template-rows: minmax(0, 16dvh) minmax(0, 1fr) auto;
+  }
+
+  .topZone {
+    max-height: 16dvh;
+  }
+
   .brandRule {
-    margin-top: 0.2rem;
+    margin-top: 0.15rem;
   }
 
   .tagline {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .panelDockCrowded {
+    max-height: min(50dvh, 100%);
+  }
+}
+
+@media (max-height: 560px) {
+  .shell {
+    grid-template-rows: minmax(0, 10dvh) minmax(0, 1fr) auto;
+  }
+
+  .topZone {
+    max-height: 10dvh;
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .centerStage {
+    display: none;
+  }
+
+  .panelDockCrowded {
+    max-height: min(62dvh, 100%);
+  }
+
+  .suggestions {
+    padding-bottom: 0.55rem;
   }
 }
 
