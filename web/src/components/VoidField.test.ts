@@ -16,5 +16,7 @@ describe("VoidField module", () => {
     assert.match(source, /OctahedronGeometry/);
     assert.match(source, /0x7fe7ef/);
     assert.match(source, /0xd7b56d/);
+    assert.match(source, /0xe08a5a/);
+    assert.match(source, /0x6edc9a/);
   });
 });

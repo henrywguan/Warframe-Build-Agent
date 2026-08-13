@@ -10,6 +10,9 @@ type VoidFieldProps = {
 
 const CYAN = 0x7fe7ef;
 const GOLD = 0xd7b56d;
+const EMBER = 0xe08a5a;
+const SIGNAL = 0x6edc9a;
+const PLASMA = 0x5eb8e8;
 const VOID = 0x04070c;
 
 function prefersReducedMotion(): boolean {
@@ -78,7 +81,11 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
       key.position.set(-2.4, 2.2, 4);
       const rim = new THREE.PointLight(GOLD, 0.65, 24, 2);
       rim.position.set(3.2, -1.4, 2.5);
-      scene.add(ambient, key, rim);
+      const warm = new THREE.PointLight(EMBER, 0.45, 20, 2);
+      warm.position.set(1.6, 2.8, 3.2);
+      const life = new THREE.PointLight(SIGNAL, 0.35, 18, 2);
+      life.position.set(-3.1, -1.8, 2.2);
+      scene.add(ambient, key, rim, warm, life);
 
       const crystalGroup = new THREE.Group();
       scene.add(crystalGroup);
@@ -145,6 +152,25 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
       const goldDust = new THREE.Points(goldDustGeo, goldMat);
       scene.add(goldDust);
 
+      const emberCount = Math.floor(particleCount * 0.22);
+      const emberPos = new Float32Array(emberCount * 3);
+      for (let i = 0; i < emberCount; i += 1) {
+        emberPos[i * 3] = (Math.random() - 0.5) * 11;
+        emberPos[i * 3 + 1] = (Math.random() - 0.5) * 7;
+        emberPos[i * 3 + 2] = (Math.random() - 0.5) * 7 - 0.5;
+      }
+      const emberGeo = new THREE.BufferGeometry();
+      emberGeo.setAttribute("position", new THREE.BufferAttribute(emberPos, 3));
+      const emberMat = new THREE.PointsMaterial({
+        color: EMBER,
+        size: 0.03,
+        transparent: true,
+        opacity: 0.38,
+        depthWrite: false,
+      });
+      const emberDust = new THREE.Points(emberGeo, emberMat);
+      scene.add(emberDust);
+
       const resize = () => {
         if (!renderer || !hostRef.current) return;
         const width = Math.max(1, hostRef.current.clientWidth);
@@ -197,8 +223,12 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
 
         key.intensity = 0.85 + pulse * 0.9;
         rim.intensity = 0.45 + pulse * 0.7;
+        warm.intensity = 0.3 + pulse * 0.55;
+        life.intensity = currentMood === "thinking" ? 0.55 : 0.28 + pulse * 0.25;
         particleMat.opacity = 0.35 + pulse * 0.45;
         goldMat.opacity = currentMood === "speaking" ? 0.55 : 0.32;
+        emberMat.opacity = currentMood === "speaking" ? 0.55 : 0.3;
+        particleMat.color.setHex(currentMood === "thinking" ? PLASMA : CYAN);
 
         const pos = particleGeo.getAttribute("position") as import("three").BufferAttribute;
         for (let i = 0; i < particleCount; i += 1) {
@@ -208,6 +238,7 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
         pos.needsUpdate = true;
         particles.rotation.y = t * 0.02 * speed;
         goldDust.rotation.y = -t * 0.015 * speed;
+        emberDust.rotation.z = t * 0.018 * speed;
 
         camera.position.x = Math.sin(t * 0.07) * 0.18;
         camera.position.y = 0.12 + Math.sin(t * 0.11) * 0.08;

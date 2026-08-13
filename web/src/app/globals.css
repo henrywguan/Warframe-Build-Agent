@@ -1,9 +1,10 @@
 :root {
+  /* Primary arsenal */
   --ink: #e8eef5;
-  --ink-soft: rgba(196, 208, 220, 0.72);
+  --ink-soft: rgba(196, 208, 220, 0.78);
   --void: #04070c;
   --panel: rgba(10, 16, 24, 0.72);
-  --panel-strong: rgba(14, 22, 32, 0.88);
+  --panel-strong: rgba(14, 22, 32, 0.9);
   --line: rgba(122, 101, 52, 0.7);
   --line-bright: #d7b56d;
   --cyan: #7fe7ef;
@@ -11,7 +12,18 @@
   --gold: #d7b56d;
   --gold-dim: #7a6534;
   --danger: #e06b6b;
-  --shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+
+  /* Tertiary accents — warmth, life, cool steel (not purple) */
+  --ember: #e08a5a;
+  --ember-soft: rgba(224, 138, 90, 0.22);
+  --signal: #6edc9a;
+  --signal-soft: rgba(110, 220, 154, 0.18);
+  --mist: #9bb4c8;
+  --mist-soft: rgba(155, 180, 200, 0.16);
+  --plasma: #5eb8e8;
+  --plasma-soft: rgba(94, 184, 232, 0.2);
+
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
   --radius: 2px;
   --font-display: "Orbitron", "Oxanium", sans-serif;
   --font-body: "Rajdhani", "Source Sans 3", sans-serif;
@@ -46,5 +58,5 @@ textarea {
 }
 
 ::selection {
-  background: rgba(0, 196, 204, 0.35);
+  background: rgba(94, 184, 232, 0.35);
 }

@@ -34,6 +34,19 @@ import {
   loadAiChatPreference,
   saveAiChatEnabled,
 } from "../lib/ai-chat-pref";
+import {
+  type ChatMemory,
+  deleteConversation,
+  emptyMemory,
+  getActiveConversation,
+  loadChatMemory,
+  saveChatMemory,
+  selectConversation,
+  startNewChat,
+  toMemoryMessages,
+  upsertActiveMessages,
+} from "../lib/chat-memory";
+import { ChatHistoryDrawer } from "../components/ChatHistoryDrawer";
 import styles from "./page.module.css";
 
 const VoidField = dynamic(
@@ -115,8 +128,15 @@ function TopZone({
   );
 }
 
+function withWelcome(messages: ChatMessage[]): ChatMessage[] {
+  if (messages.some((m) => m.id === "welcome")) return messages;
+  return [{ ...WELCOME_MESSAGE }, ...messages];
+}
+
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const [chatMemory, setChatMemory] = useState<ChatMemory>(() => emptyMemory());
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -135,6 +155,7 @@ export default function HomePage() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpokenIdRef = useRef<string | null>(null);
+  const memoryHydratedRef = useRef(false);
 
   const mood = deriveOrdisMood(pending, speaking);
 
@@ -183,6 +204,20 @@ export default function HomePage() {
     setOnlineSearch(loadOnlineSearchEnabled());
     const savedAi = loadAiChatPreference();
     setAiChat(savedAi ?? defaultAiChatEnabled());
+    const memory = loadChatMemory();
+    setChatMemory(memory);
+    const active = getActiveConversation(memory);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
+    memoryHydratedRef.current = true;
     let cancelled = false;
     (async () => {
       try {
@@ -217,6 +252,15 @@ export default function HomePage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!memoryHydratedRef.current || !ready) return;
+    setChatMemory((prev) => {
+      const next = upsertActiveMessages(prev, toMemoryMessages(messages));
+      saveChatMemory(next);
+      return next;
+    });
+  }, [messages, ready]);
 
   async function unlock(event: FormEvent) {
     event.preventDefault();
@@ -340,9 +384,7 @@ export default function HomePage() {
     }
   }
 
-  function clearChat() {
-    if (pending) return;
-    setMessages([{ ...WELCOME_MESSAGE }]);
+  function resetLocalComposer() {
     setInput("");
     setAttachment(null);
     setError(null);
@@ -352,7 +394,62 @@ export default function HomePage() {
       clearTimeout(speakTimerRef.current);
       speakTimerRef.current = null;
     }
+  }
+
+  function clearChat() {
+    if (pending) return;
+    setMessages([{ ...WELCOME_MESSAGE }]);
+    resetLocalComposer();
     inputRef.current?.focus();
+  }
+
+  function openNewChat() {
+    if (pending) return;
+    const next = startNewChat(chatMemory);
+    setChatMemory(next);
+    saveChatMemory(next);
+    setMessages([{ ...WELCOME_MESSAGE }]);
+    resetLocalComposer();
+    setHistoryOpen(false);
+    inputRef.current?.focus();
+  }
+
+  function openConversation(id: string) {
+    if (pending) return;
+    const next = selectConversation(chatMemory, id);
+    setChatMemory(next);
+    saveChatMemory(next);
+    const active = getActiveConversation(next);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
+    resetLocalComposer();
+    setHistoryOpen(false);
+  }
+
+  function removeConversation(id: string) {
+    if (pending) return;
+    const next = deleteConversation(chatMemory, id);
+    setChatMemory(next);
+    saveChatMemory(next);
+    const active = getActiveConversation(next);
+    setMessages(
+      withWelcome(
+        active.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          toolsUsed: m.toolsUsed,
+        })),
+      ),
+    );
   }
 
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
@@ -407,6 +504,14 @@ export default function HomePage() {
   return (
     <>
       <VoidField mood={mood} />
+      <ChatHistoryDrawer
+        open={historyOpen}
+        memory={chatMemory}
+        onClose={() => setHistoryOpen(false)}
+        onSelect={openConversation}
+        onNew={openNewChat}
+        onDelete={removeConversation}
+      />
       <main className={styles.shell}>
       <TopZone
         tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
@@ -417,15 +522,37 @@ export default function HomePage() {
       <section className={styles.chatPanel} aria-label="Chat">
         <div className={styles.panelHeader}>
           <p className={styles.panelLabel}>Transmission log</p>
-          <button
-            type="button"
-            className={styles.clearBtn}
-            disabled={!canClearChat}
-            onClick={clearChat}
-            aria-label="Clear chat log"
-          >
-            Clear
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.ghostBtn}
+              disabled={pending}
+              onClick={() => setHistoryOpen(true)}
+              aria-label="Open chat history"
+              title="Chat memory / history"
+            >
+              History
+            </button>
+            <button
+              type="button"
+              className={`${styles.ghostBtn} ${styles.ghostBtnAccent}`}
+              disabled={pending}
+              onClick={openNewChat}
+              aria-label="Start a new chat"
+              title="New chat"
+            >
+              New
+            </button>
+            <button
+              type="button"
+              className={styles.clearBtn}
+              disabled={!canClearChat}
+              onClick={clearChat}
+              aria-label="Clear chat log"
+            >
+              Clear
+            </button>
+          </div>
         </div>
         <div className={styles.messages} ref={messagesRef}>
           {messages.map((message) => (
