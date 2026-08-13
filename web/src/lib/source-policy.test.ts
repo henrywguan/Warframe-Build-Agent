@@ -69,9 +69,9 @@ describe("web source policy (local first + online toggle)", () => {
     assert.match(disabled, /Do not ask them to type yes\/no/);
   });
 
-  it("adds search_web and fetch_web_page when AI chat is enabled", async () => {
+  it("adds search_web and fetch_web_page when LLM mode is enabled", async () => {
     const { getChatTools, runChatTool } = await import("./tools.ts");
-    const names = getChatTools({ aiChat: true })
+    const names = getChatTools({ llmMode: true })
       .filter((entry) => entry.type === "function")
       .map((entry) => entry.function.name);
     assert.ok(names.includes("search_web"));
@@ -80,21 +80,46 @@ describe("web source policy (local first + online toggle)", () => {
     const disabled = await runChatTool(
       "search_web",
       JSON.stringify({ query: "Excalibur steel path" }),
-      { aiChat: false },
+      { llmMode: false },
     );
-    assert.match(disabled, /AI_CHAT_DISABLED/);
+    assert.match(disabled, /LLM_MODE_DISABLED/);
     const fetchDisabled = await runChatTool(
       "fetch_web_page",
       JSON.stringify({ url: "https://wiki.warframe.com/w/Mesa" }),
-      { aiChat: false, onlineSearch: false },
+      { llmMode: false, onlineSearch: false },
     );
     assert.match(fetchDisabled, /FETCH_PAGE_DISABLED/);
-    const both = getChatTools({ aiChat: true, onlineSearch: true }).map(
+    const both = getChatTools({ llmMode: true, onlineSearch: true }).map(
       (entry) => (entry.type === "function" ? entry.function.name : ""),
     );
     assert.ok(both.includes("search_web"));
     assert.ok(both.includes("search_community_builds"));
     assert.ok(both.includes("fetch_web_page"));
+  });
+
+  it("Online search still gates only search_community_builds (not search_web)", async () => {
+    const { getChatTools } = await import("./tools.ts");
+    const onlineOnly = getChatTools({ onlineSearch: true, llmMode: false }).map(
+      (entry) => (entry.type === "function" ? entry.function.name : ""),
+    );
+    assert.ok(onlineOnly.includes("search_community_builds"));
+    assert.ok(onlineOnly.includes("fetch_web_page"));
+    assert.ok(!onlineOnly.includes("search_web"));
+    const llmOnly = getChatTools({ llmMode: true, onlineSearch: false }).map(
+      (entry) => (entry.type === "function" ? entry.function.name : ""),
+    );
+    assert.ok(llmOnly.includes("search_web"));
+    assert.ok(!llmOnly.includes("search_community_builds"));
+  });
+
+  it("AI-on prompt is general agent; AI-off keeps Warframe prompt", async () => {
+    const { GENERAL_AGENT_PROMPT } = await import("./general-agent-prompt.ts");
+    assert.match(GENERAL_AGENT_PROMPT, /General agent is ON/i);
+    assert.match(GENERAL_AGENT_PROMPT, /Do \*\*not\*\* force Warframe framing/);
+    assert.match(GENERAL_AGENT_PROMPT, /search_web/);
+    assert.match(GENERAL_AGENT_PROMPT, /Hermes Desktop/);
+    assert.match(SYSTEM_PROMPT, /Warframe Build Agent/);
+    assert.doesNotMatch(SYSTEM_PROMPT, /General agent is ON/i);
   });
 
   it("formats a toggle-gated online search marker (no Reply yes)", () => {

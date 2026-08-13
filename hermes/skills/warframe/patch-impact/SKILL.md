@@ -1,7 +1,7 @@
 ---
 name: patch-impact
 description: Map official patch notes and hotfixes to build, weapon, and mod recommendations the operator should revisit.
-version: 0.3.0
+version: 0.4.0
 metadata:
   hermes:
     tags: [Warframe, Patches, Builds, Balance]
@@ -17,10 +17,11 @@ Operator asks how a recent update affects a build, weapon tier, or farm plan —
 
 ## Procedure
 
-1. Fetch official changes:
+1. Fetch official changes (match webchat patch tools — hub alone is not enough for synopsis):
    - `npm run patches -- latest`
+   - `npm run patches -- detail` or `detail <version|url>`
    - `npm run patches -- changes`
-2. Source of truth: https://www.warframe.com/en/patch-notes — summarize only.
+2. Source of truth: https://www.warframe.com/en/patch-notes — summarize from **detail** text, not titles alone.
 3. Classify: bugfix, rebalance, new content, vault/unvault, mod/arcane tweak.
 4. Map impact:
    - Weapon stats → rerun `compare-dps` if shifted

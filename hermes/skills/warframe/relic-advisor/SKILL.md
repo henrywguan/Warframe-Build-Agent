@@ -1,7 +1,7 @@
 ---
 name: relic-advisor
 description: Advise on Void Relics — part drops, vaulted status, radshare etiquette, and refinement strategy.
-version: 0.3.0
+version: 0.4.0
 metadata:
   hermes:
     tags: [Warframe, Relics, Fissures, Prime]
@@ -20,6 +20,7 @@ Operator asks which relic drops a part, vaulted status, radshare/refinement stra
 2. Offline pack first:
    - `npm run knowledge -- lookup "Void Relic"`
    - `npm run knowledge -- lookup "<part or relic>"`
+   - `npm run knowledge -- relic "<query>" [--refinement intact|exceptional|flawless|radiant]` (same as webchat `/relic`)
 3. Live fissures when timing matters:
    - `npm run wf -- fissures` / `fissures --steel-path`
 4. Vaulted vs unvaulted: pack digest + `npm run market -- price <slug>`.

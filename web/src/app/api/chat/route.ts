@@ -13,6 +13,7 @@ import {
   type TextContentPart,
 } from "@/lib/chat-types";
 import { resolveChatTurn } from "@/lib/chat-turn";
+import { GENERAL_AGENT_PROMPT } from "@/lib/general-agent-prompt";
 import { preferLocalChat, runLocalChat } from "@/lib/local-chat";
 import {
   formatLlmConnectionError,
@@ -33,6 +34,7 @@ import {
 } from "@/lib/live-search-augment";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import {
+  GENERAL_AGENT_MAX_TOOL_ROUNDS,
   MAX_TOOL_ROUNDS,
   TOOL_BUDGET_EXHAUSTED_PROMPT,
   dedupeToolCall,
@@ -40,7 +42,7 @@ import {
 import { getChatTools, runChatTool } from "@/lib/tools";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 function getClient(clientLlm?: Partial<ClientLlmConfig>): OpenAI {
   const apiKey = resolveApiKey(clientLlm);
@@ -78,7 +80,7 @@ async function runModelCompletion(
   model: string,
   clientLlm?: Partial<ClientLlmConfig>,
   onlineSearchToggle?: boolean,
-  aiChat?: boolean,
+  generalAgent?: boolean,
 ): Promise<{ content: string; toolsUsed: string[]; model: string }> {
   const client = getClient(clientLlm);
   const history: ChatCompletionMessageParam[] = incoming
@@ -99,35 +101,37 @@ async function runModelCompletion(
   const buildAsk = latestUser
     ? looksLikeBuildRequest(messageText(latestUser.content))
     : false;
+  const basePrompt = generalAgent ? GENERAL_AGENT_PROMPT : SYSTEM_PROMPT;
   const consentNote = [
     `\n\n## Runtime LLM\nThis session's model id is \`${model}\`${
       resolveBaseUrl(clientLlm) ? ` at \`${resolveBaseUrl(clientLlm)}\`` : ""
     }. When asked what model/LLM this agent is running, answer with that exact id — do not guess another model name.`,
-    aiChat
-      ? "\n\n## Runtime mode\n**AI chat is ON.** Give smart, player-friendly answers. Prefer local live tools and `lookup_local_knowledge` first. When you need public corroboration, call `search_web` (includes full-page excerpts) and/or `fetch_web_page` for specific URLs. Cite returned URLs only. Never ask the player to type yes/no for web search."
-      : "",
+    generalAgent
+      ? "\n\n## Runtime mode\n**General AI agent is ON.** Answer any topic (recipes, how-tos, tech, news). Do not force Warframe framing. Prefer `search_web` + `fetch_web_page` for research. Use Warframe tools only when the Operator asks about Warframe. This web chat cannot edit files, run a terminal, or use MCP — point coding-on-machine work to Hermes Desktop. Cite returned URLs only."
+      : "\n\n## Runtime mode\n**Warframe LLM advisor** (general AI agent off). Stay Warframe-helpful. Prefer local live tools and `lookup_local_knowledge` first. You may call `search_web` / `fetch_web_page` for public corroboration. Cite returned URLs only. Never ask the player to type yes/no for web search.",
     onlineSearchToggle
-      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
+      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent for Warframe community builds. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
       : buildAsk
-        ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
+        ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only for community builds. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
         : "",
   ].join("");
 
   const messages: ChatCompletionMessageParam[] = [
-    { role: "system", content: `${SYSTEM_PROMPT}${consentNote}` },
+    { role: "system", content: `${basePrompt}${consentNote}` },
     ...history,
   ];
 
   const tools = getChatTools({
+    llmMode: true,
     onlineSearch: Boolean(onlineSearchToggle),
-    aiChat: Boolean(aiChat),
   });
   const toolsUsed: string[] = [];
   const toolPayloads: string[] = [];
   const seenToolCalls = new Set<string>();
+  const maxRounds = generalAgent ? GENERAL_AGENT_MAX_TOOL_ROUNDS : MAX_TOOL_ROUNDS;
   let guard = 0;
 
-  while (guard < MAX_TOOL_ROUNDS) {
+  while (guard < maxRounds) {
     guard += 1;
     const completion = await client.chat.completions.create({
       model,
@@ -163,7 +167,7 @@ async function runModelCompletion(
         ? dedupe.stub!
         : await runChatTool(call.function.name, args, {
             onlineSearch: Boolean(onlineSearchToggle),
-            aiChat: Boolean(aiChat),
+            llmMode: true,
           });
 
       if (!dedupe.duplicate) {
@@ -172,7 +176,7 @@ async function runModelCompletion(
           rawArgs: args,
           result: raw,
           onlineSearch: Boolean(onlineSearchToggle),
-          aiChat: Boolean(aiChat),
+          llmMode: true,
         });
         raw = augmented.result;
         for (const extra of augmented.extraTools) {
@@ -210,14 +214,8 @@ async function runModelCompletion(
   };
 }
 
-function shouldPreferLocal(
-  clientLlm?: Partial<ClientLlmConfig>,
-  aiChat?: boolean | null,
-): boolean {
-  // Explicit AI toggle wins over env CHAT_MODE / browser LLM heuristics.
-  if (aiChat === true) return false;
-  if (aiChat === false) return true;
-  // Browser LLM settings override env CHAT_MODE=local so Ollama can be plugged in from the UI.
+/** Prefer local chatbot when no LLM is configured (AI toggle no longer forces local). */
+function shouldPreferLocal(clientLlm?: Partial<ClientLlmConfig>): boolean {
   if (resolveApiKey(clientLlm)) return false;
   return preferLocalChat();
 }
@@ -254,16 +252,16 @@ export async function POST(request: Request) {
 
   const clientLlm = parseClientLlm(body.llm);
   const onlineSearchToggle = body.onlineSearch === true;
-  const aiChat =
-    body.aiChat === true ? true : body.aiChat === false ? false : null;
-  const useLocal = shouldPreferLocal(clientLlm, aiChat);
+  // Keep body field name `aiChat` — it means general-agent mode (not "use LLM").
+  const generalAgent = body.aiChat === true;
+  const useLocal = shouldPreferLocal(clientLlm);
   const model = resolveModel(clientLlm, hasImages(incoming));
 
-  if (aiChat === true && !resolveApiKey(clientLlm)) {
+  if (generalAgent && !resolveApiKey(clientLlm)) {
     return NextResponse.json(
       {
         error:
-          "AI chat is on but no LLM is configured. Tap LLM / Ollama to add a key or Ollama URL, or turn AI off for the offline chatbot.",
+          "AI (general agent) is on but no LLM is configured. Tap LLM / Ollama to add a key or Ollama URL, or turn AI off for the Warframe offline chatbot / LLM advisor.",
       },
       { status: 400 },
     );
@@ -285,7 +283,7 @@ export async function POST(request: Request) {
           model,
           clientLlm,
           onlineSearchToggle,
-          aiChat === true,
+          generalAgent,
         ),
     });
     return NextResponse.json(result);

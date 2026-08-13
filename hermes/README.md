@@ -6,8 +6,14 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.3.0` (Hermes ≥ 0.12.0)  
-Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.
+**Profile version:** `0.6.0` (Hermes ≥ 0.12.0)  
+Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
+
+**Ordis is a Cursor-class general AI agent** (tools + reasoning + delivery), with specialties:
+
+- **Warframe** — pack + webchat-parity CLIs  
+- **Always-online research** — [Agent Reach](https://github.com/Panniantong/Agent-Reach)  
+- **Full agent toolkit** — `skills/software-development/*` + [`CODING.md`](CODING.md)
 
 ---
 
@@ -47,9 +53,13 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 | Path | Role |
 | --- | --- |
-| `SOUL.md` | Ordis identity + source policy |
+| `SOUL.md` | Ordis identity — general agent first + Warframe/research specialties |
 | `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
-| `skills/warframe/*` | Compare, builds, mechanics, knowledge, loadout, DPS, world-state, market, patches |
+| `AGENT_REACH.md` | Install / doctor / boundaries for Agent Reach |
+| `CODING.md` | Cursor-class agent constitution + capability map |
+| `skills/warframe/*` | Builds, loadout, DPS, world-state, market, patches, … |
+| `skills/research/agent-reach/` | General web / social / video research |
+| `skills/software-development/*` | Full tool-using agent pack (26 skills) |
 | `distribution.yaml` | Hermes distribution manifest |
 | `config.yaml` / `profile.yaml` | Light defaults |
 
@@ -68,6 +78,45 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 3. Smoke test in Hermes chat:  
    `Lookup Arcane Energize from the local knowledge pack`
+4. *(Optional)* Install Agent Reach for general research — see [`AGENT_REACH.md`](AGENT_REACH.md). Then try:  
+   `Research current AI agent frameworks and summarize with sources`
+5. Enable **all** Hermes toolsets you can: filesystem, terminal, web, browser, vision, MCP, subagents.  
+   Smoke test: `Act as a full Cursor agent — explore how npm run knowledge is wired, verify with a command, summarize.`
+6. For other repos, point the Hermes working directory at that project (Warframe CLIs need this repo).
+
+---
+
+## Cursor-class agent
+
+See [`CODING.md`](CODING.md). Includes:
+
+**Autonomy:** `agent-loop` · `multi-step-delivery` · `tool-orchestration` · `reasoning-discipline` · `context-discipline` · `project-rules` · `security-hygiene`  
+
+**Code:** `codebase-explore` · `plan-task` · `implement-change` · `debug-issue` · `test-verify` · `refactor-cleanup` · `git-workflow` · `pr-workflow` · `code-review` · `docs-sync`  
+
+**Runtime / perception:** `shell-discipline` · `env-bootstrap` · `http-api-debug` · `data-notebooks` · `vision-analyze` · `browser-automate` · `mcp-integrate` · `delegate-subagents` · `skill-authoring`
+
+Optional: also seed Hermes upstream bundled software skills:
+
+```bash
+hermes skills opt-in --sync
+```
+
+---
+
+## General research (Agent Reach)
+
+On the **same machine** as Hermes (not inside this repo’s `data/` tree):
+
+```bash
+pipx install https://github.com/Panniantong/Agent-Reach/archive/main.zip
+agent-reach install --env=auto          # check-only first
+# After you approve system packages:
+agent-reach install --env=auto --system
+agent-reach doctor
+```
+
+Details and safety boundaries: [`AGENT_REACH.md`](AGENT_REACH.md).
 
 ---
 
@@ -85,7 +134,11 @@ npm run knowledge -- status
 npm run knowledge -- lookup "Primary Merciless"
 npm run knowledge -- compare-loadout "Coda Hema" --mods "Serration,Split Chamber" --arcanes "Primary Merciless"
 npm run knowledge -- compare-dps "Torid" "Ignis Wraith" --preset typical
+npm run knowledge -- ehp --health 700 --shields 300 --armor 300 --dr 0.5
+npm run market -- slug-search "Arcane Energize"
+npm run patches -- detail
 npm run wf -- summary
+npm run wf -- arbitration
 ```
 
 ---
@@ -93,5 +146,7 @@ npm run wf -- summary
 ## More help
 
 - Beginner Hermes guide: [`docs/hermes-export.md`](../docs/hermes-export.md)  
+- Coding agent: [`CODING.md`](CODING.md)  
+- Agent Reach: [`AGENT_REACH.md`](AGENT_REACH.md) · https://github.com/Panniantong/Agent-Reach  
 - Getting started hub: [`docs/getting-started.md`](../docs/getting-started.md)  
 - Offline pack: [`docs/offline-knowledge.md`](../docs/offline-knowledge.md)

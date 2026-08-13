@@ -48,13 +48,13 @@ const SEARCH_WEB_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "search_web",
     description:
-      "General public web search (DuckDuckGo + Warframe Wiki) with auto-fetched full-page excerpts from top hits. Use when facts may be patch-sensitive, time-sensitive, or missing from local tools. Available when the WebUI AI toggle is on. Cite only returned URLs. For a specific URL, call fetch_web_page.",
+      "General public web search (DuckDuckGo; Warframe Wiki only when the query looks Warframe-related) with auto-fetched full-page excerpts from top hits. Does not force Warframe framing on general topics. Available in LLM mode. Cite only returned URLs. For a specific URL, call fetch_web_page.",
     parameters: {
       type: "object",
       properties: {
         query: {
           type: "string",
-          description: "Search query (e.g. 'Steel Path Excalibur survivability 2026')",
+          description: "Search query (e.g. 'Steel Path Excalibur survivability 2026' or 'strawberry smoothie recipes')",
         },
       },
       required: ["query"],
@@ -68,7 +68,7 @@ const FETCH_WEB_PAGE_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "fetch_web_page",
     description:
-      "Fetch and parse a full public web page into readable text (wiki, patch notes, guides, Overframe, forums, etc.). Use after search_web / search_community_builds when you need the body of a specific URL, or whenever the player asks about content on a known page. Available when AI or Online search is on. Only http(s) public URLs.",
+      "Fetch and parse a full public web page into readable text (wiki, patch notes, guides, recipes, Overframe, forums, etc.). Use after search_web / search_community_builds when you need the body of a specific URL, or whenever the player asks about content on a known page. Available in LLM mode or when Online search is on. Only http(s) public URLs.",
     parameters: {
       type: "object",
       properties: {
@@ -568,15 +568,16 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
   },
 ];
 
-/** Base tools, plus AI web search and/or community crawl based on UI toggles. */
+/** Base tools, plus LLM web search and/or community crawl based on UI toggles. */
 export function getChatTools(options?: {
   onlineSearch?: boolean;
-  aiChat?: boolean;
+  /** LLM mode (Warframe advisor or general agent) — enables search_web + fetch_web_page. */
+  llmMode?: boolean;
 }): OpenAI.Chat.ChatCompletionTool[] {
   const tools = [...chatTools];
-  if (options?.aiChat) tools.push(SEARCH_WEB_TOOL);
+  if (options?.llmMode) tools.push(SEARCH_WEB_TOOL);
   if (options?.onlineSearch) tools.push(SEARCH_COMMUNITY_BUILDS_TOOL);
-  if (options?.aiChat || options?.onlineSearch) tools.push(FETCH_WEB_PAGE_TOOL);
+  if (options?.llmMode || options?.onlineSearch) tools.push(FETCH_WEB_PAGE_TOOL);
   return tools;
 }
 
@@ -613,7 +614,10 @@ async function withRequiredQuery(
 export async function runChatTool(
   name: string,
   rawArgs: string,
-  options?: { onlineSearch?: boolean; aiChat?: boolean },
+  options?: {
+    onlineSearch?: boolean;
+    llmMode?: boolean;
+  },
 ): Promise<string> {
   let args: ToolArgs = {};
   try {
@@ -732,10 +736,10 @@ export async function runChatTool(
         return await lookupLocalKnowledge(query);
       }
       case "search_web": {
-        if (!options?.aiChat) {
+        if (!options?.llmMode) {
           return [
-            "AI_CHAT_DISABLED: the AI toggle is off.",
-            "Tell the player to turn on AI in the chat UI for smart replies with web search, or answer from local tools only.",
+            "LLM_MODE_DISABLED: no LLM is configured for this session.",
+            "Tell the player to configure LLM / Ollama for smart replies with web search, or answer from local tools only.",
           ].join("\n");
         }
         const query = asString(args.query);
@@ -743,9 +747,9 @@ export async function runChatTool(
         return await searchWebOnline(query);
       }
       case "fetch_web_page": {
-        if (!options?.aiChat && !options?.onlineSearch) {
+        if (!options?.llmMode && !options?.onlineSearch) {
           return [
-            "FETCH_PAGE_DISABLED: turn on AI and/or Online search in the chat UI to fetch full pages.",
+            "FETCH_PAGE_DISABLED: configure LLM / Ollama and/or turn on Online search in the chat UI to fetch full pages.",
             "Answer from local tools only until then.",
           ].join("\n");
         }

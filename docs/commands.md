@@ -123,7 +123,7 @@ Details:
 | `public-export-sync` | Refresh public game data stub |
 | `damage-simulator` | DPS vs full damage explanations |
 
-Hermes Desktop import ships the matching player-facing skills (v0.3.0) under `hermes/skills/warframe/` — see [`docs/hermes-export.md`](hermes-export.md) and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) for Qwen/Ollama.
+Hermes Desktop import ships a Cursor-class general agent skill pack plus Warframe + research skills (v0.6.0) under `hermes/skills/` — see [`docs/hermes-export.md`](hermes-export.md), [`hermes/CODING.md`](../hermes/CODING.md), and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
 
 ---
 

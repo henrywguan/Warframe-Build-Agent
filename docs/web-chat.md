@@ -28,12 +28,18 @@ Open http://localhost:3000
 
 From the chat UI:
 
-- **AI** — smart LLM replies (requires **LLM / Ollama**). Registers `search_web` (DuckDuckGo + Wiki) so answers can be backed by public sources. Off = offline knowledge chatbot.
-- **LLM / Ollama** — Base URL / API key / model in the browser (localStorage). Example: `http://127.0.0.1:11434/v1`, key `ollama`, model `qwen2.5`.
-- **Online search** — live community crawl (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts) when the local pack is missing. Standing consent — never asks the player to type yes/no. Separate from the AI toggle.
-- **Full page fetch** — with AI or Online search on, `fetch_web_page` reads a specific public URL into text (also auto-used on top search hits).
+| Toggle | Job |
+| --- | --- |
+| **LLM / Ollama** | Configure model **and** enable LLM mode (smart replies + tools). Off / unconfigured = offline local chatbot. Saving a valid config enables the Warframe LLM advisor without turning AI on. |
+| **AI** | Mode switch **on top of LLM**: general Cursor-style research agent (non-Warframe-first). Off = keep Warframe Build Agent LLM personality/tools. Requires LLM. Not a full IDE agent (no filesystem/terminal/MCP — use Hermes Desktop for that). |
+| **Online search** | Warframe community-build crawl consent only (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts). Standing consent — never asks the player to type yes/no. |
 
-Preferences (`aiChat`, `onlineSearch`) are sent on each `/api/chat` request.
+Also:
+
+- **Full page fetch** — with LLM mode or Online search on, `fetch_web_page` reads a specific public URL into text (also auto-used on top search hits; Jina Reader fallback when direct fetch is empty/blocked).
+- **`search_web`** — available in LLM mode (Warframe advisor or AI general agent). Does **not** append `warframe` to general queries (recipes, how-tos, etc.). Warframe Wiki is included only when the query looks Warframe-related.
+
+Preferences (`aiChat` = general agent, `onlineSearch`) plus browser `llm` config are sent on each `/api/chat` request.
 
 From repo root you can also run:
 

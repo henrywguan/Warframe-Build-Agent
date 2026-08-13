@@ -142,26 +142,51 @@ function formatHits(label: string, hits: WebHit[]): string {
   ].join("\n");
 }
 
+/** True when the query is clearly Warframe / Tenno related. */
+export function looksWarframeRelated(query: string): boolean {
+  return /\b(?:warframes?|tenno|steel\s*path|eidolon|kuva\s+lich|sisters?\s+of\s+parvos|railjack|orbiter|syndicate|void\s+relic|helminth|archon(?:ic)?|overframe|riven|exalted|operator|necramech|duviri|zariman|entrati|holdfasts?|ostron|solaris|cetus|fortuna|deimos|corpus|grineer|infested|sentient|orokin|narmer|stalker|eximus|arbitration|nightwave|sortie|fissures?|incursion|archwing|incarnon|galvanized|umbral|tauforged|kavat|kubrow|predasite|vulpaphyla|dethcube|wyrm|carrier|diriga|oxylus|taxon|shade|helminth\s+charger|forma|orokin\s+reactor|exilus|aura\s+forma|primed\s+\w+|corrupted\s+mod|mods?|builds?|primes?)\b/i.test(
+    query,
+  );
+}
+
 /**
- * General public-web search for AI chat (DuckDuckGo + Warframe Wiki).
- * Available when the WebUI AI toggle is on.
- * When Online search is on, also auto-fetches full-page excerpts from top hits.
+ * Resolve DuckDuckGo query + whether to include Warframe Wiki.
+ * General queries never get a forced " warframe" suffix (smoothie/recipes stay general).
+ * Pass forceWarframe for build auto-augment paths that should stay in-domain.
+ */
+export function resolveWebSearchQuery(
+  query: string,
+  options: { forceWarframe?: boolean } = {},
+): { searchQuery: string; includeWiki: boolean } {
+  const q = query.trim();
+  const warframey = looksWarframeRelated(q);
+  const includeWiki = options.forceWarframe === true || warframey;
+  const searchQuery =
+    options.forceWarframe === true && !warframey ? `${q} warframe` : q;
+  return { searchQuery, includeWiki };
+}
+
+/**
+ * General public-web search for LLM / AI modes (DuckDuckGo + optional Warframe Wiki).
+ * Available whenever LLM mode is on. Does not append "warframe" to general queries.
+ * When fetchPages is enabled (default), auto-fetches full-page excerpts from top hits.
  */
 export async function searchWebOnline(
   query: string,
-  options: { fetchPages?: boolean } = {},
+  options: { fetchPages?: boolean; forceWarframe?: boolean } = {},
 ): Promise<string> {
   const q = query.trim();
   if (!q) return "Missing required query.";
 
-  const warframey = /\bwarframe\b|\bbuild\b|\bmod\b|\bprime\b|\bfissure\b|\bsortie\b/i.test(
-    q,
-  );
-  const searchQuery = warframey ? q : `${q} warframe`;
+  const { searchQuery, includeWiki } = resolveWebSearchQuery(q, {
+    forceWarframe: options.forceWarframe,
+  });
 
   const [webHits, wikiHits] = await Promise.all([
     searchDuckDuckGo(searchQuery, 6).catch(() => [] as WebHit[]),
-    searchWarframeWiki(q).catch(() => [] as WebHit[]),
+    includeWiki
+      ? searchWarframeWiki(q).catch(() => [] as WebHit[])
+      : Promise.resolve([] as WebHit[]),
   ]);
 
   const lines = [
@@ -170,7 +195,9 @@ export async function searchWebOnline(
     "",
     formatHits("Public web (DuckDuckGo)", webHits),
     "",
-    formatHits("Warframe Wiki", wikiHits),
+    includeWiki
+      ? formatHits("Warframe Wiki", wikiHits)
+      : "Warframe Wiki: (skipped — query is not Warframe-related)",
   ];
 
   if (!webHits.length && !wikiHits.length) {

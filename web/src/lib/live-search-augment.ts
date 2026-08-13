@@ -37,7 +37,8 @@ export async function maybeAugmentLookupWithLiveSearch(options: {
   rawArgs: string;
   result: string;
   onlineSearch: boolean;
-  aiChat: boolean;
+  /** LLM mode (smart replies) — not the general-agent AI toggle. */
+  llmMode: boolean;
 }): Promise<{ result: string; extraTools: string[] }> {
   if (options.toolName !== "lookup_local_knowledge") {
     return { result: options.result, extraTools: [] };
@@ -58,8 +59,11 @@ export async function maybeAugmentLookupWithLiveSearch(options: {
     const community = await searchCommunityBuildsOnline(query);
     sections.push("", community);
     extraTools.push("search_community_builds");
-  } else if (options.aiChat) {
-    const web = await searchWebOnline(`${query} warframe steel path build`);
+  } else if (options.llmMode) {
+    // Build auto-augment stays Warframe-biased; general search_web does not.
+    const web = await searchWebOnline(`${query} steel path build`, {
+      forceWarframe: true,
+    });
     sections.push("", web);
     extraTools.push("search_web");
   }
@@ -68,7 +72,7 @@ export async function maybeAugmentLookupWithLiveSearch(options: {
 
   sections.push(
     "",
-    "AUTO_LIVE_SEARCH: live results were already fetched above because Online search and/or AI is enabled.",
+    "AUTO_LIVE_SEARCH: live results were already fetched above because Online search and/or LLM mode is enabled.",
     "Answer the player's build/loadout question using the item facts + these live hits.",
     "Do not digress into unrelated mechanics (Blast/Railjack/etc.) unless they asked.",
     "If Overframe is blocked, prefer DuckDuckGo/YouTube/Wiki URLs and an agent-calculated plan from the local wiki/catalog facts.",

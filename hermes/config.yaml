@@ -15,6 +15,13 @@
 #   OPENAI_BASE_URL=http://127.0.0.1:11434/v1
 
 terminal:
-  # Point cwd at a Warframe-Build-Agent checkout so Ordis can run knowledge/wf/market/patches CLIs
-  # against data/knowledge/ (mechanics, arcanes, Overframe builds, DPS calculator).
+  # Default cwd: Warframe-Build-Agent checkout for knowledge/wf/market/patches CLIs.
+  # For general coding in another repo, change the profile working directory in Hermes.
+  # Agent Reach installs to ~/.agent-reach/ (not into this cwd).
   cwd: "."
+
+# Cursor-class agent profile notes:
+# - skills/software-development/* = full tool-using agent (see CODING.md).
+# - Enable ALL available Hermes toolsets for full power:
+#   filesystem, terminal, web, browser, vision, MCP, subagents/delegate.
+# - Optional: hermes skills opt-in --sync for upstream bundled software skills.

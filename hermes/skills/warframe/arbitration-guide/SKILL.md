@@ -17,8 +17,9 @@ Operator asks about today's Arbitration, rewards, difficulty, or loadout fit.
 ## Procedure
 
 1. Live worldstate:
-   - `npm run wf -- get arbitration`
+   - `npm run wf -- arbitration`
    - `npm run wf -- summary`
+   - (optional raw) `npm run wf -- get arbitration`
 2. Parse mission type, faction, rotations (longer than normal).
 3. Offline pack for faction/mod context:
    - `npm run knowledge -- lookup "<faction>"` / `"Galvanized"`
