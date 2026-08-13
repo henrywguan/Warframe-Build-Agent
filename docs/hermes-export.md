@@ -246,17 +246,13 @@ You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dp
 
 ---
 
-## Online community search in Hermes (no yes/no)
+## Online community search in Hermes (always on)
 
-Web chat uses an **Online search** toggle. Hermes Desktop does not have that toggle.
+Web chat uses an **Online search** toggle. **Hermes is always online** — no toggle, and never ask yes/no.
 
-When local Overframe builds are missing:
+When local Overframe builds are missing, Ordis crawls community / web sources immediately (Agent Reach, Jina page reads, Overframe paths). Local pack still comes first when it has the answer. If a crawl fails (e.g. Cloudflare), Ordis falls back to agent-calculated + pack facts.
 
-- Stay local + agent-calculated by default
-- Crawl only if the Operator says **“search online”** / **“crawl Overframe/YouTube”** (or uses Agent Reach for a clear live-community ask)
-- Never ask them to type **yes** or **no**
-
-Same policy as [`source-policy.md`](source-policy.md). Screenshot/OCR Attach is web-chat only — in Hermes, paste mod names for `compare-loadout`.
+Screenshot/OCR Attach is web-chat only — in Hermes, paste mod names for `compare-loadout`.
 
 ---
 

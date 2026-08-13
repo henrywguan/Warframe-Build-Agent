@@ -68,8 +68,8 @@ In Hermes chat:
 ## Warframe + research together
 
 1. Local pack first for facts/builds (`npm run knowledge -- lookup …`).
-2. If local Overframe builds are missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`): crawl only when Online is opted in (WebUI **Online search** toggle, or Operator said “search online” in Hermes). Never ask yes/no. Do not invent video URLs.
-3. Use Agent Reach freely for clearly **non-Warframe** research; for Warframe community pulls (YouTube/Reddit/X), follow the same online opt-in rules as the Warframe skills / `community-search`.
+2. If local Overframe builds are missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`): **crawl immediately** — Hermes is always online (unlike web chat’s Online search toggle). Never ask yes/no. Do not invent video URLs.
+3. Use Agent Reach freely for general research and for Warframe community pulls (YouTube/Reddit/X) via `community-search`.
 
 ## Privacy / safety
 

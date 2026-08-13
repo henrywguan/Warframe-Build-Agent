@@ -6,8 +6,9 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.4.1` (Hermes ≥ 0.12.0)  
+**Profile version:** `0.4.2` (Hermes ≥ 0.12.0)  
 Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
+**Always online** on Hermes (local pack first, then live crawl — no Online search toggle).  
 Aligned with web chat tools (knowledge / DPS / loadout / ehp / forma / relic / patches detail / market slug-search / worldstate).  
 **Not Warframe-only:** general web research via [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional install on the Hermes host).
 

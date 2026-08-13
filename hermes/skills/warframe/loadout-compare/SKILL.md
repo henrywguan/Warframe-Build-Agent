@@ -30,13 +30,13 @@ Requires a Warframe-Build-Agent checkout with Overframe builds crawled/imported 
    ```
 4. Honor markers in the output:
    - `LOCAL_BUILDS_AVAILABLE` → summarize closest rank, missing mods, extras
-   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → **do not ask yes/no** — crawl only if Online is opted in (WebUI Online search toggle, or Operator said “search online” in Hermes); else stay local
-5. If builds are missing locally, suggest residential crawl / HTML import (`overframe-import` skill) or `community-search` when opted in.
+   - `ONLINE_SEARCH_CONFIRMATION_REQUIRED` → **crawl immediately** via `community-search` / Overframe paths (Hermes is always online; never ask yes/no)
+5. If builds are missing locally, run `community-search` and/or residential crawl / HTML import (`overframe-import`).
 
 ## Output shape
 
 - Closest local Overframe rank + overlap %
 - Missing mods / arcanes vs that build
 - Extra mods on the Operator’s loadout
-- Online status (`local-only` | `opted-in-crawl` | `n/a`)
+- Online status (`local-pack` | `live-crawl` | `crawl-failed-fallback`)
 - One practical next change

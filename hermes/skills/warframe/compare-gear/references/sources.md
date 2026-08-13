@@ -6,13 +6,13 @@ For build vs fact routing detail, see `../recommend-build/references/source-poli
 
 ## Priority
 
-1. **Repo docs / source policy** — how to interpret live data and online opt-in for community build search (never yes/no).
+1. **Repo docs / source policy** — how to interpret live data; Hermes always-online community search (never yes/no).
 2. **Local knowledge pack** — offline WFCD + Wiki digests + cached Overframe builds (`npm run knowledge -- …`).
 3. **Warframe Status API** — live worldstate, cycles, alerts, fissures, invasions, sorties, events. Docs: https://docs.warframestat.us/ — client: `npm run wf -- …`
 4. **Official patch notes** — https://www.warframe.com/en/patch-notes — client: `npm run patches -- …`
 5. **Official Warframe Wiki** — mechanics, drop tables, weapon/Warframe stats: https://wiki.warframe.com/ (also cached in the knowledge pack).
-6. **Overframe** — community builds: https://overframe.gg/ — prefer local cache; crawl only when Online is opted in.
-7. **YouTube creator builds** — only when cited or after Online opt-in; never invent fake URLs.
+6. **Overframe** — community builds: https://overframe.gg/ — prefer local cache; crawl when missing (Hermes always online).
+7. **YouTube creator builds** — when cited or fetched live; never invent fake URLs.
 8. **Agent-calculated builds** — synthesize for the stated goal when cache/online evidence is thin.
 9. **Warframe Market** — `https://api.warframe.market/v2/` — volatile listings; daily 4pm Pacific snapshots via `npm run market -- …`
 10. **Current public web** — secondary writeups when wiki/API lag a patch (not the default for facts the pack covers).

@@ -1,10 +1,10 @@
 ---
 name: community-search
 description: >
-  Opted-in live community build / web corroboration (Hermes stand-in for webchat
-  search_community_builds + search_web + fetch_web_page). Use only when Online is
-  opted in or the Operator asked to search the open web.
-version: 0.1.0
+  Always-on live community build / web corroboration for Hermes (stand-in for
+  webchat search_community_builds + search_web + fetch_web_page). Prefer local
+  pack first, then crawl without asking yes/no.
+version: 0.2.0
 metadata:
   hermes:
     tags: [Warframe, Overframe, YouTube, Web, Builds]
@@ -12,26 +12,26 @@ metadata:
     related_skills: [recommend-build, offline-knowledge, agent-reach, overframe-import]
 ---
 
-# Community / web search (opt-in)
+# Community / web search (Hermes always online)
 
 ## When to use
 
-- Local Overframe builds missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`) **and** Online is opted in
-- Operator explicitly asks to widen a comparison with Overframe / YouTube / web
+- Local Overframe builds missing (`ONLINE_SEARCH_CONFIRMATION_REQUIRED`)
+- Operator asks to widen a comparison with Overframe / YouTube / web
 - Need to read a specific public page (wiki, guide, creator notes)
+- Pack facts are thin and a public page would settle the answer
 
 ## When not to use
 
-- Pack can answer facts/mechanics/arcanes/DPS — use `offline-knowledge` / knowledge CLIs
-- Online not opted in — stay local + agent-calculated; tell them how to opt in
+- Pack already answers cleanly — skip the crawl
 - Never invent video URLs or “I watched this” without a fetch
 
-## Opt-in (never ask yes/no)
+## Hermes vs web chat
 
-| Surface | Opted in when |
+| Surface | Online behavior |
 | --- | --- |
-| Web chat | **Online search** toggle ON |
-| Hermes Desktop | Operator said “search online”, “crawl Overframe/YouTube”, or clearly asked for live community results |
+| **Hermes Desktop** | **Always online** — crawl when needed; never ask yes/no; no toggle |
+| Web chat | **Online search** toggle gates live community crawl |
 
 ## Procedure
 

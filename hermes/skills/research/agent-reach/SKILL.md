@@ -3,8 +3,8 @@ name: agent-reach
 description: >
   General web/social/video research via Agent Reach (Jina, Exa, YouTube/yt-dlp,
   GitHub/gh, Reddit, Twitter/X, RSS, Bilibili, and other routed backends).
-  Use for non-Warframe research and for opted-in online community lookup.
-version: 0.1.1
+  Use for non-Warframe research and for Hermes always-on online community lookup.
+version: 0.2.0
 metadata:
   hermes:
     tags: [Research, Web, YouTube, Reddit, Twitter, GitHub, AgentReach]
@@ -17,7 +17,7 @@ metadata:
 
 - Operator wants general research, link reading, YouTube/Reddit/Twitter/GitHub/web search
 - Operator shares a URL and wants a summary with sources
-- Hybrid Warframe questions that need **online** community material after Online opt-in (WebUI Online search toggle, or Operator said “search online” in Hermes) — never ask yes/no
+- Hybrid Warframe questions that need **online** community material (Hermes is always online — never ask yes/no)
 
 ## When not to use
 
@@ -37,7 +37,7 @@ metadata:
 2. Announce: “using Agent Reach — platform X via backend Y”.
 3. Cite URLs / tools. Do not invent social content.
 4. Prefer zero-config channels first (web / YouTube / GitHub / RSS / Exa / Bilibili basic).
-5. For Warframe build searches online: honor `ONLINE_SEARCH_CONFIRMATION_REQUIRED` and the **Online search** toggle (crawl when on; stay local when off). Never invent video URLs.
+5. For Warframe build searches online: when local builds are missing, crawl immediately (Hermes always online). Never invent video URLs.
 
 ## Zero-config quick commands
 

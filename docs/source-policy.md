@@ -34,7 +34,7 @@ When the player asks for a mod setup, “best build”, Steel Path config, loado
 | **Overlay action cards** | Local-pack gate card | Agent-calculated cards + Online-search toggle tip |
 | **Overlay chat → web API** (`CHAT_API_URL`) | Same tools/prompt as web chat | Same Online-search toggle gate |
 | **Overlay chat → direct OpenAI** | No pack tools — say so | Do not claim online search without the toggle |
-| **Hermes + local LLM** | Shell `npm run knowledge -- …` with `terminal.cwd` = repo | Same markers; Online opt-in = Operator says “search online” / crawl (no WebUI toggle in Hermes Desktop; never ask yes/no) |
+| **Hermes + local LLM** | Shell `npm run knowledge -- …` with `terminal.cwd` = repo | Same markers; **always online** — crawl when local builds are missing (no toggle; never ask yes/no). Web chat toggle does not apply. |
 
 ## Markers
 

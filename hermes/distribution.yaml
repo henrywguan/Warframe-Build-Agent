@@ -1,6 +1,6 @@
 name: warframe-build-agent
-version: 0.4.1
-description: "Ordis — Warframe builds + offline pack (webchat-parity CLIs), general web research via Agent Reach; local-LLM friendly"
+version: 0.4.2
+description: "Ordis — Warframe builds + always-online Hermes research (Agent Reach), webchat-parity CLIs; local-LLM friendly"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"

@@ -124,4 +124,4 @@ Details: [`docs/web-chat.md`](../docs/web-chat.md).
 | Connection refused | Is Ollama running? Is the Base URL exactly `…/v1`? |
 | Wrong / empty answers | Is Hermes cwd the repo root? Run `npm run knowledge -- status` |
 | Model not found | `ollama list` — model name must match Hermes |
-| Still inventing builds | Overframe cache may be empty — import builds, enable **Online search** in the web UI, or say “search online” in Hermes (never type yes/no) |
+| Still inventing builds | Overframe cache may be empty — Hermes should crawl online automatically; if CF blocks Overframe, use browser HTML import (`docs/overframe-crawl.md`) |
