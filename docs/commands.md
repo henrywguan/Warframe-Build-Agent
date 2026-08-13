@@ -123,7 +123,7 @@ Details:
 | `public-export-sync` | Refresh public game data stub |
 | `damage-simulator` | DPS vs full damage explanations |
 
-Hermes Desktop import ships player-facing Warframe skills plus research + Cursor-style coding skills (v0.5.0) under `hermes/skills/` — see [`docs/hermes-export.md`](hermes-export.md), [`hermes/CODING.md`](../hermes/CODING.md), and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
+Hermes Desktop import ships a Cursor-class general agent skill pack plus Warframe + research skills (v0.6.0) under `hermes/skills/` — see [`docs/hermes-export.md`](hermes-export.md), [`hermes/CODING.md`](../hermes/CODING.md), and [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md).
 
 ---
 

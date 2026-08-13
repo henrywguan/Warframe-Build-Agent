@@ -8,10 +8,10 @@ Follow the steps in order. When you finish, Hermes Desktop will chat as **Ordis*
 ## What you will have when done
 
 - Hermes Desktop with the **warframe-build-agent** profile  
-- Ordis skills: Warframe builds/DPS/worldstate/market/patches **plus** Cursor-style coding skills  
+- Ordis as a **Cursor-class general AI agent** (tools, reasoning, delivery) with Warframe specialty  
 - Access to this repo’s **offline knowledge pack** (Wiki digests, arcanes, mechanics, Overframe builds when available)  
-- Optional: **general web research** via [Agent Reach](https://github.com/Panniantong/Agent-Reach)  
-- **Coding agent mode** — explore/plan/implement/debug/test/git (see [`../hermes/CODING.md`](../hermes/CODING.md))
+- Optional: **always-online research** via [Agent Reach](https://github.com/Panniantong/Agent-Reach)  
+- Full agent skill pack — see [`../hermes/CODING.md`](../hermes/CODING.md)
 
 **Time:** about 15–30 minutes the first time (plus a few minutes if you install Agent Reach).
 
@@ -247,18 +247,23 @@ You should see skills such as `offline-knowledge`, `loadout-compare`, `modded-dp
 
 ---
 
-## Coding agent tools (recommended)
+## Cursor-class agent tools (recommended)
 
-For Cursor-like coding, enable in Hermes Desktop/CLI:
+For full Cursor-like power, enable in Hermes Desktop/CLI:
 
-1. **Filesystem** tools (read/write/patch)  
-2. **Terminal** tool  
-3. **Web** tools (or Agent Reach) for docs/issues  
+1. **Filesystem** (read/write/patch)  
+2. **Terminal**  
+3. **Web** search/extract (or Agent Reach)  
+4. **Browser** (UI verification)  
+5. **Vision** (screenshots/diagrams)  
+6. **MCP** servers you use  
+7. **Subagents / delegate** if available  
 
-Then try: *“Explore the knowledge CLI entrypoint and explain how lookup works.”*  
-Full skill list: [`../hermes/CODING.md`](../hermes/CODING.md).
+Then try: *“Act as a full Cursor agent — explore the knowledge CLI, run a verifying command, summarize with evidence.”*  
 
-Point the profile working directory at **this repo** for Warframe CLIs, or at **any other project** when you want general coding help.
+Constitution + skill map: [`../hermes/CODING.md`](../hermes/CODING.md).
+
+Point cwd at **this repo** for Warframe CLIs, or **any project** for general agent work.
 
 ---
 

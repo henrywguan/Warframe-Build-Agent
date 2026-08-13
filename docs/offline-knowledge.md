@@ -106,7 +106,7 @@ Full guide: [`docs/overframe-crawl.md`](overframe-crawl.md).
 - Local LLM (Qwen/Ollama): set `OPENAI_BASE_URL` + `OPENAI_MODEL` in `web/.env.local` — still uses the tools above
 - Deterministic no-LLM chatbot: `CHAT_MODE=local` in `web/.env.local`
 - CLI: `lookup`, `compare-loadout`, `dps`, `compare-dps`, `pull-mechanics`, `pull-arcanes`
-- Hermes: profile v0.5.0 (always online + coding agent) + [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) / [`hermes/CODING.md`](../hermes/CODING.md); pack with `./scripts/pack-hermes-profile.sh`
+- Hermes: profile v0.6.0 (Cursor-class agent + always online + Warframe) + [`hermes/LOCAL_LLM.md`](../hermes/LOCAL_LLM.md) / [`hermes/CODING.md`](../hermes/CODING.md); pack with `./scripts/pack-hermes-profile.sh`
 - Cursor skill: `.cursor/skills/offline-knowledge/SKILL.md`
 
 Prefer local knowledge for **item/mechanic/arcane facts**, **loadout compares**, and **DPS estimates** first. If Overframe builds are missing from the pack, enable the WebUI **Online search** toggle for a live crawl (never ask the player to type yes/no) — see [`docs/source-policy.md`](source-policy.md). Keep using live tools for fissures, market, and patch hubs.

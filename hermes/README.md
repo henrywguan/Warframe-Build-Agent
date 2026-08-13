@@ -6,14 +6,14 @@ This folder is the **Hermes profile** (Ordis) you import into Hermes Desktop or 
 
 → **[`docs/hermes-export.md`](../docs/hermes-export.md)** — precise step-by-step import for everyone.
 
-**Profile version:** `0.5.0` (Hermes ≥ 0.12.0)  
+**Profile version:** `0.6.0` (Hermes ≥ 0.12.0)  
 Works with **local LLMs** (Ollama / Qwen / LM Studio) or cloud OpenAI-compatible APIs.  
 
-Capabilities:
+**Ordis is a Cursor-class general AI agent** (tools + reasoning + delivery), with specialties:
 
-- **Warframe specialty** — pack + webchat-parity CLIs  
-- **Always-online research** — [Agent Reach](https://github.com/Panniantong/Agent-Reach) (optional host install)  
-- **Cursor-style coding agent** — `skills/software-development/*` + [`CODING.md`](CODING.md)
+- **Warframe** — pack + webchat-parity CLIs  
+- **Always-online research** — [Agent Reach](https://github.com/Panniantong/Agent-Reach)  
+- **Full agent toolkit** — `skills/software-development/*` + [`CODING.md`](CODING.md)
 
 ---
 
@@ -53,13 +53,13 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
 
 | Path | Role |
 | --- | --- |
-| `SOUL.md` | Ordis identity + Warframe / research / coding routing |
+| `SOUL.md` | Ordis identity — general agent first + Warframe/research specialties |
 | `LOCAL_LLM.md` | Ollama / Qwen / LM Studio setup |
 | `AGENT_REACH.md` | Install / doctor / boundaries for Agent Reach |
-| `CODING.md` | Cursor-style coding agent guide |
+| `CODING.md` | Cursor-class agent constitution + capability map |
 | `skills/warframe/*` | Builds, loadout, DPS, world-state, market, patches, … |
 | `skills/research/agent-reach/` | General web / social / video research |
-| `skills/software-development/*` | Agent loop, explore, plan, implement, debug, test, git, PR, review, … |
+| `skills/software-development/*` | Full tool-using agent pack (26 skills) |
 | `distribution.yaml` | Hermes distribution manifest |
 | `config.yaml` / `profile.yaml` | Light defaults |
 
@@ -80,19 +80,23 @@ hermes profile import ./exports/warframe-build-agent-hermes-profile.tar.gz --nam
    `Lookup Arcane Energize from the local knowledge pack`
 4. *(Optional)* Install Agent Reach for general research — see [`AGENT_REACH.md`](AGENT_REACH.md). Then try:  
    `Research current AI agent frameworks and summarize with sources`
-5. Enable Hermes **filesystem + terminal (+ web)** tools so coding skills can edit and verify.  
-   Smoke test: `Explore how npm run knowledge is wired, then summarize the entry files.`
-6. For coding **other repos**, point the Hermes working directory at that project (Warframe CLIs need this repo).
+5. Enable **all** Hermes toolsets you can: filesystem, terminal, web, browser, vision, MCP, subagents.  
+   Smoke test: `Act as a full Cursor agent — explore how npm run knowledge is wired, verify with a command, summarize.`
+6. For other repos, point the Hermes working directory at that project (Warframe CLIs need this repo).
 
 ---
 
-## Coding agent (Cursor-style)
+## Cursor-class agent
 
-See [`CODING.md`](CODING.md). Core skills:
+See [`CODING.md`](CODING.md). Includes:
 
-`agent-loop` · `codebase-explore` · `plan-task` · `implement-change` · `debug-issue` · `test-verify` · `git-workflow` · `pr-workflow` · `code-review` · `refactor-cleanup` · `shell-discipline` · `docs-sync`
+**Autonomy:** `agent-loop` · `multi-step-delivery` · `tool-orchestration` · `reasoning-discipline` · `context-discipline` · `project-rules` · `security-hygiene`  
 
-Optional: keep Hermes’s own bundled software-development skills seeded too:
+**Code:** `codebase-explore` · `plan-task` · `implement-change` · `debug-issue` · `test-verify` · `refactor-cleanup` · `git-workflow` · `pr-workflow` · `code-review` · `docs-sync`  
+
+**Runtime / perception:** `shell-discipline` · `env-bootstrap` · `http-api-debug` · `data-notebooks` · `vision-analyze` · `browser-automate` · `mcp-integrate` · `delegate-subagents` · `skill-authoring`
+
+Optional: also seed Hermes upstream bundled software skills:
 
 ```bash
 hermes skills opt-in --sync
