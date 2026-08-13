@@ -394,7 +394,6 @@
   padding: 0.75rem 0.9rem;
   border-radius: 1px;
   line-height: 1.45;
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
   animation: messageIn 320ms var(--ease-out) both;
 }
@@ -403,6 +402,7 @@
   align-self: flex-end;
   max-width: min(92%, 42rem);
   width: auto;
+  white-space: pre-wrap;
   background: linear-gradient(
     135deg,
     rgba(94, 184, 232, 0.28) 0%,
@@ -416,6 +416,7 @@
 
 .assistant {
   align-self: stretch;
+  white-space: normal;
   background: linear-gradient(90deg, rgba(110, 220, 154, 0.05), rgba(0, 0, 0, 0.38) 28%);
   border: 1px solid rgba(122, 101, 52, 0.5);
   border-left: 2px solid var(--cyan);
