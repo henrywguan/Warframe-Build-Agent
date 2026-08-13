@@ -16,6 +16,7 @@ Friendly guides for players and Hermes users.
 | --- | --- |
 | Local LLM (Ollama / Qwen) | [hermes/LOCAL_LLM.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/hermes/LOCAL_LLM.md) |
 | Web chat + LLM chip | [docs/web-chat.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/docs/web-chat.md) |
+| Web chat design reference | [docs/web-chat-design.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/docs/web-chat-design.md) |
 | Offline knowledge pack | [docs/offline-knowledge.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/docs/offline-knowledge.md) |
 | Commands (`/list`) | [docs/commands.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/docs/commands.md) |
 | Overframe builds import | [docs/overframe-crawl.md](https://github.com/henrywguan/Warframe-Build-Agent/blob/main/docs/overframe-crawl.md) |

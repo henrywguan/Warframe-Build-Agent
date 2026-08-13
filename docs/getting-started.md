@@ -71,6 +71,8 @@ Open http://localhost:3000
 
 Tap **LLM / Ollama** to paste your Base URL and key (no file editing required).
 
+Redesigning the UI? Color / type / layout tokens → [web-chat-design.md](web-chat-design.md).
+
 **Phone on home Wi‑Fi:** `npm run web:dev:lan` (dev + HMR) or `npm run web:build && npm run web:start:lan` (no whitelist needed). Details: [web-chat.md](web-chat.md#use-from-another-device-on-your-home-wi-fi-lan).
 
 ---

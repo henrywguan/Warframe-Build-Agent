@@ -6,6 +6,8 @@ The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy 
 
 **Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, and delete. On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
+For a full inventory of colors, typography, layout, components, and motion tokens (handy when redesigning), see **[`web-chat-design.md`](web-chat-design.md)**.
+
 ## Why this exists
 
 Cursor Cloud / desktop chat is great while coding. This UI is for **on-the-go** questions from a phone browser (and can be installed as a home-screen web app).
