@@ -35,8 +35,8 @@
   min-height: 0;
   height: 100%;
   display: grid;
-  grid-template-rows: minmax(0, 24dvh) minmax(0, 1fr) auto;
-  gap: 0.55rem;
+  grid-template-rows: minmax(0, 26dvh) minmax(0, 1fr) auto;
+  gap: 0.9rem;
   overflow: hidden;
 }
 
@@ -68,12 +68,13 @@
 
 .topZone {
   min-height: 0;
-  max-height: 24dvh;
+  max-height: 26dvh;
   display: grid;
   grid-template-rows: auto minmax(4.5rem, 1fr);
-  gap: 0.2rem;
+  gap: 0.35rem;
   align-content: start;
   overflow: hidden;
+  padding-bottom: 0.35rem;
 }
 
 .chatsToggle {
@@ -160,6 +161,7 @@
   align-content: end;
   min-height: 4.5rem;
   overflow: hidden;
+  padding-bottom: 0.25rem;
   animation: rise 720ms var(--ease-out) both;
 }
 
@@ -167,6 +169,7 @@
   position: relative;
   min-height: 0;
   height: 100%;
+  margin-top: 0.15rem;
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(155, 180, 200, 0.22);
@@ -820,11 +823,17 @@
   }
 
   .shell {
-    grid-template-rows: minmax(0, 20dvh) minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 24dvh) minmax(0, 1fr) auto;
+    gap: 1.1rem;
   }
 
   .topZone {
-    max-height: 20dvh;
+    max-height: 24dvh;
+    padding-bottom: 0.45rem;
+  }
+
+  .chatPanel {
+    margin-top: 0.25rem;
   }
 
   .chatsToggle {
@@ -889,11 +898,13 @@
 
 @media (max-width: 600px) {
   .shell {
-    gap: 0.4rem;
+    grid-template-rows: minmax(0, 23dvh) minmax(0, 1fr) auto;
+    gap: 1.15rem;
   }
 
   .topZone {
-    max-height: 18dvh;
+    max-height: 23dvh;
+    padding-bottom: 0.5rem;
   }
 
   .tagline {
