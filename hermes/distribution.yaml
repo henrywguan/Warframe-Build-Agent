@@ -1,6 +1,6 @@
 name: warframe-build-agent
-version: 0.4.2
-description: "Ordis — Warframe builds + always-online Hermes research (Agent Reach), webchat-parity CLIs; local-LLM friendly"
+version: 0.5.0
+description: "Ordis — Warframe specialty + always-online research (Agent Reach) + Cursor-style coding agent skills; local-LLM friendly"
 hermes_requires: ">=0.12.0"
 author: "Henry Guan"
 license: "MIT"
@@ -18,6 +18,7 @@ distribution_owned:
   - SOUL.md
   - LOCAL_LLM.md
   - AGENT_REACH.md
+  - CODING.md
   - config.yaml
   - skills/
   - distribution.yaml
