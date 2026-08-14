@@ -5,6 +5,7 @@ import {
   deleteConversation,
   emptyMemory,
   isPlaceholderChat,
+  renameConversation,
   selectConversation,
   startNewChat,
   titleFromMessages,
@@ -78,5 +79,28 @@ describe("chat-memory", () => {
     assert.equal(again.activeId, memory.activeId);
     assert.equal(again.conversations.length, 1);
     assert.ok(createConversation().id);
+  });
+
+  it("keeps a user-renamed title across later message upserts", () => {
+    let memory = emptyMemory();
+    memory = upsertActiveMessages(memory, [
+      { id: "welcome", role: "assistant", content: "hi" },
+      { id: "u1", role: "user", content: "Hello Ordis" },
+      { id: "a1", role: "assistant", content: "Operator?" },
+    ]);
+    assert.equal(memory.conversations[0]?.title, "Hello Ordis");
+
+    memory = renameConversation(memory, memory.activeId, "Steel Path notes");
+    assert.equal(memory.conversations[0]?.title, "Steel Path notes");
+    assert.equal(memory.conversations[0]?.titleCustom, true);
+
+    memory = upsertActiveMessages(memory, [
+      { id: "welcome", role: "assistant", content: "hi" },
+      { id: "u1", role: "user", content: "Hello Ordis" },
+      { id: "a1", role: "assistant", content: "Operator?" },
+      { id: "u2", role: "user", content: "What about Kuva Zarr?" },
+      { id: "a2", role: "assistant", content: "…" },
+    ]);
+    assert.equal(memory.conversations[0]?.title, "Steel Path notes");
   });
 });

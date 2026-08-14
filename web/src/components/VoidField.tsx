@@ -224,18 +224,22 @@ export function VoidField({ mood = "idle" }: VoidFieldProps) {
         visible = document.visibilityState !== "hidden";
       };
       document.addEventListener("visibilitychange", onVisibility);
+
+      const timer = new THREE.Timer();
+      timer.connect(document);
       detachListeners = () => {
         document.removeEventListener("visibilitychange", onVisibility);
+        timer.dispose();
         ro.disconnect();
       };
 
-      const clock = new THREE.Clock();
-      const tick = () => {
+      const tick = (timestamp = performance.now()) => {
         if (disposed) return;
         frame = requestAnimationFrame(tick);
         if (!visible || !renderer) return;
 
-        const t = clock.getElapsedTime();
+        timer.update(timestamp);
+        const t = timer.getElapsed();
         const currentMood = moodRef.current;
         const speed =
           currentMood === "thinking" ? 1.55 : currentMood === "speaking" ? 1.9 : 1;

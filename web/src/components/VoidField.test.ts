@@ -9,7 +9,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 describe("VoidField module", () => {
   it("exports a client Three.js atmosphere wired to Ordis moods", () => {
     const source = readFileSync(join(here, "VoidField.tsx"), "utf8");
-    assert.match(source, /import\("three"\)/);
+    assert.match(source, /THREE\.Timer/);
+    assert.match(source, /timer\.getElapsed\(\)/);
+    assert.doesNotMatch(source, /THREE\.Clock/);
     assert.match(source, /OrdisMood/);
     assert.match(source, /prefers-reduced-motion/);
     assert.match(source, /visibilitychange/);

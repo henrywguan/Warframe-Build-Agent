@@ -30,6 +30,8 @@ describe("web UI wiring integrity", () => {
       "clearChat",
       "Clear",
       "ChatHistorySidebar",
+      "onRename",
+      "renameConversation",
       "Chats",
       "panelDock",
       "panelDockCrowded",
