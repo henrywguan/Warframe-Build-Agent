@@ -40,6 +40,7 @@ import {
   emptyMemory,
   getActiveConversation,
   loadChatMemory,
+  renameConversation,
   saveChatMemory,
   selectConversation,
   startNewChat,
@@ -461,6 +462,13 @@ export default function HomePage() {
     );
   }
 
+  function renameChat(id: string, title: string) {
+    if (pending) return;
+    const next = renameConversation(chatMemory, id, title);
+    setChatMemory(next);
+    saveChatMemory(next);
+  }
+
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
   useEffect(() => {
@@ -538,6 +546,7 @@ export default function HomePage() {
         onSelect={openConversation}
         onNew={openNewChat}
         onDelete={removeConversation}
+        onRename={renameChat}
         disabled={pending}
       />
       <main

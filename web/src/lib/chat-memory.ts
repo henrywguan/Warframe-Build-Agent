@@ -16,6 +16,8 @@ export type MemoryMessage = {
 export type Conversation = {
   id: string;
   title: string;
+  /** When true, upserts keep the user-edited title instead of auto-titling. */
+  titleCustom?: boolean;
   createdAt: number;
   updatedAt: number;
   messages: MemoryMessage[];
@@ -105,6 +107,7 @@ export function loadChatMemory(): ChatMemory {
       .map((c) => ({
         id: c.id,
         title: typeof c.title === "string" && c.title.trim() ? c.title : "New chat",
+        ...(c.titleCustom ? { titleCustom: true as const } : {}),
         createdAt: Number(c.createdAt) || Date.now(),
         updatedAt: Number(c.updatedAt) || Date.now(),
         messages: toMemoryMessages(c.messages),
@@ -130,6 +133,7 @@ export function saveChatMemory(memory: ChatMemory): void {
       .slice(0, MAX_CONVERSATIONS)
       .map((c) => ({
         ...c,
+        ...(c.titleCustom ? { titleCustom: true as const } : {}),
         messages: toMemoryMessages(c.messages),
       })),
   };
@@ -165,7 +169,7 @@ export function upsertActiveMessages(
   const active = getActiveConversation(memory);
   const nextActive: Conversation = {
     ...active,
-    title: titleFromMessages(messages),
+    title: active.titleCustom ? active.title : titleFromMessages(messages),
     updatedAt: now,
     messages: toMemoryMessages(messages),
   };
@@ -222,7 +226,9 @@ export function renameConversation(
   return {
     ...memory,
     conversations: memory.conversations.map((c) =>
-      c.id === id ? { ...c, title: nextTitle, updatedAt: Date.now() } : c,
+      c.id === id
+        ? { ...c, title: nextTitle, titleCustom: true, updatedAt: Date.now() }
+        : c,
     ),
   };
 }
