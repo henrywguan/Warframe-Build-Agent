@@ -12,13 +12,45 @@ interface OrdisStageProps {
   className?: string;
 }
 
+const MOODS: OrdisMood[] = ["idle", "thinking", "speaking"];
+
 const HERO: Record<OrdisMood, string> = {
   idle: "/ordis/hero-idle.webp",
   thinking: "/ordis/hero-thinking.webp",
   speaking: "/ordis/hero-speaking.webp",
 };
 
-const MOODS: OrdisMood[] = ["idle", "thinking", "speaking"];
+const RING_LAYERS = [
+  { src: "/ordis/ring-idle.webp", overlay: styles.ringIdleOverlay },
+  { src: "/ordis/ring-think.webp", overlay: styles.ringThinkOverlay },
+  { src: "/ordis/ring-speak.webp", overlay: styles.ringSpeakOverlay },
+] as const;
+
+/** Decorative public WebP plates — next/image not required. */
+function PlateImg({
+  className,
+  src,
+  fetchPriority,
+  onError,
+}: {
+  className: string;
+  src: string;
+  fetchPriority?: "high" | "low";
+  onError?: () => void;
+}) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- static public WebP mood plates
+    <img
+      className={className}
+      src={src}
+      alt=""
+      draggable={false}
+      decoding="async"
+      fetchPriority={fetchPriority}
+      onError={onError}
+    />
+  );
+}
 
 function CephalonSvg({ className }: { className?: string }) {
   return (
@@ -141,7 +173,7 @@ export function OrdisStage({ mood, caption, className }: OrdisStageProps) {
       className={[
         styles.stage,
         styles[mood],
-        usePlate ? styles.plateMode : styles.svgMode,
+        usePlate && styles.plateMode,
         className,
       ]
         .filter(Boolean)
@@ -161,55 +193,27 @@ export function OrdisStage({ mood, caption, className }: OrdisStageProps) {
 
         {usePlate ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element -- static public WebP mood plates */}
-            <img
-              className={styles.glow}
-              src="/ordis/glow-plate.webp"
-              alt=""
-              draggable={false}
-              decoding="async"
-            />
+            <PlateImg className={styles.glow} src="/ordis/glow-plate.webp" />
             <div className={styles.heroStack}>
               {MOODS.map((m) => (
-                // eslint-disable-next-line @next/next/no-img-element -- mood crossfade stack
-                <img
+                <PlateImg
                   key={m}
                   className={[styles.hero, mood === m ? styles.heroActive : ""]
                     .filter(Boolean)
                     .join(" ")}
                   src={HERO[m]}
-                  alt=""
-                  draggable={false}
-                  decoding="async"
                   fetchPriority={m === "idle" ? "high" : "low"}
                   onError={() => setUsePlate(false)}
                 />
               ))}
             </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className={`${styles.ringOverlay} ${styles.ringIdleOverlay}`}
-              src="/ordis/ring-idle.webp"
-              alt=""
-              draggable={false}
-              decoding="async"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className={`${styles.ringOverlay} ${styles.ringThinkOverlay}`}
-              src="/ordis/ring-think.webp"
-              alt=""
-              draggable={false}
-              decoding="async"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className={`${styles.ringOverlay} ${styles.ringSpeakOverlay}`}
-              src="/ordis/ring-speak.webp"
-              alt=""
-              draggable={false}
-              decoding="async"
-            />
+            {RING_LAYERS.map(({ src, overlay }) => (
+              <PlateImg
+                key={src}
+                className={`${styles.ringOverlay} ${overlay}`}
+                src={src}
+              />
+            ))}
           </>
         ) : null}
 
