@@ -10,7 +10,7 @@ Canonical source files:
 | Layout, bubbles, chips, composer | [`web/src/app/page.module.css`](../web/src/app/page.module.css) |
 | Fonts / PWA meta | [`web/src/app/layout.tsx`](../web/src/app/layout.tsx) |
 | Ordis stage motion | [`web/src/components/OrdisStage.module.css`](../web/src/components/OrdisStage.module.css) |
-| Ordis SVG paints | [`web/src/components/OrdisStage.tsx`](../web/src/components/OrdisStage.tsx) |
+| Ordis plates + SVG fallback | [`web/src/components/OrdisStage.tsx`](../web/src/components/OrdisStage.tsx), [`web/public/ordis/`](../web/public/ordis/) |
 | Icon / PWA mark | [`web/public/ordis-icon.svg`](../web/public/ordis-icon.svg), [`web/public/manifest.webmanifest`](../web/public/manifest.webmanifest) |
 
 Product/behavior (toggles, LLM, Online search) stays in [`web-chat.md`](web-chat.md).
@@ -20,7 +20,7 @@ Product/behavior (toggles, LLM, Online search) stays in [`web-chat.md`](web-chat
 ## Design direction
 
 - **Theme:** Warframe arsenal / void-ship console — dark void panels, Orokin gold rules, energy cyan accents.
-- **Brand signal:** “Warframe Build Agent” + center-stage Ordis cephalon (original SVG/CSS, not game assets).
+- **Brand signal:** “Warframe Build Agent” + center-stage Ordis cephalon (original WebP mood plates + SVG fallback, not game assets).
 - **Shape language:** Sharp / near-zero radius (`2px` / `1px`). Avoid pills and soft cards.
 - **Atmosphere:** Layered radial gradients + faint cyan/gold grid overlay (not a flat fill). Left/right side glows and workspace aurora intensify with Ordis mood.
 - **Motion:** Entrance rise on shell pieces; Ordis idle / thinking / speaking moods; mood-reactive side glow pulse; chip/send hover lift.
@@ -159,11 +159,12 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 
 ### Ordis stage
 
-- Field size: `min(42vw, 150px)`, aspect-ratio 1, capped by `min(18dvh, 150px)`
-- Moods (`data-mood`): `idle` | `thinking` | `speaking`
+- Field size: `min(42vw, 148px)`, aspect-ratio 1, capped by viewport/caption slot
+- Moods (`data-mood`): `idle` | `thinking` | `speaking`; `data-assets`: `plate` | `svg`
 - Captions (from `lib/ordis.ts`): standing by / consulting / transmitting
 - Speaking mood lasts **3400ms** after assistant reply
-- SVG gradients: core cyan, facet gold→cyan, edge warm ivory→dim gold
+- **Asset pack** (`web/public/ordis/`): mood hero WebPs, glow plate, ring overlays — crossfade + CSS float/spin/ripple; SVG cephalon on load error or `@container` when the field is under ~72px
+- SVG gradients (fallback): core cyan, facet gold→cyan, edge warm ivory→dim gold
 - **Mood-reactive side glow:** ember wash (left) + plasma/cyan (right) as full-viewport washes behind Ordis that reach into laptop side margins; stronger while thinking/speaking. Workspace `::before` aurora and VoidField point lights surge on reply.
 - **Void atmosphere:** denser float particles (edge-biased) and wireframe octahedrons spread across the full field, including blank left/right margins.
 
@@ -257,7 +258,7 @@ When restyling, touch these in order:
 1. **Tokens** — `globals.css` `:root` (+ body gradients / grid)
 2. **Fonts** — `layout.tsx` + `--font-*` wiring
 3. **Shell / chat chrome** — `page.module.css` (brand, panel, bubbles, chips, composer)
-4. **Ordis** — `OrdisStage.module.css` + SVG stops in `OrdisStage.tsx`
+4. **Ordis** — `OrdisStage.module.css` + `web/public/ordis/` plates + SVG fallback in `OrdisStage.tsx`
 5. **PWA / icons** — `manifest.webmanifest`, `ordis-icon.svg`, PNG set, `themeColor` in `layout.tsx`
 6. **Integrity** — `web/src/lib/ui-integrity.test.ts` asserts key labels/wiring strings still exist in `page.tsx`
 
