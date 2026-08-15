@@ -92,6 +92,39 @@ export function resolveModel(
   return client?.model?.trim() || fallback;
 }
 
+/**
+ * Heuristic: many local vision models (Gemma 3 4B, LLaVA, Moondream, …)
+ * reject OpenAI-style `tools` / tool_choice with HTTP 400.
+ */
+export function modelLikelySupportsTools(modelId: string): boolean {
+  const id = modelId.trim().toLowerCase();
+  if (!id) return true;
+  if (
+    /(?:^|[/:_-])(llava|bakllava|moondream|minicpm-v|obsidian|cogvlm|qwen2(?:\.5)?-vl|qwen-vl)/.test(
+      id,
+    )
+  ) {
+    return false;
+  }
+  // Ollama gemma3:* vision tags (4b especially) do not support tools.
+  if (/gemma-?3/.test(id)) return false;
+  if (/gemma2?:?\d*b/.test(id) && !/instruct/.test(id)) return false;
+  return true;
+}
+
+/** True when the provider rejected the request because the model cannot use tools. */
+export function isToolsUnsupportedError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("does not support tools") ||
+    lower.includes("does not support function") ||
+    lower.includes("tool use is not supported") ||
+    lower.includes("tools are not supported") ||
+    (lower.includes("tool_choice") && lower.includes("not support"))
+  );
+}
+
 /** Detect “what model / LLM is this agent running?” (and `/model`). */
 export function looksLikeModelIdentityQuestion(text: string): boolean {
   const t = text.trim().toLowerCase();

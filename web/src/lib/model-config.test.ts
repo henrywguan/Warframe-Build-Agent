@@ -4,8 +4,10 @@ import {
   formatActiveLlmReply,
   formatLlmConnectionError,
   isLlmConnectionError,
+  isToolsUnsupportedError,
   llmConfigReady,
   looksLikeModelIdentityQuestion,
+  modelLikelySupportsTools,
   parseClientLlm,
   resolveApiKey,
   resolveBaseUrl,
@@ -39,6 +41,22 @@ describe("model-config", () => {
     assert.equal(resolveBaseUrl({ baseUrl: "http://127.0.0.1:11434/v1" }), "http://127.0.0.1:11434/v1");
     assert.equal(resolveModel({ model: "qwen2.5" }, false), "qwen2.5");
     assert.equal(resolveModel({ visionModel: "llava", model: "qwen2.5" }, true), "llava");
+  });
+
+  it("detects vision models that typically cannot call tools", () => {
+    assert.equal(modelLikelySupportsTools("qwen2.5"), true);
+    assert.equal(modelLikelySupportsTools("gpt-4o"), true);
+    assert.equal(modelLikelySupportsTools("gemma3:4b"), false);
+    assert.equal(modelLikelySupportsTools("registry.ollama.ai/library/gemma3:4b"), false);
+    assert.equal(modelLikelySupportsTools("llava"), false);
+    assert.equal(modelLikelySupportsTools("moondream"), false);
+    assert.equal(
+      isToolsUnsupportedError(
+        new Error("400 registry.ollama.ai/library/gemma3:4b does not support tools"),
+      ),
+      true,
+    );
+    assert.equal(isToolsUnsupportedError(new Error("invalid api key")), false);
   });
 
   it("detects model-identity questions and formats the reply", () => {

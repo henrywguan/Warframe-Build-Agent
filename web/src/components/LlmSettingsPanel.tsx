@@ -82,11 +82,15 @@ export function LlmSettingsPanel({
         <input
           className={styles.input}
           value={draft.visionModel}
-          placeholder="llava (screenshots)"
+          placeholder="llava / gemma3:4b (screenshots)"
           onChange={(event) => update("visionModel", event.target.value)}
           autoComplete="off"
         />
       </label>
+      <p className={styles.llmHint}>
+        Screenshot vision models that cannot call tools (Gemma 3, LLaVA, Moondream)
+        still work — Ordis reads the image, then compares locally.
+      </p>
       <div className={styles.llmActions}>
         <button
           type="button"
