@@ -16,8 +16,14 @@ import { resolveChatTurn } from "@/lib/chat-turn";
 import { GENERAL_AGENT_PROMPT } from "@/lib/general-agent-prompt";
 import { preferLocalChat, runLocalChat } from "@/lib/local-chat";
 import {
+  buildVisionReadMessages,
+  compareFromVisionText,
+} from "@/lib/vision-loadout";
+import {
   formatLlmConnectionError,
   isLlmConnectionError,
+  isToolsUnsupportedError,
+  modelLikelySupportsTools,
   parseClientLlm,
   resolveApiKey,
   resolveBaseUrl,
@@ -81,7 +87,9 @@ async function runModelCompletion(
   clientLlm?: Partial<ClientLlmConfig>,
   onlineSearchToggle?: boolean,
   generalAgent?: boolean,
+  options?: { enableTools?: boolean },
 ): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+  const enableTools = options?.enableTools !== false;
   const client = getClient(clientLlm);
   const history: ChatCompletionMessageParam[] = incoming
     .filter((m) => messageText(m.content) || hasImages([m]))
@@ -121,14 +129,20 @@ async function runModelCompletion(
     ...history,
   ];
 
-  const tools = getChatTools({
-    llmMode: true,
-    onlineSearch: Boolean(onlineSearchToggle),
-  });
+  const tools = enableTools
+    ? getChatTools({
+        llmMode: true,
+        onlineSearch: Boolean(onlineSearchToggle),
+      })
+    : [];
   const toolsUsed: string[] = [];
   const toolPayloads: string[] = [];
   const seenToolCalls = new Set<string>();
-  const maxRounds = generalAgent ? GENERAL_AGENT_MAX_TOOL_ROUNDS : MAX_TOOL_ROUNDS;
+  const maxRounds = enableTools
+    ? generalAgent
+      ? GENERAL_AGENT_MAX_TOOL_ROUNDS
+      : MAX_TOOL_ROUNDS
+    : 1;
   let guard = 0;
 
   while (guard < maxRounds) {
@@ -136,8 +150,9 @@ async function runModelCompletion(
     const completion = await client.chat.completions.create({
       model,
       messages,
-      tools,
-      tool_choice: "auto",
+      ...(enableTools
+        ? { tools, tool_choice: "auto" as const }
+        : {}),
       temperature: 0.4,
     });
 
@@ -214,6 +229,67 @@ async function runModelCompletion(
   };
 }
 
+/**
+ * Vision models that cannot use tools: read the screenshot, then compare
+ * against the local Overframe pack server-side.
+ */
+async function runVisionLoadoutWithoutTools(
+  incoming: IncomingChatMessage[],
+  model: string,
+  clientLlm?: Partial<ClientLlmConfig>,
+): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+  const client = getClient(clientLlm);
+  const latestUser = [...incoming].reverse().find((m) => m.role === "user");
+  const userHint = latestUser ? messageText(latestUser.content) : "";
+  const completion = await client.chat.completions.create({
+    model,
+    messages: buildVisionReadMessages(incoming),
+    temperature: 0.2,
+  });
+  const visionText = completion.choices[0]?.message?.content?.trim() || "";
+  return compareFromVisionText(visionText, userHint, model);
+}
+
+async function runModelCompletionSafe(
+  incoming: IncomingChatMessage[],
+  model: string,
+  clientLlm?: Partial<ClientLlmConfig>,
+  onlineSearchToggle?: boolean,
+  generalAgent?: boolean,
+): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+  const withImages = hasImages(incoming);
+  const preferNoTools = withImages && !modelLikelySupportsTools(model);
+
+  if (preferNoTools) {
+    return runVisionLoadoutWithoutTools(incoming, model, clientLlm);
+  }
+
+  try {
+    return await runModelCompletion(
+      incoming,
+      model,
+      clientLlm,
+      onlineSearchToggle,
+      generalAgent,
+      { enableTools: true },
+    );
+  } catch (error) {
+    if (!isToolsUnsupportedError(error)) throw error;
+    if (withImages) {
+      return runVisionLoadoutWithoutTools(incoming, model, clientLlm);
+    }
+    // Text-only model rejected tools — answer without tool calling.
+    return runModelCompletion(
+      incoming,
+      model,
+      clientLlm,
+      onlineSearchToggle,
+      generalAgent,
+      { enableTools: false },
+    );
+  }
+}
+
 /** Prefer local chatbot when no LLM is configured (AI toggle no longer forces local). */
 function shouldPreferLocal(clientLlm?: Partial<ClientLlmConfig>): boolean {
   if (resolveApiKey(clientLlm)) return false;
@@ -278,7 +354,7 @@ export async function POST(request: Request) {
       },
       runLocal: (messages) => runLocalChat(messages),
       runModel: (messages) =>
-        runModelCompletion(
+        runModelCompletionSafe(
           messages,
           model,
           clientLlm,
