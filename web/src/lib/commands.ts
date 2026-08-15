@@ -23,6 +23,7 @@ import {
   runRelicSlash,
   runFarmVsBuySlash,
 } from "@/lib/tier-calcs";
+import { saveBuildUsageHelp } from "@/lib/saved-builds";
 
 export interface ChatCommand {
   name: string;
@@ -302,6 +303,12 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     usage: "/buyvsfarm <item>",
     description: "Alias for /farm-vs-buy",
     kind: "tool",
+  },
+  {
+    name: "save-build",
+    usage: "/save-build <name> | warframe: … | primary: … | …",
+    description: "Save a loadout card to the desktop Arsenal pane (browser localStorage)",
+    kind: "meta",
   },
   {
     name: "profile",
@@ -593,6 +600,23 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
         content: await runFarmVsBuySlash(item),
         toolsUsed: ["farm_vs_buy"],
       };
+    }
+    case "save-build":
+    case "savebuild":
+    case "arsenal-save": {
+      if (!args.length || /^(-h|--help|help)$/i.test(args.join(" "))) {
+        return meta(saveBuildUsageHelp());
+      }
+      return meta(
+        [
+          "Ordis notes the loadout, Operator.",
+          "",
+          "In the web UI, `/save-build` writes to the desktop **Saved Builds** pane (browser localStorage).",
+          "This server path cannot persist cards — run the command in the Ordis web chat, or use + on the Arsenal pane.",
+          "",
+          saveBuildUsageHelp(),
+        ].join("\n"),
+      );
     }
     case "profile":
       return meta(

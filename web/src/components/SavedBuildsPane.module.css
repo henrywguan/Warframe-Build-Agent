@@ -1,0 +1,331 @@
+.pane {
+  display: none;
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  height: 100%;
+  max-height: 100%;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.75rem 0.65rem 0.8rem;
+  border: 1px solid rgba(155, 180, 200, 0.18);
+  border-left-color: rgba(122, 101, 52, 0.5);
+  background:
+    linear-gradient(195deg, rgba(28, 44, 54, 0.92) 0%, rgba(8, 14, 20, 0.95) 55%, rgba(4, 8, 12, 0.97) 100%);
+  box-shadow: inset 1px 0 0 rgba(0, 196, 204, 0.07);
+  overflow: hidden;
+  animation: riseBuilds 520ms var(--ease-out, ease) both;
+}
+
+@media (min-width: 861px) {
+  .pane {
+    display: flex;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold, #d7b56d);
+}
+
+.title {
+  margin: 0.12rem 0 0;
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink, #e8eef5);
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.28rem;
+}
+
+.iconBtn,
+.folderAdd,
+.folderChipBtn,
+.folderDelete,
+.cardTitle {
+  font: inherit;
+}
+
+.iconBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(0, 196, 204, 0.45);
+  background: rgba(0, 196, 204, 0.1);
+  color: var(--cyan, #7fe7ef);
+  border-radius: 1px;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: filter 160ms ease, transform 160ms ease;
+}
+
+.iconBtn:hover:not(:disabled),
+.iconBtn:focus-visible:not(:disabled) {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.iconBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.folderBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  max-height: 4.8rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.folderChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  border: 1px solid rgba(155, 180, 200, 0.28);
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 1px;
+  color: var(--mist, #9bb4c8);
+  max-width: 100%;
+}
+
+.folderChipActive {
+  border-color: rgba(215, 181, 109, 0.55);
+  color: var(--gold, #d7b56d);
+  background: rgba(215, 181, 109, 0.1);
+}
+
+.folderChipBtn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.28rem 0.42rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  max-width: 7.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folderDelete {
+  border: 0;
+  background: transparent;
+  color: rgba(155, 180, 200, 0.7);
+  padding: 0.2rem 0.35rem 0.2rem 0;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.folderDelete:hover {
+  color: #e08a5a;
+}
+
+.folderInput {
+  width: 6.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.28rem 0.42rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.folderAdd {
+  border: 1px dashed rgba(127, 231, 239, 0.4);
+  background: transparent;
+  color: var(--cyan, #7fe7ef);
+  border-radius: 1px;
+  padding: 0.28rem 0.45rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.folderAdd:hover {
+  background: rgba(127, 231, 239, 0.08);
+}
+
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-right: 0.15rem;
+  scrollbar-width: thin;
+}
+
+.empty {
+  margin: 0.4rem 0.1rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: rgba(196, 208, 220, 0.72);
+}
+
+.empty code {
+  font-size: 0.68rem;
+  color: var(--cyan, #7fe7ef);
+}
+
+.card {
+  border: 1px solid rgba(155, 180, 200, 0.22);
+  border-radius: 1px;
+  background: rgba(4, 10, 16, 0.72);
+  padding: 0.55rem 0.55rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.card:hover {
+  border-color: rgba(127, 231, 239, 0.35);
+}
+
+.cardSelected {
+  border-color: rgba(215, 181, 109, 0.65);
+  box-shadow: inset 2px 0 0 rgba(0, 196, 204, 0.55);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  border: 0;
+  background: transparent;
+  color: var(--ink, #e8eef5);
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nameInput,
+.fieldInput,
+.listInput,
+.folderSelect {
+  width: 100%;
+  border: 1px solid rgba(155, 180, 200, 0.28);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ink, #e8eef5);
+  border-radius: 1px;
+  font: inherit;
+  font-size: 0.68rem;
+  padding: 0.32rem 0.4rem;
+  outline: none;
+}
+
+.nameInput:focus,
+.fieldInput:focus,
+.listInput:focus,
+.folderSelect:focus {
+  border-color: rgba(0, 196, 204, 0.55);
+}
+
+.nameInput {
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.folderSelect {
+  width: auto;
+  max-width: 42%;
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist, #9bb4c8);
+  cursor: pointer;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.sectionLabel {
+  margin: 0;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(215, 181, 109, 0.85);
+}
+
+.listInput {
+  resize: vertical;
+  min-height: 1.6rem;
+  line-height: 1.35;
+  color: rgba(196, 208, 220, 0.92);
+}
+
+.footnote {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.58rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: rgba(155, 180, 200, 0.62);
+}
+
+@keyframes riseBuilds {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pane {
+    animation: none;
+  }
+}
