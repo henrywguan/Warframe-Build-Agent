@@ -105,22 +105,31 @@ The page can load (`GET / 200`), but Next blocked the phone’s origin from the 
 | `PATCH_CHANGES_URL` | no | URL to `data/patches/latest-changes.json` from the daily patch job |
 | `PATCH_SNAPSHOT_URL` | no | URL to `data/patches/latest-snapshot.json` (fallback if live hub fetch fails) |
 
-## Deploy (Vercel, etc.)
+## Deploy (public URL + OpenAI)
+
+Full guide (Vercel, Fly.io / Railway, VPS, launch checklist): **[`hosting.md`](hosting.md)**.
+
+### Quick path — Vercel
 
 1. Set the project **root directory** to `web` (or deploy from `web/`).
-2. Add env vars: `OPENAI_API_KEY`, optional `CHAT_PASSWORD`, optional model/base URL.
+2. Add env vars: `OPENAI_API_KEY`, **`CHAT_PASSWORD`**, optional `OPENAI_MODEL` / `OPENAI_VISION_MODEL` / base URL.
 3. For daily scrapes after Actions commit to `main`, set:
    - `MARKET_CHANGES_URL` → raw `data/market/latest-changes.json`
    - `PATCH_CHANGES_URL` → raw `data/patches/latest-changes.json`
    - optional `PATCH_SNAPSHOT_URL` → raw `data/patches/latest-snapshot.json`
-4. Ensure the host can reach:
-   - your model provider
-   - `https://api.warframestat.us`
-   - `https://api.warframe.market`
-   - `https://www.warframe.com` (live patch-notes hub)
-5. Deploy.
+4. Ensure the host can reach your model provider, `api.warframestat.us`, `api.warframe.market`, and `warframe.com`.
+5. Deploy. Chat routes allow up to **120s** (`web/vercel.json`).
 
-Live `get_market_price` and `get_patch_notes_latest` work on any deploy. Saved day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files during repo-root/dev runs).
+### Quick path — Fly.io (whole monorepo + knowledge pack)
+
+```bash
+fly auth login
+fly apps create <your-app-name>   # then set app name in fly.toml
+fly secrets set OPENAI_API_KEY=sk-... OPENAI_MODEL=gpt-4o-mini CHAT_PASSWORD=changeme
+fly deploy
+```
+
+See [`hosting.md`](hosting.md) for Railway and VPS. Live `get_market_price` / `get_patch_notes_latest` work on any deploy; day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files on repo-root hosts).
 
 ## Slash commands
 
