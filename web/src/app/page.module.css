@@ -524,6 +524,20 @@
   color: var(--ink);
 }
 
+.pendingBubble {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  background: linear-gradient(
+    90deg,
+    rgba(94, 184, 232, 0.08),
+    rgba(0, 0, 0, 0.38) 32%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(127, 231, 239, 0.06),
+    0 0 18px rgba(94, 184, 232, 0.08);
+}
+
 .compareBlock {
   display: grid;
   gap: 0.75rem;

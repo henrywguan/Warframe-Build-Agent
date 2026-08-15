@@ -49,6 +49,7 @@ import {
   upsertActiveMessages,
 } from "../lib/chat-memory";
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
+import { ReplyLoader } from "../components/ReplyLoader";
 import { resolvePromptSuggestions } from "../lib/prompt-suggestions";
 import styles from "./page.module.css";
 
@@ -623,8 +624,11 @@ export default function HomePage() {
             </article>
           ))}
           {pending ? (
-            <article className={`${styles.bubble} ${styles.assistant}`}>
-              Checking the latest intel…
+            <article
+              className={`${styles.bubble} ${styles.assistant} ${styles.pendingBubble}`}
+              aria-busy="true"
+            >
+              <ReplyLoader label="Ordis is consulting…" />
             </article>
           ) : null}
         </div>

@@ -10,6 +10,8 @@ The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy 
 
 **Prompt chips:** Beside AI / LLM / Online search, the dock shows **contextual follow-up prompts** when the thread has useful signals (starters on a fresh chat; build/farm/market/patch/worldstate follow-ups after replies). When nothing useful matches, it falls back to `/list`, `/fissures sp`, and `/patches`.
 
+**Pending reply:** While Ordis generates an answer, the transmission log shows a glowing three-bar loader (Uiverse-inspired, arsenal palette) with “Ordis is consulting…”.
+
 For a full inventory of colors, typography, layout, components, and motion tokens (handy when redesigning), see **[`web-chat-design.md`](web-chat-design.md)**.
 
 ## Why this exists
