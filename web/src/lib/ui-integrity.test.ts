@@ -24,7 +24,8 @@ describe("web UI wiring integrity", () => {
       "/api/health",
       "/api/auth",
       "sendMessage",
-      "SUGGESTIONS",
+      "resolvePromptSuggestions",
+      "promptChips",
       "BrandHeader",
       "Transmission log",
       "clearChat",
@@ -58,7 +59,7 @@ describe("web UI wiring integrity", () => {
   });
 
   it("wires suggestion chips and send controls to sendMessage", () => {
-    assert.match(pageSource, /onClick=\{\(\) => void sendMessage\(suggestion\)\}/);
+    assert.match(pageSource, /onClick=\{\(\) => void sendMessage\(suggestion\.prompt\)\}/);
     assert.match(pageSource, /onSubmit=\{onSubmit\}/);
     assert.match(pageSource, /type="submit"/);
   });

@@ -4,6 +4,7 @@ import {
   FormEvent,
   KeyboardEvent,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -48,6 +49,7 @@ import {
   upsertActiveMessages,
 } from "../lib/chat-memory";
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
+import { resolvePromptSuggestions } from "../lib/prompt-suggestions";
 import styles from "./page.module.css";
 
 const VoidField = dynamic(
@@ -68,8 +70,6 @@ interface ChatMessage {
   imageUrl?: string;
   toolsUsed?: string[];
 }
-
-const SUGGESTIONS = ["/list", "/fissures sp", "/patches"];
 
 const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
@@ -168,6 +168,10 @@ export default function HomePage() {
   const memoryHydratedRef = useRef(false);
 
   const mood = deriveOrdisMood(pending, speaking);
+  const promptChips = useMemo(
+    () => resolvePromptSuggestions(messages),
+    [messages],
+  );
 
   function triggerSpeaking(messageId: string) {
     if (lastSpokenIdRef.current === messageId) return;
@@ -691,15 +695,16 @@ export default function HomePage() {
             >
               Online search {onlineSearch ? "on" : "off"}
             </button>
-            {SUGGESTIONS.map((suggestion) => (
+            {promptChips.map((suggestion) => (
               <button
-                key={suggestion}
+                key={suggestion.id}
                 type="button"
-                className={styles.chip}
+                className={`${styles.chip}${suggestion.kind === "prompt" ? ` ${styles.chipPrompt}` : ""}`}
                 disabled={pending}
-                onClick={() => void sendMessage(suggestion)}
+                title={suggestion.prompt}
+                onClick={() => void sendMessage(suggestion.prompt)}
               >
-                {suggestion}
+                {suggestion.label}
               </button>
             ))}
           </div>

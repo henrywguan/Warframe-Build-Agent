@@ -6,7 +6,7 @@ The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy 
 
 **Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, rename (✎ or double-click title), and delete. On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history. Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
-**Assistant markup:** Agent replies render as Markdown (GFM: lists, tables, code fences, links). Raw HTML in replies is skipped. User bubbles stay plain text.
+**Prompt chips:** Beside AI / LLM / Online search, the dock shows **contextual follow-up prompts** when the thread has useful signals (starters on a fresh chat; build/farm/market/patch/worldstate follow-ups after replies). When nothing useful matches, it falls back to `/list`, `/fissures sp`, and `/patches`.
 
 For a full inventory of colors, typography, layout, components, and motion tokens (handy when redesigning), see **[`web-chat-design.md`](web-chat-design.md)**.
 

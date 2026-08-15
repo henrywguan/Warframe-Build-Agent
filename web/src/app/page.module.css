@@ -608,6 +608,18 @@
   background: linear-gradient(135deg, rgba(110, 220, 154, 0.14), rgba(0, 196, 204, 0.1));
 }
 
+.chipPrompt {
+  border-color: rgba(94, 184, 232, 0.48);
+  color: var(--mist);
+  background: rgba(94, 184, 232, 0.08);
+}
+
+.chipPrompt:hover,
+.chipPrompt:focus-visible {
+  border-color: rgba(127, 231, 239, 0.75);
+  color: var(--cyan);
+}
+
 .llmPanel {
   display: grid;
   gap: 0.55rem;
