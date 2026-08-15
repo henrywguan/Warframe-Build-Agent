@@ -12,6 +12,7 @@ import {
   runSlashCommand,
   type CommandResult,
 } from "./commands";
+import type { SavedBuild } from "./saved-builds";
 
 export interface ChatTurnMessage {
   role: "user" | "assistant";
@@ -22,6 +23,10 @@ export interface ChatTurnResult {
   message: { role: "assistant"; content: string };
   toolsUsed: string[];
   model: string;
+  /** Structured Arsenal card for the web client to persist locally. */
+  savedBuild?: SavedBuild;
+  /** Optional folder name to create/select when applying savedBuild. */
+  savedBuildFolder?: string;
 }
 
 export interface ChatTurnDeps {
@@ -30,12 +35,16 @@ export interface ChatTurnDeps {
     content: string;
     toolsUsed: string[];
     model: string;
+    savedBuild?: SavedBuild;
+    savedBuildFolder?: string;
   }>;
   /** Optional fully-local path (no cloud LLM). */
   runLocal?: (messages: IncomingChatMessage[]) => Promise<{
     content: string;
     toolsUsed: string[];
     model: string;
+    savedBuild?: SavedBuild;
+    savedBuildFolder?: string;
   }>;
   preferLocal?: boolean;
   /** Resolved model for this request — used for identity questions / `/model`. */
@@ -91,6 +100,10 @@ export async function resolveChatTurn(
       message: { role: "assistant", content: localResult.content },
       toolsUsed: localResult.toolsUsed,
       model: localResult.model,
+      ...(localResult.savedBuild ? { savedBuild: localResult.savedBuild } : {}),
+      ...(localResult.savedBuildFolder
+        ? { savedBuildFolder: localResult.savedBuildFolder }
+        : {}),
     };
   }
 
@@ -99,5 +112,9 @@ export async function resolveChatTurn(
     message: { role: "assistant", content: modelResult.content },
     toolsUsed: modelResult.toolsUsed,
     model: modelResult.model,
+    ...(modelResult.savedBuild ? { savedBuild: modelResult.savedBuild } : {}),
+    ...(modelResult.savedBuildFolder
+      ? { savedBuildFolder: modelResult.savedBuildFolder }
+      : {}),
   };
 }

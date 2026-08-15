@@ -52,13 +52,16 @@ import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import { SavedBuildsPane } from "../components/SavedBuildsPane";
 import {
   type SavedBuildsMemory,
+  addBuild,
   applySaveBuildCommand,
   emptySavedBuilds,
+  ensureFolderByName,
   isSaveBuildSlash,
   loadSavedBuilds,
   saveBuildUsageHelp,
   saveSavedBuilds,
   stripSaveBuildCommand,
+  type SavedBuild,
 } from "../lib/saved-builds";
 import { resolvePromptSuggestions } from "../lib/prompt-suggestions";
 import styles from "./page.module.css";
@@ -410,10 +413,33 @@ export default function HomePage() {
         message?: ChatMessage;
         toolsUsed?: string[];
         error?: string;
+        savedBuild?: SavedBuild;
+        savedBuildFolder?: string;
       };
 
       if (!response.ok) {
         throw new Error(data.error || "Chat request failed");
+      }
+
+      if (data.savedBuild && typeof data.savedBuild.id === "string") {
+        const incoming = data.savedBuild;
+        const folderHint = data.savedBuildFolder?.trim();
+        let appliedFolderId: string | null = null;
+        setSavedBuilds((prev) => {
+          let next = prev;
+          let folderId: string | null = incoming.folderId ?? null;
+          if (folderHint) {
+            const ensured = ensureFolderByName(next, folderHint);
+            next = ensured.memory;
+            folderId = ensured.folderId;
+          }
+          appliedFolderId = folderId;
+          next = addBuild(next, { ...incoming, folderId });
+          saveSavedBuilds(next);
+          return next;
+        });
+        setSelectedBuildId(incoming.id);
+        if (appliedFolderId) setBuildFolderFilter(appliedFolderId);
       }
 
       setMessages((current) => [

@@ -46,6 +46,7 @@ describe("web source policy (local first + online toggle)", () => {
       .filter((entry) => entry.type === "function")
       .map((entry) => entry.function.name);
     assert.ok(names.includes("compare_loadout_to_overframe"));
+    assert.ok(names.includes("save_build"));
     assert.ok(names.includes("estimate_modded_dps"));
     assert.ok(names.includes("lookup_local_knowledge"));
     assert.ok(!names.includes("search_community_builds"));

@@ -17,6 +17,12 @@ import {
 import { ocrImageDataUrl, parseLoadoutFromOcrText } from "@/lib/loadout-parse";
 import { lookupLocalKnowledge } from "@/lib/local-knowledge";
 import { runOfflineDps } from "@/lib/offline-dps";
+import {
+  composeSavedBuildFromNaturalLanguage,
+  composeSavedBuildFromParsedLoadout,
+  looksLikeSaveBuildRequest,
+} from "@/lib/save-build-compose";
+import type { SavedBuild } from "@/lib/saved-builds";
 import { looksLikeBuildRequest } from "@/lib/source-policy";
 import {
   liveCycles,
@@ -30,6 +36,8 @@ export type LocalChatResult = {
   content: string;
   toolsUsed: string[];
   model: "local-knowledge";
+  savedBuild?: SavedBuild;
+  savedBuildFolder?: string;
 };
 
 function extractJsonLoadout(text: string): ParsedLoadout | null {
@@ -103,6 +111,27 @@ async function handleScreenshotCompare(
     .filter((line) => line !== undefined)
     .join("\n");
 
+  if (looksLikeSaveBuildRequest(text)) {
+    toolsUsed.push("save_build");
+    const savedBuild = await composeSavedBuildFromParsedLoadout(loadout, {
+      notes: "Saved from screenshot (local OCR)",
+    });
+    return {
+      content: [
+        "Local chatbot — screenshot saved to your Arsenal pane.",
+        `Parsed: ${loadout.itemName} · mods ${loadout.mods.length} · arcanes ${loadout.arcanes.length}`,
+        "",
+        `Card: **${savedBuild.name}**`,
+        "",
+        "Also compared to top Overframe builds:",
+        body,
+      ].join("\n"),
+      toolsUsed,
+      model: "local-knowledge",
+      savedBuild,
+    };
+  }
+
   return {
     content: `${preface}${body}`,
     toolsUsed,
@@ -112,6 +141,38 @@ async function handleScreenshotCompare(
 
 async function handlePlainLocal(text: string): Promise<LocalChatResult> {
   const toolsUsed: string[] = [];
+
+  if (looksLikeSaveBuildRequest(text)) {
+    const savedBuild = await composeSavedBuildFromNaturalLanguage(text);
+    if (savedBuild) {
+      toolsUsed.push("save_build");
+      return {
+        content: [
+          "Local chatbot — saved to your Arsenal pane (catalog auto-classified the item slot).",
+          "",
+          `Card: **${savedBuild.name}**`,
+          savedBuild.warframe.name ? `• Warframe: ${savedBuild.warframe.name}` : null,
+          savedBuild.primary.name ? `• Primary: ${savedBuild.primary.name}` : null,
+          savedBuild.secondary.name
+            ? `• Secondary: ${savedBuild.secondary.name}`
+            : null,
+          savedBuild.melee.name ? `• Melee: ${savedBuild.melee.name}` : null,
+          savedBuild.companion.name
+            ? `• Companion: ${savedBuild.companion.name}`
+            : null,
+          savedBuild.archonCrystals.length
+            ? `• Crystals: ${savedBuild.archonCrystals.map((c) => c.effect).join(", ")}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+        toolsUsed,
+        model: "local-knowledge",
+        savedBuild,
+      };
+    }
+  }
+
   const lower = text.toLowerCase();
 
   const dpsCompare = text.match(

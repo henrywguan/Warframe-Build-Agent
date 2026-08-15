@@ -50,7 +50,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/forma --needed N [--current 60]` | Forma count heuristic (offline) |
 | `/inventory <pasted list>` | Parse owned gear list (heuristic) |
 | `/farm-vs-buy <item>` / `/buyvsfarm` | Farm route + market price tips |
-| `/save-build <name> \| warframe: …` | Save a loadout card to the desktop **Saved Builds** pane (`/savebuild`, `/arsenal-save`) |
+| `/save-build <name> \| warframe: …` | Save a loadout card to the desktop **Saved Builds** pane (`/savebuild`, `/arsenal-save`). Natural language (“save a Soma Prime build…” + mods) and screenshot + “save this” also call `save_build` / local compose with catalog auto-classification. |
 | `/profile` | Player profile stub (CLI / localStorage later) |
 | `/knowledge <query>` | Offline knowledge pack lookup (no LLM) |
 | `/compare <item> \| mods…` | Compare a pasted loadout to top 3 local Overframe builds |
