@@ -20,6 +20,11 @@ import {
   compareFromVisionText,
 } from "@/lib/vision-loadout";
 import {
+  extractSavedBuildFromToolPayloads,
+  stripSavedBuildMarker,
+} from "@/lib/save-build-compose";
+import type { SavedBuild } from "@/lib/saved-builds";
+import {
   formatLlmConnectionError,
   isLlmConnectionError,
   isToolsUnsupportedError,
@@ -88,7 +93,13 @@ async function runModelCompletion(
   onlineSearchToggle?: boolean,
   generalAgent?: boolean,
   options?: { enableTools?: boolean },
-): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+): Promise<{
+  content: string;
+  toolsUsed: string[];
+  model: string;
+  savedBuild?: SavedBuild;
+  savedBuildFolder?: string;
+}> {
   const enableTools = options?.enableTools !== false;
   const client = getClient(clientLlm);
   const history: ChatCompletionMessageParam[] = incoming
@@ -166,10 +177,17 @@ async function runModelCompletion(
     const toolCalls = choice.tool_calls ?? [];
     if (!toolCalls.length) {
       const content = choice.content?.trim();
+      const saved = extractSavedBuildFromToolPayloads(toolPayloads);
       return {
         content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
         toolsUsed,
         model,
+        ...(saved
+          ? {
+              savedBuild: saved.build,
+              ...(saved.folderName ? { savedBuildFolder: saved.folderName } : {}),
+            }
+          : {}),
       };
     }
 
@@ -205,7 +223,7 @@ async function runModelCompletion(
         role: "tool",
         tool_call_id: call.id,
         content: annotateToolResultForOnlineConsent(
-          raw,
+          stripSavedBuildMarker(raw),
           Boolean(onlineSearchToggle),
         ),
       };
@@ -222,10 +240,17 @@ async function runModelCompletion(
   });
   const finalChoice = finalCompletion.choices[0]?.message;
   const content = finalChoice?.content?.trim();
+  const saved = extractSavedBuildFromToolPayloads(toolPayloads);
   return {
     content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
     toolsUsed,
     model,
+    ...(saved
+      ? {
+          savedBuild: saved.build,
+          ...(saved.folderName ? { savedBuildFolder: saved.folderName } : {}),
+        }
+      : {}),
   };
 }
 
@@ -237,7 +262,13 @@ async function runVisionLoadoutWithoutTools(
   incoming: IncomingChatMessage[],
   model: string,
   clientLlm?: Partial<ClientLlmConfig>,
-): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+): Promise<{
+  content: string;
+  toolsUsed: string[];
+  model: string;
+  savedBuild?: SavedBuild;
+  savedBuildFolder?: string;
+}> {
   const client = getClient(clientLlm);
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
   const userHint = latestUser ? messageText(latestUser.content) : "";
@@ -256,7 +287,13 @@ async function runModelCompletionSafe(
   clientLlm?: Partial<ClientLlmConfig>,
   onlineSearchToggle?: boolean,
   generalAgent?: boolean,
-): Promise<{ content: string; toolsUsed: string[]; model: string }> {
+): Promise<{
+  content: string;
+  toolsUsed: string[];
+  model: string;
+  savedBuild?: SavedBuild;
+  savedBuildFolder?: string;
+}> {
   const withImages = hasImages(incoming);
   const preferNoTools = withImages && !modelLikelySupportsTools(model);
 
@@ -389,6 +426,10 @@ export async function POST(request: Request) {
           },
           toolsUsed: local.toolsUsed,
           model: local.model,
+          ...(local.savedBuild ? { savedBuild: local.savedBuild } : {}),
+          ...(local.savedBuildFolder
+            ? { savedBuildFolder: local.savedBuildFolder }
+            : {}),
           fallback: isLlmConnectionError(error) ? "local-after-llm-unreachable" : "local-after-missing-key",
         });
       } catch (localError) {

@@ -9,6 +9,10 @@ import { fetchPublicPage, formatFetchedPage } from "@/lib/fetch-page";
 import { LOCAL_KNOWLEDGE_TOOL_DESCRIPTION } from "@/lib/source-policy";
 import { runOfflineDps } from "@/lib/offline-dps";
 import {
+  composeSavedBuildFromToolArgs,
+  encodeSavedBuildToolResult,
+} from "@/lib/save-build-compose";
+import {
   packArcaneLookup,
   packBuildLookup,
   packFarmLookup,
@@ -534,6 +538,65 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
   {
     type: "function",
     function: {
+      name: "save_build",
+      description:
+        "Save a player loadout into the desktop Saved Builds (Arsenal) pane. Auto-classifies a single itemName via the local catalog into Warframe / Primary / Secondary / Melee, or companion name hints. Prefer explicit warframe/primary/secondary/melee/companion fields when the Operator lists a full arsenal. Use when they ask to save/add/store a build (text or after reading a screenshot).",
+      parameters: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            description: "Card title (e.g. SP Soma)",
+          },
+          folder: {
+            type: "string",
+            description: "Optional folder name in the Arsenal pane",
+          },
+          itemName: {
+            type: "string",
+            description:
+              "Single gear piece to auto-categorize (Warframe or weapon). Use with mods/arcanes when only one item is provided.",
+          },
+          mods: {
+            type: "array",
+            items: { type: "string" },
+            description: "Mods for itemName (auto-classified slot)",
+          },
+          arcanes: {
+            type: "array",
+            items: { type: "string" },
+            description: "Arcanes for itemName",
+          },
+          warframe: { type: "string" },
+          primary: { type: "string" },
+          secondary: { type: "string" },
+          melee: { type: "string" },
+          companion: { type: "string" },
+          warframeMods: { type: "array", items: { type: "string" } },
+          primaryMods: { type: "array", items: { type: "string" } },
+          secondaryMods: { type: "array", items: { type: "string" } },
+          meleeMods: { type: "array", items: { type: "string" } },
+          companionMods: { type: "array", items: { type: "string" } },
+          warframeArcanes: { type: "array", items: { type: "string" } },
+          primaryArcanes: { type: "array", items: { type: "string" } },
+          secondaryArcanes: { type: "array", items: { type: "string" } },
+          meleeArcanes: { type: "array", items: { type: "string" } },
+          companionArcanes: { type: "array", items: { type: "string" } },
+          crystals: {
+            type: "array",
+            items: { type: "string" },
+            description:
+              "Archon crystals, e.g. \"Crimson Primary Damage\", \"Amber Casting Speed\"",
+          },
+          notes: { type: "string" },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "estimate_modded_dps",
       description:
         "Offline arsenal-style modded DPS calculator using the local catalog + curated mod multipliers (DB asOf 2026-08-03). Prefers Galvanized Steel Path shells over Serration/Split Chamber. Presets: rifle-viral-heat, rifle-viral-electric, rifle-corrosive-heat, rifle-raw-crit, rifle-budget, pistol-viral-heat, shotgun-viral-heat, typical. Mention Primary Debilitate/Merciless as separate arcane recommendations.",
@@ -792,6 +855,51 @@ export async function runChatTool(
           3,
         );
         return formatLoadoutCompare(result);
+      }
+      case "save_build": {
+        const strList = (...keys: string[]): string[] | undefined => {
+          for (const key of keys) {
+            const value = args[key];
+            if (Array.isArray(value)) {
+              return value.map(String).filter(Boolean);
+            }
+          }
+          return undefined;
+        };
+        const build = await composeSavedBuildFromToolArgs({
+          name: asString(args.name),
+          folder: asString(args.folder),
+          itemName: asString(args.itemName),
+          mods: strList("mods"),
+          arcanes: strList("arcanes"),
+          warframe: asString(args.warframe),
+          primary: asString(args.primary),
+          secondary: asString(args.secondary),
+          melee: asString(args.melee),
+          companion: asString(args.companion),
+          warframeMods: strList("warframeMods"),
+          primaryMods: strList("primaryMods"),
+          secondaryMods: strList("secondaryMods"),
+          meleeMods: strList("meleeMods"),
+          companionMods: strList("companionMods"),
+          warframeArcanes: strList("warframeArcanes"),
+          primaryArcanes: strList("primaryArcanes"),
+          secondaryArcanes: strList("secondaryArcanes"),
+          meleeArcanes: strList("meleeArcanes"),
+          companionArcanes: strList("companionArcanes"),
+          crystals: strList("crystals"),
+          notes: asString(args.notes),
+        });
+        const hasGear =
+          build.warframe.name ||
+          build.primary.name ||
+          build.secondary.name ||
+          build.melee.name ||
+          build.companion.name;
+        if (!hasGear) {
+          return "save_build needs at least itemName or warframe/primary/secondary/melee/companion.";
+        }
+        return encodeSavedBuildToolResult(build, asString(args.folder));
       }
       case "estimate_modded_dps": {
         const weapon = asString(args.weapon);

@@ -49,7 +49,21 @@ import {
   upsertActiveMessages,
 } from "../lib/chat-memory";
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
+import { SavedBuildsPane } from "../components/SavedBuildsPane";
 import { ReplyLoader } from "../components/ReplyLoader";
+import {
+  type SavedBuildsMemory,
+  addBuild,
+  applySaveBuildCommand,
+  emptySavedBuilds,
+  ensureFolderByName,
+  isSaveBuildSlash,
+  loadSavedBuilds,
+  saveBuildUsageHelp,
+  saveSavedBuilds,
+  stripSaveBuildCommand,
+  type SavedBuild,
+} from "../lib/saved-builds";
 import { resolvePromptSuggestions } from "../lib/prompt-suggestions";
 import styles from "./page.module.css";
 
@@ -147,6 +161,13 @@ function withWelcome(messages: ChatMessage[]): ChatMessage[] {
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [chatMemory, setChatMemory] = useState<ChatMemory>(() => emptyMemory());
+  const [savedBuilds, setSavedBuilds] = useState<SavedBuildsMemory>(() =>
+    emptySavedBuilds(),
+  );
+  const [selectedBuildId, setSelectedBuildId] = useState<string | null>(null);
+  const [buildFolderFilter, setBuildFolderFilter] = useState<
+    "all" | "unfiled" | string
+  >("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
@@ -221,6 +242,7 @@ export default function HomePage() {
     setAiChat(savedAi ?? defaultAiChatEnabled());
     const memory = loadChatMemory();
     setChatMemory(memory);
+    setSavedBuilds(loadSavedBuilds());
     const active = getActiveConversation(memory);
     setMessages(
       withWelcome(
@@ -325,6 +347,43 @@ export default function HomePage() {
     setMessages(nextMessages);
     setInput("");
     setAttachment(null);
+
+    if (!image && content && isSaveBuildSlash(content)) {
+      const args = stripSaveBuildCommand(content);
+      if (/^(-h|--help|help)$/i.test(args)) {
+        setMessages((current) => [
+          ...current,
+          {
+            id: uid(),
+            role: "assistant",
+            content: saveBuildUsageHelp(),
+          },
+        ]);
+        inputRef.current?.focus();
+        return;
+      }
+      const activeFolder =
+        buildFolderFilter === "all" || buildFolderFilter === "unfiled"
+          ? null
+          : buildFolderFilter;
+      const result = applySaveBuildCommand(savedBuilds, args, activeFolder);
+      setSavedBuilds(result.memory);
+      saveSavedBuilds(result.memory);
+      setSelectedBuildId(result.build.id);
+      if (result.build.folderId) setBuildFolderFilter(result.build.folderId);
+      setMessages((current) => [
+        ...current,
+        {
+          id: uid(),
+          role: "assistant",
+          content: result.reply,
+          toolsUsed: ["save_build"],
+        },
+      ]);
+      inputRef.current?.focus();
+      return;
+    }
+
     setPending(true);
 
     try {
@@ -355,10 +414,33 @@ export default function HomePage() {
         message?: ChatMessage;
         toolsUsed?: string[];
         error?: string;
+        savedBuild?: SavedBuild;
+        savedBuildFolder?: string;
       };
 
       if (!response.ok) {
         throw new Error(data.error || "Chat request failed");
+      }
+
+      if (data.savedBuild && typeof data.savedBuild.id === "string") {
+        const incoming = data.savedBuild;
+        const folderHint = data.savedBuildFolder?.trim();
+        let appliedFolderId: string | null = null;
+        setSavedBuilds((prev) => {
+          let next = prev;
+          let folderId: string | null = incoming.folderId ?? null;
+          if (folderHint) {
+            const ensured = ensureFolderByName(next, folderHint);
+            next = ensured.memory;
+            folderId = ensured.folderId;
+          }
+          appliedFolderId = folderId;
+          next = addBuild(next, { ...incoming, folderId });
+          saveSavedBuilds(next);
+          return next;
+        });
+        setSelectedBuildId(incoming.id);
+        if (appliedFolderId) setBuildFolderFilter(appliedFolderId);
       }
 
       setMessages((current) => [
@@ -812,6 +894,17 @@ export default function HomePage() {
               : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
       </p>
       </main>
+      <SavedBuildsPane
+        memory={savedBuilds}
+        onChange={(next) => {
+          setSavedBuilds(next);
+          saveSavedBuilds(next);
+        }}
+        selectedBuildId={selectedBuildId}
+        onSelectBuild={setSelectedBuildId}
+        filterFolderId={buildFolderFilter}
+        onFilterFolder={setBuildFolderFilter}
+      />
       </div>
     </>
   );
