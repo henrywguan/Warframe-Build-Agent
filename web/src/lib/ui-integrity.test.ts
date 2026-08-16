@@ -17,6 +17,7 @@ describe("web UI wiring integrity", () => {
       "pageGlows",
       "data-mood={mood}",
       "MessageBody",
+      "ReplyLoader",
       "deriveOrdisMood",
       "shouldTriggerSpeaking",
       'aria-label="Chat"',
