@@ -29,6 +29,8 @@ export function SavedBuildsPane({
   onSelectBuild,
   filterFolderId,
   onFilterFolder,
+  mobileOpen = false,
+  onMobileClose,
 }: {
   memory: SavedBuildsMemory;
   onChange: (next: SavedBuildsMemory) => void;
@@ -36,6 +38,8 @@ export function SavedBuildsPane({
   onSelectBuild: (id: string | null) => void;
   filterFolderId: FolderFilter;
   onFilterFolder: (id: FolderFilter) => void;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }) {
   const visible = useMemo(() => {
     if (filterFolderId === "all") return buildsInFolder(memory, "all");
@@ -77,98 +81,119 @@ export function SavedBuildsPane({
   }
 
   return (
-    <aside className={styles.pane} aria-label="Saved builds">
-      <div className={styles.header}>
-        <div>
-          <p className={styles.label}>Arsenal</p>
-          <h2 className={styles.title}>Saved Builds</h2>
+    <div className={styles.rail} data-open={mobileOpen ? "true" : "false"}>
+      <div
+        className={`${styles.backdrop} ${mobileOpen ? styles.backdropOpen : ""}`}
+        role="presentation"
+        onClick={onMobileClose}
+        aria-hidden={!mobileOpen}
+      />
+      <aside
+        className={`${styles.pane} ${mobileOpen ? styles.paneOpen : ""}`}
+        aria-label="Saved builds"
+      >
+        <div className={styles.header}>
+          <div>
+            <p className={styles.label}>Arsenal</p>
+            <h2 className={styles.title}>Saved Builds</h2>
+          </div>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={handleAddBuild}
+              aria-label="Add build slot"
+              title="Add build"
+            >
+              +
+            </button>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={handleRemove}
+              aria-label="Remove selected build"
+              title="Remove build"
+              disabled={!selectedBuildId && visible.length === 0}
+            >
+              −
+            </button>
+            {onMobileClose ? (
+              <button
+                type="button"
+                className={styles.closeMobile}
+                onClick={onMobileClose}
+                aria-label="Close saved builds"
+              >
+                Close
+              </button>
+            ) : null}
+          </div>
         </div>
-        <div className={styles.headerActions}>
+
+        <div className={styles.folderBar}>
           <button
             type="button"
-            className={styles.iconBtn}
-            onClick={handleAddBuild}
-            aria-label="Add build slot"
-            title="Add build"
+            className={`${styles.folderChip} ${filterFolderId === "all" ? styles.folderChipActive : ""}`}
+            onClick={() => onFilterFolder("all")}
           >
-            +
+            All
           </button>
           <button
             type="button"
-            className={styles.iconBtn}
-            onClick={handleRemove}
-            aria-label="Remove selected build"
-            title="Remove build"
-            disabled={!selectedBuildId && visible.length === 0}
+            className={`${styles.folderChip} ${filterFolderId === "unfiled" ? styles.folderChipActive : ""}`}
+            onClick={() => onFilterFolder("unfiled")}
           >
-            −
+            Unfiled
           </button>
-        </div>
-      </div>
-
-      <div className={styles.folderBar}>
-        <button
-          type="button"
-          className={`${styles.folderChip} ${filterFolderId === "all" ? styles.folderChipActive : ""}`}
-          onClick={() => onFilterFolder("all")}
-        >
-          All
-        </button>
-        <button
-          type="button"
-          className={`${styles.folderChip} ${filterFolderId === "unfiled" ? styles.folderChipActive : ""}`}
-          onClick={() => onFilterFolder("unfiled")}
-        >
-          Unfiled
-        </button>
-        {memory.folders.map((folder) => (
-          <FolderChip
-            key={folder.id}
-            folder={folder}
-            active={filterFolderId === folder.id}
-            onSelect={() => onFilterFolder(folder.id)}
-            onRename={(name) => onChange(renameFolder(memory, folder.id, name))}
-            onDelete={() => handleDeleteFolder(folder.id)}
-          />
-        ))}
-        <button
-          type="button"
-          className={styles.folderAdd}
-          onClick={handleAddFolder}
-          aria-label="Add folder"
-          title="Add folder"
-        >
-          + Folder
-        </button>
-      </div>
-
-      <div className={styles.scroll}>
-        {visible.length === 0 ? (
-          <p className={styles.empty}>
-            No builds here yet. Use <code>+ </code> or{" "}
-            <code>/save-build</code> to add a card.
-          </p>
-        ) : (
-          visible.map((build) => (
-            <BuildCard
-              key={build.id}
-              build={build}
-              folders={memory.folders}
-              selected={build.id === selectedBuildId}
-              onSelect={() =>
-                onSelectBuild(build.id === selectedBuildId ? null : build.id)
-              }
-              onRename={(name) => onChange(renameBuild(memory, build.id, name))}
-              onPatch={(patch) => onChange(updateBuild(memory, build.id, patch))}
+          {memory.folders.map((folder) => (
+            <FolderChip
+              key={folder.id}
+              folder={folder}
+              active={filterFolderId === folder.id}
+              onSelect={() => onFilterFolder(folder.id)}
+              onRename={(name) => onChange(renameFolder(memory, folder.id, name))}
+              onDelete={() => handleDeleteFolder(folder.id)}
             />
-          ))
-        )}
-      </div>
+          ))}
+          <button
+            type="button"
+            className={styles.folderAdd}
+            onClick={handleAddFolder}
+            aria-label="Add folder"
+            title="Add folder"
+          >
+            + Folder
+          </button>
+        </div>
 
-      <p className={styles.footnote}>
-        Desktop pane · browser localStorage · double-click names to rename
-      </p>
-    </aside>
+        <div className={styles.scroll}>
+          {visible.length === 0 ? (
+            <p className={styles.empty}>
+              No builds here yet. Use <code>+ </code> or{" "}
+              <code>/save-build</code> to add a card.
+            </p>
+          ) : (
+            visible.map((build) => (
+              <BuildCard
+                key={build.id}
+                build={build}
+                folders={memory.folders}
+                selected={build.id === selectedBuildId}
+                onSelect={() =>
+                  onSelectBuild(build.id === selectedBuildId ? null : build.id)
+                }
+                onRename={(name) => onChange(renameBuild(memory, build.id, name))}
+                onPatch={(patch) => onChange(updateBuild(memory, build.id, patch))}
+              />
+            ))
+          )}
+        </div>
+
+        <p className={styles.footnote}>
+          Browser localStorage · double-click names to rename
+        </p>
+      </aside>
+    </div>
   );
 }
 

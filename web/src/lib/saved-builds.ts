@@ -444,7 +444,7 @@ export function formatBuildSummary(build: SavedBuild): string {
           .join("; ")}`
       : null,
     "",
-    "Visible in the desktop **Saved Builds** pane (browser localStorage).",
+    "Visible in the **Saved Builds** pane (browser localStorage; **Builds** drawer on phones).",
   ];
   return lines.filter((l) => l !== null).join("\n");
 }

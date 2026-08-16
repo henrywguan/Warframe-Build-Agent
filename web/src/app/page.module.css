@@ -181,7 +181,8 @@
     radial-gradient(circle at 28% 78%, rgba(94, 184, 232, 0.28), transparent 72%);
 }
 
-.chatsToggle {
+.chatsToggle,
+.buildsToggle {
   display: none;
   flex: 0 0 auto;
   border: 1px solid rgba(155, 180, 200, 0.4);
@@ -198,13 +199,22 @@
 }
 
 .chatsToggle:hover,
-.chatsToggle:focus-visible {
+.chatsToggle:focus-visible,
+.buildsToggle:hover,
+.buildsToggle:focus-visible {
   border-color: var(--plasma);
   color: var(--plasma);
   outline: none;
 }
 
-.chatsToggle:disabled {
+.buildsToggle:hover,
+.buildsToggle:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.chatsToggle:disabled,
+.buildsToggle:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
@@ -1011,7 +1021,8 @@
     margin-top: 0.25rem;
   }
 
-  .chatsToggle {
+  .chatsToggle,
+  .buildsToggle {
     display: inline-flex;
   }
 
