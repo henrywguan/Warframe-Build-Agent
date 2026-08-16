@@ -12,6 +12,7 @@ Pick the path that matches how you want to use it.
 | --- | --- |
 | **Import into Hermes Desktop** (chat as Ordis on your PC) | **[Hermes import — step by step](hermes-export.md)** ← start here if you are new |
 | **Use the phone/web chat** in a browser | [Web chat](web-chat.md) |
+| **Host a public URL with OpenAI** | [Hosting](hosting.md) (Vercel / Fly / VPS) |
 | **Use commands in a terminal** | Sections below + [Command list](commands.md) |
 | **Use the desktop arsenal overlay** | [Overlay](overlay.md) |
 | **Fill / refresh the offline knowledge pack** | [Offline knowledge](offline-knowledge.md) |

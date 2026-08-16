@@ -30,6 +30,8 @@ Help players make better Warframe decisions: compare gear, recommend builds, exp
 | `hermes/` | Hermes Desktop/CLI profile distribution (SOUL + skills) |
 | `exports/` | Packed Hermes profile archive(s) |
 | `docs/web-chat.md` | How to run/deploy the on-the-go chat UI |
+| `docs/hosting.md` | Public URL + OpenAI hosting (Vercel / Fly / VPS) |
+| `Dockerfile` / `fly.toml` | Container + Fly.io deploy for the web chat + knowledge pack |
 | `docs/hermes-export.md` | How to import this agent into Hermes Desktop |
 | `overlay/` | Desktop arsenal overlay (external region capture + action recommendations; no memory editing) |
 | `docs/overlay.md` | Overlay usage + external-only policy / `--verify-external` safeguards |

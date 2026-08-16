@@ -50,6 +50,7 @@ import {
 } from "../lib/chat-memory";
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import { SavedBuildsPane } from "../components/SavedBuildsPane";
+import { ReplyLoader } from "../components/ReplyLoader";
 import {
   type SavedBuildsMemory,
   addBuild,
@@ -705,8 +706,11 @@ export default function HomePage() {
             </article>
           ))}
           {pending ? (
-            <article className={`${styles.bubble} ${styles.assistant}`}>
-              Checking the latest intel…
+            <article
+              className={`${styles.bubble} ${styles.assistant} ${styles.pendingBubble}`}
+              aria-busy="true"
+            >
+              <ReplyLoader label="Ordis is consulting…" />
             </article>
           ) : null}
         </div>

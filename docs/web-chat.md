@@ -2,7 +2,7 @@
 
 A phone-friendly chat front-end lives in [`web/`](../web/). It can run against an OpenAI-compatible model **or** a fully local knowledge chatbot (`CHAT_MODE=local` / no API key). It supports **loadout screenshot attachments** (vision model or local OCR) to compare against top-3 Overframe builds in the offline pack, plus Warframe Status, Warframe.market, and official patch-notes helpers.
 
-The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) plus tertiary accents (**ember** copper, **signal** verdant, **plasma** ice-blue, **mist** steel) for depth. A **center-stage Ordis cephalon** (original SVG/CSS, not game assets) sits **above** the transmission log — it idles, thinks, and glitch-pops when speaking, and never overlays chat text. The stage caption row is reserved so status text is not clipped. Behind the shell, a modular **Three.js void field** (`VoidField`) draws mood-reactive particles and wireframe crystals (DPR-capped, paused when the tab is hidden; CSS fallback when `prefers-reduced-motion` is on).
+The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) plus tertiary accents (**ember** copper, **signal** verdant, **plasma** ice-blue, **mist** steel) for depth. A **center-stage Ordis cephalon** (original WebP mood plates + SVG/CSS fallback, not game assets) sits **above** the transmission log — it idles, thinks, and glitch-pops when speaking, and never overlays chat text. Mood plates live under `web/public/ordis/` (hero / glow / ring overlays); the SVG remains for load errors and tiny stage sizes. The stage caption row is reserved so status text is not clipped. Behind the shell, a modular **Three.js void field** (`VoidField`) draws mood-reactive particles and wireframe crystals (DPR-capped, paused when the tab is hidden; CSS fallback when `prefers-reduced-motion` is on).
 
 **Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, rename (✎ or double-click title), and delete. On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history.
 
@@ -11,6 +11,8 @@ The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy 
 **Assistant markup:** Agent replies render as Markdown (GFM: lists, tables, code fences, links). Raw HTML in replies is skipped. User bubbles stay plain text.
 
 **Prompt chips:** Beside AI / LLM / Online search, the dock shows **contextual follow-up prompts** when the thread has useful signals (starters on a fresh chat; build/farm/market/patch/worldstate follow-ups after replies). When nothing useful matches, it falls back to `/list`, `/fissures sp`, and `/patches`.
+
+**Pending reply:** While Ordis generates an answer, the transmission log shows a glowing three-bar loader (Uiverse-inspired, arsenal palette) with “Ordis is consulting…”.
 
 For a full inventory of colors, typography, layout, components, and motion tokens (handy when redesigning), see **[`web-chat-design.md`](web-chat-design.md)**.
 
@@ -107,22 +109,31 @@ The page can load (`GET / 200`), but Next blocked the phone’s origin from the 
 | `PATCH_CHANGES_URL` | no | URL to `data/patches/latest-changes.json` from the daily patch job |
 | `PATCH_SNAPSHOT_URL` | no | URL to `data/patches/latest-snapshot.json` (fallback if live hub fetch fails) |
 
-## Deploy (Vercel, etc.)
+## Deploy (public URL + OpenAI)
+
+Full guide (Vercel, Fly.io / Railway, VPS, launch checklist): **[`hosting.md`](hosting.md)**.
+
+### Quick path — Vercel
 
 1. Set the project **root directory** to `web` (or deploy from `web/`).
-2. Add env vars: `OPENAI_API_KEY`, optional `CHAT_PASSWORD`, optional model/base URL.
+2. Add env vars: `OPENAI_API_KEY`, **`CHAT_PASSWORD`**, optional `OPENAI_MODEL` / `OPENAI_VISION_MODEL` / base URL.
 3. For daily scrapes after Actions commit to `main`, set:
    - `MARKET_CHANGES_URL` → raw `data/market/latest-changes.json`
    - `PATCH_CHANGES_URL` → raw `data/patches/latest-changes.json`
    - optional `PATCH_SNAPSHOT_URL` → raw `data/patches/latest-snapshot.json`
-4. Ensure the host can reach:
-   - your model provider
-   - `https://api.warframestat.us`
-   - `https://api.warframe.market`
-   - `https://www.warframe.com` (live patch-notes hub)
-5. Deploy.
+4. Ensure the host can reach your model provider, `api.warframestat.us`, `api.warframe.market`, and `warframe.com`.
+5. Deploy. Chat routes allow up to **120s** (`web/vercel.json`).
 
-Live `get_market_price` and `get_patch_notes_latest` work on any deploy. Saved day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files during repo-root/dev runs).
+### Quick path — Fly.io (whole monorepo + knowledge pack)
+
+```bash
+fly auth login
+fly apps create <your-app-name>   # then set app name in fly.toml
+fly secrets set OPENAI_API_KEY=sk-... OPENAI_MODEL=gpt-4o-mini CHAT_PASSWORD=changeme
+fly deploy
+```
+
+See [`hosting.md`](hosting.md) for Railway and VPS. Live `get_market_price` / `get_patch_notes_latest` work on any deploy; day-over-day diffs need the `*_CHANGES_URL` env vars (or local `data/` files on repo-root hosts).
 
 ## Slash commands
 

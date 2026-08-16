@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Keep the web app self-contained for easy Vercel/mobile deploys.
+  // Standalone output is used by the repo-root Dockerfile (Fly / Docker / VPS).
+  output: "standalone",
   turbopack: {
     root: process.cwd(),
   },
