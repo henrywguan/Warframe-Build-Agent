@@ -1,0 +1,26 @@
+# Docker build context — keep the image lean; knowledge pack is included intentionally.
+.git
+.github
+.cursor
+**/node_modules
+**/.next
+**/dist
+**/coverage
+**/.env
+**/.env.*
+!**/.env.example
+exports
+overlay
+hermes
+src
+scripts
+docs
+*.md
+!web/README.md
+web/scripts
+**/*.test.ts
+**/*.test.js
+**/tsconfig.tsbuildinfo
+data/knowledge/.cache
+data/knowledge/builds-export*.json
+data/knowledge/player-profile.json

@@ -1,0 +1,37 @@
+# Fly.io — whole-monorepo web chat (see docs/hosting.md)
+# 1. fly auth login
+# 2. fly apps create <unique-name>  && set app below
+# 3. fly secrets set OPENAI_API_KEY=... OPENAI_MODEL=gpt-4o-mini CHAT_PASSWORD=...
+# 4. fly deploy
+
+app = "warframe-build-agent"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  HOSTNAME = "0.0.0.0"
+  ALLOW_LOCAL_DAILY_DATA = "true"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
