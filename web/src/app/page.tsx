@@ -169,6 +169,7 @@ export default function HomePage() {
     "all" | "unfiled" | string
   >("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [buildsOpen, setBuildsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -371,6 +372,10 @@ export default function HomePage() {
       saveSavedBuilds(result.memory);
       setSelectedBuildId(result.build.id);
       if (result.build.folderId) setBuildFolderFilter(result.build.folderId);
+      if (typeof window !== "undefined" && window.matchMedia("(max-width: 860px)").matches) {
+        setSidebarOpen(false);
+        setBuildsOpen(true);
+      }
       setMessages((current) => [
         ...current,
         {
@@ -441,6 +446,11 @@ export default function HomePage() {
         });
         setSelectedBuildId(incoming.id);
         if (appliedFolderId) setBuildFolderFilter(appliedFolderId);
+        // On phones the Arsenal rail is a drawer — open it after a save.
+        if (typeof window !== "undefined" && window.matchMedia("(max-width: 860px)").matches) {
+          setSidebarOpen(false);
+          setBuildsOpen(true);
+        }
       }
 
       setMessages((current) => [
@@ -559,12 +569,13 @@ export default function HomePage() {
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
   useEffect(() => {
-    if (!sidebarOpen && !showLlmSettings) return;
+    if (!sidebarOpen && !buildsOpen && !showLlmSettings) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (event: globalThis.KeyboardEvent) => {
       if (event.key !== "Escape") return;
       if (showLlmSettings) setShowLlmSettings(false);
+      else if (buildsOpen) setBuildsOpen(false);
       else if (sidebarOpen) setSidebarOpen(false);
     };
     window.addEventListener("keydown", onKey);
@@ -572,7 +583,7 @@ export default function HomePage() {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [sidebarOpen, showLlmSettings]);
+  }, [sidebarOpen, buildsOpen, showLlmSettings]);
 
   if (!ready) {
     return (
@@ -639,12 +650,12 @@ export default function HomePage() {
       <main
         className={[
           styles.shell,
-          sidebarOpen ? styles.shellObscured : "",
+          sidebarOpen || buildsOpen ? styles.shellObscured : "",
           showLlmSettings ? styles.shellCrowded : "",
         ]
           .filter(Boolean)
           .join(" ")}
-        aria-hidden={sidebarOpen || undefined}
+        aria-hidden={sidebarOpen || buildsOpen || undefined}
       >
       <TopZone
         tagline="Builds, compares, world-state, market, and patch notes — Ordis on the line."
@@ -659,11 +670,27 @@ export default function HomePage() {
               type="button"
               className={styles.chatsToggle}
               disabled={pending}
-              onClick={() => setSidebarOpen(true)}
+              onClick={() => {
+                setBuildsOpen(false);
+                setSidebarOpen(true);
+              }}
               aria-label="Open chats"
               title="Open chats"
             >
               Chats
+            </button>
+            <button
+              type="button"
+              className={styles.buildsToggle}
+              disabled={pending}
+              onClick={() => {
+                setSidebarOpen(false);
+                setBuildsOpen(true);
+              }}
+              aria-label="Open saved builds"
+              title="Open saved builds"
+            >
+              Builds
             </button>
             <p className={styles.panelLabel}>Transmission log</p>
           </div>
@@ -904,6 +931,8 @@ export default function HomePage() {
         onSelectBuild={setSelectedBuildId}
         filterFolderId={buildFolderFilter}
         onFilterFolder={setBuildFolderFilter}
+        mobileOpen={buildsOpen}
+        onMobileClose={() => setBuildsOpen(false)}
       />
       </div>
     </>

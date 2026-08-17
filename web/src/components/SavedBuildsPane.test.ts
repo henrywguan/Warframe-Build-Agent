@@ -19,4 +19,13 @@ describe("SavedBuildsPane", () => {
     assert.match(css, /min-width:\s*861px/);
     assert.ok(existsSync(join(here, "SavedBuildsPane.module.css")));
   });
+
+  it("supports a mobile overlay drawer like chat history", () => {
+    assert.match(pane, /mobileOpen/);
+    assert.match(pane, /onMobileClose/);
+    assert.match(pane, /Close saved builds/);
+    assert.match(css, /\.backdrop/);
+    assert.match(css, /\.paneOpen/);
+    assert.match(css, /max-width:\s*860px/);
+  });
 });
