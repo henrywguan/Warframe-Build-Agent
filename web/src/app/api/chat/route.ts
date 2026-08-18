@@ -23,6 +23,11 @@ import {
   extractSavedBuildFromToolPayloads,
   stripSavedBuildMarker,
 } from "@/lib/save-build-compose";
+import {
+  extractMarketQuotesFromToolPayloads,
+  stripMarketQuotesMarker,
+  type MarketQuotesPayload,
+} from "@/lib/market-quotes";
 import type { SavedBuild } from "@/lib/saved-builds";
 import {
   formatLlmConnectionError,
@@ -99,6 +104,7 @@ async function runModelCompletion(
   model: string;
   savedBuild?: SavedBuild;
   savedBuildFolder?: string;
+  marketQuotes?: MarketQuotesPayload;
 }> {
   const enableTools = options?.enableTools !== false;
   const client = getClient(clientLlm);
@@ -178,6 +184,7 @@ async function runModelCompletion(
     if (!toolCalls.length) {
       const content = choice.content?.trim();
       const saved = extractSavedBuildFromToolPayloads(toolPayloads);
+      const marketQuotes = extractMarketQuotesFromToolPayloads(toolPayloads);
       return {
         content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
         toolsUsed,
@@ -188,6 +195,7 @@ async function runModelCompletion(
               ...(saved.folderName ? { savedBuildFolder: saved.folderName } : {}),
             }
           : {}),
+        ...(marketQuotes ? { marketQuotes } : {}),
       };
     }
 
@@ -223,7 +231,7 @@ async function runModelCompletion(
         role: "tool",
         tool_call_id: call.id,
         content: annotateToolResultForOnlineConsent(
-          stripSavedBuildMarker(raw),
+          stripMarketQuotesMarker(stripSavedBuildMarker(raw)),
           Boolean(onlineSearchToggle),
         ),
       };
@@ -241,6 +249,7 @@ async function runModelCompletion(
   const finalChoice = finalCompletion.choices[0]?.message;
   const content = finalChoice?.content?.trim();
   const saved = extractSavedBuildFromToolPayloads(toolPayloads);
+  const marketQuotes = extractMarketQuotesFromToolPayloads(toolPayloads);
   return {
     content: content || fallbackFromToolResults(toolPayloads, toolsUsed),
     toolsUsed,
@@ -251,6 +260,7 @@ async function runModelCompletion(
           ...(saved.folderName ? { savedBuildFolder: saved.folderName } : {}),
         }
       : {}),
+    ...(marketQuotes ? { marketQuotes } : {}),
   };
 }
 
@@ -268,6 +278,7 @@ async function runVisionLoadoutWithoutTools(
   model: string;
   savedBuild?: SavedBuild;
   savedBuildFolder?: string;
+  marketQuotes?: MarketQuotesPayload;
 }> {
   const client = getClient(clientLlm);
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
@@ -293,6 +304,7 @@ async function runModelCompletionSafe(
   model: string;
   savedBuild?: SavedBuild;
   savedBuildFolder?: string;
+  marketQuotes?: MarketQuotesPayload;
 }> {
   const withImages = hasImages(incoming);
   const preferNoTools = withImages && !modelLikelySupportsTools(model);
@@ -430,6 +442,7 @@ export async function POST(request: Request) {
           ...(local.savedBuildFolder
             ? { savedBuildFolder: local.savedBuildFolder }
             : {}),
+          ...(local.marketQuotes ? { marketQuotes: local.marketQuotes } : {}),
           fallback: isLlmConnectionError(error) ? "local-after-llm-unreachable" : "local-after-missing-key",
         });
       } catch (localError) {

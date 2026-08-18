@@ -35,6 +35,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/vendor <syndicate>` | Standing gift priorities stub |
 | `/slug <item name>` | Resolve Warframe.market slug |
 | `/market <slug>` | Live Warframe.market price (e.g. `mirage_prime_set`) |
+| `/wfm <item>` | In-game max-rank sellers + whisper copy panel (`/warframe-market`) |
 | `/market-changes` | Daily 4pm Pacific market scrape changes |
 | `/patches [n]` | Latest official updates/hotfixes (hub titles/links) |
 | `/hotfix` | Alias for `/patches` |
@@ -151,6 +152,7 @@ npm run wf -- construction
 npm run market -- status
 npm run market -- price mirage_prime_set
 npm run market -- slug-search "Mirage Prime set"
+npm run market -- wfm "Primed Continuity"
 npm run market -- pull --force
 npm run market -- changes
 

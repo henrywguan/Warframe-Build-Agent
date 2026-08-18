@@ -24,6 +24,36 @@ describe("resolveChatTurn", () => {
     assert.equal(modelCalls, 0);
   });
 
+  it("passes marketQuotes through from slash commands", async () => {
+    const quotes = {
+      slug: "primed_continuity",
+      itemName: "Primed Continuity",
+      source: "full" as const,
+      fetchedAt: "2026-08-18T00:00:00.000Z",
+      url: "https://warframe.market/items/primed_continuity",
+      quotes: [
+        {
+          ign: "SellerA",
+          platinum: 80,
+          quantity: 1,
+          whisper: "/w SellerA Hi!",
+        },
+      ],
+    };
+    const result = await resolveChatTurn([{ role: "user", content: "/wfm Primed Continuity" }], {
+      runSlash: async () => ({
+        handled: true,
+        content: "Opened Market Quotes panel",
+        toolsUsed: ["lookup_market_sellers"],
+        marketQuotes: quotes,
+      }),
+      runModel: async () => ({ content: "model", toolsUsed: [], model: "gpt" }),
+    });
+    assert.equal(result.model, "slash-command");
+    assert.equal(result.marketQuotes?.slug, "primed_continuity");
+    assert.equal(result.toolsUsed[0], "lookup_market_sellers");
+  });
+
   it("falls through to the model for plain language", async () => {
     const result = await resolveChatTurn(
       [{ role: "user", content: "Budget Coda Hema for Steel Path?" }],

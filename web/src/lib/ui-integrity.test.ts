@@ -33,6 +33,8 @@ describe("web UI wiring integrity", () => {
       "Clear",
       "ChatHistorySidebar",
       "SavedBuildsPane",
+      "MarketQuotePanel",
+      "marketQuotes",
       "savedBuilds",
       "buildsToggle",
       "buildsOpen",

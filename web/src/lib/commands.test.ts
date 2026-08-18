@@ -22,6 +22,7 @@ describe("slash commands", () => {
     assert.match(result.content, /\/patch /);
     assert.match(result.content, /\/model/);
     assert.match(result.content, /\/market/);
+    assert.match(result.content, /\/wfm/);
     assert.match(result.content, /\/baro/);
     assert.match(result.content, /\/build/);
     assert.match(result.content, /\/farm/);
@@ -78,6 +79,21 @@ describe("slash commands", () => {
     if (!result.handled) return;
     assert.match(result.content, /Usage: \/market/);
     assert.deepEqual(result.toolsUsed, []);
+  });
+
+  it("returns wfm usage when query missing", async () => {
+    const result = await runSlashCommand("/wfm");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Usage: \/wfm/);
+    assert.deepEqual(result.toolsUsed, []);
+  });
+
+  it("registers /warframe-market as a /wfm alias", async () => {
+    const result = await runSlashCommand("/warframe-market");
+    assert.equal(result.handled, true);
+    if (!result.handled) return;
+    assert.match(result.content, /Usage: \/wfm/);
   });
 
   it("handles unknown commands with the catalog", async () => {

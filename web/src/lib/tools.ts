@@ -12,6 +12,7 @@ import {
   composeSavedBuildFromToolArgs,
   encodeSavedBuildToolResult,
 } from "@/lib/save-build-compose";
+import { encodeMarketQuotesToolResult } from "@/lib/market-quotes";
 import {
   packArcaneLookup,
   packBuildLookup,
@@ -30,6 +31,7 @@ import {
   liveFissures,
   liveInvasions,
   liveMarketDailyChanges,
+  liveMarketIngameQuotes,
   liveMarketPrice,
   liveMarketSlugSearch,
   liveNightwave,
@@ -337,7 +339,7 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     function: {
       name: "get_market_price",
       description:
-        "Get live Warframe.market v2 top-order price summary for an item slug (e.g. mirage_prime_set).",
+        "Get live Warframe.market v2 top-order price summary for an item slug (lowest/median platinum). Does not return seller IGNs or whisper text. For in-game sellers / copy-whisper / Buy listings, use lookup_market_sellers instead.",
       parameters: {
         type: "object",
         properties: {
@@ -363,6 +365,26 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
           query: {
             type: "string",
             description: "Item display name or partial slug (e.g. Mirage Prime set)",
+          },
+        },
+        required: ["query"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "lookup_market_sellers",
+      description:
+        "Find in-game Warframe.market sell orders (status=ingame, max rank when the item has maxRank) and build /w whisper copy for the cheapest listings. Use when the Operator wants to buy, whisper, copy WFM paste, or see in-game sellers — not for a price-only summary (use get_market_price).",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description:
+              "Item display name or market slug (e.g. Primed Continuity, soma_prime_set)",
           },
         },
         required: ["query"],
@@ -766,6 +788,12 @@ export async function runChatTool(
         const slug = asString(args.slug);
         if (!slug) return "Missing required slug.";
         return await liveMarketPrice(slug);
+      }
+      case "lookup_market_sellers": {
+        const query = asString(args.query);
+        if (!query) return "Missing required query.";
+        const result = await liveMarketIngameQuotes(query);
+        return encodeMarketQuotesToolResult(result);
       }
       case "search_market_slug":
         return await withRequiredQuery(args, liveMarketSlugSearch);

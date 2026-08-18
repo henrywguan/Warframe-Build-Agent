@@ -145,6 +145,7 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/fissures [sp] [tier]` | Live fissures |
 | `/cycles` / `/sortie` / `/alerts` / `/invasions` | Live worldstate slices |
 | `/market <slug>` | Live Warframe.market price |
+| `/wfm <item>` | In-game max-rank sellers + whisper panel |
 | `/market-changes` | Daily 4pm Pacific market scrape |
 | `/list` / `/help` | Command catalog |
 | `/model` | Active LLM model id for this session |
@@ -176,7 +177,9 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 ## What the chat can tool-call
 
 - Worldstate summary, fissures, cycles, sortie, invasions, alerts, **arbitration**, **Darvo deals**, **construction progress**
-- Warframe.market v2 price by slug
+- Warframe.market v2 price by slug (`get_market_price`)
+- In-game sellers + `/w` whisper copy (`lookup_market_sellers` / `/wfm`) — opens the Market Quotes panel
+- Latest saved daily market changes (4pm Pacific job)
 - Latest saved daily market changes (4pm Pacific job)
 - Latest official updates/hotfixes (live hub scrape)
 - Newly listed patch notes since the previous daily snapshot (4pm Pacific job)

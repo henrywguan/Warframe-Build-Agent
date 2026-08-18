@@ -13,6 +13,7 @@ import {
   type CommandResult,
 } from "./commands";
 import type { SavedBuild } from "./saved-builds";
+import type { MarketQuotesPayload } from "./market-quotes";
 
 export interface ChatTurnMessage {
   role: "user" | "assistant";
@@ -27,6 +28,8 @@ export interface ChatTurnResult {
   savedBuild?: SavedBuild;
   /** Optional folder name to create/select when applying savedBuild. */
   savedBuildFolder?: string;
+  /** Structured in-game seller quotes for the Market Quotes panel. */
+  marketQuotes?: MarketQuotesPayload;
 }
 
 export interface ChatTurnDeps {
@@ -37,6 +40,7 @@ export interface ChatTurnDeps {
     model: string;
     savedBuild?: SavedBuild;
     savedBuildFolder?: string;
+    marketQuotes?: MarketQuotesPayload;
   }>;
   /** Optional fully-local path (no cloud LLM). */
   runLocal?: (messages: IncomingChatMessage[]) => Promise<{
@@ -45,6 +49,7 @@ export interface ChatTurnDeps {
     model: string;
     savedBuild?: SavedBuild;
     savedBuildFolder?: string;
+    marketQuotes?: MarketQuotesPayload;
   }>;
   preferLocal?: boolean;
   /** Resolved model for this request — used for identity questions / `/model`. */
@@ -89,6 +94,7 @@ export async function resolveChatTurn(
           message: { role: "assistant", content: result.content },
           toolsUsed: result.toolsUsed,
           model: "slash-command",
+          ...(result.marketQuotes ? { marketQuotes: result.marketQuotes } : {}),
         };
       }
     }
@@ -104,6 +110,7 @@ export async function resolveChatTurn(
       ...(localResult.savedBuildFolder
         ? { savedBuildFolder: localResult.savedBuildFolder }
         : {}),
+      ...(localResult.marketQuotes ? { marketQuotes: localResult.marketQuotes } : {}),
     };
   }
 
@@ -116,5 +123,6 @@ export async function resolveChatTurn(
     ...(modelResult.savedBuildFolder
       ? { savedBuildFolder: modelResult.savedBuildFolder }
       : {}),
+    ...(modelResult.marketQuotes ? { marketQuotes: modelResult.marketQuotes } : {}),
   };
 }

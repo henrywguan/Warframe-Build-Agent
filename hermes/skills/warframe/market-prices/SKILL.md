@@ -13,19 +13,23 @@ metadata:
 
 ## When to use
 
-Player asks what something is worth, the market slug for a name, whether to buy/sell, or how a watchlist item moved day-over-day.
+Player asks what something is worth, the market slug for a name, whether to buy/sell, **in-game sellers / whisper copy**, or how a watchlist item moved day-over-day.
 
 ## Procedure
 
 1. Resolve item **slugs** when unknown:
    - `npm run market -- slug-search "<name>"`
-2. Prefer live Warframe.market v2 top orders:
+2. Prefer live Warframe.market v2 top orders for a **price summary**:
    - `GET https://api.warframe.market/v2/orders/item/{slug}/top`
    - Or repo CLI: `npm run market -- price <slug>`
-3. Prefer the highest **sell rank** present in top orders when ranks exist.
-4. Treat values as **listing snapshots**, not guaranteed clears.
-5. For day-over-day moves, use saved daily snapshots / `npm run market -- changes` when available (4pm Pacific job).
-6. Always caveat volatility.
+3. When the player wants **in-game sellers / whisper paste / Buy**:
+   - Web: `/wfm "<item>"` or tool `lookup_market_sellers`
+   - CLI: `npm run market -- wfm "Primed Continuity"`
+   - Filter: `type=sell`, `user.status=ingame`, max rank when present; cheapest 5
+4. Prefer the highest **sell rank** present in top orders when ranks exist.
+5. Treat values as **listing snapshots**, not guaranteed clears.
+6. For day-over-day moves, use saved daily snapshots / `npm run market -- changes` when available (4pm Pacific job).
+7. Always caveat volatility.
 
 ## References
 

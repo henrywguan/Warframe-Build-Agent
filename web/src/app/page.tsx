@@ -50,6 +50,7 @@ import {
 } from "../lib/chat-memory";
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import { SavedBuildsPane } from "../components/SavedBuildsPane";
+import { MarketQuotePanel } from "../components/MarketQuotePanel";
 import { ReplyLoader } from "../components/ReplyLoader";
 import {
   type SavedBuildsMemory,
@@ -65,6 +66,10 @@ import {
   type SavedBuild,
 } from "../lib/saved-builds";
 import { resolvePromptSuggestions } from "../lib/prompt-suggestions";
+import {
+  isMarketQuotesPayload,
+  type MarketQuotesPayload,
+} from "../lib/market-quotes";
 import styles from "./page.module.css";
 
 const VoidField = dynamic(
@@ -170,6 +175,10 @@ export default function HomePage() {
   >("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [buildsOpen, setBuildsOpen] = useState(false);
+  const [marketQuotes, setMarketQuotes] = useState<MarketQuotesPayload | null>(
+    null,
+  );
+  const [marketQuotesOpen, setMarketQuotesOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -421,6 +430,7 @@ export default function HomePage() {
         error?: string;
         savedBuild?: SavedBuild;
         savedBuildFolder?: string;
+        marketQuotes?: MarketQuotesPayload;
       };
 
       if (!response.ok) {
@@ -451,6 +461,11 @@ export default function HomePage() {
           setSidebarOpen(false);
           setBuildsOpen(true);
         }
+      }
+
+      if (isMarketQuotesPayload(data.marketQuotes) && data.marketQuotes.quotes.length) {
+        setMarketQuotes(data.marketQuotes);
+        setMarketQuotesOpen(true);
       }
 
       setMessages((current) => [
@@ -933,6 +948,11 @@ export default function HomePage() {
         onFilterFolder={setBuildFolderFilter}
         mobileOpen={buildsOpen}
         onMobileClose={() => setBuildsOpen(false)}
+      />
+      <MarketQuotePanel
+        quotes={marketQuotes}
+        open={marketQuotesOpen}
+        onClose={() => setMarketQuotesOpen(false)}
       />
       </div>
     </>

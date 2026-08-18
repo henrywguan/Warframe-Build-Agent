@@ -1,5 +1,19 @@
 import { loadDailyJson } from "@/lib/daily-data";
 import {
+  filterIngameMaxedSells,
+  formatAmbiguousSlugs,
+  formatNoIngameSellers,
+  formatQuotesOpened,
+  itemLooksLikeRiven,
+  itemMaxRank,
+  marketItemUrl,
+  normalizeMarketOrders,
+  pickMarketSlug,
+  toMarketQuoteRows,
+  type MarketOrderLike,
+  type MarketQuotesPayload,
+} from "@/lib/market-quotes";
+import {
   PATCH_DETAIL_DEFAULT_MAX_CHARS,
   formatPatchDetail,
   parsePatchDetailHtml,
@@ -126,8 +140,28 @@ async function statusGet<T>(pathName: string): Promise<T> {
   return (await response.json()) as T;
 }
 
-async function marketGet<T>(pathName: string): Promise<T> {
-  const response = await fetch(`${MARKET_BASE}${pathName}`, {
+class MarketHttpError extends Error {
+  readonly status: number;
+  readonly path: string;
+
+  constructor(message: string, status: number, path: string) {
+    super(message);
+    this.name = "MarketHttpError";
+    this.status = status;
+    this.path = path;
+  }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function marketGet<T>(
+  pathName: string,
+  fetchImpl: typeof fetch = fetch,
+  attempt = 1,
+): Promise<T> {
+  const response = await fetchImpl(`${MARKET_BASE}${pathName}`, {
     headers: {
       Accept: "application/json",
       Language: "en",
@@ -137,7 +171,20 @@ async function marketGet<T>(pathName: string): Promise<T> {
     cache: "no-store",
   });
   if (!response.ok) {
-    throw new Error(`Warframe.market ${response.status} for ${pathName}`);
+    const retryable =
+      response.status === 429 ||
+      response.status === 502 ||
+      response.status === 503 ||
+      response.status === 504;
+    if (retryable && attempt < 4) {
+      await sleep(500 * attempt);
+      return marketGet<T>(pathName, fetchImpl, attempt + 1);
+    }
+    throw new MarketHttpError(
+      `Warframe.market ${response.status} for ${pathName}`,
+      response.status,
+      pathName,
+    );
   }
   const body = (await response.json()) as { data: T; error: string | null };
   if (body.error) throw new Error(body.error);
@@ -820,9 +867,116 @@ export async function liveMarketSlugSearch(query: string): Promise<string> {
     "",
     ...scored.map((row) => `• ${row.name} → ${row.slug}`),
     "",
-    "Next: /market <slug>",
+    "Next: /market <slug>  ·  in-game sellers: /wfm <slug>",
   ];
   return lines.join("\n");
+}
+
+export type LiveMarketQuotesResult = {
+  content: string;
+  quotes?: MarketQuotesPayload;
+};
+
+export async function liveMarketIngameQuotes(
+  query: string,
+  options?: { fetchImpl?: typeof fetch },
+): Promise<LiveMarketQuotesResult> {
+  const fetchImpl = options?.fetchImpl ?? fetch;
+  const cleaned = query.trim().replace(/^["']|["']$/g, "");
+  if (!cleaned) {
+    return {
+      content:
+        "Usage: /wfm <item name>\nExample: /wfm Primed Continuity\nTip: /slug <item> then /wfm <slug>",
+    };
+  }
+
+  const catalog = await marketGet<
+    Array<{
+      slug: string;
+      tags?: string[];
+      maxRank?: number;
+      modMaxRank?: number;
+      i18n?: Record<string, { name?: string }>;
+    }>
+  >("/items", fetchImpl);
+
+  const pick = pickMarketSlug(
+    cleaned,
+    catalog.map((item) => ({
+      slug: item.slug,
+      name: item.i18n?.en?.name ?? item.slug,
+    })),
+  );
+
+  if (pick.kind === "none") {
+    return {
+      content: [
+        `No Warframe.market slug match for “${cleaned}”.`,
+        "Try a shorter name, or `/slug <item>` then `/wfm <slug>`.",
+      ].join("\n"),
+    };
+  }
+  if (pick.kind === "ambiguous") {
+    return { content: formatAmbiguousSlugs(cleaned, pick.matches) };
+  }
+
+  const slug = pick.match.slug;
+  const item = await marketGet<{
+    slug: string;
+    tags?: string[];
+    maxRank?: number;
+    modMaxRank?: number;
+    i18n?: Record<string, { name?: string }>;
+  }>(`/items/${encodeURIComponent(slug)}`, fetchImpl).catch(() => null);
+
+  const catalogRow = catalog.find((row) => row.slug === slug);
+  const itemName = item?.i18n?.en?.name ?? pick.match.name;
+  const tags = item?.tags ?? catalogRow?.tags;
+
+  if (itemLooksLikeRiven(slug, tags)) {
+    return {
+      content: [
+        `**${itemName}** is a Riven listing.`,
+        "Rivens use Warframe.market **auctions**, not this sell-order book — out of scope for `/wfm`.",
+      ].join("\n"),
+    };
+  }
+
+  const maxRank = itemMaxRank(item ?? catalogRow);
+  let orders: MarketOrderLike[] = [];
+  let source: "full" | "top" = "full";
+  try {
+    const data = await marketGet<unknown>(
+      `/orders/item/${encodeURIComponent(slug)}`,
+      fetchImpl,
+    );
+    orders = normalizeMarketOrders(data);
+  } catch (error) {
+    const status = error instanceof MarketHttpError ? error.status : 0;
+    if (status !== 404 && status !== 400) throw error;
+    source = "top";
+    const top = await marketGet<{
+      sell?: MarketOrderLike[];
+      buy?: MarketOrderLike[];
+    }>(`/orders/item/${encodeURIComponent(slug)}/top`, fetchImpl);
+    orders = [...(top.sell ?? []), ...(top.buy ?? [])];
+  }
+
+  const filtered = filterIngameMaxedSells(orders, maxRank);
+  if (!filtered.length) {
+    return { content: formatNoIngameSellers(itemName, slug, maxRank) };
+  }
+
+  const quotes: MarketQuotesPayload = {
+    slug,
+    itemName,
+    ...(maxRank !== undefined ? { maxRank } : {}),
+    source,
+    fetchedAt: new Date().toISOString(),
+    quotes: toMarketQuoteRows(filtered, itemName),
+    url: marketItemUrl(slug),
+  };
+  return { content: formatQuotesOpened(quotes), quotes };
 }
 
 export async function livePatchNotesDailyChanges(): Promise<string> {

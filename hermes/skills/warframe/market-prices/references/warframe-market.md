@@ -19,6 +19,7 @@ Scheduled target: **4:00 PM America/Los_Angeles** (PST/PDT).
 ```bash
 npm run market -- status
 npm run market -- price mirage_prime_set
+npm run market -- wfm "Primed Continuity"
 npm run market -- snapshot
 npm run market -- pull --force          # run now, ignore 4pm gate
 npm run market -- changes
@@ -51,11 +52,14 @@ GitHub Action [`.github/workflows/market-daily-prices.yml`](../.github/workflows
 - Spreads, offline/online mix, and thin order books can still skew a single number
 - Always re-check warframe.market before large trades
 - Empty/missing previous snapshot = baseline day (no % change yet)
+- In-game seller quotes (`/wfm`) filter `status=ingame` at max rank; that is WFM status, not a guaranteed trade
+- Rivens are auctions, not this order book
 
 ## Useful v2 routes used here
 
 | Route | Use |
 | --- | --- |
 | `GET /items` | Catalog + display names |
-| `GET /items/{slug}` | Single item metadata |
+| `GET /items/{slug}` | Single item metadata (`maxRank` when present) |
+| `GET /orders/item/{slug}` | Full order book for in-game seller quotes |
 | `GET /orders/item/{slug}/top` | Top sell/buy orders for pricing |
