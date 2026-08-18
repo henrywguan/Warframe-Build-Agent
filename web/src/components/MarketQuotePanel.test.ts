@@ -9,11 +9,11 @@ const panel = readFileSync(join(here, "MarketQuotePanel.tsx"), "utf8");
 const css = readFileSync(join(here, "MarketQuotePanel.module.css"), "utf8");
 
 describe("MarketQuotePanel", () => {
-  it("ships copy/buy whisper actions and window chrome", () => {
+  it("ships buy whisper action and window chrome", () => {
     assert.match(panel, /wfm-item-search/);
     assert.match(panel, /\/api\/market\/wfm/);
     assert.match(panel, /MARKET_QUOTE_LIMIT|5 cheapest/);
-    assert.match(panel, /Copy/);
+    assert.doesNotMatch(panel, /: "Copy"/);
     assert.match(panel, /Buy/);
     assert.match(panel, /navigator\.clipboard/);
     assert.match(panel, /Minimize market quotes/);

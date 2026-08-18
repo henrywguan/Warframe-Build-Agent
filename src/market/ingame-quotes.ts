@@ -183,7 +183,7 @@ export function formatQuotesOpened(payload: MarketQuotesPayload): string {
     "",
     ...payload.quotes.map((row) => `• ${row.ign} · ${row.platinum}p`),
     "",
-    "Opened Market Quotes panel — Copy or Buy pastes `/w IGN …` (confirm in-game).",
+    "Opened Market Quotes panel — Buy pastes `/w IGN …` (confirm in-game).",
   ];
   if (caveat) lines.splice(2, 0, caveat, "");
   lines.push(
