@@ -264,7 +264,6 @@
   gap: 0.4rem;
 }
 
-.copyBtn,
 .buyBtn {
   flex: 1;
   min-height: 2.05rem;
@@ -274,22 +273,6 @@
   text-transform: uppercase;
   font-size: 0.7rem;
   font-weight: 700;
-}
-
-.copyBtn {
-  border: 1px solid rgba(155, 180, 200, 0.4);
-  background: rgba(0, 0, 0, 0.28);
-  color: var(--ink);
-}
-
-.copyBtn:hover,
-.copyBtn:focus-visible {
-  border-color: var(--plasma, #5eb8e8);
-  color: var(--plasma, #5eb8e8);
-  outline: none;
-}
-
-.buyBtn {
   border: 1px solid var(--gold, #d7b56d);
   background: linear-gradient(180deg, rgba(215, 181, 109, 0.28), rgba(122, 101, 52, 0.22));
   color: var(--gold, #d7b56d);
@@ -342,7 +325,6 @@
     flex-wrap: wrap;
   }
 
-  .copyBtn,
   .buyBtn {
     min-width: 6.5rem;
   }

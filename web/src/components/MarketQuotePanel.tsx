@@ -437,13 +437,6 @@ export function MarketQuotePanel({
                       <div className={styles.rowActions}>
                         <button
                           type="button"
-                          className={styles.copyBtn}
-                          onClick={() => void copyWhisper(key, row.whisper)}
-                        >
-                          {copied ? "Copied" : "Copy"}
-                        </button>
-                        <button
-                          type="button"
                           className={styles.buyBtn}
                           onClick={() => void copyWhisper(key, row.whisper)}
                         >
@@ -462,7 +455,7 @@ export function MarketQuotePanel({
             </>
           ) : !status && !matches.length ? (
             <p className={styles.note}>
-              Search an item for the {MARKET_QUOTE_LIMIT} cheapest in-game max-rank sellers. Copy or Buy
+              Search an item for the {MARKET_QUOTE_LIMIT} cheapest in-game max-rank sellers. Buy
               pastes a `/w` whisper.
             </p>
           ) : null}

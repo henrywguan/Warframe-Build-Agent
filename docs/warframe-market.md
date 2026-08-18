@@ -54,7 +54,7 @@ The on-the-go UI (`web/`) can call:
 - `lookup_market_sellers` — in-game max-rank **sell quotes** + `/w` whisper copy (`/wfm`)
 - `get_market_daily_changes` — saved day-over-day diff via `MARKET_CHANGES_URL` (or local `data/market/latest-changes.json` in dev)
 
-`/wfm <item>` (alias `/warframe-market`) opens a floating **Market Quotes** panel with Copy / Buy (clipboard whisper). `/market <slug>` stays a short price summary.
+`/wfm <item>` (alias `/warframe-market`) opens a floating **Market Quotes** panel with Buy (clipboard whisper). `/market <slug>` stays a short price summary.
 
 See [`docs/web-chat.md`](web-chat.md).
 
