@@ -19,7 +19,10 @@ describe("DesktopTaskbar", () => {
     assert.match(css, /flex-direction:\s*column/);
     assert.match(css, /itemSelected/);
     assert.match(css, /itemSignal/);
-    assert.match(css, /overflow-y:\s*hidden/);
+    assert.match(css, /max-height:\s*2\.4rem/);
+    assert.match(css, /overflow-wrap:\s*break-word/);
+    assert.doesNotMatch(css, /max-width:\s*8\.5rem/);
+    assert.doesNotMatch(css, /padding-right:\s*0\.75rem/);
     assert.match(css, /prefers-reduced-motion/);
     assert.doesNotMatch(css, /#1F9CFE/);
     assert.ok(existsSync(join(here, "DesktopTaskbar.module.css")));
