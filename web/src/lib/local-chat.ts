@@ -22,11 +22,17 @@ import {
   composeSavedBuildFromParsedLoadout,
   looksLikeSaveBuildRequest,
 } from "@/lib/save-build-compose";
+import {
+  extractMarketSellerQuery,
+  looksLikeMarketSellerRequest,
+  type MarketQuotesPayload,
+} from "@/lib/market-quotes";
 import type { SavedBuild } from "@/lib/saved-builds";
 import { looksLikeBuildRequest } from "@/lib/source-policy";
 import {
   liveCycles,
   liveFissures,
+  liveMarketIngameQuotes,
   livePatchNotesDetail,
   livePatchNotesLatest,
   liveWorldstateSummary,
@@ -38,6 +44,7 @@ export type LocalChatResult = {
   model: "local-knowledge";
   savedBuild?: SavedBuild;
   savedBuildFolder?: string;
+  marketQuotes?: MarketQuotesPayload;
 };
 
 function extractJsonLoadout(text: string): ParsedLoadout | null {
@@ -174,6 +181,20 @@ async function handlePlainLocal(text: string): Promise<LocalChatResult> {
   }
 
   const lower = text.toLowerCase();
+
+  if (looksLikeMarketSellerRequest(text)) {
+    const query = extractMarketSellerQuery(text);
+    if (query) {
+      toolsUsed.push("lookup_market_sellers");
+      const result = await liveMarketIngameQuotes(query);
+      return {
+        content: result.content,
+        toolsUsed,
+        model: "local-knowledge",
+        ...(result.quotes ? { marketQuotes: result.quotes } : {}),
+      };
+    }
+  }
 
   const dpsCompare = text.match(
     /^\s*(?:which\s+has\s+higher\s+(?:damage|dps)\s*[,:-]?\s*)?(.+?)\s+(?:vs|versus|or)\s+(.+?)(?:\?|$)/i,
@@ -323,6 +344,7 @@ export async function runLocalChat(
         content: slash.content,
         toolsUsed: slash.toolsUsed,
         model: "local-knowledge",
+        ...(slash.marketQuotes ? { marketQuotes: slash.marketQuotes } : {}),
       };
     }
   }

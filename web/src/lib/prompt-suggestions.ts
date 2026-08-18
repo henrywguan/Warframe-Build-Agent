@@ -69,7 +69,7 @@ export function extractTopicHint(text: string): string | null {
   if (!cleaned) return null;
 
   const patterns: RegExp[] = [
-    /\/(?:build|farm|dps|knowledge|compare|arcanes|preset)\s+([^/\n]+)$/i,
+    /\/(?:build|farm|dps|knowledge|compare|arcanes|preset|wfm|warframe-market)\s+([^/\n]+)$/i,
     /\/market\s+([a-z0-9_]+)/i,
     /(?:build|builds|loadout)\s+(?:for\s+)?([A-Za-z][\w'’\-]+(?:\s+[A-Za-z][\w'’\-]+){0,3})/i,
     /(?:farm|farming|acquire|how (?:do|to) (?:I )?get)\s+([A-Za-z][\w'’\-]+(?:\s+[A-Za-z][\w'’\-]+){0,3})/i,
@@ -221,7 +221,7 @@ function suggestionsFromTools(
     }
   }
 
-  if (has("get_market_price", "search_market_slug", "get_market_daily_changes")) {
+  if (has("get_market_price", "search_market_slug", "get_market_daily_changes", "lookup_market_sellers")) {
     pushUnique(out, seen, {
       id: "follow-market-day",
       label: "Market daily changes",
@@ -235,6 +235,12 @@ function suggestionsFromTools(
           id: "follow-market-item",
           label: clipLabel(`Price ${topic}`),
           prompt: `/market ${slug}`,
+          kind: "prompt",
+        });
+        pushUnique(out, seen, {
+          id: "follow-wfm-item",
+          label: clipLabel(`Sellers ${topic}`),
+          prompt: `/wfm ${topic}`,
           kind: "prompt",
         });
       }

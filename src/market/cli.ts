@@ -4,6 +4,18 @@ import { fileURLToPath } from "node:url";
 import { WarframeMarketClient, WarframeMarketError } from "./client.js";
 import { formatItemPrice, formatPriceChanges, formatSnapshot } from "./format.js";
 import {
+  filterIngameMaxedSells,
+  formatAmbiguousSlugs,
+  formatNoIngameSellers,
+  formatQuotesCli,
+  itemLooksLikeRiven,
+  itemMaxRank,
+  marketItemUrl,
+  pickMarketSlug,
+  toMarketQuoteRows,
+  type MarketQuotesPayload,
+} from "./ingame-quotes.js";
+import {
   buildDailySnapshot,
   computePriceChanges,
   findPreviousSnapshot,
@@ -29,6 +41,7 @@ const DEFAULT_DATA_DIR = path.join(ROOT, "data/market");
 const COMMANDS = [
   "price",
   "slug-search",
+  "wfm",
   "snapshot",
   "changes",
   "pull",
@@ -57,6 +70,7 @@ Usage:
 Commands:
   price <slug>            Live top-order summary for one item
   slug-search <query>     Fuzzy item name → market slug
+  wfm <query>             In-game max-rank sell quotes + /w whisper lines
   snapshot                Pull watchlist snapshot now (no timezone gate)
   changes                 Show latest saved day-over-day changes
   pull                    Daily job: snapshot at 4pm Pacific, write changes
@@ -125,7 +139,9 @@ function parseArgs(argv: string[]): ParsedArgs {
       }
       default:
         if (
-          (parsed.command === "price" || parsed.command === "slug-search") &&
+          (parsed.command === "price" ||
+            parsed.command === "slug-search" ||
+            parsed.command === "wfm") &&
           !parsed.slug &&
           !parsed.query &&
           !token.startsWith("-")
@@ -156,6 +172,59 @@ function scoreMarketName(query: string, name: string, slug: string): number {
   const qTokens = q.split(" ").filter(Boolean);
   const nTokens = new Set(n.split(" ").filter(Boolean));
   return qTokens.filter((t) => nTokens.has(t)).length * 18;
+}
+
+async function runWfmQuotes(
+  query: string,
+  platform?: MarketPlatform,
+): Promise<{ text: string; payload?: MarketQuotesPayload }> {
+  const client = new WarframeMarketClient({ platform });
+  const catalog = await client.listItems();
+  const pick = pickMarketSlug(
+    query,
+    catalog.map((item) => ({
+      slug: item.slug,
+      name: item.i18n?.en?.name ?? item.slug,
+    })),
+  );
+  if (pick.kind === "none") {
+    return { text: `No Warframe.market slug match for “${query}”.` };
+  }
+  if (pick.kind === "ambiguous") {
+    return { text: formatAmbiguousSlugs(query, pick.matches) };
+  }
+
+  const slug = pick.match.slug;
+  const item = await client.getItem(slug).catch(() => null);
+  const itemName = item?.i18n?.en?.name ?? pick.match.name;
+  if (itemLooksLikeRiven(slug, item?.tags)) {
+    return {
+      text: [
+        `${itemName} is a Riven listing.`,
+        "Rivens use Warframe.market auctions, not this sell-order book.",
+      ].join("\n"),
+    };
+  }
+
+  const maxRank = itemMaxRank(item);
+  const { orders, source } = await client.getItemOrders(slug);
+  const filtered = filterIngameMaxedSells(orders, maxRank);
+  const payload: MarketQuotesPayload = {
+    slug,
+    itemName,
+    ...(maxRank !== undefined ? { maxRank } : {}),
+    source,
+    fetchedAt: new Date().toISOString(),
+    quotes: toMarketQuoteRows(filtered, itemName),
+    url: marketItemUrl(slug),
+  };
+  if (!payload.quotes.length) {
+    return {
+      text: formatNoIngameSellers(itemName, slug, maxRank),
+      payload,
+    };
+  }
+  return { text: formatQuotesCli(payload), payload };
 }
 
 async function main(): Promise<void> {
@@ -240,6 +309,16 @@ async function main(): Promise<void> {
             ].join("\n")
           : `No slug match for “${parsed.query}”.`,
       );
+      break;
+    }
+    case "wfm": {
+      if (!parsed.query) {
+        throw new Error(
+          'Command "wfm" requires a query, e.g. npm run market -- wfm "Primed Continuity"',
+        );
+      }
+      const result = await runWfmQuotes(parsed.query, parsed.platform);
+      print(result.payload ?? { query: parsed.query, error: result.text }, result.text);
       break;
     }
     case "snapshot": {

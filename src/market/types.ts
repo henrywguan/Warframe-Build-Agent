@@ -37,6 +37,10 @@ export interface MarketItem {
   ducats?: number;
   tradingTax?: number;
   tradable?: boolean;
+  /** Present on mods/arcanes. Sets/relics/blueprints omit this. */
+  maxRank?: number;
+  /** Alternate v2 spelling seen on some payloads. */
+  modMaxRank?: number;
   i18n?: Record<string, MarketItemI18n>;
 }
 

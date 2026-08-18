@@ -61,6 +61,7 @@ npm run wf -- construction
 npm run market -- status
 npm run market -- price mirage_prime_set
 npm run market -- slug-search "Mirage Prime set"
+npm run market -- wfm "Primed Continuity"
 npm run market -- pull --force
 npm run market -- changes
 npm run patches -- latest

@@ -5,9 +5,11 @@ import {
   type MarketApiEnvelope,
   type MarketClientOptions,
   type MarketItem,
+  type MarketOrder,
   type MarketPlatform,
   type MarketTopOrders,
 } from "./types.js";
+import { normalizeMarketOrders } from "./ingame-quotes.js";
 
 export class WarframeMarketError extends Error {
   readonly status: number;
@@ -52,6 +54,32 @@ export class WarframeMarketClient {
     return this.request<MarketTopOrders>(
       `/orders/item/${encodeURIComponent(slug)}/top`,
     );
+  }
+
+  /**
+   * Full item order book when available; falls back to `/top` on 404/400.
+   * Mixed sell+buy — filter with `filterIngameMaxedSells`.
+   */
+  async getItemOrders(
+    slug: string,
+  ): Promise<{ orders: MarketOrder[]; source: "full" | "top" }> {
+    try {
+      const data = await this.request<unknown>(
+        `/orders/item/${encodeURIComponent(slug)}`,
+      );
+      return { orders: normalizeMarketOrders(data), source: "full" };
+    } catch (error) {
+      const status =
+        error instanceof WarframeMarketError ? error.status : 0;
+      if (status === 404 || status === 400) {
+        const top = await this.getTopOrders(slug);
+        return {
+          orders: [...(top.sell ?? []), ...(top.buy ?? [])],
+          source: "top",
+        };
+      }
+      throw error;
+    }
   }
 
   async getTopOrdersMany(

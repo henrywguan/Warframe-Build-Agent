@@ -13,6 +13,8 @@ import {
   stubVendor,
 } from "@/lib/pack-commands";
 import { runChatTool } from "./tools";
+import { liveMarketIngameQuotes } from "./warframe-live";
+import type { MarketQuotesPayload } from "./market-quotes";
 import {
   relicPositionalArgs,
   runEhpSlash,
@@ -203,6 +205,18 @@ export const CHAT_COMMANDS: ChatCommand[] = [
     kind: "tool",
   },
   {
+    name: "wfm",
+    usage: "/wfm <item>",
+    description: "In-game max-rank sellers + whisper copy panel",
+    kind: "tool",
+  },
+  {
+    name: "warframe-market",
+    usage: "/warframe-market <item>",
+    description: "Alias for /wfm",
+    kind: "tool",
+  },
+  {
     name: "market-changes",
     usage: "/market-changes",
     description: "Daily 4pm Pacific market scrape changes",
@@ -332,7 +346,7 @@ export function formatCommandList(): string {
     "",
     "Useful CLI:",
     "• npm run wf -- summary | fissures --steel-path | cycles | baro | nightwave | archon | arbitration | darvo | construction",
-    "• npm run market -- price <slug> | slug-search \"…\" | changes",
+    "• npm run market -- price <slug> | slug-search \"…\" | wfm \"…\" | changes",
     "• npm run patches -- latest | changes",
     "• npm run knowledge -- status | lookup \"…\" | farm|builds \"…\" | ehp|forma|relic|profile|farm-vs-buy",
     "• npm run knowledge -- dps|compare-dps|compare-loadout … | import-builds | crawl-overframe",
@@ -369,7 +383,12 @@ function parseSlash(text: string): ParsedSlash | null {
 }
 
 export type CommandResult =
-  | { handled: true; content: string; toolsUsed: string[] }
+  | {
+      handled: true;
+      content: string;
+      toolsUsed: string[];
+      marketQuotes?: MarketQuotesPayload;
+    }
   | { handled: false };
 
 function meta(content: string): CommandResult {
@@ -510,10 +529,26 @@ export async function runSlashCommand(text: string): Promise<CommandResult> {
       const slug = args[0];
       if (!slug) {
         return meta(
-          "Usage: /market <slug>\nExample: /market mirage_prime_set\nTip: /slug <item name> to resolve a slug",
+          "Usage: /market <slug>\nExample: /market mirage_prime_set\nTip: /slug <item name> to resolve a slug, or /wfm <item> for in-game sellers",
         );
       }
       return fromTool("get_market_price", { slug });
+    }
+    case "wfm":
+    case "warframe-market": {
+      const query = args.join(" ").trim().replace(/^["']|["']$/g, "");
+      if (!query) {
+        return meta(
+          "Usage: /wfm <item name>\nExample: /wfm Primed Continuity\nTip: /slug <item> then /wfm <slug>\nAlias: /warframe-market",
+        );
+      }
+      const result = await liveMarketIngameQuotes(query);
+      return {
+        handled: true,
+        content: result.content,
+        toolsUsed: ["lookup_market_sellers"],
+        ...(result.quotes ? { marketQuotes: result.quotes } : {}),
+      };
     }
     case "market-changes":
     case "market_changes":

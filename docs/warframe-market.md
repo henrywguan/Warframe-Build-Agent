@@ -19,6 +19,8 @@ Scheduled target: **4:00 PM America/Los_Angeles** (PST/PDT).
 ```bash
 npm run market -- status
 npm run market -- price mirage_prime_set
+npm run market -- slug-search "Mirage Prime set"
+npm run market -- wfm "Primed Continuity"
 npm run market -- snapshot
 npm run market -- pull --force          # run now, ignore 4pm gate
 npm run market -- changes
@@ -48,8 +50,11 @@ GitHub Action [`.github/workflows/market-daily-prices.yml`](../.github/workflows
 
 The on-the-go UI (`web/`) can call:
 
-- `get_market_price` — live Warframe.market v2 top orders
+- `get_market_price` — live Warframe.market v2 top-order **price summary** (no seller IGNs)
+- `lookup_market_sellers` — in-game max-rank **sell quotes** + `/w` whisper copy (`/wfm`)
 - `get_market_daily_changes` — saved day-over-day diff via `MARKET_CHANGES_URL` (or local `data/market/latest-changes.json` in dev)
+
+`/wfm <item>` (alias `/warframe-market`) opens a floating **Market Quotes** panel with Copy / Buy (clipboard whisper). `/market <slug>` stays a short price summary.
 
 See [`docs/web-chat.md`](web-chat.md).
 
@@ -60,6 +65,10 @@ See [`docs/web-chat.md`](web-chat.md).
 - Spreads, offline/online mix, and thin order books can still skew a single number
 - Always re-check warframe.market before large trades
 - Empty/missing previous snapshot = baseline day (no % change yet)
+- `/wfm` filters **in-game** sellers at **max rank** (when the item has `maxRank`). That is Warframe.market status, not a guaranteed trade.
+- Whisper copy is a site convention (`/w IGN Hi! I want to buy: "Item" for Np platinum. (warframe.market)`), not an API field. Ranked mods/arcanes use `"Name (rank N)"`.
+- Rivens are **auctions**, not this order book.
+- Clipboard paste from the web UI needs a secure context (https or localhost).
 
 ## Useful v2 routes used here
 
@@ -67,4 +76,5 @@ See [`docs/web-chat.md`](web-chat.md).
 | --- | --- |
 | `GET /items` | Catalog + display names |
 | `GET /items/{slug}` | Single item metadata |
+| `GET /orders/item/{slug}` | Full order book (in-game seller quotes; 404 → `/top` fallback) |
 | `GET /orders/item/{slug}/top` | Top sell/buy orders for pricing |
