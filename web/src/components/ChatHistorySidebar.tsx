@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChatMemory, Conversation } from "../lib/chat-memory";
 import { formatChatTime } from "../lib/chat-memory";
+import { HISTORY_MIN_W, PANEL_MAX_W, PANEL_MIN_H } from "../lib/desktop-shell";
+import { PanelResizeHandles } from "./PanelResizeHandles";
 import styles from "./ChatHistorySidebar.module.css";
 
 export function ChatHistorySidebar({
@@ -14,6 +16,10 @@ export function ChatHistorySidebar({
   onDelete,
   onRename,
   disabled,
+  desktopHidden = false,
+  onDesktopMinimize,
+  desktopSize,
+  onDesktopResize,
 }: {
   memory: ChatMemory;
   mobileOpen: boolean;
@@ -23,9 +29,25 @@ export function ChatHistorySidebar({
   onDelete: (id: string) => void;
   onRename: (id: string, title: string) => void;
   disabled?: boolean;
+  desktopHidden?: boolean;
+  onDesktopMinimize?: () => void;
+  desktopSize?: { w: number; h: number | null };
+  onDesktopResize?: (next: { w: number; h: number | null }) => void;
 }) {
   return (
-    <div className={styles.rail} data-open={mobileOpen ? "true" : "false"}>
+    <div
+      className={`${styles.rail} ${desktopHidden ? styles.railHidden : ""} ${
+        desktopSize?.h ? styles.railShort : ""
+      }`}
+      data-open={mobileOpen ? "true" : "false"}
+      style={
+        desktopSize
+          ? {
+              ["--panel-h" as string]: desktopSize.h ? `${desktopSize.h}px` : "100%",
+            }
+          : undefined
+      }
+    >
       <div
         className={`${styles.backdrop} ${mobileOpen ? styles.backdropOpen : ""}`}
         role="presentation"
@@ -41,14 +63,27 @@ export function ChatHistorySidebar({
             <p className={styles.label}>Memory</p>
             <h2 className={styles.title}>Transmissions</h2>
           </div>
-          <button
-            type="button"
-            className={styles.closeMobile}
-            onClick={onMobileClose}
-            aria-label="Close chat list"
-          >
-            Close
-          </button>
+          <div className={styles.headerActions}>
+            {onDesktopMinimize ? (
+              <button
+                type="button"
+                className={styles.chromeBtn}
+                onClick={onDesktopMinimize}
+                aria-label="Minimize transmissions"
+                title="Minimize"
+              >
+                –
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className={styles.closeMobile}
+              onClick={onMobileClose}
+              aria-label="Close chat list"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
         <button
@@ -78,6 +113,16 @@ export function ChatHistorySidebar({
           Saved in this browser. Screenshots are not kept in history. Double-click
           a title to rename.
         </p>
+        {onDesktopResize && desktopSize ? (
+          <PanelResizeHandles
+            edges={["east", "corner"]}
+            size={desktopSize}
+            minW={HISTORY_MIN_W}
+            maxW={PANEL_MAX_W}
+            minH={PANEL_MIN_H}
+            onChange={onDesktopResize}
+          />
+        ) : null}
       </aside>
     </div>
   );

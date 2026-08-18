@@ -28,4 +28,12 @@ describe("SavedBuildsPane", () => {
     assert.match(css, /\.paneOpen/);
     assert.match(css, /max-width:\s*860px/);
   });
+
+  it("adds desktop minimize and resize chrome", () => {
+    assert.match(pane, /Minimize saved builds/);
+    assert.match(pane, /PanelResizeHandles/);
+    assert.match(pane, /desktopHidden/);
+    assert.match(css, /\.chromeBtn/);
+    assert.match(css, /\.railHidden/);
+  });
 });

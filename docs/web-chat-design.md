@@ -107,6 +107,13 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 
 ## Layout & spacing
 
+### Desktop taskbar (`.bar` in `DesktopTaskbar.module.css`)
+
+- Desktop only (`min-width: 861px`), left column of `.workspace` (~`3.35rem`)
+- Kokonut-style expanding icon+label, **arsenal palette** (no stock `#1F9CFE`): Transmissions selected = plasma fill, Builds selected = gold fill
+- Minimized apps keep a gold/plasma pip; click restores the panel
+- Transmissions / Saved Builds: header **minimize** (`–`) plus east/west + corner resize handles (`PanelResizeHandles`)
+
 ### Shell (`.shell`)
 
 - Width: `min(1120px, 100%)`, centered

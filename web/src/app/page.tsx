@@ -51,6 +51,7 @@ import {
 import { ChatHistorySidebar } from "../components/ChatHistorySidebar";
 import { SavedBuildsPane } from "../components/SavedBuildsPane";
 import { MarketQuotePanel } from "../components/MarketQuotePanel";
+import { DesktopTaskbar, type TaskbarAppId } from "../components/DesktopTaskbar";
 import { ReplyLoader } from "../components/ReplyLoader";
 import {
   type SavedBuildsMemory,
@@ -70,6 +71,14 @@ import {
   isMarketQuotesPayload,
   type MarketQuotesPayload,
 } from "../lib/market-quotes";
+import {
+  DESKTOP_MQ,
+  desktopWorkspaceColumns,
+  loadDesktopShell,
+  saveDesktopShell,
+  type DesktopPanelId,
+  type DesktopShellState,
+} from "../lib/desktop-shell";
 import styles from "./page.module.css";
 
 const VoidField = dynamic(
@@ -179,6 +188,13 @@ export default function HomePage() {
     null,
   );
   const [marketQuotesOpen, setMarketQuotesOpen] = useState(false);
+  const [desktopShell, setDesktopShell] = useState<DesktopShellState>(() =>
+    loadDesktopShell(),
+  );
+  const [taskbarSelected, setTaskbarSelected] = useState<TaskbarAppId | null>(
+    "history",
+  );
+  const [isDesktop, setIsDesktop] = useState(false);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -253,6 +269,7 @@ export default function HomePage() {
     const memory = loadChatMemory();
     setChatMemory(memory);
     setSavedBuilds(loadSavedBuilds());
+    setDesktopShell(loadDesktopShell());
     const active = getActiveConversation(memory);
     setMessages(
       withWelcome(
@@ -298,6 +315,14 @@ export default function HomePage() {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_MQ);
+    const apply = () => setIsDesktop(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
   }, []);
 
   useEffect(() => {
@@ -583,6 +608,37 @@ export default function HomePage() {
 
   const canClearChat = !pending && messages.some((m) => m.id !== "welcome");
 
+  function updateDesktopShell(
+    next: DesktopShellState | ((prev: DesktopShellState) => DesktopShellState),
+  ) {
+    setDesktopShell((prev) => {
+      const resolved = typeof next === "function" ? next(prev) : next;
+      saveDesktopShell(resolved);
+      return resolved;
+    });
+  }
+
+  function setPanelMinimized(id: DesktopPanelId, minimized: boolean) {
+    updateDesktopShell((prev) => {
+      const next = {
+        ...prev,
+        [id]: { ...prev[id], minimized },
+      };
+      if (!minimized) {
+        setTaskbarSelected(id);
+      } else {
+        const other: DesktopPanelId = id === "history" ? "builds" : "history";
+        setTaskbarSelected(next[other].minimized ? null : other);
+      }
+      return next;
+    });
+  }
+
+  function onTaskbarSelect(id: TaskbarAppId) {
+    setTaskbarSelected(id);
+    if (desktopShell[id].minimized) setPanelMinimized(id, false);
+  }
+
   useEffect(() => {
     if (!sidebarOpen && !buildsOpen && !showLlmSettings) return;
     const previous = document.body.style.overflow;
@@ -651,7 +707,31 @@ export default function HomePage() {
     <>
       <VoidField mood={mood} />
       <PageSideGlows mood={mood} />
-      <div className={styles.workspace} data-mood={mood}>
+      <div
+        className={styles.workspace}
+        data-mood={mood}
+        style={
+          isDesktop
+            ? { gridTemplateColumns: desktopWorkspaceColumns(desktopShell) }
+            : undefined
+        }
+      >
+      <DesktopTaskbar
+        apps={[
+          {
+            id: "history",
+            title: "Transmissions",
+            minimized: desktopShell.history.minimized,
+          },
+          {
+            id: "builds",
+            title: "Builds",
+            minimized: desktopShell.builds.minimized,
+          },
+        ]}
+        selectedId={taskbarSelected}
+        onSelect={onTaskbarSelect}
+      />
       <ChatHistorySidebar
         memory={chatMemory}
         mobileOpen={sidebarOpen}
@@ -661,6 +741,20 @@ export default function HomePage() {
         onDelete={removeConversation}
         onRename={renameChat}
         disabled={pending}
+        desktopHidden={isDesktop && desktopShell.history.minimized}
+        onDesktopMinimize={
+          isDesktop ? () => setPanelMinimized("history", true) : undefined
+        }
+        desktopSize={isDesktop ? desktopShell.history : undefined}
+        onDesktopResize={
+          isDesktop
+            ? (size) =>
+                updateDesktopShell((prev) => ({
+                  ...prev,
+                  history: { ...prev.history, ...size },
+                }))
+            : undefined
+        }
       />
       <main
         className={[
@@ -948,6 +1042,20 @@ export default function HomePage() {
         onFilterFolder={setBuildFolderFilter}
         mobileOpen={buildsOpen}
         onMobileClose={() => setBuildsOpen(false)}
+        desktopHidden={isDesktop && desktopShell.builds.minimized}
+        onDesktopMinimize={
+          isDesktop ? () => setPanelMinimized("builds", true) : undefined
+        }
+        desktopSize={isDesktop ? desktopShell.builds : undefined}
+        onDesktopResize={
+          isDesktop
+            ? (size) =>
+                updateDesktopShell((prev) => ({
+                  ...prev,
+                  builds: { ...prev.builds, ...size },
+                }))
+            : undefined
+        }
       />
       <MarketQuotePanel
         quotes={marketQuotes}
