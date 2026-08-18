@@ -18,6 +18,8 @@ import {
   renameFolder,
   updateBuild,
 } from "../lib/saved-builds";
+import { BUILDS_MIN_W, PANEL_MAX_W, PANEL_MIN_H } from "../lib/desktop-shell";
+import { PanelResizeHandles } from "./PanelResizeHandles";
 import styles from "./SavedBuildsPane.module.css";
 
 type FolderFilter = "all" | "unfiled" | string;
@@ -31,6 +33,10 @@ export function SavedBuildsPane({
   onFilterFolder,
   mobileOpen = false,
   onMobileClose,
+  desktopHidden = false,
+  onDesktopMinimize,
+  desktopSize,
+  onDesktopResize,
 }: {
   memory: SavedBuildsMemory;
   onChange: (next: SavedBuildsMemory) => void;
@@ -40,6 +46,10 @@ export function SavedBuildsPane({
   onFilterFolder: (id: FolderFilter) => void;
   mobileOpen?: boolean;
   onMobileClose?: () => void;
+  desktopHidden?: boolean;
+  onDesktopMinimize?: () => void;
+  desktopSize?: { w: number; h: number | null };
+  onDesktopResize?: (next: { w: number; h: number | null }) => void;
 }) {
   const visible = useMemo(() => {
     if (filterFolderId === "all") return buildsInFolder(memory, "all");
@@ -81,7 +91,19 @@ export function SavedBuildsPane({
   }
 
   return (
-    <div className={styles.rail} data-open={mobileOpen ? "true" : "false"}>
+    <div
+      className={`${styles.rail} ${desktopHidden ? styles.railHidden : ""} ${
+        desktopSize?.h ? styles.railShort : ""
+      }`}
+      data-open={mobileOpen ? "true" : "false"}
+      style={
+        desktopSize
+          ? {
+              ["--panel-h" as string]: desktopSize.h ? `${desktopSize.h}px` : "100%",
+            }
+          : undefined
+      }
+    >
       <div
         className={`${styles.backdrop} ${mobileOpen ? styles.backdropOpen : ""}`}
         role="presentation"
@@ -117,6 +139,17 @@ export function SavedBuildsPane({
             >
               −
             </button>
+            {onDesktopMinimize ? (
+              <button
+                type="button"
+                className={styles.chromeBtn}
+                onClick={onDesktopMinimize}
+                aria-label="Minimize saved builds"
+                title="Minimize"
+              >
+                –
+              </button>
+            ) : null}
             {onMobileClose ? (
               <button
                 type="button"
@@ -192,6 +225,16 @@ export function SavedBuildsPane({
         <p className={styles.footnote}>
           Browser localStorage · double-click names to rename
         </p>
+        {onDesktopResize && desktopSize ? (
+          <PanelResizeHandles
+            edges={["west", "corner"]}
+            size={desktopSize}
+            minW={BUILDS_MIN_W}
+            maxW={PANEL_MAX_W}
+            minH={PANEL_MIN_H}
+            onChange={onDesktopResize}
+          />
+        ) : null}
       </aside>
     </div>
   );

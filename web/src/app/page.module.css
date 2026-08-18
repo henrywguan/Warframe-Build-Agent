@@ -16,7 +16,7 @@
 @media (min-width: 861px) {
   .workspace {
     grid-template-columns:
-      minmax(13.5rem, 15.5rem) minmax(0, 1fr) minmax(16.5rem, 20.5rem);
+      3.35rem minmax(13.5rem, 15.5rem) minmax(0, 1fr) minmax(16.5rem, 20.5rem);
   }
 }
 
@@ -995,7 +995,7 @@
 @media (max-width: 980px) and (min-width: 861px) {
   .workspace {
     grid-template-columns:
-      minmax(12.5rem, 13.5rem) minmax(0, 1fr) minmax(15rem, 18rem);
+      3.35rem minmax(12.5rem, 13.5rem) minmax(0, 1fr) minmax(15rem, 18rem);
     gap: 0.5rem;
   }
 }

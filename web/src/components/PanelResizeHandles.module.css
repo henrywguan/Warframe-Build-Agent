@@ -1,0 +1,64 @@
+.handle {
+  position: absolute;
+  z-index: 4;
+  touch-action: none;
+}
+
+.east,
+.west {
+  top: 0;
+  bottom: 0.9rem;
+  width: 0.45rem;
+}
+
+.east {
+  right: 0;
+  cursor: ew-resize;
+}
+
+.west {
+  left: 0;
+  cursor: ew-resize;
+}
+
+.east:hover,
+.west:hover,
+.east:active,
+.west:active {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(215, 181, 109, 0.35),
+    transparent
+  );
+}
+
+.corner {
+  right: 0;
+  bottom: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: nwse-resize;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 48%,
+      rgba(215, 181, 109, 0.9) 48% 58%,
+      transparent 58% 70%,
+      rgba(215, 181, 109, 0.7) 70% 80%,
+      transparent 80%
+    );
+}
+
+@media (max-width: 860px) {
+  .handle {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .east,
+  .west {
+    transition: none;
+  }
+}

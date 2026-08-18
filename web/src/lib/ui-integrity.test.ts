@@ -35,6 +35,8 @@ describe("web UI wiring integrity", () => {
       "SavedBuildsPane",
       "MarketQuotePanel",
       "marketQuotes",
+      "DesktopTaskbar",
+      "desktopShell",
       "savedBuilds",
       "buildsToggle",
       "buildsOpen",
