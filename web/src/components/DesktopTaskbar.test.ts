@@ -13,10 +13,13 @@ describe("DesktopTaskbar", () => {
     assert.match(bar, /Desktop taskbar/);
     assert.match(bar, /Restore \$\{app\.title\}/);
     assert.match(bar, /Transmissions|title: "Transmissions"|app\.title/);
+    assert.match(bar, /wfm: WfmIcon/);
     assert.match(bar, /itemMinimized/);
     assert.match(css, /min-width:\s*861px/);
     assert.match(css, /flex-direction:\s*column/);
     assert.match(css, /itemSelected/);
+    assert.match(css, /itemSignal/);
+    assert.match(css, /overflow-y:\s*hidden/);
     assert.match(css, /prefers-reduced-motion/);
     assert.doesNotMatch(css, /#1F9CFE/);
     assert.ok(existsSync(join(here, "DesktopTaskbar.module.css")));

@@ -35,7 +35,7 @@ These run in the Ordis web UI without needing the model for tool dispatch:
 | `/vendor <syndicate>` | Standing gift priorities stub |
 | `/slug <item name>` | Resolve Warframe.market slug |
 | `/market <slug>` | Live Warframe.market price (e.g. `mirage_prime_set`) |
-| `/wfm <item>` | In-game max-rank sellers + whisper copy panel (`/warframe-market`) |
+| `/wfm <item>` | In-game max-rank sellers + whisper copy (web Orbiter **/wfm** tab or `/warframe-market`) |
 | `/market-changes` | Daily 4pm Pacific market scrape changes |
 | `/patches [n]` | Latest official updates/hotfixes (hub titles/links) |
 | `/hotfix` | Alias for `/patches` |

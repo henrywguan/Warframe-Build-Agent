@@ -109,10 +109,13 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 
 ### Desktop taskbar (`.bar` in `DesktopTaskbar.module.css`)
 
-- Desktop only (`min-width: 861px`), left column of `.workspace` (~`3.35rem`)
-- Kokonut-style expanding icon+label, **arsenal palette** (no stock `#1F9CFE`): Transmissions selected = plasma fill, Builds selected = gold fill
-- Minimized apps keep a gold/plasma pip; click restores the panel
+- Desktop only (`min-width: 861px`), first column of a **full-viewport** `.workspace` (`width: 100%`, left padding `0.4rem`)
+- Extra `column-gap` (`1.35rem`) plus a centered chat shell (`max-width: 54rem`) keep the dock away from the transmission log
+- Stretch to the workspace row (status line is **inside** `.chatPanel` so the bar bottom matches the composer/status, no viewport clip)
+- Kokonut-style expanding icon+label, **arsenal palette** (no stock `#1F9CFE`): Transmissions selected = plasma fill, Builds selected = gold fill, **/wfm** selected = signal fill
+- Minimized apps keep a gold/plasma/signal pip; click restores the panel
 - Transmissions / Saved Builds: header **minimize** (`–`) plus east/west + corner resize handles (`PanelResizeHandles`)
+- **/wfm** opens the Market Quotes pane with an item search box (`POST /api/market/wfm`) for the 5 cheapest in-game max-rank sellers
 
 ### Shell (`.shell`)
 

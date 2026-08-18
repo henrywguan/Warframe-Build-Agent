@@ -12,6 +12,7 @@ import {
   toMarketQuoteRows,
   type MarketOrderLike,
   type MarketQuotesPayload,
+  type MarketSlugMatch,
 } from "@/lib/market-quotes";
 import {
   PATCH_DETAIL_DEFAULT_MAX_CHARS,
@@ -875,6 +876,7 @@ export async function liveMarketSlugSearch(query: string): Promise<string> {
 export type LiveMarketQuotesResult = {
   content: string;
   quotes?: MarketQuotesPayload;
+  matches?: MarketSlugMatch[];
 };
 
 export async function liveMarketIngameQuotes(
@@ -917,7 +919,10 @@ export async function liveMarketIngameQuotes(
     };
   }
   if (pick.kind === "ambiguous") {
-    return { content: formatAmbiguousSlugs(cleaned, pick.matches) };
+    return {
+      content: formatAmbiguousSlugs(cleaned, pick.matches),
+      matches: pick.matches,
+    };
   }
 
   const slug = pick.match.slug;

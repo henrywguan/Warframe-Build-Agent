@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   DEFAULT_DESKTOP_SHELL,
   clampPanelHeight,
@@ -7,6 +10,9 @@ import {
   desktopWorkspaceColumns,
   parseDesktopShell,
 } from "./desktop-shell.ts";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const pageCss = readFileSync(join(here, "../app/page.module.css"), "utf8");
 
 describe("desktop shell layout", () => {
   it("clamps panel width and height", () => {
@@ -39,5 +45,13 @@ describe("desktop shell layout", () => {
       builds: { ...DEFAULT_DESKTOP_SHELL.builds, minimized: true },
     });
     assert.equal(collapsed, "3.35rem minmax(0, 1fr)");
+  });
+
+  it("pins the desktop workspace to the viewport left with extra center gap", () => {
+    assert.match(pageCss, /width:\s*100%/);
+    assert.match(pageCss, /max-width:\s*none/);
+    assert.match(pageCss, /column-gap:\s*1\.35rem/);
+    assert.match(pageCss, /max-width:\s*54rem/);
+    assert.match(pageCss, /\.chatPanel \.statusLine/);
   });
 });
