@@ -9,6 +9,7 @@ import {
   type PointerEvent,
 } from "react";
 import {
+  MARKET_QUOTE_LIMIT,
   MARKET_QUOTES_STORAGE_KEY,
   type MarketQuotesPayload,
   type MarketSlugMatch,
@@ -124,7 +125,7 @@ export function MarketQuotePanel({
   const [query, setQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [matches, setMatches] = useState<MarketSlugMatch[] | null>(null);
+  const [matches, setMatches] = useState<MarketSlugMatch[]>([]);
   const uiRef = useRef(ui);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const dragRef = useRef<{
@@ -148,12 +149,6 @@ export function MarketQuotePanel({
   useEffect(() => {
     if (!open) return;
     if (quotes?.itemName) setQuery(quotes.itemName);
-    setUi((current) => {
-      if (!current.minimized) return current;
-      const next = { ...current, minimized: false };
-      saveUi(next);
-      return next;
-    });
   }, [open, quotes]);
 
   useEffect(() => {
@@ -189,7 +184,6 @@ export function MarketQuotePanel({
 
   function setMinimized(next: boolean) {
     updateUi({ minimized: next });
-    onMinimizedChange?.(next);
   }
 
   async function runSearch(rawQuery: string) {
@@ -198,7 +192,7 @@ export function MarketQuotePanel({
     setSearching(true);
     setStatus(null);
     setCopyError(null);
-    setMatches(null);
+    setMatches([]);
     try {
       const response = await fetch("/api/market/wfm", {
         method: "POST",
@@ -218,7 +212,7 @@ export function MarketQuotePanel({
       }
       if (data.quotes?.quotes?.length) {
         onQuotes?.(data.quotes);
-        setMatches(null);
+        setMatches([]);
         setStatus(null);
         setQuery(data.quotes.itemName);
         return;
@@ -243,31 +237,27 @@ export function MarketQuotePanel({
     void runSearch(query);
   }
 
-  function onTitlePointerDown(event: PointerEvent<HTMLDivElement>) {
+  function beginDrag(event: PointerEvent<HTMLDivElement>, kind: "move" | "resize") {
     if (event.button !== 0) return;
-    const target = event.target as HTMLElement;
-    if (target.closest("button") || target.closest("a") || target.closest("form")) return;
+    if (kind === "resize") event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = {
       pointerId: event.pointerId,
-      kind: "move",
+      kind,
       startX: event.clientX,
       startY: event.clientY,
       orig: uiRef.current,
     };
   }
 
+  function onTitlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement;
+    if (target.closest("button") || target.closest("a") || target.closest("form")) return;
+    beginDrag(event, "move");
+  }
+
   function onResizePointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = {
-      pointerId: event.pointerId,
-      kind: "resize",
-      startX: event.clientX,
-      startY: event.clientY,
-      orig: uiRef.current,
-    };
+    beginDrag(event, "resize");
   }
 
   function onPointerMove(event: PointerEvent) {
@@ -389,7 +379,7 @@ export function MarketQuotePanel({
 
           {status ? <p className={styles.note}>{status}</p> : null}
 
-          {matches?.length ? (
+          {matches.length ? (
             <ul className={styles.matches}>
               {matches.map((row) => (
                 <li key={row.slug}>
@@ -416,7 +406,7 @@ export function MarketQuotePanel({
                 <span>
                   {rankLabel}
                   {quotes.source === "top" ? " · top-order fallback" : ""}
-                  {" · 5 cheapest in-game"}
+                  {` · ${MARKET_QUOTE_LIMIT} cheapest in-game`}
                 </span>
                 <a
                   className={styles.marketLink}
@@ -470,9 +460,9 @@ export function MarketQuotePanel({
                 localhost.
               </p>
             </>
-          ) : !status && !matches?.length ? (
+          ) : !status && !matches.length ? (
             <p className={styles.note}>
-              Search an item for the 5 cheapest in-game max-rank sellers. Copy or Buy
+              Search an item for the {MARKET_QUOTE_LIMIT} cheapest in-game max-rank sellers. Copy or Buy
               pastes a `/w` whisper.
             </p>
           ) : null}

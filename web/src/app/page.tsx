@@ -490,10 +490,7 @@ export default function HomePage() {
       }
 
       if (isMarketQuotesPayload(data.marketQuotes) && data.marketQuotes.quotes.length) {
-        setMarketQuotes(data.marketQuotes);
-        setMarketQuotesOpen(true);
-        setMarketPanelMinimized(false);
-        setTaskbarSelected("wfm");
+        openMarketQuotes(data.marketQuotes);
       }
 
       setMessages((current) => [
@@ -637,13 +634,19 @@ export default function HomePage() {
     });
   }
 
+  function openMarketQuotes(nextQuotes?: MarketQuotesPayload | null) {
+    if (nextQuotes) setMarketQuotes(nextQuotes);
+    setMarketQuotesOpen(true);
+    setMarketPanelMinimized(false);
+    setTaskbarSelected("wfm");
+  }
+
   function onTaskbarSelect(id: TaskbarAppId) {
-    setTaskbarSelected(id);
     if (id === "wfm") {
-      setMarketQuotesOpen(true);
-      setMarketPanelMinimized(false);
+      openMarketQuotes();
       return;
     }
+    setTaskbarSelected(id);
     if (desktopShell[id].minimized) setPanelMinimized(id, false);
   }
 

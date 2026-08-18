@@ -40,6 +40,7 @@ describe("web UI wiring integrity", () => {
       'id: "wfm"',
       'title: "/wfm"',
       "marketPanelMinimized",
+      "openMarketQuotes",
       "closeMarketQuotes",
       "savedBuilds",
       "buildsToggle",

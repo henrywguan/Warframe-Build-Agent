@@ -12,7 +12,7 @@ describe("MarketQuotePanel", () => {
   it("ships copy/buy whisper actions and window chrome", () => {
     assert.match(panel, /wfm-item-search/);
     assert.match(panel, /\/api\/market\/wfm/);
-    assert.match(panel, /Search an item for the 5 cheapest/);
+    assert.match(panel, /MARKET_QUOTE_LIMIT|5 cheapest/);
     assert.match(panel, /Copy/);
     assert.match(panel, /Buy/);
     assert.match(panel, /navigator\.clipboard/);

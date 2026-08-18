@@ -52,11 +52,11 @@ const ICONS: Record<TaskbarAppId, () => ReactNode> = {
   wfm: WfmIcon,
 };
 
-function itemToneClass(id: TaskbarAppId): string {
-  if (id === "builds") return styles.itemGold;
-  if (id === "wfm") return styles.itemSignal;
-  return styles.itemPlasma;
-}
+const ITEM_TONE: Record<TaskbarAppId, string> = {
+  history: styles.itemPlasma,
+  builds: styles.itemGold,
+  wfm: styles.itemSignal,
+};
 
 export function DesktopTaskbar({
   apps,
@@ -80,7 +80,7 @@ export function DesktopTaskbar({
               type="button"
               className={`${styles.item} ${selected ? styles.itemSelected : ""} ${
                 app.minimized ? styles.itemMinimized : ""
-              } ${itemToneClass(app.id)}`}
+              } ${ITEM_TONE[app.id]}`}
               aria-pressed={selected}
               aria-label={
                 app.minimized ? `Restore ${app.title}` : `Show ${app.title}`
