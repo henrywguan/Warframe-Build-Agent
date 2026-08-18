@@ -188,6 +188,7 @@ export default function HomePage() {
     null,
   );
   const [marketQuotesOpen, setMarketQuotesOpen] = useState(false);
+  const [marketPanelMinimized, setMarketPanelMinimized] = useState(false);
   const [desktopShell, setDesktopShell] = useState<DesktopShellState>(() =>
     loadDesktopShell(),
   );
@@ -489,8 +490,7 @@ export default function HomePage() {
       }
 
       if (isMarketQuotesPayload(data.marketQuotes) && data.marketQuotes.quotes.length) {
-        setMarketQuotes(data.marketQuotes);
-        setMarketQuotesOpen(true);
+        openMarketQuotes(data.marketQuotes);
       }
 
       setMessages((current) => [
@@ -634,9 +634,31 @@ export default function HomePage() {
     });
   }
 
+  function openMarketQuotes(nextQuotes?: MarketQuotesPayload | null) {
+    if (nextQuotes) setMarketQuotes(nextQuotes);
+    setMarketQuotesOpen(true);
+    setMarketPanelMinimized(false);
+    setTaskbarSelected("wfm");
+  }
+
   function onTaskbarSelect(id: TaskbarAppId) {
+    if (id === "wfm") {
+      openMarketQuotes();
+      return;
+    }
     setTaskbarSelected(id);
     if (desktopShell[id].minimized) setPanelMinimized(id, false);
+  }
+
+  function closeMarketQuotes() {
+    setMarketQuotesOpen(false);
+    setMarketPanelMinimized(false);
+    setTaskbarSelected((current) => {
+      if (current !== "wfm") return current;
+      if (!desktopShell.history.minimized) return "history";
+      if (!desktopShell.builds.minimized) return "builds";
+      return null;
+    });
   }
 
   useEffect(() => {
@@ -727,6 +749,11 @@ export default function HomePage() {
             id: "builds",
             title: "Builds",
             minimized: desktopShell.builds.minimized,
+          },
+          {
+            id: "wfm",
+            title: "/wfm",
+            minimized: marketQuotesOpen && marketPanelMinimized,
           },
         ]}
         selectedId={taskbarSelected}
@@ -1018,17 +1045,17 @@ export default function HomePage() {
           </button>
         </form>
         </div>
+        <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
+          {error
+            ? error
+            : llmConfigReady(llmConfig)
+              ? `${aiChat ? "AI general agent" : "LLM on (Warframe advisor)"} · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
+              : aiChat
+                ? "AI on — configure LLM / Ollama for the general agent"
+                : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
+        </p>
       </section>
 
-      <p className={`${styles.statusLine} ${error ? styles.error : ""}`}>
-        {error
-          ? error
-          : llmConfigReady(llmConfig)
-            ? `${aiChat ? "AI general agent" : "LLM on (Warframe advisor)"} · ${llmConfig.model || "default"}${llmConfig.baseUrl ? ` @ ${llmConfig.baseUrl}` : ""}${onlineSearch ? " · Online search on" : ""}`
-            : aiChat
-              ? "AI on — configure LLM / Ollama for the general agent"
-              : "Offline knowledge chatbot. Configure LLM / Ollama for the Warframe advisor; toggle AI for general research."}
-      </p>
       </main>
       <SavedBuildsPane
         memory={savedBuilds}
@@ -1060,7 +1087,10 @@ export default function HomePage() {
       <MarketQuotePanel
         quotes={marketQuotes}
         open={marketQuotesOpen}
-        onClose={() => setMarketQuotesOpen(false)}
+        minimized={marketPanelMinimized}
+        onMinimizedChange={setMarketPanelMinimized}
+        onClose={closeMarketQuotes}
+        onQuotes={setMarketQuotes}
       />
       </div>
     </>

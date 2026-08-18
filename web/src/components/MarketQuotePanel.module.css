@@ -72,6 +72,110 @@
   flex-shrink: 0;
 }
 
+.search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem;
+  padding: 0.55rem 0.7rem 0.45rem;
+  border-bottom: 1px solid rgba(122, 101, 52, 0.28);
+}
+
+.searchLabel {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold, #d7b56d);
+}
+
+.searchInput {
+  min-width: 0;
+  border: 1px solid rgba(122, 101, 52, 0.7);
+  border-radius: 1px;
+  padding: 0.5rem 0.65rem;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--ink, #e8eef5);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--cyan, #7fe7ef);
+  box-shadow: 0 0 0 2px rgba(0, 196, 204, 0.18);
+}
+
+.searchBtn {
+  border: 1px solid rgba(215, 181, 109, 0.65);
+  border-radius: 1px;
+  padding: 0.45rem 0.7rem;
+  background: linear-gradient(180deg, #c9a85a 0%, #8a6a2e 100%);
+  color: #14100a;
+  font-family: var(--font-display), var(--font-orbitron), sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.searchBtn:hover:not(:disabled),
+.searchBtn:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+  outline: none;
+}
+
+.searchBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.note {
+  margin: 0;
+  padding: 0.45rem 0.75rem 0.15rem;
+  color: var(--ink-soft, rgba(196, 208, 220, 0.78));
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.matches {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0.55rem 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  overflow: auto;
+  min-height: 0;
+}
+
+.matchBtn {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.55rem;
+  border: 1px solid rgba(155, 180, 200, 0.28);
+  border-radius: 1px;
+  padding: 0.4rem 0.55rem;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--ink, #e8eef5);
+  cursor: pointer;
+  text-align: left;
+}
+
+.matchBtn:hover:not(:disabled),
+.matchBtn:focus-visible:not(:disabled) {
+  border-color: var(--signal, #6edc9a);
+  outline: none;
+}
+
+.matchBtn code {
+  font-size: 0.72rem;
+  color: var(--mist, #9bb4c8);
+}
+
 .chromeBtn {
   width: 1.7rem;
   height: 1.5rem;

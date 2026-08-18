@@ -1,9 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+} from "react";
+import {
+  MARKET_QUOTE_LIMIT,
   MARKET_QUOTES_STORAGE_KEY,
   type MarketQuotesPayload,
+  type MarketSlugMatch,
 } from "../lib/market-quotes";
 import styles from "./MarketQuotePanel.module.css";
 
@@ -20,7 +29,7 @@ const MIN_H = 220;
 
 function defaultUi(): UiState {
   if (typeof window === "undefined") {
-    return { x: 24, y: 72, w: 400, h: 440, minimized: false };
+    return { x: 72, y: 72, w: 400, h: 480, minimized: false };
   }
   const mobile = window.innerWidth <= 860;
   const w = mobile
@@ -28,8 +37,8 @@ function defaultUi(): UiState {
     : Math.min(420, Math.max(MIN_W, Math.round(window.innerWidth * 0.32)));
   const h = mobile
     ? Math.min(Math.round(window.innerHeight * 0.72), 560)
-    : 440;
-  const x = mobile ? 8 : Math.max(16, window.innerWidth - w - 20);
+    : 480;
+  const x = mobile ? 8 : Math.max(12, Math.round(3.35 * 16) + 18);
   const y = mobile ? Math.max(12, Math.round(window.innerHeight * 0.1)) : 72;
   return { x, y, w, h, minimized: false };
 }
@@ -98,16 +107,27 @@ async function copyText(text: string): Promise<boolean> {
 export function MarketQuotePanel({
   quotes,
   open,
+  minimized,
+  onMinimizedChange,
   onClose,
+  onQuotes,
 }: {
   quotes: MarketQuotesPayload | null;
   open: boolean;
+  minimized?: boolean;
+  onMinimizedChange?: (minimized: boolean) => void;
   onClose: () => void;
+  onQuotes?: (quotes: MarketQuotesPayload | null) => void;
 }) {
   const [ui, setUi] = useState<UiState>(defaultUi);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [copyError, setCopyError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [matches, setMatches] = useState<MarketSlugMatch[]>([]);
   const uiRef = useRef(ui);
+  const searchRef = useRef<HTMLInputElement | null>(null);
   const dragRef = useRef<{
     pointerId: number;
     kind: "move" | "resize";
@@ -115,6 +135,8 @@ export function MarketQuotePanel({
     startY: number;
     orig: UiState;
   } | null>(null);
+
+  const isMinimized = minimized ?? ui.minimized;
 
   useEffect(() => {
     setUi(loadUi());
@@ -125,47 +147,117 @@ export function MarketQuotePanel({
   }, [ui]);
 
   useEffect(() => {
-    if (!open || !quotes?.quotes.length) return;
-    setUi((current) => {
-      const next = { ...current, minimized: false };
-      saveUi(next);
-      return next;
-    });
+    if (!open) return;
+    if (quotes?.itemName) setQuery(quotes.itemName);
   }, [open, quotes]);
 
-  const updateUi = useCallback((patch: Partial<UiState> | ((prev: UiState) => UiState)) => {
-    setUi((prev) => {
-      const next = typeof patch === "function" ? patch(prev) : { ...prev, ...patch };
+  useEffect(() => {
+    if (minimized === undefined) return;
+    setUi((current) => {
+      if (current.minimized === minimized) return current;
+      const next = { ...current, minimized };
       saveUi(next);
       return next;
     });
-  }, []);
+  }, [minimized]);
 
-  function onTitlePointerDown(event: PointerEvent<HTMLDivElement>) {
+  useEffect(() => {
+    if (!open || isMinimized) return;
+    const frame = window.requestAnimationFrame(() => {
+      searchRef.current?.focus();
+      searchRef.current?.select();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, isMinimized]);
+
+  const updateUi = useCallback(
+    (patch: Partial<UiState> | ((prev: UiState) => UiState)) => {
+      setUi((prev) => {
+        const next = typeof patch === "function" ? patch(prev) : { ...prev, ...patch };
+        saveUi(next);
+        if (next.minimized !== prev.minimized) onMinimizedChange?.(next.minimized);
+        return next;
+      });
+    },
+    [onMinimizedChange],
+  );
+
+  function setMinimized(next: boolean) {
+    updateUi({ minimized: next });
+  }
+
+  async function runSearch(rawQuery: string) {
+    const cleaned = rawQuery.trim();
+    if (!cleaned || searching) return;
+    setSearching(true);
+    setStatus(null);
+    setCopyError(null);
+    setMatches([]);
+    try {
+      const response = await fetch("/api/market/wfm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: cleaned }),
+      });
+      const data = (await response.json()) as {
+        content?: string;
+        quotes?: MarketQuotesPayload | null;
+        matches?: MarketSlugMatch[] | null;
+        error?: string;
+      };
+      if (!response.ok) {
+        onQuotes?.(null);
+        setStatus(data.error || "Warframe.market lookup failed.");
+        return;
+      }
+      if (data.quotes?.quotes?.length) {
+        onQuotes?.(data.quotes);
+        setMatches([]);
+        setStatus(null);
+        setQuery(data.quotes.itemName);
+        return;
+      }
+      onQuotes?.(null);
+      if (data.matches?.length) {
+        setMatches(data.matches);
+        setStatus(data.content || "Several matches — pick a slug.");
+        return;
+      }
+      setStatus(data.content || "No in-game sellers for that item right now.");
+    } catch (error) {
+      onQuotes?.(null);
+      setStatus(error instanceof Error ? error.message : "Warframe.market lookup failed.");
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  function onSearchSubmit(event: FormEvent) {
+    event.preventDefault();
+    void runSearch(query);
+  }
+
+  function beginDrag(event: PointerEvent<HTMLDivElement>, kind: "move" | "resize") {
     if (event.button !== 0) return;
-    const target = event.target as HTMLElement;
-    if (target.closest("button") || target.closest("a")) return;
+    if (kind === "resize") event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = {
       pointerId: event.pointerId,
-      kind: "move",
+      kind,
       startX: event.clientX,
       startY: event.clientY,
       orig: uiRef.current,
     };
   }
 
+  function onTitlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement;
+    if (target.closest("button") || target.closest("a") || target.closest("form")) return;
+    beginDrag(event, "move");
+  }
+
   function onResizePointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = {
-      pointerId: event.pointerId,
-      kind: "resize",
-      startX: event.clientX,
-      startY: event.clientY,
-      orig: uiRef.current,
-    };
+    beginDrag(event, "resize");
   }
 
   function onPointerMove(event: PointerEvent) {
@@ -212,22 +304,22 @@ export function MarketQuotePanel({
     setCopyError("Clipboard blocked — use https or localhost, or copy the /w line manually.");
   }
 
-  if (!open || !quotes) return null;
+  if (!open) return null;
 
   const rankLabel =
-    quotes.maxRank === undefined ? "unranked" : `max rank ${quotes.maxRank}`;
+    quotes?.maxRank === undefined ? "unranked" : `max rank ${quotes.maxRank}`;
 
   return (
     <aside
-      className={`${styles.panel} ${ui.minimized ? styles.minimized : ""}`}
+      className={`${styles.panel} ${isMinimized ? styles.minimized : ""}`}
       style={{
         left: ui.x,
         top: ui.y,
         width: ui.w,
-        height: ui.minimized ? undefined : ui.h,
+        height: isMinimized ? undefined : ui.h,
       }}
       role="dialog"
-      aria-label="Market Quotes"
+      aria-label="Warframe.market /wfm"
     >
       <div
         className={styles.titleBar}
@@ -237,17 +329,17 @@ export function MarketQuotePanel({
         onPointerCancel={onPointerUp}
       >
         <div className={styles.titleText}>
-          <p className={styles.kicker}>Market Quotes</p>
-          <h2 className={styles.title}>{quotes.itemName}</h2>
+          <p className={styles.kicker}>/wfm</p>
+          <h2 className={styles.title}>{quotes?.itemName ?? "Warframe.market"}</h2>
         </div>
         <div className={styles.titleActions}>
           <button
             type="button"
             className={styles.chromeBtn}
-            aria-label={ui.minimized ? "Restore market quotes" : "Minimize market quotes"}
-            onClick={() => updateUi({ minimized: !ui.minimized })}
+            aria-label={isMinimized ? "Restore market quotes" : "Minimize market quotes"}
+            onClick={() => setMinimized(!isMinimized)}
           >
-            {ui.minimized ? "▢" : "–"}
+            {isMinimized ? "▢" : "–"}
           </button>
           <button
             type="button"
@@ -260,64 +352,121 @@ export function MarketQuotePanel({
         </div>
       </div>
 
-      {!ui.minimized ? (
+      {!isMinimized ? (
         <>
-          <div className={styles.meta}>
-            <span>
-              {rankLabel}
-              {quotes.source === "top" ? " · top-order fallback" : ""}
-            </span>
-            <a
-              className={styles.marketLink}
-              href={quotes.url}
-              target="_blank"
-              rel="noreferrer"
+          <form className={styles.search} onSubmit={onSearchSubmit}>
+            <label className={styles.searchLabel} htmlFor="wfm-item-search">
+              Item
+            </label>
+            <input
+              id="wfm-item-search"
+              ref={searchRef}
+              className={styles.searchInput}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Primed Continuity, Soma Prime…"
+              autoComplete="off"
+              disabled={searching}
+            />
+            <button
+              className={styles.searchBtn}
+              type="submit"
+              disabled={searching || !query.trim()}
             >
-              warframe.market
-            </a>
-          </div>
-          <ul className={styles.rows}>
-            {quotes.quotes.map((row, index) => {
-              const key = `${row.ign}-${row.platinum}-${index}`;
-              const copied = copiedKey === key;
-              return (
-                <li key={key} className={styles.row}>
-                  <div className={styles.rowMain}>
-                    <span className={styles.ign}>{row.ign}</span>
-                    <span className={styles.plat}>{row.platinum}p</span>
-                    <span className={styles.stat}>×{row.quantity}</span>
-                    {row.rank !== undefined ? (
-                      <span className={styles.stat}>r{row.rank}</span>
-                    ) : null}
-                    {row.reputation !== undefined ? (
-                      <span className={styles.stat}>rep {row.reputation}</span>
-                    ) : null}
-                  </div>
-                  <div className={styles.rowActions}>
-                    <button
-                      type="button"
-                      className={styles.copyBtn}
-                      onClick={() => void copyWhisper(key, row.whisper)}
-                    >
-                      {copied ? "Copied" : "Copy"}
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.buyBtn}
-                      onClick={() => void copyWhisper(key, row.whisper)}
-                    >
-                      {copied ? "Copied" : "Buy"}
-                    </button>
-                  </div>
+              {searching ? "…" : "Search"}
+            </button>
+          </form>
+
+          {status ? <p className={styles.note}>{status}</p> : null}
+
+          {matches.length ? (
+            <ul className={styles.matches}>
+              {matches.map((row) => (
+                <li key={row.slug}>
+                  <button
+                    type="button"
+                    className={styles.matchBtn}
+                    onClick={() => {
+                      setQuery(row.slug);
+                      void runSearch(row.slug);
+                    }}
+                    disabled={searching}
+                  >
+                    <span>{row.name}</span>
+                    <code>{row.slug}</code>
+                  </button>
                 </li>
-              );
-            })}
-          </ul>
-          <p className={styles.caveat}>
-            Listings move fast. In-game is WFM status, not a guaranteed accept. Paste
-            in Recruiting / region chat (needs `/w IGN`). Clipboard needs https or
-            localhost.
-          </p>
+              ))}
+            </ul>
+          ) : null}
+
+          {quotes?.quotes.length ? (
+            <>
+              <div className={styles.meta}>
+                <span>
+                  {rankLabel}
+                  {quotes.source === "top" ? " · top-order fallback" : ""}
+                  {` · ${MARKET_QUOTE_LIMIT} cheapest in-game`}
+                </span>
+                <a
+                  className={styles.marketLink}
+                  href={quotes.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  warframe.market
+                </a>
+              </div>
+              <ul className={styles.rows}>
+                {quotes.quotes.map((row, index) => {
+                  const key = `${row.ign}-${row.platinum}-${index}`;
+                  const copied = copiedKey === key;
+                  return (
+                    <li key={key} className={styles.row}>
+                      <div className={styles.rowMain}>
+                        <span className={styles.ign}>{row.ign}</span>
+                        <span className={styles.plat}>{row.platinum}p</span>
+                        <span className={styles.stat}>×{row.quantity}</span>
+                        {row.rank !== undefined ? (
+                          <span className={styles.stat}>r{row.rank}</span>
+                        ) : null}
+                        {row.reputation !== undefined ? (
+                          <span className={styles.stat}>rep {row.reputation}</span>
+                        ) : null}
+                      </div>
+                      <div className={styles.rowActions}>
+                        <button
+                          type="button"
+                          className={styles.copyBtn}
+                          onClick={() => void copyWhisper(key, row.whisper)}
+                        >
+                          {copied ? "Copied" : "Copy"}
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.buyBtn}
+                          onClick={() => void copyWhisper(key, row.whisper)}
+                        >
+                          {copied ? "Copied" : "Buy"}
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className={styles.caveat}>
+                Listings move fast. In-game is WFM status, not a guaranteed accept. Paste
+                in Recruiting / region chat (needs `/w IGN`). Clipboard needs https or
+                localhost.
+              </p>
+            </>
+          ) : !status && !matches.length ? (
+            <p className={styles.note}>
+              Search an item for the {MARKET_QUOTE_LIMIT} cheapest in-game max-rank sellers. Copy or Buy
+              pastes a `/w` whisper.
+            </p>
+          ) : null}
+
           {copyError ? <p className={styles.copyError}>{copyError}</p> : null}
           <div
             className={styles.resize}

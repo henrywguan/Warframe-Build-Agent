@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import styles from "./DesktopTaskbar.module.css";
 
-export type TaskbarAppId = "history" | "builds";
+export type TaskbarAppId = "history" | "builds" | "wfm";
 
 type TaskbarApp = {
   id: TaskbarAppId;
@@ -34,9 +34,28 @@ function BuildsIcon() {
   );
 }
 
+function WfmIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8 1.2 14.4 8 8 14.8 1.6 8 8 1.2Zm0 2.3L4.1 8 8 12.5 11.9 8 8 3.5Z"
+      />
+      <path fill="currentColor" d="M8 5.4 10.4 8 8 10.6 5.6 8 8 5.4Z" />
+    </svg>
+  );
+}
+
 const ICONS: Record<TaskbarAppId, () => ReactNode> = {
   history: TransmissionIcon,
   builds: BuildsIcon,
+  wfm: WfmIcon,
+};
+
+const ITEM_TONE: Record<TaskbarAppId, string> = {
+  history: styles.itemPlasma,
+  builds: styles.itemGold,
+  wfm: styles.itemSignal,
 };
 
 export function DesktopTaskbar({
@@ -61,7 +80,7 @@ export function DesktopTaskbar({
               type="button"
               className={`${styles.item} ${selected ? styles.itemSelected : ""} ${
                 app.minimized ? styles.itemMinimized : ""
-              } ${app.id === "builds" ? styles.itemGold : styles.itemPlasma}`}
+              } ${ITEM_TONE[app.id]}`}
               aria-pressed={selected}
               aria-label={
                 app.minimized ? `Restore ${app.title}` : `Show ${app.title}`

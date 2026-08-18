@@ -4,7 +4,7 @@ A phone-friendly chat front-end lives in [`web/`](../web/). It can run against a
 
 The UI uses a Warframe arsenal-inspired theme (void panels, Orokin gold, energy cyan) plus tertiary accents (**ember** copper, **signal** verdant, **plasma** ice-blue, **mist** steel) for depth. A **center-stage Ordis cephalon** (original WebP mood plates + SVG/CSS fallback, not game assets) sits **above** the transmission log — it idles, thinks, and glitch-pops when speaking, and never overlays chat text. Mood plates live under `web/public/ordis/` (hero / glow / ring overlays); the SVG remains for load errors and tiny stage sizes. The stage caption row is reserved so status text is not clipped. Behind the shell, a modular **Three.js void field** (`VoidField`) draws mood-reactive particles and wireframe crystals (DPR-capped, paused when the tab is hidden; CSS fallback when `prefers-reduced-motion` is on).
 
-**Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, rename (✎ or double-click title), and delete. On desktop (≥861px) a left **Orbiter taskbar** (Kokonut-style expanding icon labels, arsenal palette) keeps Transmissions and Builds; minimize either panel to a pip on that dock, then click the icon to restore. Both desktop panels are width/height resizable (edge + corner handles). On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history.
+**Chat memory:** Persistent left **Transmissions** sidebar (Copilot / Open WebUI style) with New chat, switch, rename (✎ or double-click title), and delete. On desktop (≥861px) a left **Orbiter taskbar** sits on the far left of the viewport (Kokonut-style expanding icon labels, arsenal palette) for Transmissions, Builds, and **/wfm**. Minimize Transmissions or Builds to a pip on that dock, then click the icon to restore. Both desktop side panels are width/height resizable (edge + corner handles). The taskbar bottom aligns with the transmission log (status lives inside the chat panel). Extra column gap plus a centered chat column keep the dock away from the log. On narrow phones the sidebar slides in from a **Chats** control. Clear still wipes the current log. Conversations persist in browser `localStorage`. Screenshot attachments are not stored in history.
 
 **Saved Builds:** Desktop right **Arsenal** rail (≥861px), same taskbar restore when minimized. On phones, a **Builds** control (next to **Chats**) opens the same pane as a right-side drawer. Folder chips, scrollable cards (Warframe / weapons / companion / mods / arcanes / archon crystals), editable names, and **+ / −** controls. Add via the pane, `/save-build`, natural language (“save a Soma Prime build” + mods/arcanes/crystals), or by attaching a loadout screenshot and asking to save — the agent auto-classifies Warframe / Primary / Secondary / Melee from the catalog (companions via name hints). Persists in browser `localStorage` (`wfba_saved_builds_v1`). Favicon / PWA icons use `web/public/ordis-icon.svg` plus the PNG sizes next to it.
 
@@ -145,7 +145,7 @@ Type **`/list`** in the chat for the full catalog (web slashes, Cursor commands,
 | `/fissures [sp] [tier]` | Live fissures |
 | `/cycles` / `/sortie` / `/alerts` / `/invasions` | Live worldstate slices |
 | `/market <slug>` | Live Warframe.market price |
-| `/wfm <item>` | In-game max-rank sellers + whisper panel |
+| `/wfm <item>` | In-game max-rank sellers + whisper panel (or use the Orbiter **/wfm** tab) |
 | `/market-changes` | Daily 4pm Pacific market scrape |
 | `/list` / `/help` | Command catalog |
 | `/model` | Active LLM model id for this session |
@@ -178,7 +178,7 @@ Full shared catalog: [`docs/commands.md`](commands.md). Cursor cleanup modes: [`
 
 - Worldstate summary, fissures, cycles, sortie, invasions, alerts, **arbitration**, **Darvo deals**, **construction progress**
 - Warframe.market v2 price by slug (`get_market_price`)
-- In-game sellers + `/w` whisper copy (`lookup_market_sellers` / `/wfm`) — opens the Market Quotes panel
+- In-game sellers + `/w` whisper copy (`lookup_market_sellers` / `/wfm`) — Orbiter **/wfm** tab or chat command opens the Market Quotes search pane
 - Latest saved daily market changes (4pm Pacific job)
 - Latest official updates/hotfixes (live hub scrape)
 - Newly listed patch notes since the previous daily snapshot (4pm Pacific job)
