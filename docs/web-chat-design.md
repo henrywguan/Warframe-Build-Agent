@@ -189,6 +189,13 @@ Fallbacks in tokens: Orbitron → Oxanium → sans; Rajdhani → Source Sans 3 �
 
 Shared bubble props: `border-radius: 1px`, padding `0.75rem 0.9rem`, `white-space: pre-wrap`, enter animation `messageIn` 280ms.
 
+### Saved Builds add menu (`.addWrap` in `SavedBuildsPane.module.css`)
+
+- Adapted from Uiverse [Galahhad / old-falcon-43](https://uiverse.io/Galahhad/old-falcon-43) (MIT); **arsenal tokens**, not the stock gray/cornflower chrome
+- `+` bars morph to an X when open; popup scales in from the top-right with **Add slot** legend, icon rows, and gold rules between Warframe / weapons / Companion
+- Hover fill is cyan, glyphs use gold / cyan / plasma / ember / signal
+- Sharp 1–2px radius (no pills); `prefers-reduced-motion` drops the scale/rotate transitions
+
 ### Chips (`.chip`)
 
 - Sharp 1px radius, dark fill, dim gold border
