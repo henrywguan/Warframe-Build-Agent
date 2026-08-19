@@ -175,15 +175,17 @@ export function MarketQuotePanel({
       setUi((prev) => {
         const next = typeof patch === "function" ? patch(prev) : { ...prev, ...patch };
         saveUi(next);
-        if (next.minimized !== prev.minimized) onMinimizedChange?.(next.minimized);
         return next;
       });
     },
-    [onMinimizedChange],
+    [],
   );
 
   function setMinimized(next: boolean) {
     updateUi({ minimized: next });
+    // Notify the parent from the click handler, not from the setUi updater.
+    // React 19 runs reducers during render; calling HomePage setState there warns.
+    onMinimizedChange?.(next);
   }
 
   async function runSearch(rawQuery: string) {
