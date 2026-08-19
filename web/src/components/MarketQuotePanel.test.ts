@@ -18,6 +18,11 @@ describe("MarketQuotePanel", () => {
     assert.match(panel, /navigator\.clipboard/);
     assert.match(panel, /Minimize market quotes/);
     assert.match(panel, /Close market quotes/);
+    assert.match(panel, /onMinimizedChange\?\.\(next\)/);
+    assert.doesNotMatch(
+      panel,
+      /setUi\(\(prev\) =>[\s\S]{0,240}onMinimizedChange/,
+    );
     assert.match(panel, /wfba_market_quotes_ui_v1|MARKET_QUOTES_STORAGE_KEY/);
     assert.match(panel, /onPointerDown/);
     assert.match(panel, /nwse-resize|resize/);
