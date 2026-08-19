@@ -26,6 +26,29 @@ Canonical local env template: [`web/.env.example`](../web/.env.example). Product
 - **Static CDN / GitHub Pages alone** — no Node API or pack filesystem
 - **Client-only OpenAI keys in the browser** — keys still relay through `/api/chat`; keep the real key in server env and set **`CHAT_PASSWORD`**
 
+## Temporary HTTPS share (Cloudflare Quick Tunnel)
+
+For **human testing with friends** while the chat runs on your PC: a random `https://*.trycloudflare.com` URL, no Cloudflare account, no Vercel deploy. The URL dies when you stop the tunnel.
+
+1. Set `CHAT_PASSWORD` in [`web/.env.local`](../web/.env.example) (required — the URL is public).
+2. Start the chat (prefer a production build; HMR through a tunnel is flaky):
+
+```bash
+npm run web:build
+npm run web:start
+```
+
+3. In a **second** terminal:
+
+```bash
+npm run web:tunnel
+```
+
+4. Install [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) once if the script says it is missing (`winget install --id Cloudflare.cloudflared` on Windows, `brew install cloudflared` on macOS).
+5. Copy the `https://….trycloudflare.com` line cloudflared prints. Send friends that URL **and** the password. Ctrl+C ends the share.
+
+Ollama on the same PC still works: friends hit your Next server, which talks to `127.0.0.1:11434` locally. This is **not** a production host — use Vercel/Fly for a URL that stays up when your laptop sleeps.
+
 ## Launch checklist (any host)
 
 1. Set `OPENAI_API_KEY` + `OPENAI_MODEL` (e.g. `gpt-4o-mini`). Add `OPENAI_VISION_MODEL` (e.g. `gpt-4o`) if you attach loadout screenshots.

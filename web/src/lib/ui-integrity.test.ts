@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pageSource = readFileSync(join(here, "../app/page.tsx"), "utf8");
+const nextConfig = readFileSync(join(here, "../../next.config.ts"), "utf8");
 
 describe("web UI wiring integrity", () => {
   it("keeps Ordis stage, chat panel, composer, and API linked", () => {
@@ -85,5 +86,9 @@ describe("web UI wiring integrity", () => {
     assert.match(pageSource, /function clearChat\(\)/);
     assert.match(pageSource, /onClick=\{clearChat\}/);
     assert.match(pageSource, /aria-label="Clear chat log"/);
+  });
+
+  it("allows Cloudflare Quick Tunnel origins in next dev", () => {
+    assert.match(nextConfig, /trycloudflare\.com/);
   });
 });

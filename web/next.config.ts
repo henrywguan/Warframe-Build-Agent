@@ -8,10 +8,12 @@ const nextConfig: NextConfig = {
     root: process.cwd(),
   },
   /**
-   * Dev-only: allow cross-origin HMR / `/_next/*` from phones on the LAN.
+   * Dev-only: allow cross-origin HMR / `/_next/*` from phones on the LAN
+   * and Cloudflare Quick Tunnels (`*.trycloudflare.com`).
    * Does not apply to `next start` (no webpack HMR). See docs/web-chat.md.
    */
   allowedDevOrigins: [
+    "*.trycloudflare.com",
     "192.168.*.*",
     "10.*.*.*",
     "172.16.*.*",

@@ -91,6 +91,17 @@ npm run web:start:lan
 
 Then open `http://<your-pc-lan-ip>:3000` from any device. Same firewall note as above. Prefer setting `CHAT_PASSWORD` if untrusted people share the Wi‑Fi.
 
+### Option C — Temporary HTTPS tunnel (friends off your Wi‑Fi)
+
+Cloudflare Quick Tunnel: `https://*.trycloudflare.com` while your PC is on. Set `CHAT_PASSWORD`, then:
+
+```bash
+npm run web:build && npm run web:start   # terminal 1
+npm run web:tunnel                       # terminal 2
+```
+
+Needs [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) on PATH. Full notes: [`hosting.md`](hosting.md#temporary-https-share-cloudflare-quick-tunnel). Do not leave `next dev` on the public internet; prefer `web:start`.
+
 ### Why you saw `192.168.1.58` blocked
 
 The page can load (`GET / 200`), but Next blocked the phone’s origin from the **dev** Hot Module Replacement websocket (`/_next/webpack-hmr`). Adding that host (or the private ranges we ship) fixes HMR/hydration during `next dev`. It is not required for Option B.
