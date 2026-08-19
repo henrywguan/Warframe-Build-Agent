@@ -15,6 +15,7 @@ export function knowledgePaths(repoRoot = process.cwd()) {
     buildsIndex: path.join(root, "builds", "index.json"),
     buildsDir: path.join(root, "builds", "by-item"),
     mods: path.join(root, "mods", "index.json"),
+    modsCatalog: path.join(root, "mods", "catalog-names.json"),
     officialIndex: path.join(root, "official", "index.json"),
     officialDir: path.join(root, "official", "digests"),
     mechanicsIndex: path.join(root, "mechanics", "index.json"),

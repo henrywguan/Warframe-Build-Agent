@@ -1,4 +1,4 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, access } from "node:fs/promises";
 import path from "node:path";
 import { writeFileDurable } from "./fs-write.js";
 import { knowledgePaths } from "./paths.js";
@@ -352,6 +352,52 @@ export async function saveBuildCrawl(options: {
     },
     notes: options.notes,
     overframeStatus: options.overframeStatus,
+  };
+  await writeJson(paths.manifest, manifest);
+  return manifest;
+}
+
+/** Full WFCD mod-name list for UI autocomplete (does not replace Overframe mods/index.json). */
+export async function saveModsNameCatalog(options: {
+  repoRoot?: string;
+  rows: Array<{ name: string; type?: string; tradable?: boolean; wikiaUrl?: string }>;
+  suggest: unknown;
+  webPath: string;
+  notes: string[];
+  previous?: KnowledgeManifest | null;
+}): Promise<KnowledgeManifest> {
+  const paths = knowledgePaths(options.repoRoot);
+  await mkdir(path.dirname(paths.modsCatalog), { recursive: true });
+  await writeJson(paths.modsCatalog, options.rows);
+  try {
+    await access(path.dirname(options.webPath));
+    await writeJson(options.webPath, options.suggest);
+  } catch {
+    /* web/ tree may be absent in a CLI-only checkout */
+  }
+
+  const previous = options.previous;
+  const manifest: KnowledgeManifest = {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    sources: {
+      wfcd: previous?.sources.wfcd ?? "https://api.warframestat.us",
+      wiki: previous?.sources.wiki ?? "https://wiki.warframe.com",
+      overframe: previous?.sources.overframe ?? "https://overframe.gg",
+      official: previous?.sources.official ?? "https://www.warframe.com",
+    },
+    counts: {
+      catalogItems: previous?.counts.catalogItems ?? 0,
+      wikiDigests: previous?.counts.wikiDigests ?? 0,
+      buildEntries: previous?.counts.buildEntries ?? 0,
+      modsIndexed: previous?.counts.modsIndexed ?? 0,
+      modsCatalog: options.rows.length,
+      officialDigests: previous?.counts.officialDigests ?? 0,
+      mechanicsDigests: previous?.counts.mechanicsDigests ?? 0,
+      arcaneDigests: previous?.counts.arcaneDigests ?? 0,
+    },
+    notes: [...(previous?.notes ?? []).slice(-8), ...options.notes],
+    overframeStatus: previous?.overframeStatus ?? "skipped",
   };
   await writeJson(paths.manifest, manifest);
   return manifest;

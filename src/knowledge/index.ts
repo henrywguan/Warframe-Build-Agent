@@ -17,6 +17,7 @@ export {
   formatPresetHelp,
 } from "./dps/compare.js";
 export { pullKnowledgePack, pullMechanicsOnly, pullArcanesOnly } from "./pull.js";
+export { pullModsNameCatalog, slimModsFromWfcd } from "./mods-catalog.js";
 export { runOverframeCrawl } from "./crawl-overframe.js";
 export { crawlOverframeTopBuilds, indexModsFromBuilds } from "./overframe.js";
 export {

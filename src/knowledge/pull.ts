@@ -3,6 +3,7 @@ import { pullArcaneDigests } from "./arcanes.js";
 import { pullCatalog } from "./catalog.js";
 import type { OverframeBuildRank } from "./constants.js";
 import { pullMechanicsDigests } from "./mechanics.js";
+import { pullModsNameCatalog } from "./mods-catalog.js";
 import { pullOfficialDigests } from "./official.js";
 import {
   buildsFromImport,
@@ -35,6 +36,7 @@ export type PullOptions = {
   skipOfficial?: boolean;
   skipMechanics?: boolean;
   skipArcanes?: boolean;
+  skipModsCatalog?: boolean;
   importBuildsPath?: string;
   concurrency?: number;
   onLog?: (line: string) => void;
@@ -243,6 +245,17 @@ export async function pullKnowledgePack(options: PullOptions = {}): Promise<Know
   log(
     `Manifest written: ${manifest.counts.catalogItems} items, ${manifest.counts.wikiDigests} wiki digests, ${manifest.counts.mechanicsDigests ?? 0} mechanics digests, ${manifest.counts.arcaneDigests ?? 0} arcane digests, ${manifest.counts.buildEntries} build entries, ${manifest.counts.officialDigests ?? 0} official digests (${manifest.overframeStatus})`,
   );
+
+  if (!options.skipModsCatalog) {
+    try {
+      return await pullModsNameCatalog({ repoRoot, onLog: log });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      log(`Mod-name catalog failed: ${message}`);
+      notes.push(`Mod-name catalog failed: ${message}`);
+    }
+  }
+
   return manifest;
 }
 

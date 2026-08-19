@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-04T06:12:31.065Z",
+  "generatedAt": "2026-08-19T01:32:34.468Z",
   "sources": {
     "wfcd": "https://api.warframestat.us",
     "wiki": "https://wiki.warframe.com",
@@ -12,13 +12,12 @@
     "wikiDigests": 751,
     "buildEntries": 1,
     "modsIndexed": 17,
+    "modsCatalog": 1428,
     "officialDigests": 0,
     "mechanicsDigests": 41,
     "arcaneDigests": 168
   },
   "notes": [
-    "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
-    "Crawl limited to first 3 catalog items.",
     "Cloudflare bot challenge blocked overframe.gg from this network. Re-run crawl-overframe on a residential network, or pass --import-builds <file>.",
     "Imported 0 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
     "Imported 2 item build set(s) from ./data/knowledge/examples/builds-import.sample.json.",
@@ -26,7 +25,8 @@
     "Arcane digests: 169/170 (failed 1)",
     "Arcane digests: 168/168 (failed 0)",
     "Overframe crawl: top 3 builds per item with mods + arcanes scanned into local knowledge pack.",
-    "Imported 1 item build set(s) from ./data/knowledge/builds-enkaus-2026-08-03.json."
+    "Imported 1 item build set(s) from ./data/knowledge/builds-enkaus-2026-08-03.json.",
+    "WFCD mod-name catalog: 1428 names for arsenal /wfm autocomplete."
   ],
   "overframeStatus": "partial"
 }

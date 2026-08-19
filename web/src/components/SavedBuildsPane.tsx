@@ -4,25 +4,39 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   BuildFolder,
   GearSlot,
+  GearSlotKey,
   SavedBuild,
   SavedBuildsMemory,
 } from "../lib/saved-builds";
 import {
+  BUILD_FOCUS_LABELS,
+  BUILD_FOCUS_SLOTS,
   addBuild,
   addFolder,
   buildsInFolder,
   createEmptyBuild,
   deleteBuild,
   deleteFolder,
+  inferFocusSlot,
   renameBuild,
   renameFolder,
   updateBuild,
 } from "../lib/saved-builds";
 import { BUILDS_MIN_W, PANEL_MAX_W, PANEL_MIN_H } from "../lib/desktop-shell";
+import suggestPack from "../data/offline-suggest.json";
+import { NameSuggestInput } from "./NameSuggestInput";
 import { PanelResizeHandles } from "./PanelResizeHandles";
 import styles from "./SavedBuildsPane.module.css";
 
 type FolderFilter = "all" | "unfiled" | string;
+
+const ITEM_DICTS = {
+  warframe: suggestPack.items.warframe,
+  primary: suggestPack.items.primary,
+  secondary: suggestPack.items.secondary,
+  melee: suggestPack.items.melee,
+  companion: suggestPack.items.companion,
+};
 
 export function SavedBuildsPane({
   memory,
@@ -51,20 +65,53 @@ export function SavedBuildsPane({
   desktopSize?: { w: number; h: number | null };
   onDesktopResize?: (next: { w: number; h: number | null }) => void;
 }) {
+  const [addOpen, setAddOpen] = useState(false);
+  const [focusNewId, setFocusNewId] = useState<string | null>(null);
+  const addWrapRef = useRef<HTMLDivElement | null>(null);
+
   const visible = useMemo(() => {
     if (filterFolderId === "all") return buildsInFolder(memory, "all");
     if (filterFolderId === "unfiled") return buildsInFolder(memory, null);
     return buildsInFolder(memory, filterFolderId);
   }, [memory, filterFolderId]);
 
-  function handleAddBuild() {
+  const grouped = useMemo(() => {
+    const buckets: Record<string, SavedBuild[]> = {
+      warframe: [],
+      primary: [],
+      secondary: [],
+      melee: [],
+      companion: [],
+      full: [],
+    };
+    for (const build of visible) {
+      buckets[inferFocusSlot(build)]?.push(build);
+    }
+    return buckets;
+  }, [visible]);
+
+  useEffect(() => {
+    function onPointerDown(event: MouseEvent) {
+      if (!addWrapRef.current?.contains(event.target as Node)) setAddOpen(false);
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, []);
+
+  function handleAddSlot(slot: GearSlotKey) {
     const folderId =
       filterFolderId === "all" || filterFolderId === "unfiled"
         ? null
         : filterFolderId;
-    const build = createEmptyBuild({ folderId });
+    const build = createEmptyBuild({
+      folderId,
+      focusSlot: slot,
+      name: `New ${BUILD_FOCUS_LABELS[slot]}`,
+    });
     onChange(addBuild(memory, build));
     onSelectBuild(build.id);
+    setFocusNewId(build.id);
+    setAddOpen(false);
   }
 
   function handleRemove() {
@@ -89,6 +136,8 @@ export function SavedBuildsPane({
     onChange(deleteFolder(memory, folderId));
     if (filterFolderId === folderId) onFilterFolder("all");
   }
+
+  const sectionOrder = [...BUILD_FOCUS_SLOTS, "full"] as const;
 
   return (
     <div
@@ -120,15 +169,35 @@ export function SavedBuildsPane({
             <h2 className={styles.title}>Saved Builds</h2>
           </div>
           <div className={styles.headerActions}>
-            <button
-              type="button"
-              className={styles.iconBtn}
-              onClick={handleAddBuild}
-              aria-label="Add build slot"
-              title="Add build"
-            >
-              +
-            </button>
+            <div className={styles.addWrap} ref={addWrapRef}>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={() => setAddOpen((open) => !open)}
+                aria-label="Add build slot"
+                aria-expanded={addOpen}
+                aria-haspopup="menu"
+                title="Add Warframe, Primary, Secondary, Melee, or Companion"
+              >
+                +
+              </button>
+              {addOpen ? (
+                <ul className={styles.addMenu} role="menu">
+                  {BUILD_FOCUS_SLOTS.map((slot) => (
+                    <li key={slot} role="none">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className={styles.addMenuItem}
+                        onClick={() => handleAddSlot(slot)}
+                      >
+                        {BUILD_FOCUS_LABELS[slot]}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
             <button
               type="button"
               className={styles.iconBtn}
@@ -202,28 +271,38 @@ export function SavedBuildsPane({
         <div className={styles.scroll}>
           {visible.length === 0 ? (
             <p className={styles.empty}>
-              No builds here yet. Use <code>+ </code> or{" "}
-              <code>/save-build</code> to add a card.
+              No builds here yet. Use <code>+</code> to pick Warframe, Primary,
+              Secondary, Melee, or Companion — or <code>/save-build</code>.
             </p>
           ) : (
-            visible.map((build) => (
-              <BuildCard
-                key={build.id}
-                build={build}
-                folders={memory.folders}
-                selected={build.id === selectedBuildId}
-                onSelect={() =>
-                  onSelectBuild(build.id === selectedBuildId ? null : build.id)
-                }
-                onRename={(name) => onChange(renameBuild(memory, build.id, name))}
-                onPatch={(patch) => onChange(updateBuild(memory, build.id, patch))}
-              />
-            ))
+            sectionOrder.map((slot) => {
+              const rows = grouped[slot] ?? [];
+              if (!rows.length) return null;
+              return (
+                <section key={slot} className={styles.slotGroup}>
+                  <h3 className={styles.slotHeading}>{BUILD_FOCUS_LABELS[slot]}</h3>
+                  {rows.map((build) => (
+                    <BuildCard
+                      key={build.id}
+                      build={build}
+                      folders={memory.folders}
+                      selected={build.id === selectedBuildId}
+                      autoFocusName={focusNewId === build.id}
+                      onSelect={() =>
+                        onSelectBuild(build.id === selectedBuildId ? null : build.id)
+                      }
+                      onRename={(name) => onChange(renameBuild(memory, build.id, name))}
+                      onPatch={(patch) => onChange(updateBuild(memory, build.id, patch))}
+                    />
+                  ))}
+                </section>
+              );
+            })
           )}
         </div>
 
         <p className={styles.footnote}>
-          Browser localStorage · double-click names to rename
+          Browser localStorage · double-click names to rename · mod names from the offline pack
         </p>
         {onDesktopResize && desktopSize ? (
           <PanelResizeHandles
@@ -321,6 +400,7 @@ function BuildCard({
   build,
   folders,
   selected,
+  autoFocusName,
   onSelect,
   onRename,
   onPatch,
@@ -328,6 +408,7 @@ function BuildCard({
   build: SavedBuild;
   folders: BuildFolder[];
   selected: boolean;
+  autoFocusName?: boolean;
   onSelect: () => void;
   onRename: (name: string) => void;
   onPatch: (patch: Partial<SavedBuild>) => void;
@@ -335,6 +416,9 @@ function BuildCard({
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState(build.name);
   const nameRef = useRef<HTMLInputElement | null>(null);
+  const focus = inferFocusSlot(build);
+  const slotsToShow: GearSlotKey[] =
+    focus === "full" ? [...BUILD_FOCUS_SLOTS] : [focus];
 
   useEffect(() => {
     setDraftName(build.name);
@@ -355,6 +439,7 @@ function BuildCard({
     <article
       className={`${styles.card} ${selected ? styles.cardSelected : ""}`}
       data-selected={selected ? "true" : "false"}
+      data-slot={focus}
       onClick={onSelect}
     >
       <div className={styles.cardHeader}>
@@ -410,78 +495,61 @@ function BuildCard({
         </select>
       </div>
 
-      <GearBlock
-        label="Warframe"
-        slot={build.warframe}
-        onChange={(warframe) => onPatch({ warframe })}
-      />
-      <GearBlock
-        label="Primary"
-        slot={build.primary}
-        onChange={(primary) => onPatch({ primary })}
-      />
-      <GearBlock
-        label="Secondary"
-        slot={build.secondary}
-        onChange={(secondary) => onPatch({ secondary })}
-      />
-      <GearBlock
-        label="Melee"
-        slot={build.melee}
-        onChange={(melee) => onPatch({ melee })}
-      />
-      <GearBlock
-        label="Companion"
-        slot={build.companion}
-        onChange={(companion) => onPatch({ companion })}
-      />
-
-      <div
-        className={styles.section}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <p className={styles.sectionLabel}>Archon crystals</p>
-        <textarea
-          className={styles.listInput}
-          rows={2}
-          placeholder="Crimson Melee Crit, Amber Casting Speed…"
-          value={build.archonCrystals
-            .map((c) =>
-              `${c.color}${c.tauforged ? " Tau" : ""} ${c.effect}`.replace(
-                /\s+/g,
-                " ",
-              ).trim(),
-            )
-            .join(", ")}
-          onChange={(e) => {
-            const parts = e.target.value
-              .split(/[,;\n]+/)
-              .map((s) => s.trim())
-              .filter(Boolean);
-            onPatch({
-              archonCrystals: parts.map((entry) => {
-                const tauforged = /tau/i.test(entry);
-                const cleaned = entry.replace(/\btau(?:forged)?\b/gi, "").trim();
-                const colorMatch = cleaned.match(
-                  /^(crimson|amber|azure|violet|topaz|emerald)\b/i,
-                );
-                const color = colorMatch?.[1]
-                  ? colorMatch[1][0]!.toUpperCase() +
-                    colorMatch[1].slice(1).toLowerCase()
-                  : "Crystal";
-                const effect = colorMatch
-                  ? cleaned.slice(colorMatch[0].length).trim() || cleaned
-                  : cleaned;
-                return {
-                  color,
-                  effect,
-                  ...(tauforged ? { tauforged: true as const } : {}),
-                };
-              }),
-            });
-          }}
+      {slotsToShow.map((slot) => (
+        <GearBlock
+          key={slot}
+          label={BUILD_FOCUS_LABELS[slot]}
+          slot={build[slot]}
+          itemNames={ITEM_DICTS[slot]}
+          autoFocusName={autoFocusName && slot === slotsToShow[0]}
+          onChange={(next) => onPatch({ [slot]: next })}
         />
-      </div>
+      ))}
+
+      {focus === "warframe" || focus === "full" ? (
+        <div className={styles.section} onClick={(e) => e.stopPropagation()}>
+          <p className={styles.sectionLabel}>Archon crystals</p>
+          <textarea
+            className={styles.listInput}
+            rows={2}
+            placeholder="Crimson Melee Crit, Amber Casting Speed…"
+            value={build.archonCrystals
+              .map((c) =>
+                `${c.color}${c.tauforged ? " Tau" : ""} ${c.effect}`
+                  .replace(/\s+/g, " ")
+                  .trim(),
+              )
+              .join(", ")}
+            onChange={(e) => {
+              const parts = e.target.value
+                .split(/[,;\n]+/)
+                .map((s) => s.trim())
+                .filter(Boolean);
+              onPatch({
+                archonCrystals: parts.map((entry) => {
+                  const tauforged = /tau/i.test(entry);
+                  const cleaned = entry.replace(/\btau(?:forged)?\b/gi, "").trim();
+                  const colorMatch = cleaned.match(
+                    /^(crimson|amber|azure|violet|topaz|emerald)\b/i,
+                  );
+                  const color = colorMatch?.[1]
+                    ? colorMatch[1][0]!.toUpperCase() +
+                      colorMatch[1].slice(1).toLowerCase()
+                    : "Crystal";
+                  const effect = colorMatch
+                    ? cleaned.slice(colorMatch[0].length).trim() || cleaned
+                    : cleaned;
+                  return {
+                    color,
+                    effect,
+                    ...(tauforged ? { tauforged: true as const } : {}),
+                  };
+                }),
+              });
+            }}
+          />
+        </div>
+      ) : null}
     </article>
   );
 }
@@ -489,53 +557,69 @@ function BuildCard({
 function GearBlock({
   label,
   slot,
+  itemNames,
+  autoFocusName,
   onChange,
 }: {
   label: string;
   slot: GearSlot;
+  itemNames: readonly string[];
+  autoFocusName?: boolean;
   onChange: (next: GearSlot) => void;
 }) {
+  const [modsText, setModsText] = useState(() =>
+    slot.mods.length ? slot.mods.join(", ") : "",
+  );
+  const [arcanesText, setArcanesText] = useState(() =>
+    slot.arcanes.length ? slot.arcanes.join(", ") : "",
+  );
+
+  function commitList(
+    raw: string,
+    field: "mods" | "arcanes",
+    setText: (next: string) => void,
+  ) {
+    setText(raw);
+    onChange({
+      ...slot,
+      [field]: raw
+        .split(/[,;\n]+/)
+        .map((s) => s.trim())
+        .filter(Boolean),
+    });
+  }
+
   return (
     <div className={styles.section} onClick={(e) => e.stopPropagation()}>
       <p className={styles.sectionLabel}>{label}</p>
-      <input
+      <NameSuggestInput
         className={styles.fieldInput}
         value={slot.name}
         placeholder={`${label} name`}
-        aria-label={`${label} name`}
-        onChange={(e) => onChange({ ...slot, name: e.target.value })}
+        ariaLabel={`${label} name`}
+        dictionary={itemNames}
+        autoFocus={autoFocusName}
+        onChange={(name) => onChange({ ...slot, name })}
       />
-      <textarea
+      <NameSuggestInput
         className={styles.listInput}
+        mode="list"
         rows={2}
-        placeholder="Mods (comma-separated)"
-        aria-label={`${label} mods`}
-        value={slot.mods.join(", ")}
-        onChange={(e) =>
-          onChange({
-            ...slot,
-            mods: e.target.value
-              .split(/[,;\n]+/)
-              .map((s) => s.trim())
-              .filter(Boolean),
-          })
-        }
+        value={modsText}
+        placeholder="Mods — type to autocomplete"
+        ariaLabel={`${label} mods`}
+        dictionary={suggestPack.mods}
+        onChange={(raw) => commitList(raw, "mods", setModsText)}
       />
-      <textarea
+      <NameSuggestInput
         className={styles.listInput}
+        mode="list"
         rows={1}
-        placeholder="Arcanes (comma-separated)"
-        aria-label={`${label} arcanes`}
-        value={slot.arcanes.join(", ")}
-        onChange={(e) =>
-          onChange({
-            ...slot,
-            arcanes: e.target.value
-              .split(/[,;\n]+/)
-              .map((s) => s.trim())
-              .filter(Boolean),
-          })
-        }
+        value={arcanesText}
+        placeholder="Arcanes — type to autocomplete"
+        ariaLabel={`${label} arcanes`}
+        dictionary={suggestPack.arcanes}
+        onChange={(raw) => commitList(raw, "arcanes", setArcanesText)}
       />
     </div>
   );

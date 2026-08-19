@@ -78,6 +78,7 @@ cd overlay && python3 -m wf_overlay
 npm run knowledge -- pull
 npm run knowledge -- pull-mechanics
 npm run knowledge -- pull-arcanes
+npm run knowledge -- pull-mods
 npm run knowledge -- crawl-overframe
 npm run knowledge -- lookup "Coda Hema"
 npm run knowledge -- farm "Enkaus"

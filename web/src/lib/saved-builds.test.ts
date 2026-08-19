@@ -5,6 +5,7 @@ import {
   applySaveBuildCommand,
   createEmptyBuild,
   emptySavedBuilds,
+  inferFocusSlot,
   isSaveBuildSlash,
   parseSaveBuildArgs,
   renameBuild,
@@ -44,6 +45,19 @@ describe("saved-builds", () => {
     assert.equal(result.memory.folders[0]?.name, "Steel Path");
     assert.equal(result.build.folderId, result.memory.folders[0]?.id);
     assert.match(result.reply, /Saved build/);
+  });
+
+  it("infers a single filled slot for grouped arsenal cards", () => {
+    const primary = createEmptyBuild({
+      name: "Soma",
+      primary: { name: "Soma Prime", mods: ["Serration"], arcanes: [] },
+    });
+    assert.equal(inferFocusSlot(primary), "primary");
+    const tagged = createEmptyBuild({
+      name: "New Warframe",
+      focusSlot: "warframe",
+    });
+    assert.equal(inferFocusSlot(tagged), "warframe");
   });
 
   it("renames builds and folders", () => {

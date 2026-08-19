@@ -15,6 +15,7 @@ A full catalog + digests pack is usually only a few MB. Overframe build text sta
 | `wiki/digests/*.json` | [Warframe Wiki API](https://wiki.warframe.com) | Plain-text digests per item |
 | `builds/by-item/*.json` | [Overframe](https://overframe.gg) crawl | Top 3 community builds per item (**mods + arcanes**) |
 | `mods/index.json` | Aggregated from crawled builds | Unique mods/arcanes seen on top builds |
+| `mods/catalog-names.json` | [WFCD / warframestat.us](https://api.warframestat.us/mods) | Full mod-name list for arsenal / `/wfm` autocomplete (`npm run knowledge -- pull-mods`) |
 | `official/digests/*.json` | [warframe.com](https://www.warframe.com) | Patch hub + news digests for local chatbot recall |
 | `mechanics/digests/*.json` | [Warframe Wiki](https://wiki.warframe.com) | Curated mechanics/resource pages (Damage, Status, Armor, factions, Forma, relics, …) |
 | `arcanes/digests/*.json` | [Warframe Wiki](https://wiki.warframe.com) | Arcane Enhancement digests (Warframe/Primary/Secondary/Melee/Magus/Virtuos/…) |
@@ -35,6 +36,9 @@ npm run knowledge -- pull-mechanics
 
 # Arcane Enhancement digests (Warframe Wiki category)
 npm run knowledge -- pull-arcanes
+
+# Full WFCD mod-name catalog (arsenal / /wfm autocomplete)
+npm run knowledge -- pull-mods
 
 # Dev sample
 npm run knowledge -- pull --limit 25

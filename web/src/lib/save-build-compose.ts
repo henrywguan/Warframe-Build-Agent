@@ -12,6 +12,7 @@ import {
   createEmptyBuild,
   emptyGear,
   formatBuildSummary,
+  inferFocusSlot,
   splitList,
 } from "./saved-builds";
 
@@ -173,7 +174,7 @@ export async function composeSavedBuildFromToolArgs(
     }
   }
 
-  return build;
+  return { ...build, focusSlot: inferFocusSlot(build) };
 }
 
 export async function composeSavedBuildFromParsedLoadout(
@@ -218,7 +219,7 @@ export async function composeSavedBuildFromParsedLoadout(
       archonCrystals: parseCrystalEntries(crystalMatch[1]),
     };
   }
-  return build;
+  return { ...build, focusSlot: inferFocusSlot(build) };
 }
 
 /**
