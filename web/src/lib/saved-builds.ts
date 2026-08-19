@@ -10,6 +10,48 @@ export type GearSlot = {
   arcanes: string[];
 };
 
+export const BUILD_FOCUS_SLOTS = [
+  "warframe",
+  "primary",
+  "secondary",
+  "melee",
+  "companion",
+] as const;
+
+export type GearSlotKey = (typeof BUILD_FOCUS_SLOTS)[number];
+export type BuildFocusSlot = GearSlotKey | "full";
+
+export const BUILD_FOCUS_LABELS: Record<BuildFocusSlot, string> = {
+  warframe: "Warframe",
+  primary: "Primary",
+  secondary: "Secondary",
+  melee: "Melee",
+  companion: "Companion",
+  full: "Loadout",
+};
+
+export function isGearSlotKey(value: unknown): value is GearSlotKey {
+  return (
+    value === "warframe" ||
+    value === "primary" ||
+    value === "secondary" ||
+    value === "melee" ||
+    value === "companion"
+  );
+}
+
+export function filledGearSlots(build: Pick<SavedBuild, GearSlotKey>): GearSlotKey[] {
+  return BUILD_FOCUS_SLOTS.filter((slot) => Boolean(build[slot]?.name?.trim()));
+}
+
+export function inferFocusSlot(build: Pick<SavedBuild, GearSlotKey | "focusSlot">): BuildFocusSlot {
+  if (build.focusSlot === "full") return "full";
+  if (isGearSlotKey(build.focusSlot)) return build.focusSlot;
+  const filled = filledGearSlots(build);
+  if (filled.length === 1) return filled[0]!;
+  return "full";
+}
+
 export type ArchonCrystal = {
   /** e.g. Crimson, Amber, Azure, Violet, Topaz, Emerald */
   color: string;
@@ -24,6 +66,8 @@ export type SavedBuild = {
   folderId: string | null;
   createdAt: number;
   updatedAt: number;
+  /** Which arsenal slot this card is for. Missing/old cards infer from filled names. */
+  focusSlot?: BuildFocusSlot;
   warframe: GearSlot;
   primary: GearSlot;
   secondary: GearSlot;
@@ -64,6 +108,14 @@ export function createEmptyBuild(
     folderId: partial?.folderId ?? null,
     createdAt: now,
     updatedAt: now,
+    focusSlot: partial?.focusSlot ?? inferFocusSlot({
+      focusSlot: partial?.focusSlot,
+      warframe: partial?.warframe ?? emptyGear(),
+      primary: partial?.primary ?? emptyGear(),
+      secondary: partial?.secondary ?? emptyGear(),
+      melee: partial?.melee ?? emptyGear(),
+      companion: partial?.companion ?? emptyGear(),
+    }),
     warframe: partial?.warframe ?? emptyGear(),
     primary: partial?.primary ?? emptyGear(),
     secondary: partial?.secondary ?? emptyGear(),
@@ -131,6 +183,8 @@ export function loadSavedBuilds(): SavedBuildsMemory {
           name: typeof b.name === "string" && b.name.trim() ? b.name.trim() : "New build",
           folderId:
             typeof b.folderId === "string" && folderIds.has(b.folderId) ? b.folderId : null,
+          focusSlot:
+            b.focusSlot === "full" || isGearSlotKey(b.focusSlot) ? b.focusSlot : undefined,
           warframe: normalizeGear(b.warframe),
           primary: normalizeGear(b.primary),
           secondary: normalizeGear(b.secondary),

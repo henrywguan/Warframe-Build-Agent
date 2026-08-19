@@ -34,6 +34,7 @@ import {
   pullPublicExportStub,
 } from "./public-export.js";
 import { pullArcanesOnly, pullKnowledgePack, pullMechanicsOnly } from "./pull.js";
+import { pullModsNameCatalog } from "./mods-catalog.js";
 import { loadManifest } from "./store.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -45,6 +46,7 @@ Usage:
   npm run knowledge -- pull [options]
   npm run knowledge -- pull-mechanics [options]
   npm run knowledge -- pull-arcanes [options]
+  npm run knowledge -- pull-mods
   npm run knowledge -- crawl-overframe [options]
   npm run knowledge -- parse-overframe-html <file|dir> [...] [options]
   npm run knowledge -- import-builds <file> [--merge]
@@ -74,6 +76,7 @@ pull options:
   --skip-official          Skip warframe.com official digests
   --skip-mechanics         Skip curated mechanics/resource digests
   --skip-arcanes           Skip Arcane Enhancement digests
+  --skip-mods-catalog      Skip WFCD full mod-name catalog (autocomplete)
   --import-builds <file>   JSON import when Overframe is Cloudflare-blocked
   --concurrency <n>        Parallel workers (wiki default 4)
 
@@ -85,6 +88,10 @@ pull-arcanes options:
   Refresh Arcane Enhancement digests from Warframe Wiki
   --limit <n>              Only first N titles (dev/sample)
   --concurrency <n>        Parallel workers (default 3)
+
+pull-mods:
+  Refresh the full WFCD mod-name catalog for arsenal / /wfm autocomplete
+  Writes data/knowledge/mods/catalog-names.json and web/src/data/offline-suggest.json
 
 dps / compare-dps options:
   Offline arsenal-style modded DPS estimate (not a full simulator)
@@ -354,6 +361,7 @@ async function main() {
       skipOfficial: rest.includes("--skip-official"),
       skipMechanics: rest.includes("--skip-mechanics"),
       skipArcanes: rest.includes("--skip-arcanes"),
+      skipModsCatalog: rest.includes("--skip-mods-catalog"),
       importBuildsPath: getFlag(rest, "--import-builds"),
       concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
     });
@@ -375,6 +383,11 @@ async function main() {
       limit: limitRaw ? Number(limitRaw) : undefined,
       concurrency: concurrencyRaw ? Number(concurrencyRaw) : undefined,
     });
+    return;
+  }
+
+  if (command === "pull-mods") {
+    await pullModsNameCatalog();
     return;
   }
 

@@ -18,6 +18,8 @@ export interface KnowledgeManifest {
     wikiDigests: number;
     buildEntries: number;
     modsIndexed: number;
+    /** Full WFCD mod-name list for autocomplete (catalog-names.json). */
+    modsCatalog?: number;
     officialDigests?: number;
     mechanicsDigests?: number;
     arcaneDigests?: number;

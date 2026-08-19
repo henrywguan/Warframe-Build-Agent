@@ -130,10 +130,25 @@ export async function parseLoadoutFromOcrText(
     root
       ? (await readJson<CatalogItem[]>(path.join(root, "catalog", "items.json"))) || []
       : [];
-  const mods =
+  const catalogNames =
+    root
+      ? (await readJson<Array<{ name?: string }>>(
+          path.join(root, "mods", "catalog-names.json"),
+        )) || []
+      : [];
+  const fromIndex =
     root
       ? (await readJson<ModDigest[]>(path.join(root, "mods", "index.json"))) || []
       : [];
+  const mods: ModDigest[] = [
+    ...fromIndex,
+    ...catalogNames
+      .filter((row) => row.name?.trim())
+      .map((row) => ({
+        name: row.name!.trim(),
+        kind: "mod" as const,
+      })),
+  ];
   return parseLoadoutFromText(rawText, catalog, mods, hintedItemName);
 }
 

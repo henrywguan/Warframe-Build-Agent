@@ -10,7 +10,8 @@ const css = readFileSync(join(here, "MarketQuotePanel.module.css"), "utf8");
 
 describe("MarketQuotePanel", () => {
   it("ships buy whisper action and window chrome", () => {
-    assert.match(panel, /wfm-item-search/);
+    assert.match(panel, /NameSuggestInput/);
+    assert.match(panel, /wfmSuggestDictionary/);
     assert.match(panel, /\/api\/market\/wfm/);
     assert.match(panel, /MARKET_QUOTE_LIMIT|5 cheapest/);
     assert.doesNotMatch(panel, /: "Copy"/);

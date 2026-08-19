@@ -11,11 +11,16 @@ const css = readFileSync(join(here, "SavedBuildsPane.module.css"), "utf8");
 describe("SavedBuildsPane", () => {
   it("ships plus/minus controls and scrollable cards", () => {
     assert.match(pane, /Add build slot/);
+    assert.match(pane, /addMenu/);
+    assert.match(pane, /Warframe, Primary, Secondary, Melee, or Companion/);
+    assert.match(pane, /NameSuggestInput/);
+    assert.match(pane, /offline-suggest/);
     assert.match(pane, /Remove selected build/);
     assert.match(pane, /Saved Builds/);
     assert.match(pane, /Archon crystals/);
     assert.match(pane, /onDoubleClick/);
-    assert.match(css, /\.scroll/);
+    assert.match(css, /\.addMenu/);
+    assert.match(css, /\.slotHeading/);
     assert.match(css, /min-width:\s*861px/);
     assert.ok(existsSync(join(here, "SavedBuildsPane.module.css")));
   });

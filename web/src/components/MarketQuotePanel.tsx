@@ -14,6 +14,9 @@ import {
   type MarketQuotesPayload,
   type MarketSlugMatch,
 } from "../lib/market-quotes";
+import suggestPack from "../data/offline-suggest.json";
+import { wfmSuggestDictionary } from "../lib/name-suggest";
+import { NameSuggestInput } from "./NameSuggestInput";
 import styles from "./MarketQuotePanel.module.css";
 
 type UiState = {
@@ -127,7 +130,7 @@ export function MarketQuotePanel({
   const [status, setStatus] = useState<string | null>(null);
   const [matches, setMatches] = useState<MarketSlugMatch[]>([]);
   const uiRef = useRef(ui);
-  const searchRef = useRef<HTMLInputElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
   const dragRef = useRef<{
     pointerId: number;
     kind: "move" | "resize";
@@ -360,15 +363,17 @@ export function MarketQuotePanel({
             <label className={styles.searchLabel} htmlFor="wfm-item-search">
               Item
             </label>
-            <input
+            <NameSuggestInput
               id="wfm-item-search"
-              ref={searchRef}
+              inputRef={searchRef}
               className={styles.searchInput}
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={setQuery}
+              dictionary={wfmSuggestDictionary(suggestPack)}
               placeholder="Primed Continuity, Soma Prime…"
-              autoComplete="off"
+              ariaLabel="Item"
               disabled={searching}
+              onPick={(name) => void runSearch(name)}
             />
             <button
               className={styles.searchBtn}
