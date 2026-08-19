@@ -98,7 +98,7 @@ const SEARCH_COMMUNITY_BUILDS_TOOL: OpenAI.Chat.ChatCompletionTool = {
   function: {
     name: "search_community_builds",
     description:
-      "Live crawl of community build sources when Online search is enabled: Overframe.gg top builds (mods when available), DuckDuckGo web results, YouTube links, Warframe Wiki, plus auto-fetched full-page excerpts. Call after lookup_local_knowledge when local Overframe builds are missing — do not ask the player to type yes/no (the Online search toggle is consent).",
+      "Live crawl of community build sources when Online search is enabled: Overframe.gg top builds (mods when available), DuckDuckGo web/YouTube/Wiki, plus a short full-page excerpt. Call at most once per turn after lookup_local_knowledge when local Overframe builds are missing. Do not call this when the Operator is saving/adding a personal card (use save_build). Never ask the player to type yes/no.",
     parameters: {
       type: "object",
       properties: {
@@ -562,7 +562,7 @@ export const chatTools: OpenAI.Chat.ChatCompletionTool[] = [
     function: {
       name: "save_build",
       description:
-        "Save a player loadout into the desktop Saved Builds (Arsenal) pane. Auto-classifies a single itemName via the local catalog into Warframe / Primary / Secondary / Melee, or companion name hints. Prefer explicit warframe/primary/secondary/melee/companion fields when the Operator lists a full arsenal. Use when they ask to save/add/store a build (text or after reading a screenshot).",
+        "Save a player loadout into the desktop Saved Builds (Arsenal) pane. Auto-classifies a single itemName via the local catalog into Warframe / Primary / Secondary / Melee, or companion name hints. Prefer explicit warframe/primary/secondary/melee/companion fields when the Operator lists a full arsenal. Use when they ask to save/add/store a build (text or after reading a screenshot). On that turn call this tool only — do not crawl community builds first.",
       parameters: {
         type: "object",
         properties: {

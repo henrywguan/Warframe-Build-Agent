@@ -19,8 +19,12 @@ describe("DesktopTaskbar", () => {
     assert.match(css, /flex-direction:\s*column/);
     assert.match(css, /itemSelected/);
     assert.match(css, /itemSignal/);
-    assert.match(css, /max-height:\s*2\.4rem/);
-    assert.match(css, /overflow-wrap:\s*break-word/);
+    assert.match(css, /max-height:\s*2\.6rem/);
+    assert.match(css, /white-space:\s*nowrap/);
+    assert.match(css, /white-space:\s*pre-line/);
+    assert.match(css, /overflow-wrap:\s*normal/);
+    assert.doesNotMatch(css, /overflow-wrap:\s*break-word/);
+    assert.match(bar, /dockLabel/);
     assert.doesNotMatch(css, /max-width:\s*8\.5rem/);
     assert.doesNotMatch(css, /padding-right:\s*0\.75rem/);
     assert.match(css, /prefers-reduced-motion/);

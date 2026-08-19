@@ -21,6 +21,7 @@ import {
 } from "@/lib/vision-loadout";
 import {
   extractSavedBuildFromToolPayloads,
+  looksLikeSaveBuildRequest,
   stripSavedBuildMarker,
 } from "@/lib/save-build-compose";
 import {
@@ -50,10 +51,17 @@ import {
 } from "@/lib/live-search-augment";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 import {
+  CONTEXT_OVERFLOW_PLAYER_MESSAGE,
   GENERAL_AGENT_MAX_TOOL_ROUNDS,
   MAX_TOOL_ROUNDS,
+  SAVE_BUILD_SKIP_RESEARCH_TOOLS,
+  SKIPPED_FOR_SAVE_BUILD,
   TOOL_BUDGET_EXHAUSTED_PROMPT,
+  clipMessagesForContextRetry,
+  clipToolResult,
   dedupeToolCall,
+  isContextOverflowError,
+  toolCallDedupeKey,
 } from "@/lib/tool-loop";
 import { getChatTools, runChatTool } from "@/lib/tools";
 
@@ -91,6 +99,41 @@ function toModelContent(
   return parts.length ? parts : messageText(content) || "(empty)";
 }
 
+async function createChatCompletion(
+  client: OpenAI,
+  model: string,
+  messages: ChatCompletionMessageParam[],
+  extra: {
+    tools?: OpenAI.Chat.ChatCompletionTool[];
+    tool_choice?: "auto";
+  } = {},
+): Promise<OpenAI.Chat.Completions.ChatCompletion> {
+  const params = {
+    model,
+    messages,
+    temperature: 0.4,
+    ...extra,
+  };
+  try {
+    return await client.chat.completions.create(params);
+  } catch (error) {
+    if (!isContextOverflowError(error)) throw error;
+    const clipped = clipMessagesForContextRetry(messages);
+    messages.splice(0, messages.length, ...clipped);
+    try {
+      return await client.chat.completions.create({
+        ...params,
+        messages,
+      });
+    } catch (retryError) {
+      if (isContextOverflowError(retryError)) {
+        throw new Error(CONTEXT_OVERFLOW_PLAYER_MESSAGE);
+      }
+      throw retryError;
+    }
+  }
+}
+
 async function runModelCompletion(
   incoming: IncomingChatMessage[],
   model: string,
@@ -123,9 +166,9 @@ async function runModelCompletion(
     });
 
   const latestUser = [...incoming].reverse().find((m) => m.role === "user");
-  const buildAsk = latestUser
-    ? looksLikeBuildRequest(messageText(latestUser.content))
-    : false;
+  const lastUserText = latestUser ? messageText(latestUser.content) : "";
+  const buildAsk = lastUserText ? looksLikeBuildRequest(lastUserText) : false;
+  const saveAsk = lastUserText ? looksLikeSaveBuildRequest(lastUserText) : false;
   const basePrompt = generalAgent ? GENERAL_AGENT_PROMPT : SYSTEM_PROMPT;
   const consentNote = [
     `\n\n## Runtime LLM\nThis session's model id is \`${model}\`${
@@ -134,11 +177,13 @@ async function runModelCompletion(
     generalAgent
       ? "\n\n## Runtime mode\n**General AI agent is ON.** Answer any topic (recipes, how-tos, tech, news). Do not force Warframe framing. Prefer `search_web` + `fetch_web_page` for research. Use Warframe tools only when the Operator asks about Warframe. This web chat cannot edit files, run a terminal, or use MCP — point coding-on-machine work to Hermes Desktop. Cite returned URLs only."
       : "\n\n## Runtime mode\n**Warframe LLM advisor** (general AI agent off). Stay Warframe-helpful. Prefer local live tools and `lookup_local_knowledge` first. You may call `search_web` / `fetch_web_page` for public corroboration. Cite returned URLs only. Never ask the player to type yes/no for web search.",
-    onlineSearchToggle
-      ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent for Warframe community builds. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts). Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
-      : buildAsk
-        ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only for community builds. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
-        : "",
+    saveAsk
+      ? "\n\n## Runtime intent\nThe Operator is **saving or adding a personal build card**. Call `save_build` only. Do not call `search_community_builds`, `lookup_local_knowledge`, `search_web`, or `fetch_web_page` on this turn."
+      : onlineSearchToggle
+        ? "\n\n## Runtime consent\nPlayer enabled the **Online search** toggle. That is standing consent for Warframe community builds. After `lookup_local_knowledge`, if local Overframe builds are missing or the player wants community comparison, call `search_community_builds` immediately (includes full-page excerpts) — at most once this turn. Use `fetch_web_page` for any extra URLs. Do NOT ask yes/no. Cite only URLs returned by tools."
+        : buildAsk
+          ? "\n\n## Runtime consent\n**Online search is OFF.** Stay on local pack + agent-calculated only for community builds. Do not call `search_community_builds`. If Overframe builds are missing, tell the player to enable the Online search toggle — never ask them to type yes/no."
+          : "",
   ].join("");
 
   const messages: ChatCompletionMessageParam[] = [
@@ -164,13 +209,8 @@ async function runModelCompletion(
 
   while (guard < maxRounds) {
     guard += 1;
-    const completion = await client.chat.completions.create({
-      model,
-      messages,
-      ...(enableTools
-        ? { tools, tool_choice: "auto" as const }
-        : {}),
-      temperature: 0.4,
+    const completion = await createChatCompletion(client, model, messages, {
+      ...(enableTools ? { tools, tool_choice: "auto" as const } : {}),
     });
 
     const choice = completion.choices[0]?.message;
@@ -203,26 +243,31 @@ async function runModelCompletion(
       if (call.type !== "function") continue;
       toolsUsed.push(call.function.name);
       const args = call.function.arguments ?? "{}";
+      const skipResearch =
+        saveAsk && SAVE_BUILD_SKIP_RESEARCH_TOOLS.has(call.function.name);
       const dedupe = dedupeToolCall(seenToolCalls, call.function.name, args);
-      let raw = dedupe.duplicate
-        ? dedupe.stub!
-        : await runChatTool(call.function.name, args, {
-            onlineSearch: Boolean(onlineSearchToggle),
-            llmMode: true,
-          });
-
-      if (!dedupe.duplicate) {
+      let raw: string;
+      if (dedupe.duplicate) {
+        raw = dedupe.stub!;
+      } else if (skipResearch) {
+        raw = SKIPPED_FOR_SAVE_BUILD;
+      } else {
+        raw = await runChatTool(call.function.name, args, {
+          onlineSearch: Boolean(onlineSearchToggle),
+          llmMode: true,
+        });
         const augmented = await maybeAugmentLookupWithLiveSearch({
           toolName: call.function.name,
           rawArgs: args,
           result: raw,
           onlineSearch: Boolean(onlineSearchToggle),
           llmMode: true,
+          skipLiveSearch: saveAsk,
         });
         raw = augmented.result;
         for (const extra of augmented.extraTools) {
           toolsUsed.push(extra);
-          seenToolCalls.add(`${extra}:${args.trim() || "{}"}`);
+          seenToolCalls.add(toolCallDedupeKey(extra, args));
         }
       }
 
@@ -230,9 +275,12 @@ async function runModelCompletion(
       const toolMessage: ChatCompletionToolMessageParam = {
         role: "tool",
         tool_call_id: call.id,
-        content: annotateToolResultForOnlineConsent(
-          stripMarketQuotesMarker(stripSavedBuildMarker(raw)),
-          Boolean(onlineSearchToggle),
+        content: clipToolResult(
+          call.function.name,
+          annotateToolResultForOnlineConsent(
+            stripMarketQuotesMarker(stripSavedBuildMarker(raw)),
+            Boolean(onlineSearchToggle),
+          ),
         ),
       };
       messages.push(toolMessage);
@@ -241,11 +289,7 @@ async function runModelCompletion(
 
   // Local models (Ollama/Qwen) often keep requesting tools; force a text answer.
   messages.push({ role: "user", content: TOOL_BUDGET_EXHAUSTED_PROMPT });
-  const finalCompletion = await client.chat.completions.create({
-    model,
-    messages,
-    temperature: 0.4,
-  });
+  const finalCompletion = await createChatCompletion(client, model, messages);
   const finalChoice = finalCompletion.choices[0]?.message;
   const content = finalChoice?.content?.trim();
   const saved = extractSavedBuildFromToolPayloads(toolPayloads);
@@ -414,6 +458,15 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    if (
+      isContextOverflowError(error) ||
+      message === CONTEXT_OVERFLOW_PLAYER_MESSAGE
+    ) {
+      return NextResponse.json(
+        { error: CONTEXT_OVERFLOW_PLAYER_MESSAGE },
+        { status: 400 },
+      );
+    }
     if (message.includes("kept calling tools") || message.includes("Too many tool rounds")) {
       return NextResponse.json({ error: message }, { status: 502 });
     }

@@ -38,7 +38,7 @@ function defaultUi(): UiState {
   const h = mobile
     ? Math.min(Math.round(window.innerHeight * 0.72), 560)
     : 480;
-  const x = mobile ? 8 : Math.max(12, Math.round(3.35 * 16) + 18);
+  const x = mobile ? 8 : Math.max(12, Math.round(3.5 * 16) + 18);
   const y = mobile ? Math.max(12, Math.round(window.innerHeight * 0.1)) : 72;
   return { x, y, w, h, minimized: false };
 }

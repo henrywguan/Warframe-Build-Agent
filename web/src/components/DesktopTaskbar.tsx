@@ -8,6 +8,8 @@ export type TaskbarAppId = "history" | "builds" | "wfm";
 type TaskbarApp = {
   id: TaskbarAppId;
   title: string;
+  /** Optional dock caption; use `\\n` for a two-line label (e.g. Transmissions). */
+  dockLabel?: string;
   minimized: boolean;
 };
 
@@ -96,7 +98,15 @@ export function DesktopTaskbar({
                 <Icon />
                 {app.minimized ? <span className={styles.pip} /> : null}
               </span>
-              <span className={styles.label}>{app.title}</span>
+              <span
+                className={`${styles.label} ${
+                  (app.dockLabel ?? app.title).includes("\n")
+                    ? styles.labelMultiline
+                    : ""
+                }`}
+              >
+                {app.dockLabel ?? app.title}
+              </span>
             </button>
           );
         })}

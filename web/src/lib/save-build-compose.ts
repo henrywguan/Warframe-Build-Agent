@@ -16,7 +16,7 @@ import {
 } from "./saved-builds";
 
 const SAVE_INTENT =
-  /\b(save|add|store|pin|keep)\b[\s\S]{0,40}\b(build|loadout|arsenal|card)\b|\b(build|loadout)\b[\s\S]{0,40}\b(save|add|store|to my (builds|arsenal))\b|\/save-build\b/i;
+  /\b(save|add|store|pin|keep)\b[\s\S]{0,40}\b(builds?|loadout|arsenal|card)\b|\b(build|loadout)\b[\s\S]{0,40}\b(save|add|store|to my (builds|arsenal))\b|\/save-build\b/i;
 
 export function looksLikeSaveBuildRequest(text: string): boolean {
   return SAVE_INTENT.test(text.trim());
