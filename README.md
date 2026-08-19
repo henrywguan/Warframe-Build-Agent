@@ -145,6 +145,7 @@ Market and patch-note snapshots refresh around **4:00 PM Pacific** via GitHub Ac
 | `npm run web:dev` | Web chat (localhost) |
 | `npm run web:dev:lan` | Web chat bound for home Wi‑Fi devices |
 | `npm run web:start:lan` | Production web chat on LAN (after `web:build`) |
+| `npm run web:tunnel` | Temporary HTTPS Cloudflare Quick Tunnel (`trycloudflare.com`) |
 | `./scripts/pack-hermes-profile.sh` | Pack Hermes `.tar.gz` for Desktop import |
 | `npm test` | Unit tests |
 

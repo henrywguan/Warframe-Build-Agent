@@ -194,6 +194,7 @@ npm run knowledge -- crawl-overframe --import-builds ./data/knowledge/examples/b
 npm run web:dev
 npm run web:dev:lan
 npm run web:build && npm run web:start:lan
+npm run web:tunnel
 cd overlay && python3 -m wf_overlay
 
 # Verify / cleanup gates
