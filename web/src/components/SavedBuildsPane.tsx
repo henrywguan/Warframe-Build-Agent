@@ -30,6 +30,66 @@ import styles from "./SavedBuildsPane.module.css";
 
 type FolderFilter = "all" | "unfiled" | string;
 
+/** Slot picker groups for the Uiverse-style add menu (Galahhad/old-falcon-43). */
+const ADD_MENU_GROUPS: GearSlotKey[][] = [
+  ["warframe"],
+  ["primary", "secondary", "melee"],
+  ["companion"],
+];
+
+function SlotGlyph({ slot }: { slot: GearSlotKey }) {
+  const common = {
+    className: styles.addGlyph,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  switch (slot) {
+    case "warframe":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="3.1" />
+          <path d="M6.2 19.2v-1.1a5.8 5.8 0 0 1 11.6 0v1.1" />
+        </svg>
+      );
+    case "primary":
+      return (
+        <svg {...common}>
+          <path d="M3 14h11l6-3.2V9.5L14 12H8" />
+          <path d="M8 12v4M12 12v3.2" />
+        </svg>
+      );
+    case "secondary":
+      return (
+        <svg {...common}>
+          <path d="M7 15.5V11l8.5-2.2 1.2 2.4-6.2 1.6v2.7" />
+          <path d="M7 13.2H4.8" />
+        </svg>
+      );
+    case "melee":
+      return (
+        <svg {...common}>
+          <path d="M14.2 4.5 19.5 9.8 9.2 20.1H4.8v-4.4Z" />
+          <path d="M12.4 6.3 17.7 11.6" />
+        </svg>
+      );
+    case "companion":
+      return (
+        <svg {...common}>
+          <circle cx="8" cy="9.2" r="1.35" />
+          <circle cx="16" cy="9.2" r="1.35" />
+          <circle cx="6.6" cy="13.4" r="1.2" />
+          <circle cx="17.4" cy="13.4" r="1.2" />
+          <ellipse cx="12" cy="16.2" rx="2.4" ry="2.1" />
+        </svg>
+      );
+  }
+}
+
 const ITEM_DICTS = {
   warframe: suggestPack.items.warframe,
   primary: suggestPack.items.primary,
@@ -94,8 +154,15 @@ export function SavedBuildsPane({
     function onPointerDown(event: MouseEvent) {
       if (!addWrapRef.current?.contains(event.target as Node)) setAddOpen(false);
     }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setAddOpen(false);
+    }
     document.addEventListener("mousedown", onPointerDown);
-    return () => document.removeEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, []);
 
   function handleAddSlot(slot: GearSlotKey) {
@@ -169,34 +236,57 @@ export function SavedBuildsPane({
             <h2 className={styles.title}>Saved Builds</h2>
           </div>
           <div className={styles.headerActions}>
-            <div className={styles.addWrap} ref={addWrapRef}>
+            <div
+              className={styles.addWrap}
+              ref={addWrapRef}
+              data-open={addOpen ? "true" : "false"}
+            >
               <button
                 type="button"
-                className={styles.iconBtn}
+                className={styles.addTrigger}
                 onClick={() => setAddOpen((open) => !open)}
                 aria-label="Add build slot"
                 aria-expanded={addOpen}
                 aria-haspopup="menu"
+                aria-controls="arsenal-add-menu"
                 title="Add Warframe, Primary, Secondary, Melee, or Companion"
               >
-                +
+                <span className={styles.addBars} aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
               </button>
-              {addOpen ? (
-                <ul className={styles.addMenu} role="menu">
-                  {BUILD_FOCUS_SLOTS.map((slot) => (
-                    <li key={slot} role="none">
-                      <button
-                        type="button"
-                        role="menuitem"
-                        className={styles.addMenuItem}
-                        onClick={() => handleAddSlot(slot)}
-                      >
-                        {BUILD_FOCUS_LABELS[slot]}
-                      </button>
+              <nav
+                id="arsenal-add-menu"
+                className={styles.addMenu}
+                aria-hidden={addOpen ? "false" : "true"}
+              >
+                <p className={styles.addLegend}>Add slot</p>
+                <ul className={styles.addList} role="menu">
+                  {ADD_MENU_GROUPS.map((group, groupIndex) => (
+                    <li key={group[0]} className={styles.addGroup} role="none">
+                      {groupIndex > 0 ? (
+                        <div className={styles.addRule} role="separator" />
+                      ) : null}
+                      {group.map((slot) => (
+                        <button
+                          key={slot}
+                          type="button"
+                          role="menuitem"
+                          className={styles.addMenuItem}
+                          data-slot={slot}
+                          tabIndex={addOpen ? 0 : -1}
+                          onClick={() => handleAddSlot(slot)}
+                        >
+                          <SlotGlyph slot={slot} />
+                          <span>{BUILD_FOCUS_LABELS[slot]}</span>
+                        </button>
+                      ))}
                     </li>
                   ))}
                 </ul>
-              ) : null}
+              </nav>
             </div>
             <button
               type="button"
