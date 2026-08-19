@@ -25,7 +25,7 @@
       calc(0.55rem + var(--safe-bottom))
       0.4rem;
     grid-template-columns:
-      3.35rem minmax(13.5rem, 15.5rem) minmax(0, 1fr) minmax(16.5rem, 20.5rem);
+      3.5rem minmax(13.5rem, 15.5rem) minmax(0, 1fr) minmax(16.5rem, 20.5rem);
     column-gap: 1.35rem;
     row-gap: 0.65rem;
   }
@@ -1026,7 +1026,7 @@
 @media (max-width: 980px) and (min-width: 861px) {
   .workspace {
     grid-template-columns:
-      3.35rem minmax(12.5rem, 13.5rem) minmax(0, 1fr) minmax(15rem, 18rem);
+      3.5rem minmax(12.5rem, 13.5rem) minmax(0, 1fr) minmax(15rem, 18rem);
     column-gap: 1.05rem;
     row-gap: 0.5rem;
   }

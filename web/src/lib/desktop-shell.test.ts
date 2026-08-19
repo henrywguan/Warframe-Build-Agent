@@ -36,7 +36,7 @@ describe("desktop shell layout", () => {
 
   it("drops minimized columns from the desktop grid", () => {
     const both = desktopWorkspaceColumns(DEFAULT_DESKTOP_SHELL);
-    assert.match(both, /3\.35rem/);
+    assert.match(both, /3\.5rem/);
     assert.match(both, /248px/);
     assert.match(both, /304px/);
 
@@ -44,7 +44,7 @@ describe("desktop shell layout", () => {
       history: { ...DEFAULT_DESKTOP_SHELL.history, minimized: true },
       builds: { ...DEFAULT_DESKTOP_SHELL.builds, minimized: true },
     });
-    assert.equal(collapsed, "3.35rem minmax(0, 1fr)");
+    assert.equal(collapsed, "3.5rem minmax(0, 1fr)");
   });
 
   it("pins the desktop workspace to the viewport left with extra center gap", () => {

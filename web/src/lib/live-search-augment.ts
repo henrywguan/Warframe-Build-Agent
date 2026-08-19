@@ -39,7 +39,12 @@ export async function maybeAugmentLookupWithLiveSearch(options: {
   onlineSearch: boolean;
   /** LLM mode (smart replies) — not the general-agent AI toggle. */
   llmMode: boolean;
+  /** Saving/adding a personal card — do not append a community crawl. */
+  skipLiveSearch?: boolean;
 }): Promise<{ result: string; extraTools: string[] }> {
+  if (options.skipLiveSearch) {
+    return { result: options.result, extraTools: [] };
+  }
   if (options.toolName !== "lookup_local_knowledge") {
     return { result: options.result, extraTools: [] };
   }

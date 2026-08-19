@@ -743,6 +743,7 @@ export default function HomePage() {
           {
             id: "history",
             title: "Transmissions",
+            dockLabel: "Trans\nmissions",
             minimized: desktopShell.history.minimized,
           },
           {

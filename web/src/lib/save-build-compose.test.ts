@@ -20,6 +20,8 @@ describe("arsenal classify + NL save", () => {
       looksLikeSaveBuildRequest('I want to save a build for "Soma Prime"'),
       true,
     );
+    assert.equal(looksLikeSaveBuildRequest("add my build"), true);
+    assert.equal(looksLikeSaveBuildRequest("add this to my builds"), true);
     assert.equal(looksLikeSaveBuildRequest("compare my loadout"), false);
   });
 

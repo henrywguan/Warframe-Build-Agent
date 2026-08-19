@@ -207,8 +207,8 @@ export async function searchWebOnline(
     );
   } else if (options.fetchPages !== false) {
     const deep = await fetchPagesForHits([...wikiHits, ...webHits], {
-      limit: 2,
-      maxCharsEach: 4_000,
+      limit: 1,
+      maxCharsEach: 1_400,
     });
     if (deep) {
       lines.push("", deep);
@@ -276,7 +276,7 @@ export async function searchCommunityBuildsOnline(query: string): Promise<string
     if (overframe.itemUrl) {
       deepHits.unshift({ title: `${item} (Overframe)`, url: overframe.itemUrl });
     }
-    const deep = await fetchPagesForHits(deepHits, { limit: 2, maxCharsEach: 4_000 });
+    const deep = await fetchPagesForHits(deepHits, { limit: 1, maxCharsEach: 1_400 });
     if (deep) {
       lines.push("", deep);
       lines.push(

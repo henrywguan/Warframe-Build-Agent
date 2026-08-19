@@ -90,5 +90,5 @@ export function saveDesktopShell(state: DesktopShellState): void {
 export function desktopWorkspaceColumns(state: DesktopShellState): string {
   const history = state.history.minimized ? null : `${state.history.w}px`;
   const builds = state.builds.minimized ? null : `${state.builds.w}px`;
-  return ["3.35rem", history, "minmax(0, 1fr)", builds].filter(Boolean).join(" ");
+  return ["3.5rem", history, "minmax(0, 1fr)", builds].filter(Boolean).join(" ");
 }

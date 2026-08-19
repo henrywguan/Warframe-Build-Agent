@@ -44,7 +44,7 @@ From the chat UI:
 | --- | --- |
 | **LLM / Ollama** | Configure model **and** enable LLM mode (smart replies + tools). Off / unconfigured = offline local chatbot. Saving a valid config enables the Warframe LLM advisor without turning AI on. |
 | **AI** | Mode switch **on top of LLM**: general Cursor-style research agent (non-Warframe-first). Off = keep Warframe Build Agent LLM personality/tools. Requires LLM. Not a full IDE agent (no filesystem/terminal/MCP — use Hermes Desktop for that). |
-| **Online search** | Warframe community-build crawl consent only (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + full-page excerpts). Standing consent — never asks the player to type yes/no. |
+| **Online search** | Warframe community-build crawl consent only (`search_community_builds`: Overframe + DuckDuckGo/YouTube + Wiki + a short full-page excerpt). Standing consent — never asks the player to type yes/no. Saving/adding a personal card skips this crawl and calls `save_build` only (avoids overflowing local 8k-context models). |
 
 Also:
 
