@@ -1,136 +1,138 @@
 {
-  "date": "2026-08-21",
+  "date": "2026-08-22",
   "timezone": "America/Los_Angeles",
-  "pulledAt": "2026-08-21T23:12:49.634Z",
+  "pulledAt": "2026-08-22T23:10:12.851Z",
   "platform": "pc",
   "source": "https://api.warframe.market/v2",
   "items": [
     {
       "slug": "mirage_prime_set",
       "name": "Mirage Prime Set",
-      "lowestSell": 74,
-      "highestBuy": 62,
-      "medianSell": 75,
-      "medianBuy": 60,
+      "lowestSell": 72,
+      "highestBuy": 80,
+      "medianSell": 78,
+      "medianBuy": 66,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-21T23:12:50.772Z"
+      "fetchedAt": "2026-08-22T23:10:14.587Z"
     },
     {
       "slug": "wisp_prime_set",
       "name": "Wisp Prime Set",
-      "lowestSell": 70,
-      "highestBuy": 60,
-      "medianSell": 74,
-      "medianBuy": 55,
+      "lowestSell": 65,
+      "highestBuy": 65,
+      "medianSell": 70,
+      "medianBuy": 60,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-21T23:12:51.340Z"
+      "fetchedAt": "2026-08-22T23:10:15.102Z"
     },
     {
       "slug": "protea_prime_set",
       "name": "Protea Prime Set",
-      "lowestSell": 38,
-      "highestBuy": 31,
+      "lowestSell": 35,
+      "highestBuy": 30,
       "medianSell": 40,
       "medianBuy": 30,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-21T23:12:51.883Z"
+      "fetchedAt": "2026-08-22T23:10:15.633Z"
     },
     {
       "slug": "caliban_prime_set",
       "name": "Caliban Prime Set",
       "lowestSell": 29,
-      "highestBuy": 28,
+      "highestBuy": 27,
       "medianSell": 30,
       "medianBuy": 26,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-21T23:12:52.424Z"
+      "fetchedAt": "2026-08-22T23:10:16.147Z"
     },
     {
       "slug": "voruna_prime_set",
       "name": "Voruna Prime Set",
-      "lowestSell": 30,
-      "highestBuy": 32,
+      "lowestSell": 44,
+      "highestBuy": 35,
       "medianSell": 45,
       "medianBuy": 30,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-21T23:12:52.964Z"
+      "fetchedAt": "2026-08-22T23:10:16.803Z"
     },
     {
       "slug": "voltaic_strike",
       "name": "Voltaic Strike",
-      "rank": 0,
-      "lowestSell": 45,
-      "highestBuy": 41,
-      "medianSell": 50,
-      "medianBuy": 41,
-      "sellCount": 5,
-      "buyCount": 3,
-      "fetchedAt": "2026-08-21T23:12:53.501Z"
+      "rank": 3,
+      "lowestSell": 60,
+      "highestBuy": 26,
+      "medianSell": 60,
+      "medianBuy": 26,
+      "sellCount": 1,
+      "buyCount": 1,
+      "fetchedAt": "2026-08-22T23:10:17.363Z"
     },
     {
       "slug": "primed_continuity",
       "name": "Primed Continuity",
-      "rank": 0,
-      "lowestSell": 45,
-      "medianSell": 50,
-      "sellCount": 5,
+      "rank": 1,
+      "lowestSell": 40,
+      "medianSell": 45,
+      "sellCount": 2,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:54.049Z"
+      "fetchedAt": "2026-08-22T23:10:17.896Z"
     },
     {
       "slug": "primed_flow",
       "name": "Primed Flow",
       "rank": 0,
-      "lowestSell": 25,
-      "medianSell": 25,
+      "lowestSell": 15,
+      "highestBuy": 5,
+      "medianSell": 30,
+      "medianBuy": 5,
       "sellCount": 5,
-      "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:54.640Z"
+      "buyCount": 1,
+      "fetchedAt": "2026-08-22T23:10:18.429Z"
     },
     {
       "slug": "galvanized_diffusion",
       "name": "Galvanized Diffusion",
       "rank": 0,
-      "lowestSell": 8,
-      "medianSell": 9,
+      "lowestSell": 9,
+      "medianSell": 10,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:55.181Z"
+      "fetchedAt": "2026-08-22T23:10:18.954Z"
     },
     {
       "slug": "galvanized_savvy",
       "name": "Galvanized Savvy",
       "rank": 0,
-      "lowestSell": 8,
-      "medianSell": 9,
+      "lowestSell": 7,
+      "medianSell": 8,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:55.755Z"
+      "fetchedAt": "2026-08-22T23:10:19.518Z"
     },
     {
       "slug": "galvanized_aptitude",
       "name": "Galvanized Aptitude",
-      "rank": 1,
-      "lowestSell": 9,
+      "rank": 0,
+      "lowestSell": 8,
       "medianSell": 9,
-      "sellCount": 2,
+      "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:56.341Z"
+      "fetchedAt": "2026-08-22T23:10:20.029Z"
     },
     {
       "slug": "melee_influence",
       "name": "Melee Influence",
       "rank": 0,
       "lowestSell": 4,
-      "medianSell": 5,
+      "medianSell": 4,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:56.877Z"
+      "fetchedAt": "2026-08-22T23:10:20.604Z"
     },
     {
       "slug": "primary_deadhead",
@@ -140,37 +142,39 @@
       "medianSell": 2,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:57.414Z"
+      "fetchedAt": "2026-08-22T23:10:21.121Z"
     },
     {
       "slug": "cascadia_flare",
       "name": "Cascadia Flare",
       "rank": 0,
       "lowestSell": 2,
-      "medianSell": 3,
+      "medianSell": 2,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:58.389Z"
+      "fetchedAt": "2026-08-22T23:10:21.653Z"
     },
     {
       "slug": "arcane_energize",
       "name": "Arcane Energize",
       "rank": 0,
-      "lowestSell": 5,
-      "medianSell": 7,
+      "lowestSell": 8,
+      "medianSell": 9,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:58.931Z"
+      "fetchedAt": "2026-08-22T23:10:22.166Z"
     },
     {
       "slug": "arcane_grace",
       "name": "Arcane Grace",
       "rank": 0,
-      "lowestSell": 7,
-      "medianSell": 7,
+      "lowestSell": 6,
+      "highestBuy": 4,
+      "medianSell": 6,
+      "medianBuy": 4,
       "sellCount": 5,
-      "buyCount": 0,
-      "fetchedAt": "2026-08-21T23:12:59.521Z"
+      "buyCount": 1,
+      "fetchedAt": "2026-08-22T23:10:22.686Z"
     },
     {
       "slug": "arcane_blessing",
@@ -182,7 +186,7 @@
       "medianBuy": 1,
       "sellCount": 5,
       "buyCount": 1,
-      "fetchedAt": "2026-08-21T23:13:00.048Z"
+      "fetchedAt": "2026-08-22T23:10:23.199Z"
     }
   ]
 }
