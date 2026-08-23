@@ -1,0 +1,17 @@
+{
+  "date": "2026-08-23",
+  "previousDate": "2026-08-22",
+  "timezone": "America/Los_Angeles",
+  "generatedAt": "2026-08-23T23:26:19.013Z",
+  "source": "https://www.warframe.com/en/patch-notes",
+  "newEntries": [],
+  "removedIds": [],
+  "latest": {
+    "id": "43-5-4",
+    "title": "Amir’s Shockwave: Hotfix 43.5.4",
+    "url": "https://www.warframe.com/en/patch-notes/pc/43-5-4",
+    "type": "Hotfix",
+    "newest": true,
+    "version": "43.5.4"
+  }
+}
