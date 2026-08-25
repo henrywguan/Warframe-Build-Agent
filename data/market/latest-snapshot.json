@@ -1,76 +1,76 @@
 {
-  "date": "2026-08-24",
+  "date": "2026-08-25",
   "timezone": "America/Los_Angeles",
-  "pulledAt": "2026-08-24T23:13:18.491Z",
+  "pulledAt": "2026-08-25T23:15:33.211Z",
   "platform": "pc",
   "source": "https://api.warframe.market/v2",
   "items": [
     {
       "slug": "mirage_prime_set",
       "name": "Mirage Prime Set",
-      "lowestSell": 70,
-      "highestBuy": 65,
+      "lowestSell": 74,
+      "highestBuy": 63,
       "medianSell": 75,
       "medianBuy": 60,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-24T23:13:19.229Z"
+      "fetchedAt": "2026-08-25T23:15:34.147Z"
     },
     {
       "slug": "wisp_prime_set",
       "name": "Wisp Prime Set",
       "lowestSell": 70,
-      "highestBuy": 61,
-      "medianSell": 70,
-      "medianBuy": 58,
+      "highestBuy": 65,
+      "medianSell": 74,
+      "medianBuy": 60,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-24T23:13:19.695Z"
+      "fetchedAt": "2026-08-25T23:15:34.612Z"
     },
     {
       "slug": "protea_prime_set",
       "name": "Protea Prime Set",
-      "lowestSell": 41,
-      "highestBuy": 35,
-      "medianSell": 45,
+      "lowestSell": 34,
+      "highestBuy": 32,
+      "medianSell": 40,
       "medianBuy": 30,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-24T23:13:20.195Z"
+      "fetchedAt": "2026-08-25T23:15:35.099Z"
     },
     {
       "slug": "caliban_prime_set",
       "name": "Caliban Prime Set",
-      "lowestSell": 25,
+      "lowestSell": 28,
       "highestBuy": 26,
-      "medianSell": 29,
-      "medianBuy": 26,
+      "medianSell": 30,
+      "medianBuy": 25,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-24T23:13:20.772Z"
+      "fetchedAt": "2026-08-25T23:15:35.565Z"
     },
     {
       "slug": "voruna_prime_set",
       "name": "Voruna Prime Set",
-      "lowestSell": 45,
-      "highestBuy": 80,
+      "lowestSell": 43,
+      "highestBuy": 32,
       "medianSell": 45,
       "medianBuy": 31,
       "sellCount": 5,
       "buyCount": 5,
-      "fetchedAt": "2026-08-24T23:13:21.265Z"
+      "fetchedAt": "2026-08-25T23:15:36.119Z"
     },
     {
       "slug": "voltaic_strike",
       "name": "Voltaic Strike",
       "rank": 3,
       "lowestSell": 50,
-      "highestBuy": 36,
-      "medianSell": 52.5,
-      "medianBuy": 36,
+      "highestBuy": 35,
+      "medianSell": 50,
+      "medianBuy": 35,
       "sellCount": 2,
-      "buyCount": 2,
-      "fetchedAt": "2026-08-24T23:13:21.714Z"
+      "buyCount": 4,
+      "fetchedAt": "2026-08-25T23:15:36.585Z"
     },
     {
       "slug": "primed_continuity",
@@ -80,57 +80,59 @@
       "medianSell": 50,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:22.189Z"
+      "fetchedAt": "2026-08-25T23:15:37.130Z"
     },
     {
       "slug": "primed_flow",
       "name": "Primed Flow",
       "rank": 0,
-      "lowestSell": 25,
-      "medianSell": 40,
+      "lowestSell": 30,
+      "medianSell": 30,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:22.660Z"
+      "fetchedAt": "2026-08-25T23:15:37.621Z"
     },
     {
       "slug": "galvanized_diffusion",
       "name": "Galvanized Diffusion",
       "rank": 0,
-      "lowestSell": 8,
-      "medianSell": 10,
+      "lowestSell": 9,
+      "medianSell": 9,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:23.113Z"
+      "fetchedAt": "2026-08-25T23:15:38.093Z"
     },
     {
       "slug": "galvanized_savvy",
       "name": "Galvanized Savvy",
-      "rank": 0,
-      "lowestSell": 8,
-      "medianSell": 9,
-      "sellCount": 5,
-      "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:23.618Z"
+      "rank": 10,
+      "lowestSell": 7,
+      "highestBuy": 46,
+      "medianSell": 7,
+      "medianBuy": 46,
+      "sellCount": 1,
+      "buyCount": 5,
+      "fetchedAt": "2026-08-25T23:15:38.555Z"
     },
     {
       "slug": "galvanized_aptitude",
       "name": "Galvanized Aptitude",
       "rank": 0,
       "lowestSell": 8,
-      "medianSell": 8,
+      "medianSell": 9,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:24.075Z"
+      "fetchedAt": "2026-08-25T23:15:39.098Z"
     },
     {
       "slug": "melee_influence",
       "name": "Melee Influence",
       "rank": 0,
       "lowestSell": 4,
-      "medianSell": 4,
+      "medianSell": 5,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:24.525Z"
+      "fetchedAt": "2026-08-25T23:15:39.579Z"
     },
     {
       "slug": "primary_deadhead",
@@ -140,19 +142,17 @@
       "medianSell": 2,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:24.986Z"
+      "fetchedAt": "2026-08-25T23:15:40.063Z"
     },
     {
       "slug": "cascadia_flare",
       "name": "Cascadia Flare",
       "rank": 0,
       "lowestSell": 2,
-      "highestBuy": 1,
-      "medianSell": 2,
-      "medianBuy": 1,
+      "medianSell": 3,
       "sellCount": 5,
-      "buyCount": 1,
-      "fetchedAt": "2026-08-24T23:13:25.452Z"
+      "buyCount": 0,
+      "fetchedAt": "2026-08-25T23:15:40.532Z"
     },
     {
       "slug": "arcane_energize",
@@ -162,27 +162,29 @@
       "medianSell": 9,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:25.916Z"
+      "fetchedAt": "2026-08-25T23:15:41.006Z"
     },
     {
       "slug": "arcane_grace",
       "name": "Arcane Grace",
       "rank": 0,
-      "lowestSell": 7,
+      "lowestSell": 6,
       "medianSell": 8,
       "sellCount": 5,
       "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:26.375Z"
+      "fetchedAt": "2026-08-25T23:15:41.565Z"
     },
     {
       "slug": "arcane_blessing",
       "name": "Arcane Blessing",
       "rank": 0,
       "lowestSell": 2,
+      "highestBuy": 5,
       "medianSell": 3,
+      "medianBuy": 5,
       "sellCount": 5,
-      "buyCount": 0,
-      "fetchedAt": "2026-08-24T23:13:26.827Z"
+      "buyCount": 1,
+      "fetchedAt": "2026-08-25T23:15:42.027Z"
     }
   ]
 }
